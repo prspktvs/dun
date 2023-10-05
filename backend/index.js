@@ -74,6 +74,7 @@ const onDisconnect = async (data) => {
 }
 
 const server = new Hocuspocus({
+  port: process.env.PORT || 3000,
   onConnect,
   onLoadDocument,
   onStoreDocument,
