@@ -24,6 +24,9 @@ interface IEditorProps {
   users: IUser[]
 }
 
+const HOCUSPOCUS_URL = process.env.VITE_HOCUSPOCUS_URL || ''
+console.log('HOCUSPOCUS_URL', HOCUSPOCUS_URL)
+
 function useWebRtc(
   id: string,
   onStatus: ({ status }: { status: string }) => void,
@@ -34,7 +37,7 @@ function useWebRtc(
 
   const [provider, setProvider] = useState(
     new HocuspocusProvider({
-      url: process.env.VITE_HOCUSPOCUS_URL || '',
+      url: HOCUSPOCUS_URL,
       name: id,
       document: doc,
       onStatus,
@@ -49,7 +52,7 @@ function useWebRtc(
     setDoc(doc)
     setProvider(
       new HocuspocusProvider({
-        url: 'wss://hocuspocus.eugeek.repl.co',
+        url: HOCUSPOCUS_URL, 
         name: id,
         document: doc,
         onStatus,
@@ -83,6 +86,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
     _tiptapOptions: {
       editable,
       uploadFile: async (file) => {
+        // @eugeek @FIXME 
         console.log(file)
         return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
       },
