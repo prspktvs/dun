@@ -18,3 +18,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DUN_IMBA }}'
           channelId: live
           projectId: dun-imba
+          entryPoint: ./firebase
