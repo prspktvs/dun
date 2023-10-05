@@ -1,0 +1,30 @@
+{
+	"name": "nodejs",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "nodemon index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@blocknote/core": "^0.9.3",
+		"@blocknote/react": "^0.9.3",
+		"@hocuspocus/server": "^2.5.0",
+		"@hocuspocus/transformer": "^2.5.0",
+		"@tiptap/extension-mention": "^2.1.11",
+		"@types/node": "^18.0.6",
+		"firebase-admin": "^11.11.0",
+		"node-fetch": "^3.2.6",
+		"react": "^18.2.0",
+		"yjs": "^13.6.8"
+	},
+	"devDependencies": {
+		"dotenv": "^16.3.1",
+		"nodemon": "^3.0.1"
+	}
+}
