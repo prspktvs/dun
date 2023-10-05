@@ -1,0 +1,16 @@
+{
+  "name": "dun",
+  "version": "1.0.0",
+  "description": "Get stuff dun",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd app && npm run build && cd ..",
+    "deploy": "firebase deploy --only hosting",
+    "deploy:backend": "cd backend && npm run deploy"
+  },
+  "author": "hi@p11.co",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-tools": "^12.6.2"
+  }
+}
