@@ -20,7 +20,7 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
 
 export const createProject = async (project: Partial<IProject>) => {
   try {
-    const projectId = project.id.replace(/[^a-z0-9]/g, '').toLowerCase()
+    const projectId = project.id
     const projectRef = doc(collection(db, 'projects'), projectId)
     const snap = await setDoc(projectRef, project)
 

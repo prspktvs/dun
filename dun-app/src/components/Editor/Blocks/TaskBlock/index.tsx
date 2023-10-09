@@ -13,10 +13,10 @@ type Task = {
 }
 
 const CustomCheckbox = ({ checked }: { checked: boolean }) =>
-  !checked ? (
-    <i className='ri-checkbox-blank-line text-lg' />
-  ) : (
+  checked ? (
     <i className='ri-checkbox-line  text-lg' />
+  ) : (
+    <i className='ri-checkbox-blank-line text-lg' />
   )
 
 const taskSchema: Partial<PropSchema> & Partial<Task> = {

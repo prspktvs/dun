@@ -7,6 +7,17 @@ interface IMyTasksProps {
   projectId: string
 }
 
+const TaskPreview = ({ task }: { task: ITask }) => (
+  <div className='flex items-center w-full h-12 border rounded-lg gap-1 px-1 overflow-hidden'>
+    {task.isDone ? (
+      <i className='ri-checkbox-line  text-lg' />
+    ) : (
+      <i className='ri-checkbox-blank-line text-lg' />
+    )}
+    <div>{task.text}</div>
+  </div>
+)
+
 function MyTasks({ projectId }: IMyTasksProps) {
   const [tasks, setTasks] = useState([])
 
@@ -22,15 +33,7 @@ function MyTasks({ projectId }: IMyTasksProps) {
         Your Tasks
       </div>
       {!isEmpty(tasks)
-        ? tasks.map((task) => (
-            <div
-              key={'task-' + task.id}
-              className='flex items-center w-full h-12 border rounded-lg gap-1 overflow-hidden'
-            >
-              <input type='checkbox' checked={task.isDone} disabled />
-              <div>{task.text}</div>
-            </div>
-          ))
+        ? tasks.map((task) => <TaskPreview key={'task-' + task.id} task={task} />)
         : null}
     </div>
   )

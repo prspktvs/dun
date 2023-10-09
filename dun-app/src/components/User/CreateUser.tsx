@@ -30,7 +30,7 @@ function CreateUser({ projectId }: ICreateUserProps) {
       <div className='mb-20 flex flex-col gap-3'>
         <div className='text-3xl'>What's your name</div>
         <input
-          className='focus:outline-none text-2xl'
+          className='focus:border-none text-2xl'
           placeholder='Type your name'
           value={name}
           onChange={(e) => setName(e.target.value)}

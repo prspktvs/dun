@@ -13,6 +13,7 @@ import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
+import { Alert, Loader } from '@mantine/core'
 
 const SAVING_DELAY = 2000
 
@@ -24,14 +25,21 @@ interface IEditorProps {
 
 const user = JSON.parse(localStorage['user'] || '{"name": "Anon", "color": "#FF0000"}')
 
-function useWebRtc(id: string) {
+function useWebRtc(
+  id: string,
+  onStatus: ({ status }: { status: string }) => void,
+  onClose: ({ event }: { event: unknown }) => void,
+) {
   const lastId = useRef<string>(id)
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
+
   const [provider, setProvider] = useState(
     new HocuspocusProvider({
       url: process.env.VITE_HOCUSPOCUS_URL || '',
       name: id,
       document: doc,
+      onStatus,
+      onClose,
     }),
   )
 
@@ -45,6 +53,8 @@ function useWebRtc(id: string) {
         url: 'wss://hocuspocus.eugeek.repl.co',
         name: id,
         document: doc,
+        onStatus,
+        onClose,
       }),
     )
 
@@ -55,11 +65,27 @@ function useWebRtc(id: string) {
 }
 
 function Editor({ projectId, card, users }: IEditorProps) {
-  const { provider, doc } = useWebRtc(`${projectId}/cards/${card.id}`)
+  const [isLoading, setLoading] = useState(true)
+  const [editable, setEditable] = useState(true)
+  const { provider, doc } = useWebRtc(
+    `${projectId}/cards/${card.id}`,
+    ({ status }) => {
+      if (status !== 'connected') return
+      setEditable(true)
+      setLoading(false)
+    },
+    ({ event }) => {
+      setEditable(false)
+    },
+  )
 
   const editor = useBlockNote({
-    // initialContent: card?.content,
     _tiptapOptions: {
+      editable,
+      uploadFile: async (file) => {
+        console.log(file)
+        return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
+      },
       extensions: [
         Mention.configure({
           HTMLAttributes: {
@@ -89,6 +115,10 @@ function Editor({ projectId, card, users }: IEditorProps) {
     slashMenuItems,
   })
 
+  useEffect(() => {
+    editor.isEditable = editable
+  }, [editable])
+
   const onDebouncedSave = debounce(async (editor) => {
     console.log('editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
     // await saveOrCreateCard(projectId, { ...card, content: editor.topLevelBlocks })
@@ -98,7 +128,20 @@ function Editor({ projectId, card, users }: IEditorProps) {
     return () => onDebouncedSave.cancel()
   }, [onDebouncedSave])
 
-  return <BlockNoteView editor={editor} theme='light' />
+  return isLoading ? (
+    <div className='flex justify-center items-center h-full w-full'>
+      <Loader />
+    </div>
+  ) : (
+    <>
+      {!editable && (
+        <Alert variant='light' color='red' title='' icon={<Loader color='red' size={20} />}>
+          Loading...
+        </Alert>
+      )}
+      <BlockNoteView editor={editor} theme='light' />
+    </>
+  )
 }
 
 export default Editor

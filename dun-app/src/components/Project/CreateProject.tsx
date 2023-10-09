@@ -1,4 +1,4 @@
-import { Tabs, Button, Textarea } from '@mantine/core'
+import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
 import { useState } from 'react'
 import { IProject } from '../../types/Project'
 import { createProject } from '../../services/project'
@@ -11,7 +11,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [activeTab, setActiveTab] = useState<string>('first')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [tags, setTags] = useState('')
+  const [tags, setTags] = useState<string[]>([])
 
   const onContinue = () => setActiveTab('second')
 
@@ -20,11 +20,10 @@ const CreateProject = (props: ICreateProjectProps) => {
       id: props.projectId,
       title,
       description,
-      tags: tags.split(',').map((tag) => tag.trim().toLowerCase()),
+      tags: tags.map((tag) => tag.toLowerCase()),
     }
-
     const res = await createProject(project)
-    window.location.reload(false)
+    // window.location.reload(false)
   }
 
   return (
@@ -37,13 +36,13 @@ const CreateProject = (props: ICreateProjectProps) => {
 
         <Tabs.Panel value='first' className='w-[600px] h-[300px]'>
           <input
-            className='block mt-10 align-middle text-[32px] outline-none'
+            className='block mt-10 align-middle text-[32px] border-none'
             placeholder='Type project name'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <input
-            className='block mt-1 align-middle text-[20px] outline-none'
+            className='block mt-1 align-middle text-[20px] border-none'
             placeholder='Description'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -61,7 +60,8 @@ const CreateProject = (props: ICreateProjectProps) => {
         </Tabs.Panel>
 
         <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
-          <Textarea
+          <TagsInput label='Add tags' value={tags} onChange={setTags} placeholder='Enter tag' />
+          {/* <Textarea
             size='md'
             className='mt-20'
             minRows={6}
@@ -70,9 +70,9 @@ const CreateProject = (props: ICreateProjectProps) => {
             placeholder='Input placeholder'
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-          />
+          /> */}
           <Button
-            className='mt-20'
+            className='mt-10'
             fullWidth
             radius={0}
             variant='filled'

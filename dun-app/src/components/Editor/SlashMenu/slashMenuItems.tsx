@@ -17,7 +17,7 @@ const insertImage: ReactSlashMenuItem<typeof customSchema> = {
       type: 'image',
       props: {
         src: '',
-        alt: 'Dun project image',
+        alt: '',
       },
     })
   },

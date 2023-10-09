@@ -12,6 +12,7 @@ import { useFirebaseCollection } from '../../hooks/useFirebaseCollection'
 import CreateUser from '../../components/User/CreateUser'
 import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
+import { addUserToProject } from '../../services/project'
 
 interface IProjectPageProps {}
 
@@ -26,8 +27,14 @@ const ProjectPage = (props: IProjectPageProps) => {
 
   const [cardOpenId, setCardOpenId] = useState<string>(cardId || '')
 
-  const user = JSON.parse(localStorage.getItem('user'))
-  const isUserExist = user && project?.users?.find((u) => u.id === user.id)
+  const user = JSON.parse(localStorage.getItem('user') as string)
+
+  useEffect(() => {
+    if (projectLoading || !user) return
+
+    const isUserExists = project?.users?.some(({ id }) => id === user.id)
+    if (!isUserExists) addUserToProject(projectId, user)
+  }, [project])
 
   const isLoading = cardsLoading || projectLoading
 
@@ -35,7 +42,7 @@ const ProjectPage = (props: IProjectPageProps) => {
 
   const onCreateNewCard = async () => {
     const newCard: Partial<ICard> = {
-      title: 'New card',
+      title: '',
     }
     const card = await saveOrCreateCard(projectId, newCard)
 
@@ -47,7 +54,7 @@ const ProjectPage = (props: IProjectPageProps) => {
 
   if (!project) return <CreateProject projectId={projectId} />
 
-  if (!isUserExist) return <CreateUser projectId={projectId} />
+  if (!user) return <CreateUser projectId={projectId} />
 
   return (
     <div className='grid grid-cols-5 h-screen w-screen grid-rows-10 px-10'>
@@ -83,7 +90,7 @@ const ProjectPage = (props: IProjectPageProps) => {
                 <Card
                   card={card}
                   users={project.users}
-                  key={card.id + index}
+                  key={'card-' + index}
                   cardOpenId={cardOpenId}
                   projectId={projectId}
                 />

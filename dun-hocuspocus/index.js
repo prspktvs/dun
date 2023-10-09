@@ -60,7 +60,7 @@ const onStoreDocument = async (data) => {
     }) // save Y.Doc
 
     allTasks.forEach((task) => {
-      batch.set(db.doc(path + `/tasks/${task.id}`), task)
+      batch.set(db.doc(path + `/tasks/${task.id}`), task, { merge: true })
     })
 
     await batch.commit()

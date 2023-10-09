@@ -57,7 +57,6 @@ function parseContainer(container, addTask, addFile) {
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
       const parsedBlock = parseBlock(block)
-
       switch (parsedBlock.type) {
         case 'task':
           addTask({
@@ -85,7 +84,7 @@ function parseContainer(container, addTask, addFile) {
           addFile({
             id: blockId,
             type: 'image',
-            url: parsedBlock.props.src,
+            url: parsedBlock.props.src || parsedBlock.props.url,
           })
           break
         default:

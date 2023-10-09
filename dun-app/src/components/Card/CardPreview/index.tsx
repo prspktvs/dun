@@ -64,7 +64,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
         <div className='col-span-3'>
           {card?.description?.map((line) => (
-            <div>{line}</div>
+            <div key={'description-' + line}>{line}</div>
           ))}
         </div>
       </div>
