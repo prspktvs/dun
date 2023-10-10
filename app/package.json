@@ -2,10 +2,11 @@
   "name": "react-typescript",
   "version": "1.0.0",
   "type": "module",
-  "description": "React TypeScript on Replit, using Vite bundler",
+  "description": "Dun app frontend",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build --mode production",
+    "test": "tsc",
     "preview": "vite preview"
   },
   "keywords": [],

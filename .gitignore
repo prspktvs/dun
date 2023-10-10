@@ -11,3 +11,7 @@
 node_modules
 
 dist
+
+firebase-debug.log
+.firebase/
+bun.lockb
