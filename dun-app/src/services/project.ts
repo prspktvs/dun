@@ -1,7 +1,7 @@
-import { db } from './firebaseDatabase'
 import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs } from 'firebase/firestore'
 import { IProject } from '../types/Project'
 import { IUser } from '../types/User'
+import { db } from '../config/firebase'
 
 export const addUserToProject = async (projectId: string, user: IUser) => {
   try {

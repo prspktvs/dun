@@ -2,6 +2,7 @@ import { ITask } from '../../../types/Task'
 import { useState, useEffect } from 'react'
 import { isEmpty } from 'lodash'
 import { getAllUserTasks } from '../../../services/tasks'
+import { useAuth } from '../../../context/AuthContext'
 
 interface IMyTasksProps {
   projectId: string
@@ -21,7 +22,7 @@ const TaskPreview = ({ task }: { task: ITask }) => (
 function MyTasks({ projectId }: IMyTasksProps) {
   const [tasks, setTasks] = useState([])
 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const { user } = useAuth()
 
   useEffect(() => {
     getAllUserTasks(projectId, user).then((data) => setTasks(data))

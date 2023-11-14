@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore'
-import { db } from '../services/firebaseDatabase'
 import { doc } from 'firebase/firestore'
+import { db } from '../config/firebase'
 
 function splitPathToCollectionAndDocument(path: string) {
   const splited = path.split('/')

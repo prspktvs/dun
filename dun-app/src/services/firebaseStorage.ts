@@ -1,7 +1,5 @@
-import app from '../config/firebase'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-
-const storage = getStorage(app)
+import { storage } from '../config/firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 export const uploadImage = async (path: string, file: Blob | Uint8Array | ArrayBuffer) => {
   try {

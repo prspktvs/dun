@@ -1,5 +1,5 @@
+import { db } from '../config/firebase'
 import { IUser } from '../types/User'
-import { db } from './firebaseDatabase'
 import {
   getFirestore,
   collection,

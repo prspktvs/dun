@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { db } from '../services/firebaseDatabase'
 import { collection } from 'firebase/firestore'
+import { db } from '../config/firebase'
 
 export function useFirebaseCollection(path: string) {
   const [data, setData] = useState([])

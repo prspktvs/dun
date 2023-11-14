@@ -19,7 +19,6 @@ function CreateUser({ projectId }: ICreateUserProps) {
       color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     }
 
-    localStorage.setItem('user', JSON.stringify(newUser))
     await addUserToProject(projectId, newUser)
 
     // window.location.href = `/${projectId}`

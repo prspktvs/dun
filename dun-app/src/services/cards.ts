@@ -1,4 +1,3 @@
-import { db } from './firebaseDatabase'
 import {
   getFirestore,
   collection,
@@ -11,6 +10,7 @@ import {
 } from 'firebase/firestore'
 import { ICard } from '../types/Card'
 import { genId } from '../utils'
+import { db } from '../config/firebase'
 
 export const saveOrCreateCard = async (
   projectId: string,

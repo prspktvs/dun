@@ -14,6 +14,7 @@ import { IUser } from '../../types/User'
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
+import { useAuth } from '../../context/AuthContext'
 
 const SAVING_DELAY = 2000
 
@@ -22,8 +23,6 @@ interface IEditorProps {
   card: ICard
   users: IUser[]
 }
-
-const user = JSON.parse(localStorage['user'] || '{"name": "Anon", "color": "#FF0000"}')
 
 function useWebRtc(
   id: string,
@@ -67,6 +66,7 @@ function useWebRtc(
 function Editor({ projectId, card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(true)
+  const { user } = useAuth()
   const { provider, doc } = useWebRtc(
     `${projectId}/cards/${card.id}`,
     ({ status }) => {

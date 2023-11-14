@@ -13,11 +13,13 @@ import CreateUser from '../../components/User/CreateUser'
 import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
 import { addUserToProject } from '../../services/project'
+import { useAuth } from '../../context/AuthContext'
 
 interface IProjectPageProps {}
 
 const ProjectPage = (props: IProjectPageProps) => {
   const { id: projectId = '', cardId } = useParams()
+  const { user } = useAuth()
 
   const { data: project, loading: projectLoading } = useFirebaseDocument(`projects/${projectId}`)
 
@@ -26,8 +28,6 @@ const ProjectPage = (props: IProjectPageProps) => {
   )
 
   const [cardOpenId, setCardOpenId] = useState<string>(cardId || '')
-
-  const user = JSON.parse(localStorage.getItem('user') as string)
 
   useEffect(() => {
     if (projectLoading || !user) return
@@ -68,7 +68,13 @@ const ProjectPage = (props: IProjectPageProps) => {
 
       <div className='col-span-1 row-span-1 p-5' />
       <div className='col-span-4 row-span-1  p-5 flex items-center'>
-        <Button radius={0} variant='filled' color='#464646' onClick={onCreateNewCard}>
+        <Button
+          radius={0}
+          variant='filled'
+          className='rounded-md'
+          color='#464646'
+          onClick={onCreateNewCard}
+        >
           New Topic
         </Button>
       </div>
