@@ -14,6 +14,9 @@ import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
 import { addUserToProject } from '../../services/project'
 import { useAuth } from '../../context/AuthContext'
+import Logo from '../../components/ui/Logo'
+import UserPanel from '../../components/User/UserPanel'
+import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 
 interface IProjectPageProps {}
 
@@ -27,7 +30,7 @@ const ProjectPage = (props: IProjectPageProps) => {
     `projects/${projectId}/cards`,
   )
 
-  const [cardOpenId, setCardOpenId] = useState<string>(cardId || '')
+  const [selectedCard, setSelectedCard] = useState<ICard | null>(null)
 
   useEffect(() => {
     if (projectLoading || !user) return
@@ -35,6 +38,13 @@ const ProjectPage = (props: IProjectPageProps) => {
     const isUserExists = project?.users?.some(({ id }) => id === user.id)
     if (!isUserExists) addUserToProject(projectId, user)
   }, [project])
+
+  useEffect(() => {
+    if (cardId && !isEmpty(cards)) {
+      const card = cards?.find((card) => card.id === cardId)
+      setSelectedCard(card || null)
+    }
+  }, [cards, cardId])
 
   const isLoading = cardsLoading || projectLoading
 
@@ -47,7 +57,6 @@ const ProjectPage = (props: IProjectPageProps) => {
     const card = await saveOrCreateCard(projectId, newCard)
 
     navigate(`/${projectId}/cards/${card.id}`, { replace: true })
-    setCardOpenId(card.id)
   }
 
   if (isLoading) return null
@@ -57,52 +66,32 @@ const ProjectPage = (props: IProjectPageProps) => {
   if (!user) return <CreateUser projectId={projectId} />
 
   return (
-    <div className='grid grid-cols-5 h-screen w-screen grid-rows-10 px-10'>
+    <div className='h-[calc(100vh_-_84px)]'>
       {/* Header */}
-      <div className='col-span-5 row-span-1 p-5 flex justify-between items-center'>
-        <div className='text-4xl text-black'>{project.title}</div>
-        <ProjectUsers users={project.users} />
-      </div>
-
-      {/* Buttons line: New topic, Search */}
-
-      <div className='col-span-1 row-span-1 p-5' />
-      <div className='col-span-4 row-span-1  p-5 flex items-center'>
-        <Button
-          radius={0}
-          variant='filled'
-          className='rounded-md'
-          color='#464646'
-          onClick={onCreateNewCard}
-        >
-          New Topic
-        </Button>
-      </div>
-
-      {/* Left panel */}
-      <div className='col-span-1 row-span-4 h-full p-5'>
-        <MyTasks projectId={projectId} />
-      </div>
-
-      {/* Cards section */}
-      <div className='col-span-4 h-full row-span-4 p-5'>
-        <div className='flex flex-col gap-5'>
-          {isEmpty(cards) ? (
-            <div className='text-center h-full w-full text-gray-300'>No cards</div>
-          ) : (
-            cards
-              .sort(({ createdAt: a }, { createdAt: b }) => b - a)
-              .map((card, index) => (
-                <Card
-                  card={card}
-                  users={project.users}
-                  key={'card-' + index}
-                  cardOpenId={cardOpenId}
-                  projectId={projectId}
-                />
-              ))
-          )}
+      <div className='flex justify-between items-center border-b-2 border-gray-border'>
+        <div className='w-80 border-r-2 border-gray-border p-5 text-4xl text-center  text-black'>
+          <Logo />
         </div>
+        <div className='h-20 flex items-center p-5 border-l-2 border-gray-border'>
+          <UserPanel user={user} />
+        </div>
+      </div>
+
+      <div className='flex h-full'>
+        {/* Left panel */}
+        <MyTasks projectId={projectId} />
+
+        {/* Right panel */}
+        {selectedCard && selectedCard.id === cardId ? (
+          <Card card={selectedCard} users={project.users} />
+        ) : (
+          <AllCardsContent
+            onCreateNewCard={onCreateNewCard}
+            projectId={projectId}
+            cards={cards}
+            users={project.users}
+          />
+        )}
       </div>
     </div>
   )

@@ -1,8 +1,22 @@
 @tailwind components;
 @tailwind utilities;
 
+*,
+::before,
+::after {
+  border-width: 0;
+  border-style: solid;
+  border-color: theme('borderColor.DEFAULT', currentColor);
+}
+
 .border {
   border: 1px solid #000;
+}
+
+.card-border {
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-color: #B0B0B0;
 }
 
 .border-none {

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useCollection } from 'react-firebase-hooks/firestore'
-import { collection } from 'firebase/firestore'
+import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../config/firebase'
+import { ITask } from '../types/Task'
 
 export function useFirebaseCollection(path: string) {
   const [data, setData] = useState([])
@@ -11,14 +12,28 @@ export function useFirebaseCollection(path: string) {
   })
 
   useEffect(() => {
-    if (!loading && !error) {
-      const newData = value.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
+    async function getData() {
+      const newData = await Promise.all(
+        value.docs.map(async (doc) => {
+          const tasksRef = collection(doc.ref, 'tasks')
+          const taskSnapshot = await getDocs(tasksRef)
+          const tasks: unknown[] = []
+
+          taskSnapshot.forEach((task) => {
+            tasks.push({ id: task.id, ...task.data() })
+          })
+
+          return {
+            id: doc.id,
+            tasks,
+            ...doc.data(),
+          }
+        }),
+      )
 
       setData(newData)
     }
+    if (!loading && !error) getData()
   }, [value, loading, error])
 
   return { data, loading, error }

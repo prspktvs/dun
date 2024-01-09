@@ -7,6 +7,8 @@ import {
   getDoc,
   getDocs,
   deleteDoc,
+  arrayUnion,
+  updateDoc,
 } from 'firebase/firestore'
 import { ICard } from '../types/Card'
 import { genId } from '../utils'
@@ -53,6 +55,16 @@ export const removeCard = async (projectId: string, cardId: string) => {
   try {
     if (!projectId || !cardId) return null
     await deleteDoc(doc(collection(db, 'projects', projectId, 'cards'), cardId))
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+export const saveChatIdsToCard = async (path: string, chatIds: string[]) => {
+  try {
+    const cardRef = doc(db, path)
+    await updateDoc(cardRef, { chatIds: arrayUnion(...chatIds) })
   } catch (e) {
     console.error(e)
     return null

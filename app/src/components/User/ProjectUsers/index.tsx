@@ -13,7 +13,14 @@ function ProjectUsers({ users }: IProjectUsersProps) {
         {!isEmpty(users)
           ? users.map((user) => (
               <Tooltip key={'project-' + user.id} label={user.name} withArrow>
-                <Avatar src={user.avatarUrl} alt={user.name} color={user.color} radius='xl'>
+                <Avatar
+                  size={24}
+                  src={user.avatarUrl}
+                  alt={user.name}
+                  color={user.color}
+                  radius={0}
+                  style={{ borderColor: 'black' }}
+                >
                   {user.name.at(0)}
                 </Avatar>
               </Tooltip>

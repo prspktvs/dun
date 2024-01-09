@@ -1,5 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
-import { BlockNoteView, useBlockNote } from '@blocknote/react'
+import {
+  BlockNoteView,
+  DragHandle,
+  SideMenu,
+  SideMenuPositioner,
+  useBlockNote,
+} from '@blocknote/react'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import suggestion from './Mentions/suggestion'
@@ -15,6 +21,7 @@ import { IUser } from '../../types/User'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
+import CustomSideMenu from './SideMenu'
 
 const SAVING_DELAY = 2000
 
@@ -52,7 +59,7 @@ function useWebRtc(
     setDoc(doc)
     setProvider(
       new HocuspocusProvider({
-        url: HOCUSPOCUS_URL, 
+        url: HOCUSPOCUS_URL,
         name: id,
         document: doc,
         onStatus,
@@ -86,7 +93,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
     _tiptapOptions: {
       editable,
       uploadFile: async (file) => {
-        // @eugeek @FIXME 
+        // @eugeek @FIXME
         console.log(file)
         return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
       },
@@ -143,7 +150,9 @@ function Editor({ projectId, card, users }: IEditorProps) {
           Loading...
         </Alert>
       )}
-      <BlockNoteView editor={editor} theme='light' />
+      <BlockNoteView editor={editor} theme='light'>
+        <SideMenuPositioner editor={editor} sideMenu={CustomSideMenu} />
+      </BlockNoteView>
     </>
   )
 }
