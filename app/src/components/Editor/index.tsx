@@ -2,8 +2,12 @@ import { useEffect, useState, useRef } from 'react'
 import {
   BlockNoteView,
   DragHandle,
+  FormattingToolbarPositioner,
+  HyperlinkToolbarPositioner,
   SideMenu,
   SideMenuPositioner,
+  SlashMenuItem,
+  SlashMenuPositioner,
   useBlockNote,
 } from '@blocknote/react'
 import '@blocknote/core/style.css'
@@ -92,11 +96,11 @@ function Editor({ projectId, card, users }: IEditorProps) {
   const editor = useBlockNote({
     _tiptapOptions: {
       editable,
-      uploadFile: async (file) => {
-        // @eugeek @FIXME
-        console.log(file)
-        return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
-      },
+      // uploadFile: async (file) => {
+      //   // @eugeek @FIXME
+      //   console.log(file)
+      //   return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
+      // },
       extensions: [
         Mention.configure({
           HTMLAttributes: {
@@ -151,6 +155,9 @@ function Editor({ projectId, card, users }: IEditorProps) {
         </Alert>
       )}
       <BlockNoteView editor={editor} theme='light'>
+        <FormattingToolbarPositioner editor={editor} />
+        <HyperlinkToolbarPositioner editor={editor} />
+        <SlashMenuPositioner editor={editor} />
         <SideMenuPositioner editor={editor} sideMenu={CustomSideMenu} />
       </BlockNoteView>
     </>

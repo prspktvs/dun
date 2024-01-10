@@ -3,6 +3,8 @@ import { createContext, useContext } from 'react'
 export type ChatContext = {
   chatId: string
   openChatById: (id: string) => void
+  unreadChats: { id: string; unreadCount: number }[]
+  getUnreadMessagesCount: (id: string) => number
   closeChat: () => void
 }
 

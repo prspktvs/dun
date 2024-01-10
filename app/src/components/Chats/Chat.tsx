@@ -9,10 +9,11 @@ import { isEmpty } from 'lodash'
 import { saveChatAndMessage } from '../../services/chats'
 import { useParams } from 'react-router-dom'
 import { useChats } from '../../context/ChatContext/ChatContext'
+import { IMessage } from '../../types/Chat'
 
 export default function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<IMessage[]>([])
   const [content, setContent] = useState('Card discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
@@ -24,11 +25,24 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
       if (!chat?.messages) return setMessages([])
-      const m = Object.values(chat.messages)
+      const m: IMessage[] = Object.values(chat.messages)
+      const mIds: string[] = Object.keys(chat.messages)
+      if (!m || !mIds) return
       setMessages(m)
       setContent(chat.content)
+      saveLastMessageId(mIds[mIds.length - 1])
     })
   }, [chatId])
+
+  const saveLastMessageId = (messageId: string) => {
+    localStorage.setItem(
+      'lastReadMessages',
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem('lastReadMessages') || '{}'),
+        [chatId]: messageId,
+      }),
+    )
+  }
 
   const handleMessageSend = async () => {
     if (newMessage === '') return alert('Message cannot be empty')
@@ -69,7 +83,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
             const time = `${hours}:${minutes}`
 
             return (
-              <p key={index}>
+              <div key={index}>
                 <div className='flex gap-1 items-center font-semibold'>
                   <Avatar size={24} src={messageUser.avatarUrl} radius={0} />
                   <span>
@@ -78,7 +92,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
                   </span>
                 </div>
                 <span>{message.text}</span>
-              </p>
+              </div>
             )
           })
         ) : (
@@ -96,7 +110,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
           onKeyPress={(e) => e.key === 'Enter' && handleMessageSend()}
         />
         <button onClick={handleMessageSend}>
-          <i class='ri-send-plane-2-line'></i>
+          <i className='ri-send-plane-2-line'></i>
         </button>
       </div>
     </div>

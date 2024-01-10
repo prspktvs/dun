@@ -10,6 +10,7 @@ import CardPreview from './CardPreview'
 import Discussions from './Sections/Discussions'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import clsx from 'clsx'
+import Attachments from './Sections/Attachments'
 
 interface ICardProps {
   card: ICard
@@ -19,6 +20,7 @@ interface ICardProps {
 const Card = ({ card, users }: ICardProps) => {
   const { id: projectId = '' } = useParams()
   const [title, setTitle] = useState(card.title)
+  const { closeChat } = useChats()
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
     'discussions',
   )
@@ -37,7 +39,10 @@ const Card = ({ card, users }: ICardProps) => {
     }
   }
 
-  const goBack = () => navigate(`/${projectId}`)
+  const goBack = () => {
+    closeChat()
+    navigate(`/${projectId}`)
+  }
 
   return (
     <div className='w-full'>
@@ -85,9 +90,9 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_164px)] pl-5 w-full z-20'>
+        <div className='h-[calc(100vh_-_164px)] px-5 w-full z-20'>
           <input
-            className='block ml-3 align-middle text-[32px] w-1/2 border-none'
+            className='block align-middle text-[32px] w-full overflow-hidden border-none'
             placeholder='Type title'
             value={title}
             onChange={onTitleChange}
@@ -99,7 +104,7 @@ const Card = ({ card, users }: ICardProps) => {
           {
             {
               discussions: <Discussions users={users} />,
-              attachments: null,
+              attachments: <Attachments files={card.files} />,
               updates: null,
             }[activeTab]
           }

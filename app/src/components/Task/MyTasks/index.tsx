@@ -24,7 +24,7 @@ function MyTasks({ projectId }: IMyTasksProps) {
         Your Tasks
       </div>
       {!isEmpty(tasks)
-        ? tasks.map((task) => <TaskPreview key={'mytask-' + task.id} task={task} />)
+        ? tasks.map((task, idx) => <TaskPreview key={'my-task-' + idx} task={task} />)
         : null}
     </div>
   )
