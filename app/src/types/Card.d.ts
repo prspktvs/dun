@@ -10,6 +10,7 @@ export interface ICard {
   createdAt: Date
   content: PartialBlock[]
   description: string[] | null
+  chatIds: string[] | null
   tasks: ITask[] | null
   users: IUser[] | null
   files: IFile[] | null

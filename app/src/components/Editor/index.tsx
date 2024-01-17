@@ -26,6 +26,8 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
+import { useChats } from '../../context/ChatContext/ChatContext'
+import { useEditor } from '../../context/EditorContext/EditorContext'
 
 const SAVING_DELAY = 2000
 
@@ -81,6 +83,8 @@ function Editor({ projectId, card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(true)
   const { user } = useAuth()
+  const { chatId } = useChats()
+  const { setEditor } = useEditor()
   const { provider, doc } = useWebRtc(
     `${projectId}/cards/${card.id}`,
     ({ status }) => {
@@ -96,11 +100,6 @@ function Editor({ projectId, card, users }: IEditorProps) {
   const editor = useBlockNote({
     _tiptapOptions: {
       editable,
-      // uploadFile: async (file) => {
-      //   // @eugeek @FIXME
-      //   console.log(file)
-      //   return 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.lotus-qa.com%2Fwp-content%2Fuploads%2F2020%2F02%2Ftesting.jpg&f=1&nofb=1&ipt=6eed9cc4ea6d1214a0e396c2bf5dcec365d76eb74d8a084cb5eabbd84324cf2d&ipo=images'
-      // },
       extensions: [
         Mention.configure({
           HTMLAttributes: {
@@ -131,12 +130,15 @@ function Editor({ projectId, card, users }: IEditorProps) {
   })
 
   useEffect(() => {
+    setEditor(editor)
+  }, [editor])
+
+  useEffect(() => {
     editor.isEditable = editable
   }, [editable])
 
   const onDebouncedSave = debounce(async (editor) => {
     console.log('editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
-    // await saveOrCreateCard(projectId, { ...card, content: editor.topLevelBlocks })
   }, SAVING_DELAY)
 
   useEffect(() => {

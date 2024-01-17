@@ -12,6 +12,7 @@ import {
   where,
   query,
 } from 'firebase/firestore'
+import { extractCardPath } from '../utils'
 
 export const getAllUserTasks = async (projectId: string, user: IUser) => {
   const { id } = user
@@ -22,7 +23,9 @@ export const getAllUserTasks = async (projectId: string, user: IUser) => {
   const snapshots = await getDocs(queryTasks)
   const tasks: unknown[] = []
   snapshots.forEach(
-    (snap) => snap.ref.path.includes(`projects/${projectId}`) && tasks.push(snap.data()),
+    (snap) =>
+      snap.ref.path.includes(`projects/${projectId}`) &&
+      tasks.push({ ...snap.data(), cardPath: extractCardPath(snap.ref.path) }),
   )
 
   return tasks

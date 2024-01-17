@@ -69,7 +69,10 @@ const ProjectPage = (props: IProjectPageProps) => {
     <div className='h-[calc(100vh_-_84px)]'>
       {/* Header */}
       <div className='flex justify-between items-center border-b-2 border-gray-border'>
-        <div className='w-80 border-r-2 border-gray-border p-5 text-4xl text-center  text-black'>
+        <div
+          onClick={() => navigate(`/${projectId}`)}
+          className='w-80 border-r-2 border-gray-border p-5 text-4xl text-center  text-black hover:cursor-pointer'
+        >
           <Logo />
         </div>
         <div className='h-20 flex items-center p-5 border-l-2 border-gray-border'>
@@ -77,9 +80,9 @@ const ProjectPage = (props: IProjectPageProps) => {
         </div>
       </div>
 
-      <div className='flex h-full'>
+      <div className='flex h-full w-full'>
         {/* Left panel */}
-        <MyTasks projectId={projectId} />
+        <MyTasks projectId={projectId} title={project.title} />
 
         {/* Right panel */}
         {selectedCard && selectedCard.id === cardId ? (

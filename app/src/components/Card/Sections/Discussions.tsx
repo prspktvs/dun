@@ -11,10 +11,22 @@ import ChatPreview from '../../Chats/ChatPreview'
 export default function Discussions({ users }: { users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const { chatId, openChatById } = useChats()
+  const [search, setSearch] = useState('')
   const [chats, setChats] = useState([])
+  const [filteredChats, setFilteredChats] = useState([])
+
   useEffect(() => {
     getAllCardChats(`projects/${projectId}/cards/${cardId}`).then((res) => setChats(res))
-  }, [])
+  }, [chatId])
+
+  useEffect(() => {
+    const updatedChats = chats.filter((chat) =>
+      chat.content.toLowerCase().includes(search.toLowerCase()),
+    )
+    setFilteredChats(updatedChats)
+  }, [search, chats])
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   if (chatId) {
     return <Chat chatId={chatId} users={users} />
@@ -22,8 +34,17 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   return (
     <div className='h-full'>
-      {!isEmpty(chats) ? (
-        chats.map((chat) => (
+      <div className='relative p-3 border-b-2'>
+        <i className='absolute ri-search-line text-2xl text-gray-400' />
+        <input
+          className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
+          placeholder='Search'
+          value={search}
+          onChange={onSearch}
+        />
+      </div>
+      {!isEmpty(filteredChats) ? (
+        filteredChats.map((chat) => (
           <ChatPreview
             key={'chat-' + chat.id}
             users={users}

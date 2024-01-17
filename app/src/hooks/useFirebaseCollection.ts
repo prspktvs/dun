@@ -24,9 +24,9 @@ export function useFirebaseCollection(path: string) {
           })
 
           return {
+            ...doc.data(),
             id: doc.id,
             tasks,
-            ...doc.data(),
           }
         }),
       )

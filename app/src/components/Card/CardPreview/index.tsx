@@ -26,7 +26,7 @@ const months = [
 function CardPreview({ card, onClick }: ICardPreviewProps) {
   const imageUrls = card?.files
     ?.filter((file) => file.type === 'image')
-    ?.slice(0, 2)
+    ?.slice(0, 5)
     ?.map((file) => file.url)
   const imagesCount = imageUrls ? imageUrls.length : 0
   const tasks = card?.tasks?.slice(0, 3)
@@ -58,13 +58,14 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
       <div className='grid grid-cols-5 mt-5'>
         {!isEmpty(imageUrls) ? (
           <div className='flex col-span-2'>
-            {imagesCount === 1 ? (
-              <Image radius='md' className='w-20 h-20 object-cover' src={imageUrls[0]} alt='' />
-            ) : (
-              imageUrls?.map((url) => (
-                <Image key={'image-' + url} radius='md' className='w-20' src={url} alt='' />
-              ))
-            )}
+            {imageUrls?.map((url) => (
+              <Image key={'image-' + url} className='w-20' src={url} alt='' />
+            ))}
+            {card?.files?.length > 5 ? (
+              <span className='ml-3 flex items-center h-full font-semibold underline text-lg'>
+                +{card.files.length - 5}
+              </span>
+            ) : null}
           </div>
         ) : null}
       </div>

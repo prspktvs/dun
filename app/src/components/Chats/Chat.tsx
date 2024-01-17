@@ -10,10 +10,12 @@ import { saveChatAndMessage } from '../../services/chats'
 import { useParams } from 'react-router-dom'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import { IMessage } from '../../types/Chat'
+import { useEditor } from '../../context/EditorContext/EditorContext'
 
 export default function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const [messages, setMessages] = useState<IMessage[]>([])
+  const { editor } = useEditor()
   const [content, setContent] = useState('Card discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
@@ -24,13 +26,21 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
     const messagesRef = ref(realtimeDb, `chats/${chatId}`)
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
+
+      if (editor) {
+        const block = editor.topLevelBlocks.find((block) => block.id === chat.id)
+
+        setContent(block?.content?.[0]?.text)
+      } else {
+        setContent(chat?.content)
+      }
+
       if (!chat?.messages) return setMessages([])
       const m: IMessage[] = Object.values(chat.messages)
       const mIds: string[] = Object.keys(chat.messages)
       if (!m || !mIds) return
       setMessages(m)
-      setContent(chat.content)
-      saveLastMessageId(mIds[mIds.length - 1])
+      if (editor) saveLastMessageId(mIds[mIds.length - 1])
     })
   }, [chatId])
 

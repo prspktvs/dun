@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 function FileTile({ file }: { file: IFile }) {
   switch (file.type) {
     case 'image':
-      return <img src={file.url} className='w-full h-40 rounded-md' />
+      return <img src={file.url} className='w-full h-40 rounded-md object-cover' />
     default:
       null
   }
@@ -13,7 +13,7 @@ function FileTile({ file }: { file: IFile }) {
 
 export default function Attachments({ files }: { files: IFile[] }) {
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col gap-2 p-3'>
       {!isEmpty(files) ? (
         files.map((file) => <FileTile key={'f-' + file.id} file={file} />)
       ) : (

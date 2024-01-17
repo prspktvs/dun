@@ -8,6 +8,7 @@ import Login from './pages/Auth/Login'
 import ProtectedLayout from './layouts/ProtectedLayout'
 import Logout from './pages/Auth/Logout'
 import ChatProvider from './context/ChatContext/ChatProvider'
+import EditorProvider from './context/EditorContext/EditorProvider'
 
 export default function App() {
   return (
@@ -15,16 +16,18 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <ChatProvider>
-            <Routes>
-              <Route index path='/' element={<HomePage />} />
-              <Route path='/login' element={<Login />} />
-              <Route path='/logout' element={<Logout />} />
-              <Route path='*' />
-              <Route element={<ProtectedLayout />}>
-                <Route path=':id' element={<ProjectPage />} />
-                <Route path=':id/cards/:cardId' element={<ProjectPage />} />
-              </Route>
-            </Routes>
+            <EditorProvider>
+              <Routes>
+                <Route index path='/' element={<HomePage />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/logout' element={<Logout />} />
+                <Route path='*' />
+                <Route element={<ProtectedLayout />}>
+                  <Route path=':id' element={<ProjectPage />} />
+                  <Route path=':id/cards/:cardId' element={<ProjectPage />} />
+                </Route>
+              </Routes>
+            </EditorProvider>
           </ChatProvider>
         </AuthProvider>
       </BrowserRouter>

@@ -27,8 +27,22 @@ const CreateProject = (props: ICreateProjectProps) => {
   }
 
   return (
-    <div className='h-screen w-screen flex items-center justify-center'>
-      <Tabs color='gray' defaultValue='first' value={activeTab} onChange={setActiveTab}>
+    <div className='h-screen w-screen grid grid-cols-3 grid-rows-3 divide-x-[1px] divide-y-[1px] divide-gray-border'>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <Tabs
+        className='col-start-2 row-start-2 col-end-2 row-end-2 p-5'
+        color='gray'
+        defaultValue='first'
+        value={activeTab}
+        onChange={setActiveTab}
+      >
         <Tabs.List grow>
           <Tabs.Tab value='first'>1</Tabs.Tab>
           <Tabs.Tab value='second'>2</Tabs.Tab>
@@ -61,16 +75,7 @@ const CreateProject = (props: ICreateProjectProps) => {
 
         <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
           <TagsInput label='Add tags' value={tags} onChange={setTags} placeholder='Enter tag' />
-          {/* <Textarea
-            size='md'
-            className='mt-20'
-            minRows={6}
-            radius='xs'
-            label='Add tags'
-            placeholder='Input placeholder'
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-          /> */}
+
           <Button
             className='mt-10'
             fullWidth

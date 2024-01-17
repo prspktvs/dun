@@ -1,6 +1,6 @@
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import { Modal, Button, Input } from '@mantine/core'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -11,6 +11,7 @@ import Discussions from './Sections/Discussions'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import clsx from 'clsx'
 import Attachments from './Sections/Attachments'
+import _debounce from 'lodash/debounce'
 
 interface ICardProps {
   card: ICard
@@ -20,18 +21,33 @@ interface ICardProps {
 const Card = ({ card, users }: ICardProps) => {
   const { id: projectId = '' } = useParams()
   const [title, setTitle] = useState(card.title)
-  const { closeChat } = useChats()
+  const { closeChat, unreadChats } = useChats()
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
     'discussions',
   )
 
+  const unreadDiscussions = unreadChats.reduce(
+    (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
+    0,
+  )
+
   const navigate = useNavigate()
 
-  const onTitleChange = (e) => setTitle(e.target.value)
+  const onTitleChange = (e) => {
+    const val = e.target.value
+    setTitle(val)
 
-  const onSave = async () => {
-    await saveOrCreateCard(projectId, { ...card, title })
+    onDebouncedSave(val)
   }
+
+  const onSave = (t) => saveOrCreateCard(projectId, { ...card, title: t })
+
+  const onDebouncedSave = useCallback(
+    _debounce(async (title) => {
+      await onSave(title)
+    }, 1500),
+    [],
+  )
 
   const onRemoveCard = async () => {
     if (confirm('Are you sure?')) {
@@ -51,12 +67,17 @@ const Card = ({ card, users }: ICardProps) => {
           <div className='underline hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
           </div>
-          <Button radius={0} variant='outline' color='#464646' onClick={onSave}>
-            Save
-          </Button>
+          <div className='flex gap-1'>
+            <Button radius={0} variant='outline' color='#464646' onClick={onRemoveCard}>
+              Remove
+            </Button>
+            <Button radius={0} color='#464646' onClick={() => onSave(title)}>
+              Save
+            </Button>
+          </div>
         </div>
         <div className='flex items-center h-full w-[600px]'>
-          <div className='w-full grid grid-cols-3 h-full border-l-2 divide-x-2 divide-gray-border border-gray-border'>
+          <div className='w-full grid grid-cols-3 h-full border-l-2 divide-x-[1px] divide-gray-border border-gray-border'>
             <div
               className={clsx(
                 'flex items-center justify-center',
@@ -64,7 +85,7 @@ const Card = ({ card, users }: ICardProps) => {
               )}
               onClick={() => setActiveTab('discussions')}
             >
-              Discussions
+              Discussions • {unreadDiscussions}
             </div>
             <div
               className={clsx(
@@ -73,7 +94,7 @@ const Card = ({ card, users }: ICardProps) => {
               )}
               onClick={() => setActiveTab('attachments')}
             >
-              Attachments
+              Attachments • {card.files.length}
             </div>
             <div
               className={clsx(
@@ -82,7 +103,7 @@ const Card = ({ card, users }: ICardProps) => {
               )}
               onClick={() => setActiveTab('updates')}
             >
-              Updates
+              Updates • 0
             </div>
           </div>
         </div>

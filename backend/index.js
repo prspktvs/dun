@@ -50,14 +50,29 @@ const onStoreDocument = async (data) => {
     const json = TiptapTransformer.fromYdoc(data.document, 'document-store')
     const path = `projects/${data.documentName}`
     // console.log(JSON.stringify(json, null, 2))
+
+    const prevTasksRef = db.collection(path + '/tasks')
+    const snapshot = await prevTasksRef.get()
+    const prevTasks = []
+    snapshot.forEach((doc) => {
+      prevTasks.push(doc.data())
+    })
+
     const { allTasks, allFiles, description } = parser(json)
 
     const batch = db.batch()
+
     batch.update(db.doc(path), {
       document: json,
       files: allFiles,
       description,
     }) // save Y.Doc
+
+    prevTasks
+      .filter((task) => !allTasks.includes(task.id))
+      .forEach((task) => {
+        batch.delete(db.doc(path + `/tasks/${task.id}`))
+      })
 
     allTasks.forEach((task) => {
       batch.set(db.doc(path + `/tasks/${task.id}`), task, { merge: true })

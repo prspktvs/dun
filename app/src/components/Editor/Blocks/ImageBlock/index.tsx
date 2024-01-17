@@ -35,6 +35,7 @@ const ImageBlock = createReactBlockSpec({
       const newFileName = `${timestamp}.${fileExtension}`
 
       const url = await uploadImage(newFileName, file)
+      console.log('Uploaded', url)
 
       editor.updateBlock(block, { props: { src: url } })
 
