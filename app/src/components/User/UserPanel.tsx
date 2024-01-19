@@ -18,7 +18,7 @@ export default function UserPanel({ user }: { user: IUser }) {
           >
             {user.name.at(0)}
           </Avatar>
-          <span className=''>{user.name}</span>
+          <span className='font-monaspace'>{user.name}</span>
         </div>
       </Menu.Target>
 

@@ -38,7 +38,6 @@ export default function Discussions({ users }: { users: IUser[] }) {
         <i className='absolute ri-search-line text-2xl text-gray-400' />
         <input
           className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
-          placeholder='Search'
           value={search}
           onChange={onSearch}
         />
@@ -53,10 +52,10 @@ export default function Discussions({ users }: { users: IUser[] }) {
           />
         ))
       ) : (
-        <div className='flex flex-col items-center h-full justify-center'>
-          <div className='text-gray-400'>No discussions here</div>
+        <div className='flex flex-col items-center justify-center'>
+          <div className='text-gray-400 font-monaspace mt-5'>No discussions yet</div>
           <div
-            className='underline text-lg hover:cursor-pointer'
+            className='underline font-monaspace text-lg hover:cursor-pointer'
             onClick={async () => {
               await saveChatAndMessage({
                 chatId: cardId,

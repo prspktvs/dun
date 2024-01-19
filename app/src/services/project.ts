@@ -31,3 +31,21 @@ export const createProject = async (project: Partial<IProject>) => {
     return null
   }
 }
+
+export const getAllUserProject = async (userId: string) => {
+  try {
+    const projectsRef = collection(db, 'projects')
+    const snap = await getDocs(projectsRef)
+    const projects: IProject[] = []
+    snap.forEach((doc) => {
+      const { users } = doc.data()
+      if (users) {
+        const user = users.find((user) => user.id === userId)
+        if (user) projects.push({ ...doc.data(), id: doc.id })
+      }
+    })
+    return projects
+  } catch (e) {
+    return null
+  }
+}

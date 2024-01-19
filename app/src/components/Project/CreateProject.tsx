@@ -50,19 +50,19 @@ const CreateProject = (props: ICreateProjectProps) => {
 
         <Tabs.Panel value='first' className='w-[600px] h-[300px]'>
           <input
-            className='block mt-10 align-middle text-[32px] border-none'
+            className='block mt-10 align-middle text-[32px] font-monaspace border-none'
             placeholder='Type project name'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <input
-            className='block mt-1 align-middle text-[20px] border-none'
+            className='block mt-1 align-middle text-[20px] font-monaspace border-none'
             placeholder='Description'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
           <Button
-            className='mt-20'
+            className='mt-20 font-monaspace font-thin'
             fullWidth
             radius={0}
             variant='filled'
@@ -74,10 +74,16 @@ const CreateProject = (props: ICreateProjectProps) => {
         </Tabs.Panel>
 
         <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
-          <TagsInput label='Add tags' value={tags} onChange={setTags} placeholder='Enter tag' />
+          <TagsInput
+            className='font-monaspace mt-5'
+            label='Add tags'
+            value={tags}
+            onChange={setTags}
+            placeholder='Enter tag'
+          />
 
           <Button
-            className='mt-10'
+            className='mt-10 font-thin font-monaspace'
             fullWidth
             radius={0}
             variant='filled'

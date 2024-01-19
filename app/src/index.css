@@ -1,6 +1,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'MonaspaceArgon';
+  src: url('./fonts/MonaspaceArgon.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
+
 *,
 ::before,
 ::after {
@@ -55,4 +64,14 @@
 .tiptap a {
   text-decoration: underline;
   color: steelblue;
+}
+
+.hide-scrollbar {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

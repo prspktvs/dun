@@ -83,6 +83,7 @@ const TaskBlock = createReactBlockSpec({
         <InlineContent as='div' />
         {!block?.content[0]?.text && isBlockActive ? (
           <div className='absolute left-9 text-gray-300 flex items-center italic'>
+            <div className='cursor' />
             Enter a text or type '@' to mention user
           </div>
         ) : null}

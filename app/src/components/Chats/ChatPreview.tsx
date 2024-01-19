@@ -78,7 +78,7 @@ export default function ChatPreview({
             </div>
           ) : null}
           {chat.content ? (
-            <div className='h-full flex gap-2 items-center'>
+            <div className='h-full flex gap-2 items-center font-monaspace whitespace-nowrap'>
               <div className='h-full w-[3px] bg-gray-500' />
               <div>{editorContent || chat.content}</div>
             </div>
@@ -94,7 +94,7 @@ export default function ChatPreview({
             {lastMessage ? (
               <>
                 {repliesCount ? (
-                  <div className='w-full text-right font-semibold pr-5 underline'>
+                  <div className='w-full font-monaspace text-right font-semibold pr-5 underline'>
                     {repliesCount} more replies
                   </div>
                 ) : null}

@@ -28,8 +28,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     ?.filter((file) => file.type === 'image')
     ?.slice(0, 5)
     ?.map((file) => file.url)
-  const imagesCount = imageUrls ? imageUrls.length : 0
-  const tasks = card?.tasks?.slice(0, 3)
+  const tasks = card?.tasks
   const createdAt = new Date(card.createdAt.seconds * 1000)
   const day = createdAt.getDate()
   const month = months[createdAt.getMonth()]
@@ -43,17 +42,26 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
       onClick={onClick}
     >
       <div className='flex items-center justify-between'>
-        <div className='text-xs text-gray-500'>{`${day} ${month} at ${hours}:${minutes}`}</div>
+        <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
       </div>
-      <div className='text-xl font-semibold'>{card.title}</div>
-      <div className='col-span-3'>
-        {!isEmpty(tasks)
-          ? tasks?.map((task) => <TaskPreview key={'prevtask-' + task.id} task={task} />)
-          : card?.description?.map((line) => (
-              <div key={'description-' + line} className='text-sm'>
-                {line}
-              </div>
-            ))}
+      <div className='text-xl font-semibold font-rubik'>{card.title}</div>
+      <div className='flex items-end'>
+        <div className='col-span-3 overflow-hidden'>
+          {!isEmpty(tasks)
+            ? tasks
+                ?.slice(0, 3)
+                ?.map((task) => <TaskPreview key={'prevtask-' + task.id} task={task} />)
+            : card?.description?.map((line) => (
+                <div key={'description-' + line} className='text-sm'>
+                  {line}
+                </div>
+              ))}
+        </div>
+        {tasks?.length > 4 ? (
+          <span className='ml-3 flex items-center h-full font-semibold underline text-lg'>
+            +{tasks.length - 4}
+          </span>
+        ) : null}
       </div>
       <div className='grid grid-cols-5 mt-5'>
         {!isEmpty(imageUrls) ? (

@@ -35,14 +35,13 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full'>
+    <div className='w-full overflow-y-hidden'>
       {/* Search line */}
       <div className='flex items-center justify-between h-20 border-b-2 border-gray-border'>
         <div className='relative mx-3'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
             className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
-            placeholder='Search'
             value={search}
             onChange={onSearch}
           />
@@ -52,18 +51,24 @@ export default function AllCardsContent({
             <ProjectUsers users={users} />
           </div>
           <div className='w-52 flex items-center justify-center px-5'>
-            <Button radius={0} variant='outline' color='#464646' onClick={onCreateNewCard}>
-              New Topic
+            <Button
+              className='font-monaspace'
+              radius={0}
+              variant='outline'
+              color='#464646'
+              onClick={onCreateNewCard}
+            >
+              <span className='pr-1 text-xl font-thin'>+</span>Topic
             </Button>
           </div>
         </div>
       </div>
       {/* Cards */}
-      <div>
+      <div className='h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
-          <div className='grid grid-cols-3'>
+          <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
             {filteredCards
               .sort(({ createdAt: a }, { createdAt: b }) => b - a)
               .map((card, index) => (

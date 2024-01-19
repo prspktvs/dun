@@ -17,7 +17,7 @@ export default function Attachments({ files }: { files: IFile[] }) {
       {!isEmpty(files) ? (
         files.map((file) => <FileTile key={'f-' + file.id} file={file} />)
       ) : (
-        <div className='text-gray-400'>No attachments here</div>
+        <div className='text-gray-400 font-monaspace'>No attachments yet</div>
       )}
     </div>
   )

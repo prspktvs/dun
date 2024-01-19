@@ -6,6 +6,10 @@ module.exports = {
       gridTemplateRows: {
         '10': 'repeat(10, minmax(0, 1fr))',
       },
+      fontFamily: {
+        monaspace: ['MonaspaceArgon', 'sans-serif'],
+        rubik: ['Rubik', 'sans-serif'],
+      },
       colors: {
         'gray-border': '#B0B0B0',
       },

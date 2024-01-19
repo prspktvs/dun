@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { db, realtimeDb } from '../../config/firebase'
 import { onValue, push, ref, set, get } from '@firebase/database'
 import { collection, doc, getDoc } from '@firebase/firestore'
@@ -21,6 +21,11 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
   const { closeChat } = useChats()
   const { user } = useAuth()
   const chatUsers = users.reduce((acc, user) => ({ ...acc, [user.id]: user }), {})
+  const chatRef = React.useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
+  }, [messages])
 
   useEffect(() => {
     const messagesRef = ref(realtimeDb, `chats/${chatId}`)
@@ -71,16 +76,16 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
   return (
     <div className='h-full flex flex-col'>
       <div
-        className='underline hover:cursor-pointer p-3 border-b-2 border-gray-border'
+        className='underline font-monaspace hover:cursor-pointer p-3 border-b-2 border-gray-border'
         onClick={closeChat}
       >
         {'<'} Back to discussions
       </div>
 
-      <div className='h-20 grow p-3 overflow-y-scroll'>
+      <div ref={chatRef} className='h-20 grow p-3 space-y-1 hide-scrollbar overflow-y-scroll'>
         {content ? (
-          <div className='h-10 flex gap-3 mb-3 items-center'>
-            <div className='h-full w-[2px] bg-black' />
+          <div className='h-10 flex gap-3 mb-3 items-center font-monaspace'>
+            <div className='h-full w-[3px] bg-gray-500' />
             <div>{content}</div>
           </div>
         ) : null}
@@ -88,25 +93,39 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
           messages.map((message, index) => {
             const messageUser = chatUsers[message.authorId]
             const date = new Date(message.timestamp)
+            const isAnotherDay =
+              new Date(messages[index - 1]?.timestamp).getDate() !== date.getDate()
+            const day = date.toLocaleString('en-US', { day: 'numeric' })
+            const month = date.toLocaleString('en-US', { month: 'long' })
             const hours = date.getHours().toString().padStart(2, '0')
             const minutes = date.getMinutes().toString().padStart(2, '0')
             const time = `${hours}:${minutes}`
 
+            const dayMessage =
+              date.toDateString() === new Date().toDateString() ? 'Today' : `${day} ${month}`
+
             return (
-              <div key={index}>
+              <div key={index} className='w-full '>
+                {isAnotherDay ? (
+                  <span className='flex justify-center text-gray-400 font-monaspace mb-3'>
+                    {dayMessage}
+                  </span>
+                ) : null}
                 <div className='flex gap-1 items-center font-semibold'>
                   <Avatar size={24} src={messageUser.avatarUrl} radius={0} />
-                  <span>
+                  <span className='font-rubik'>
                     {messageUser.name}
-                    <span className='ml-3 text-sm text-gray-400 font-normal'>{time}</span>
+                    <span className='ml-3 text-sm text-gray-400 font-monaspace font-thin'>
+                      {time}
+                    </span>
                   </span>
                 </div>
-                <span>{message.text}</span>
+                <span className='font-rubik'>{message.text}</span>
               </div>
             )
           })
         ) : (
-          <div className='text-gray-400 w-full text-center'>No messages here</div>
+          <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
       <div className='h-10 border-t-2 border-gray-border px-1 flex items-center'>

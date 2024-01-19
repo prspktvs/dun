@@ -12,6 +12,7 @@ import { useChats } from '../../context/ChatContext/ChatContext'
 import clsx from 'clsx'
 import Attachments from './Sections/Attachments'
 import _debounce from 'lodash/debounce'
+import Updates from './Sections/Updates'
 
 interface ICardProps {
   card: ICard
@@ -25,6 +26,7 @@ const Card = ({ card, users }: ICardProps) => {
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
     'discussions',
   )
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const unreadDiscussions = unreadChats.reduce(
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
@@ -39,6 +41,10 @@ const Card = ({ card, users }: ICardProps) => {
 
     onDebouncedSave(val)
   }
+
+  useEffect(() => {
+    if (!title.length) inputRef.current?.focus()
+  }, [])
 
   const onSave = (t) => saveOrCreateCard(projectId, { ...card, title: t })
 
@@ -64,23 +70,34 @@ const Card = ({ card, users }: ICardProps) => {
     <div className='w-full'>
       <div className='flex items-center justify-between h-20 border-b-2 border-gray-border'>
         <div className='flex items-center mx-3 justify-between grow'>
-          <div className='underline hover:cursor-pointer' onClick={goBack}>
+          <div className='underline font-monaspace hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
           </div>
           <div className='flex gap-1'>
-            <Button radius={0} variant='outline' color='#464646' onClick={onRemoveCard}>
+            <Button
+              className='font-monaspace font-thin'
+              radius={0}
+              variant='outline'
+              color='#464646'
+              onClick={onRemoveCard}
+            >
               Remove
             </Button>
-            <Button radius={0} color='#464646' onClick={() => onSave(title)}>
+            <Button
+              className='font-monaspace font-thin'
+              radius={0}
+              color='#464646'
+              onClick={() => onSave(title)}
+            >
               Save
             </Button>
           </div>
         </div>
-        <div className='flex items-center h-full w-[600px]'>
+        <div className='flex items-center h-full w-[400px] lg:w-[500px] xl:w-[600px]'>
           <div className='w-full grid grid-cols-3 h-full border-l-2 divide-x-[1px] divide-gray-border border-gray-border'>
             <div
               className={clsx(
-                'flex items-center justify-center',
+                'flex items-center justify-center font-monaspace',
                 activeTab === 'discussions' ? 'bg-black text-white' : '',
               )}
               onClick={() => setActiveTab('discussions')}
@@ -89,16 +106,16 @@ const Card = ({ card, users }: ICardProps) => {
             </div>
             <div
               className={clsx(
-                'flex items-center justify-center',
+                'flex items-center justify-center font-monaspace',
                 activeTab === 'attachments' ? 'bg-black text-white' : '',
               )}
               onClick={() => setActiveTab('attachments')}
             >
-              Attachments • {card.files.length}
+              Attachments • {card?.files?.length}
             </div>
             <div
               className={clsx(
-                'flex items-center justify-center',
+                'flex items-center justify-center font-monaspace',
                 activeTab === 'updates' ? 'bg-black text-white' : '',
               )}
               onClick={() => setActiveTab('updates')}
@@ -111,22 +128,23 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_164px)] px-5 w-full z-20'>
+        <div className='h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll px-5 w-full z-20'>
           <input
-            className='block align-middle text-[32px] w-full overflow-hidden border-none'
+            className='block font-rubik align-middle text-[32px] w-full overflow-hidden border-none'
             placeholder='Type title'
+            ref={inputRef}
             value={title}
             onChange={onTitleChange}
           />
           <Editor projectId={projectId} card={card} users={users} />
         </div>
         {/* Card attachments, chats */}
-        <div className='min-w-[600px] border-l-2 border-gray-border'>
+        <div className='min-w-[400px] lg:min-w-[500px] xl:min-w-[600px] border-l-2 border-gray-border'>
           {
             {
               discussions: <Discussions users={users} />,
               attachments: <Attachments files={card.files} />,
-              updates: null,
+              updates: <Updates />,
             }[activeTab]
           }
         </div>
