@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Chat from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext/ChatContext'
-import { getAllCardChats, saveChatAndMessage } from '../../../services/chats'
+import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services/chats'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import CardPreview from '../CardPreview'
@@ -32,6 +32,17 @@ export default function Discussions({ users }: { users: IUser[] }) {
     return <Chat chatId={chatId} users={users} />
   }
 
+  const onDeleteChat = async (id: string) => {
+    try {
+      if (confirm('Are you sure?')) {
+        await removeChatById(id)
+        setChats((prev) => prev.filter((chat) => chat.id !== id))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <div className='h-full'>
       <div className='relative p-3 border-b-2'>
@@ -48,6 +59,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
             key={'chat-' + chat.id}
             users={users}
             chat={chat}
+            onDeleteChat={() => onDeleteChat(chat.id)}
             onClick={() => openChatById(chat.id)}
           />
         ))

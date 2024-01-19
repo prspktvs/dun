@@ -1,8 +1,8 @@
-import { get, push, ref, set } from 'firebase/database'
+import { get, push, ref, remove, set } from 'firebase/database'
 import { db, realtimeDb } from '../config/firebase'
 import { IMessage } from '../types/Chat'
 import { saveChatIdsToCard } from './cards'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore'
 
 export const createNewChat = async ({
   chatId,
@@ -61,4 +61,14 @@ export const getAllCardChats = async (cardPath: string) => {
   )
 
   return snapshots.filter((snap) => snap.exists()).map((snap) => snap.val())
+}
+
+export const removeChatById = async (chatId: string) => {
+  try {
+    if (!chatId) return null
+    await remove(ref(realtimeDb, `chats/${chatId}`))
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }

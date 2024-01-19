@@ -1,10 +1,11 @@
-import { Avatar, Blockquote } from '@mantine/core'
+import { Avatar, Blockquote, Menu } from '@mantine/core'
 import { IChat, IMessage } from '../../types/Chat'
 import { IUser } from '../../types/User'
 import { isEmpty } from 'lodash'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import { useCallback, useEffect, useState } from 'react'
 import { useEditor } from '../../context/EditorContext/EditorContext'
+import { removeChatById } from '../../services/chats'
 
 function MessagePreview({
   user,
@@ -37,9 +38,11 @@ export default function ChatPreview({
   chat,
   users,
   onClick,
+  onDeleteChat,
 }: {
   chat: IChat
   users: IUser[]
+  onDeleteChat: () => void
   onClick: () => void
 }) {
   const { getUnreadMessagesCount, unreadChats } = useChats()
@@ -71,7 +74,7 @@ export default function ChatPreview({
       onClick={onClick}
     >
       <div className='w-full'>
-        <div className='flex items-center h-10 gap-2 mb-3 '>
+        <div className='relative flex items-center h-10 gap-2 mb-3 '>
           {unreadMessages ? (
             <div className='h-7 w-7 bg-red-400 border-2 border-black flex items-center justify-center'>
               <span className='font-semibold'>+{unreadMessages}</span>
@@ -83,6 +86,26 @@ export default function ChatPreview({
               <div>{editorContent || chat.content}</div>
             </div>
           ) : null}
+          <Menu shadow='md' width={200}>
+            <Menu.Target>
+              <i
+                onClick={(e) => e.stopPropagation()}
+                className='z-40 ri-more-2-fill text-2xl absolute top-1 right-5'
+              />
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Item
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDeleteChat()
+                }}
+                className='text-red-600'
+              >
+                Delete chat
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </div>
         {!isEmpty(chat?.messages) ? (
           <>
