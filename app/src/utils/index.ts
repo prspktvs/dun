@@ -1,0 +1,18 @@
+export function genId(length = 20): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  return [...new Array(length)].map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
+}
+
+export function extractCardPath(input: string): string | null {
+  const regex = /([^\/]+)\/cards\/([^\/]+)/
+  const match = input.match(regex)
+
+  if (match) {
+    const projectId = match[1]
+    const cardId = match[2]
+
+    return `${projectId}/cards/${cardId}`
+  }
+
+  return null
+}
