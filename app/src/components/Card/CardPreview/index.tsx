@@ -37,8 +37,9 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     createdAt.getMinutes() < 10 ? '0' + createdAt.getMinutes() : createdAt.getMinutes()
 
   return (
+    // add border-r-2 and
     <div
-      className='w-full h-72 p-3 overflow-hidden card-border hover:cursor-pointer'
+      className='w-full h-72 p-3 overflow-hidden border-r-2 border-[#A3A1A7]  hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='flex items-center justify-between'>
