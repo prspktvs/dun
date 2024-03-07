@@ -18,7 +18,6 @@ import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 
-
 interface IProjectPageProps {}
 
 const ProjectPage = (props: IProjectPageProps) => {
@@ -69,8 +68,6 @@ const ProjectPage = (props: IProjectPageProps) => {
   return (
     <div className='h-[calc(100vh_-_84px)]'>
       {/* Header */}
-
-      {/*by Roya-imternship ===> add new h-14 and colore bg-[#EDEBF3] and border-[#A3A1A7]  for header  */}
       <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-[#A3A1A7]'>
         <div
           onClick={() => navigate(`/${projectId}`)}
