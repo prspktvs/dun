@@ -38,12 +38,9 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         onChange={(opened) => setMenuOpened(opened)}
       >
         <Menu.Target>
-          {/* roya intern==> add h-14 */}
           <div
-            
             className=' border-[#A3A1A7] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'
           >
-            {/*roya-intern===> add text-lg */}
             <span className='font-rubik text-lg '>{title}</span> 
 
             {isMenuOpened ? (
