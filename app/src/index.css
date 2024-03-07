@@ -10,6 +10,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
 
+
+
+
 *,
 ::before,
 ::after {
@@ -26,6 +29,8 @@
   border-bottom-width: 2px;
   border-right-width: 2px;
   border-color: #B0B0B0;
+
+  
 }
 
 .border-none {
