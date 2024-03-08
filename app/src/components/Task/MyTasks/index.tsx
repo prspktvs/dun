@@ -29,7 +29,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
   const goToProject = (id) => navigate(`/${id}`, { replace: true })
 
   return (
-    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-gray-border'>
+    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-[#A3A1A7] h-screen'>
       <Menu
         shadow='md'
         width={280}
@@ -38,8 +38,11 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         onChange={(opened) => setMenuOpened(opened)}
       >
         <Menu.Target>
-          <div className='px-5 w-80 h-20 border-b-2 text-3xl border-gray-border flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
-            <span className='font-rubik'>{title}</span>
+          <div
+            className=' border-[#A3A1A7] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'
+          >
+            <span className='font-rubik text-lg '>{title}</span> 
+
             {isMenuOpened ? (
               <i className='ri-arrow-down-s-line text-2xl' />
             ) : (
@@ -61,7 +64,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         </Menu.Dropdown>
       </Menu>
       <div className='w-full px-5 py-3'>
-        <div className='flex items-center text-xl mb-3 font-monaspace'>
+        <div className='flex items-center text-sm mb-3 font-monaspace font-normal'>
           What to do • {tasks.length}
         </div>
         {!isEmpty(tasks) ? (

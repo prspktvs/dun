@@ -2,7 +2,7 @@ import { ITask } from '../../types/Task'
 
 const TaskPreview = ({ task }: { task: ITask }) =>
   task.text ? (
-    <div className='flex items-center w-full gap-1 overflow-hidden whitespace-nowrap'>
+    <div  className='flex items-center w-full gap-1 overflow-hidden whitespace-nowrap'>
       {task.isDone ? (
         <i className='ri-checkbox-line  text-lg' />
       ) : (

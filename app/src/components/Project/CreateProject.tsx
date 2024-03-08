@@ -37,7 +37,7 @@ const CreateProject = (props: ICreateProjectProps) => {
       <div />
       <div />
       <Tabs
-        className='col-start-2 row-start-2 col-end-2 row-end-2 p-5'
+        className='col-start-2 row-start-2 col-end-2 row-end-2 p-5 '
         color='gray'
         defaultValue='first'
         value={activeTab}
@@ -89,6 +89,7 @@ const CreateProject = (props: ICreateProjectProps) => {
             variant='filled'
             color='#464646'
             onClick={onCreate}
+          
           >
             Dun
           </Button>

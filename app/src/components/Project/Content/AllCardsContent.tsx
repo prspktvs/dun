@@ -7,6 +7,7 @@ import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useState } from 'react'
+import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard/IconsCard'
 
 export default function AllCardsContent({
   users,
@@ -35,9 +36,9 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full overflow-y-hidden'>
+    <div  className='w-full overflow-y-hidden border-b-2 border-[#A3A1A7]'>
       {/* Search line */}
-      <div className='flex items-center justify-between h-20 border-b-2 border-gray-border'>
+      <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -47,7 +48,7 @@ export default function AllCardsContent({
           />
         </div>
         <div className='h-full flex'>
-          <div className='w-52 border-l-2 border-r-2 border-gray-border flex items-center justify-center px-5'>
+          <div className='w-52 border-l-2 border-r-2 border-[#A3A1A7] flex items-center justify-center px-5'>
             <ProjectUsers users={users} />
           </div>
           <div className='w-52 flex items-center justify-center px-5'>
@@ -64,17 +65,58 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      <div className='h-full overflow-y-scroll hide-scrollbar'>
+      <div className=' h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
-          <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
-            {filteredCards
-              .sort(({ createdAt: a }, { createdAt: b }) => b - a)
-              .map((card, index) => (
-                <CardPreview card={card} key={'card-' + index} onClick={() => onChooseCard(card)} />
-              ))}
-          </div>
+          <>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#A3A1A7]'>
+              <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
+                What's new • 11{' '}
+              </div>
+              <div className='justify-start items-center gap-2 flex'>
+                <RiArrowRightSLine />
+                <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
+                  3/11
+                </div>
+                <RiArrowLeftSLine />
+              </div>
+            </div>
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+              {filteredCards
+                .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+                .map((card, index) => (
+                  <CardPreview
+                    card={card}
+                    key={'card-' + index}
+                    onClick={() => onChooseCard(card)}
+                  />
+                ))}
+            </div>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
+              <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
+                All topics
+              </div>
+              <div className='justify-start items-end flex '>
+                <div className=" h-5 text-slate-400 text-sm font-medium font-['Monaspace Argon Var']">
+                  Last modified
+                </div>
+                <RiArrowDown />
+              </div>
+            </div>
+
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+              {filteredCards
+                .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+                .map((card, index) => (
+                  <CardPreview
+                    card={card}
+                    key={'card-' + index}
+                    onClick={() => onChooseCard(card)}
+                  />
+                ))}
+            </div>
+          </>
         )}
       </div>
     </div>
