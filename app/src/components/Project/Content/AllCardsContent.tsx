@@ -77,7 +77,7 @@ export default function AllCardsContent({
               <div className='justify-start items-center gap-2 flex'>
                 <RiArrowRightSLine />
                 <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
-                  3/11
+                  {filteredCards.length}
                 </div>
                 <RiArrowLeftSLine />
               </div>
