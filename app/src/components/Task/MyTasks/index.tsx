@@ -29,7 +29,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
   const goToProject = (id) => navigate(`/${id}`, { replace: true })
 
   return (
-    <div  className='flex flex-col items-center gap-1 w-80 border-r-2 border-[#A3A1A7]'>
+    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-[#A3A1A7] h-screen'>
       <Menu
         shadow='md'
         width={280}
@@ -64,7 +64,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         </Menu.Dropdown>
       </Menu>
       <div className='w-full px-5 py-3'>
-        <div className='flex items-center text[0.875rem] mb-3 font-monaspace font-normal'>
+        <div className='flex items-center text-sm mb-3 font-monaspace font-normal'>
           What to do • {tasks.length}
         </div>
         {!isEmpty(tasks) ? (
