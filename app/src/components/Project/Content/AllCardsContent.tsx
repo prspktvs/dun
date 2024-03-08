@@ -36,9 +36,8 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full overflow-y-hidden'>
+    <div  className='w-full overflow-y-hidden border-b-2 border-[#A3A1A7]'>
       {/* Search line */}
-      {/*roya-intenship===>  add h-12 & border-[#A3A1A7]  */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
@@ -71,7 +70,6 @@ export default function AllCardsContent({
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
           <>
-            {/*start section topics by-roya add   */}
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#A3A1A7]'>
               <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
                 What's new • 11{' '}
@@ -84,7 +82,6 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine />
               </div>
             </div>
-            {/* end section topics by-roya  */}
             <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
@@ -96,7 +93,6 @@ export default function AllCardsContent({
                   />
                 ))}
             </div>
-            {/*start section user's last by-roya add   */}
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
               <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
                 All topics
@@ -108,7 +104,18 @@ export default function AllCardsContent({
                 <RiArrowDown />
               </div>
             </div>
-            {/* end section user's last by-roya  */}
+
+            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+              {filteredCards
+                .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+                .map((card, index) => (
+                  <CardPreview
+                    card={card}
+                    key={'card-' + index}
+                    onClick={() => onChooseCard(card)}
+                  />
+                ))}
+            </div>
           </>
         )}
       </div>
