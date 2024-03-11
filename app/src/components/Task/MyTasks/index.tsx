@@ -38,10 +38,8 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         onChange={(opened) => setMenuOpened(opened)}
       >
         <Menu.Target>
-          <div
-            className=' border-[#A3A1A7] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'
-          >
-            <span className='font-rubik text-lg '>{title}</span> 
+          <div className=' border-[#A3A1A7] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
+            <span className='font-rubik text-lg '>{title}</span>
 
             {isMenuOpened ? (
               <i className='ri-arrow-down-s-line text-2xl' />

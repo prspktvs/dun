@@ -36,7 +36,8 @@ export default function AllCardsContent({
   }
 
   return (
-    <div  className='w-full overflow-y-hidden'>
+    <div className='w-full'>
+    {/* <div className='w-full overflow-y-hidden'> */}
       {/* Search line */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -65,7 +66,7 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      <div className=' h-full overflow-y-scroll hide-scrollbar'>
+      <div className='h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
@@ -82,8 +83,8 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine />
               </div>
             </div>
-            {/* <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'> */}
-            <div className='flex items-center overflow-x-scroll'>
+            <div className='grid grid-cols-3 '>
+              {/* <div className='flex items-center overflow-x-scroll'> */}
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
@@ -107,7 +108,7 @@ export default function AllCardsContent({
               </div>
             </div>
 
-            <div className='flex items-center overflow-x-scroll border-b-2 border-[#A3A1A7]'>
+            <div className='grid grid-cols-3 '>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
