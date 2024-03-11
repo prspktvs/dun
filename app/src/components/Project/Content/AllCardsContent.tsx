@@ -36,7 +36,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full overflow-y-hidden border-b-2 border-[#A3A1A7]'>
+    <div  className='w-full overflow-y-hidden'>
       {/* Search line */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -107,7 +107,7 @@ export default function AllCardsContent({
               </div>
             </div>
 
-            <div className='flex items-center overflow-x-scroll'>
+            <div className='flex items-center overflow-x-scroll border-b-2 border-[#A3A1A7]'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
