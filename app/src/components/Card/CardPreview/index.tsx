@@ -38,13 +38,16 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='w-full h-72 p-3 overflow-hidden border-r-2 border-[#A3A1A7]  hover:cursor-pointer'
+      // className='w-full h-72 p-3 overflow-hidden border-r-2 border-[#A3A1A7]  hover:cursor-pointer'
+      className='min-w-[23.75rem] max-w-[37.5rem] h-[23.125rem] p-3 overflow-hidden  border-r-2 border-b-2 border-[#A3A1A7]  hover:cursor-pointer'
       onClick={onClick}
+
+     
     >
       <div className='flex items-center justify-between'>
         <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
       </div>
-      <div className='text-xl font-semibold font-rubik'>{card.title}</div>
+      <div className='text-lg font-semibold font-rubik not-italic '>{card.title}</div>
       <div className='flex items-end'>
         <div className='col-span-3 overflow-hidden'>
           {!isEmpty(tasks)
