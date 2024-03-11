@@ -36,7 +36,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div  className='w-full overflow-y-hidden border-b-2 border-[#A3A1A7]'>
+    <div className='w-full overflow-y-hidden border-b-2 border-[#A3A1A7]'>
       {/* Search line */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -77,12 +77,13 @@ export default function AllCardsContent({
               <div className='justify-start items-center gap-2 flex'>
                 <RiArrowRightSLine />
                 <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
-                  3/11
+                  {filteredCards.length}
                 </div>
                 <RiArrowLeftSLine />
               </div>
             </div>
-            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+            {/* <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'> */}
+            <div className='flex items-center overflow-x-scroll'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
@@ -93,6 +94,7 @@ export default function AllCardsContent({
                   />
                 ))}
             </div>
+
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
               <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
                 All topics
@@ -105,7 +107,7 @@ export default function AllCardsContent({
               </div>
             </div>
 
-            <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+            <div className='flex items-center overflow-x-scroll'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
