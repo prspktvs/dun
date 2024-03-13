@@ -82,20 +82,18 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine />
               </div>
             </div>
-            <div className='flex overflow-x-scroll '>
-              <div className='flex'>
-                {filteredCards
-                  .sort(({ createdAt: a }, { createdAt: b }) => b - a)
-                  .map((card, index) => (
-                    <div className='w-1/3 flex-none'>
-                      <CardPreview
-                        card={card}
-                        key={'card-' + index}
-                        onClick={() => onChooseCard(card)}
-                      />
-                    </div>
-                  ))}
-              </div>
+            <div className='flex overflow-x-scroll'>
+              {filteredCards
+                .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+                .map((card, index) => (
+                  <div className='w-1/3 flex-none'>
+                    <CardPreview
+                      card={card}
+                      key={'card-' + index}
+                      onClick={() => onChooseCard(card)}
+                    />
+                  </div>
+                ))}
             </div>
 
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
