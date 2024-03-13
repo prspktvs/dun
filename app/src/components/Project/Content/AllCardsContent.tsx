@@ -36,8 +36,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full'>
-    {/* <div className='w-full overflow-y-hidden'> */}
+    <div className='w-full overflow-y-hidden'>
       {/* Search line */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -84,16 +83,19 @@ export default function AllCardsContent({
               </div>
             </div>
             <div className='flex overflow-x-scroll '>
-              {/* <div className='flex items-center overflow-x-scroll'> */}
-              {filteredCards
-                .sort(({ createdAt: a }, { createdAt: b }) => b - a)
-                .map((card, index) => (
-                  <CardPreview
-                    card={card}
-                    key={'card-' + index}
-                    onClick={() => onChooseCard(card)}
-                  />
-                ))}
+              <div className='flex'>
+                {filteredCards
+                  .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+                  .map((card, index) => (
+                    <div className='w-1/3 flex-none'>
+                      <CardPreview
+                        card={card}
+                        key={'card-' + index}
+                        onClick={() => onChooseCard(card)}
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
 
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
