@@ -83,7 +83,7 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine />
               </div>
             </div>
-            <div className='grid grid-cols-3 '>
+            <div className='flex overflow-x-scroll '>
               {/* <div className='flex items-center overflow-x-scroll'> */}
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
@@ -112,11 +112,13 @@ export default function AllCardsContent({
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
-                  <CardPreview
-                    card={card}
-                    key={'card-' + index}
-                    onClick={() => onChooseCard(card)}
-                  />
+                  <div className='border-b-2 border-[#A3A1A7]'>
+                    <CardPreview
+                      card={card}
+                      key={'card-' + index}
+                      onClick={() => onChooseCard(card)}
+                    />
+                  </div>
                 ))}
             </div>
           </>
