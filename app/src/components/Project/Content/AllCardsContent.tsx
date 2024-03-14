@@ -36,7 +36,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full overflow-y-hidden'>
+    <div className='w-full h-full overflow-y-hidden'>
       {/* Search line */}
       <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -71,12 +71,12 @@ export default function AllCardsContent({
         ) : (
           <>
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#A3A1A7]'>
-              <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
-                What's new • 11{' '}
+              <div className="text-zinc-700 text-sm font-normal font-monaspace">
+                What's new • {filteredCards.length}
               </div>
               <div className='justify-start items-center gap-2 flex'>
                 <RiArrowRightSLine />
-                <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
+                <div className="text-zinc-700 text-sm font-normal font-monaspace">
                   {filteredCards.length}
                 </div>
                 <RiArrowLeftSLine />
@@ -97,18 +97,18 @@ export default function AllCardsContent({
             </div>
 
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
-              <div className="text-zinc-700 text-sm font-normal font-['Monaspace Argon Var']">
+              <div className="text-zinc-700 text-sm font-normal font-monaspace">
                 All topics
               </div>
               <div className='justify-start items-end flex '>
-                <div className=" h-5 text-slate-400 text-sm font-medium font-['Monaspace Argon Var']">
+                <div className=" h-5 text-slate-400 text-sm font-medium font-monaspace">
                   Last modified
                 </div>
                 <RiArrowDown />
               </div>
             </div>
 
-            <div className='grid grid-cols-3 '>
+            <div className='grid grid-cols-3'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (

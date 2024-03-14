@@ -7,6 +7,7 @@ import TaskPreview from '../TaskPreview'
 import { useNavigate } from 'react-router-dom'
 import { Menu } from '@mantine/core'
 import { getAllUserProject } from '../../../services/project'
+import { genId } from '../../../utils'
 
 interface IMyTasksProps {
   projectId: string
@@ -49,16 +50,24 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
           </div>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Label className='text-lg font-monaspace'>Your projects</Menu.Label>
+          <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
           {projects.map((project, idx) => (
             <Menu.Item
               key={'prjx-' + idx}
-              className='text-lg font-rubik'
+              className='text-md font-rubik'
               onClick={() => goToProject(project.id)}
             >
-              {project.title}
+              {project.title || 'Empty project'}
             </Menu.Item>
           ))}
+          <div className='border-t-[2px] pt-1 mt-1'>
+            <Menu.Item
+              className='text-md font-rubik text-gray-500'
+              onClick={() => (window.location.href = `/${genId()}`)}
+            >
+              Create new project
+            </Menu.Item>
+          </div>
         </Menu.Dropdown>
       </Menu>
       <div className='w-full px-5 py-3'>

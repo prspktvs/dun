@@ -68,7 +68,7 @@ const Card = ({ card, users }: ICardProps) => {
 
   return (
     <div className='w-full'>
-      <div className='flex items-center justify-between h-20 border-b-2 border-gray-border'>
+      <div className='flex items-center justify-between h-14 border-b-2 border-gray-border'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
@@ -111,7 +111,7 @@ const Card = ({ card, users }: ICardProps) => {
               )}
               onClick={() => setActiveTab('attachments')}
             >
-              Attachments • {card?.files?.length}
+              Attachments • {card?.files?.length || 0}
             </div>
             <div
               className={clsx(

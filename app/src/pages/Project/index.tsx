@@ -66,7 +66,7 @@ const ProjectPage = (props: IProjectPageProps) => {
   if (!user) return <CreateUser projectId={projectId} />
 
   return (
-    <div className='h-[calc(100vh_-_84px)]'>
+    <div className='h-screen overflow-y-hidden'>
       {/* Header */}
       <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-[#A3A1A7]'>
         <div
