@@ -17,6 +17,7 @@ import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
+import { genId } from '../../utils'
 
 interface IProjectPageProps {}
 
@@ -30,7 +31,7 @@ const ProjectPage = (props: IProjectPageProps) => {
     `projects/${projectId}/cards`,
   )
 
-  const [selectedCard, setSelectedCard] = useState<ICard | null>(null)
+  const [selectedCard, setSelectedCard] = useState<Partial<ICard> | null>(null)
 
   useEffect(() => {
     if (projectLoading || !user) return
@@ -42,7 +43,13 @@ const ProjectPage = (props: IProjectPageProps) => {
   useEffect(() => {
     if (cardId && !isEmpty(cards)) {
       const card = cards?.find((card) => card.id === cardId)
-      setSelectedCard(card || null)
+      const emptyCreatedCard: Partial<ICard> = {
+        id: cardId,
+        title: '',
+        content: [],
+        createdAt: new Date(),
+      }
+      setSelectedCard(card || emptyCreatedCard)
     }
   }, [cards, cardId])
 
@@ -51,12 +58,13 @@ const ProjectPage = (props: IProjectPageProps) => {
   const navigate = useNavigate()
 
   const onCreateNewCard = async () => {
-    const newCard: Partial<ICard> = {
-      title: '',
-    }
-    const card = await saveOrCreateCard(projectId, newCard)
+    // const newCard: Partial<ICard> = {
+    //   title: '',
+    // }
+    // const card = await saveOrCreateCard(projectId, newCard)
+    const id = genId()
 
-    navigate(`/${projectId}/cards/${card.id}`, { replace: true })
+    navigate(`/${projectId}/cards/${id}`, { replace: true })
   }
 
   if (isLoading) return null

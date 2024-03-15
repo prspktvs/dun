@@ -58,6 +58,7 @@ const Card = ({ card, users }: ICardProps) => {
   const onRemoveCard = async () => {
     if (confirm('Are you sure?')) {
       await removeCard(projectId, card.id)
+      goBack()
     }
   }
 
