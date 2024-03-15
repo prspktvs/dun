@@ -40,7 +40,7 @@ export default function AllCardsContent({
   return (
     <div className='w-full h-full overflow-y-hidden'>
       {/* Search line */}
-      <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
+      <div className='border-[#C1B9CF] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -50,7 +50,7 @@ export default function AllCardsContent({
           />
         </div>
         <div className='h-full flex'>
-          <div className='w-52 border-l-2 border-r-2 border-[#A3A1A7] flex items-center justify-center px-5'>
+          <div className='w-52 border-l-2 border-r-2 border-[#C1B9CF] flex items-center justify-center px-5'>
             <ProjectUsers users={users} />
           </div>
           <div className='w-52 flex items-center justify-center px-5'>
@@ -72,7 +72,7 @@ export default function AllCardsContent({
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
           <>
-            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#A3A1A7]'>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#C1B9CF]'>
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>
                 What's new • {filteredCards.length}
               </div>
@@ -98,7 +98,7 @@ export default function AllCardsContent({
                 ))}
             </div>
 
-            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#C1B9CF]'>
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>All topics</div>
               <div className='justify-start items-end flex '>
                 <div className=' h-5 text-slate-400 text-sm font-medium font-monaspace'>
@@ -110,7 +110,7 @@ export default function AllCardsContent({
 
             <div className='grid grid-cols-3'>
               {filteredCards.map((card, index) => (
-                <div className='border-b-2 border-[#A3A1A7]'>
+                <div className='border-b-2 border-[#C1B9CF]'>
                   <CardPreview
                     card={card}
                     key={'card-' + index}
