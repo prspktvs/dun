@@ -69,7 +69,7 @@ const Card = ({ card, users }: ICardProps) => {
 
   return (
     <div className='w-full'>
-      <div className='flex items-center justify-between h-14 border-b-2 border-gray-border'>
+      <div className='flex items-center justify-between h-14 border-b-2 border-[#C1B9CF]'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
@@ -94,37 +94,6 @@ const Card = ({ card, users }: ICardProps) => {
             </Button>
           </div>
         </div>
-        <div className='flex items-center h-full w-[400px] lg:w-[500px] xl:w-[600px]'>
-          <div className='w-full grid grid-cols-3 h-full border-l-2 divide-x-[1px] divide-gray-border border-gray-border'>
-            <div
-              className={clsx(
-                'flex items-center justify-center font-monaspace',
-                activeTab === 'discussions' ? 'bg-black text-white' : '',
-              )}
-              onClick={() => setActiveTab('discussions')}
-            >
-              Discussions • {unreadDiscussions}
-            </div>
-            <div
-              className={clsx(
-                'flex items-center justify-center font-monaspace',
-                activeTab === 'attachments' ? 'bg-black text-white' : '',
-              )}
-              onClick={() => setActiveTab('attachments')}
-            >
-              Attachments • {card?.files?.length || 0}
-            </div>
-            <div
-              className={clsx(
-                'flex items-center justify-center font-monaspace',
-                activeTab === 'updates' ? 'bg-black text-white' : '',
-              )}
-              onClick={() => setActiveTab('updates')}
-            >
-              Updates • 0
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className='flex'>
@@ -140,7 +109,40 @@ const Card = ({ card, users }: ICardProps) => {
           <Editor projectId={projectId} card={card} users={users} />
         </div>
         {/* Card attachments, chats */}
-        <div className='min-w-[400px] lg:min-w-[500px] xl:min-w-[600px] border-l-2 border-gray-border'>
+        <div className='min-w-[400px] lg:min-w-[500px] xl:min-w-[600px] border-l-2 border-[#C1B9CF]'>
+          <div className='flex items-center justify-between h-14 border-b-2 border-[#C1B9CF]'>
+            <div className='flex items-center h-full w-[400px] lg:w-[500px] xl:w-[600px]'>
+              <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-[#C1B9CF]'>
+                <div
+                  className={clsx(
+                    'flex items-center justify-center font-monaspace',
+                    activeTab === 'discussions' ? 'bg-black text-white' : '',
+                  )}
+                  onClick={() => setActiveTab('discussions')}
+                >
+                  Discussions • {unreadDiscussions}
+                </div>
+                <div
+                  className={clsx(
+                    'flex items-center justify-center font-monaspace',
+                    activeTab === 'attachments' ? 'bg-black text-white' : '',
+                  )}
+                  onClick={() => setActiveTab('attachments')}
+                >
+                  Attachments • {card?.files?.length || 0}
+                </div>
+                <div
+                  className={clsx(
+                    'flex items-center justify-center font-monaspace',
+                    activeTab === 'updates' ? 'bg-black text-white' : '',
+                  )}
+                  onClick={() => setActiveTab('updates')}
+                >
+                  Updates • 0
+                </div>
+              </div>
+            </div>
+          </div>
           {
             {
               discussions: <Discussions users={users} />,

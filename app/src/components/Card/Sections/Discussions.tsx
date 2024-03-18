@@ -45,7 +45,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   return (
     <div className='h-full'>
-      <div className='relative p-3 border-b-2'>
+      <div className='relative p-3 border-b-2 border-[#C1B9CF]'>
         <i className='absolute ri-search-line text-2xl text-gray-400' />
         <input
           className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'

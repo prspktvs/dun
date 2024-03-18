@@ -6,8 +6,9 @@ import { IUser } from '../../../types/User'
 import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard/IconsCard'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 export default function AllCardsContent({
   users,
@@ -23,6 +24,9 @@ export default function AllCardsContent({
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
+  const scrollContainerRef = useRef(null)
+
+
 
   useEffect(() => {
     const updatedCards = cards
@@ -35,6 +39,22 @@ export default function AllCardsContent({
 
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
+  }
+  const handleScrollForward = () => {
+    const scrollContainer = scrollContainerRef.current
+    if (scrollContainer) {
+      const offset = scrollContainer.offsetWidth / 3 // Assuming each card takes up 1/3 of the container's width
+      scrollContainer.scrollBy({ left: offset * 3, behavior: 'smooth' })
+      
+    }
+  }
+
+  const handleScrollBack = () => {
+    const scrollContainer = scrollContainerRef.current
+    if (scrollContainer) {
+      const offset = scrollContainer.offsetWidth / 3
+      scrollContainer.scrollBy({ left: -offset * 3, behavior: 'smooth' })
+    }
   }
 
   return (
@@ -77,14 +97,14 @@ export default function AllCardsContent({
                 What's new • {filteredCards.length}
               </div>
               <div className='justify-start items-center gap-2 flex'>
-                <RiArrowRightSLine />
+                <RiArrowRightSLine onClick={handleScrollBack} />
                 <div className='text-zinc-700 text-sm font-normal font-monaspace'>
                   {filteredCards.length}
                 </div>
-                <RiArrowLeftSLine />
+                <RiArrowLeftSLine onClick={handleScrollForward} />
               </div>
             </div>
-            <div className='flex overflow-x-scroll'>
+            <div ref={scrollContainerRef} className='flex overflow-x-scroll'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
