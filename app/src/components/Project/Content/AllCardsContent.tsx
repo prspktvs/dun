@@ -26,8 +26,6 @@ export default function AllCardsContent({
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
   const scrollContainerRef = useRef(null)
 
-
-
   useEffect(() => {
     const updatedCards = cards
       .filter((card) => card.title.includes(search))
@@ -45,7 +43,6 @@ export default function AllCardsContent({
     if (scrollContainer) {
       const offset = scrollContainer.offsetWidth / 3 // Assuming each card takes up 1/3 of the container's width
       scrollContainer.scrollBy({ left: offset * 3, behavior: 'smooth' })
-      
     }
   }
 
@@ -58,7 +55,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full h-full overflow-y-hidden'>
+    <div className='w-full h-full overflow-y-hidden pb-32'>
       {/* Search line */}
       <div className='border-[#C1B9CF] flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
@@ -130,7 +127,7 @@ export default function AllCardsContent({
 
             <div className='grid grid-cols-3'>
               {filteredCards.map((card, index) => (
-                <div className='border-b-2 border-[#C1B9CF]'>
+                <div className='border-b-2 border-[#C1B9CF] padding-0'>
                   <CardPreview
                     card={card}
                     key={'card-' + index}

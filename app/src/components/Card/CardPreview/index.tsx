@@ -38,7 +38,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      // className='w-full h-72 p-3 overflow-hidden border-r-2 border-[#C1B9CF]  hover:cursor-pointer'
       className='min-w-[23.75rem] max-w-[37.5rem] h-[23.125rem] p-3 overflow-hidden  border-r-2 border-[#C1B9CF]  hover:cursor-pointer'
       onClick={onClick}
     >

@@ -83,9 +83,9 @@ const ProjectPage = (props: IProjectPageProps) => {
         >
           <Logo />
         </div>
-        {/* <div className='h-full flex items-center p-5 border-l-2 border-[#C1B9CF]'>
+        <div className='h-full flex items-center p-5 border-l-2 border-[#C1B9CF]'>
           <UserPanel user={user} />
-        </div> */}
+        </div>
       </div>
 
       <div className='flex h-full w-full'>
