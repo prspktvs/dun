@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html','./src/**/*.{js,jsx,ts,tsx}'],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       gridTemplateRows: {
@@ -12,6 +12,7 @@ module.exports = {
       },
       colors: {
         'gray-border': '#B0B0B0',
+        'border-color': '#C1B9CF',
       },
     },
   },

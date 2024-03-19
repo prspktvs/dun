@@ -38,7 +38,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='min-w-[23.75rem] max-w-[37.5rem] h-[23.125rem] p-3 overflow-hidden  border-r-2 border-[#C1B9CF]  hover:cursor-pointer'
+      className='min-w-[23.75rem] max-w-[37.5rem] h-[23.125rem] p-3 overflow-hidden  border-r-2 border-border-color  hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='flex items-center justify-between'>

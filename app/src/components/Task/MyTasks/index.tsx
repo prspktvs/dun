@@ -30,7 +30,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
   const goToProject = (id) => navigate(`/${id}`, { replace: true })
 
   return (
-    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-[#C1B9CF] h-screen'>
+    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-border-color h-screen'>
       <Menu
         shadow='md'
         width={280}
@@ -39,7 +39,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         onChange={(opened) => setMenuOpened(opened)}
       >
         <Menu.Target>
-          <div className=' border-[#C1B9CF] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
+          <div className=' border-border-color h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
             <span className='font-rubik text-lg '>{title}</span>
 
             {isMenuOpened ? (

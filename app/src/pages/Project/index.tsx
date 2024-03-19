@@ -76,14 +76,14 @@ const ProjectPage = (props: IProjectPageProps) => {
   return (
     <div className='h-screen overflow-y-hidden'>
       {/* Header */}
-      <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-[#C1B9CF]'>
+      <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-border-color'>
         <div
           onClick={() => navigate(`/${projectId}`)}
-          className='w-80 border-r-2 border-[#C1B9CF] p-5 text-4xl text-center  text-black hover:cursor-pointer'
+          className='w-80 border-r-2 border-border-color p-5 text-4xl text-center  text-black hover:cursor-pointer'
         >
           <Logo />
         </div>
-        <div className='h-full flex items-center p-5 border-l-2 border-[#C1B9CF]'>
+        <div className='h-full flex items-center p-5 border-l-2 border-border-color'>
           <UserPanel user={user} />
         </div>
       </div>
