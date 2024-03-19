@@ -6,8 +6,9 @@ import { IUser } from '../../../types/User'
 import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard/IconsCard'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 export default function AllCardsContent({
   users,
@@ -23,6 +24,7 @@ export default function AllCardsContent({
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
+  const scrollContainerRef = useRef(null)
 
   useEffect(() => {
     const updatedCards = cards
@@ -36,11 +38,26 @@ export default function AllCardsContent({
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
   }
+  const handleScrollForward = () => {
+    const scrollContainer = scrollContainerRef.current
+    if (scrollContainer) {
+      const offset = scrollContainer.offsetWidth / 3 // Assuming each card takes up 1/3 of the container's width
+      scrollContainer.scrollBy({ left: offset * 3, behavior: 'smooth' })
+    }
+  }
+
+  const handleScrollBack = () => {
+    const scrollContainer = scrollContainerRef.current
+    if (scrollContainer) {
+      const offset = scrollContainer.offsetWidth / 3
+      scrollContainer.scrollBy({ left: -offset * 3, behavior: 'smooth' })
+    }
+  }
 
   return (
-    <div className='w-full h-full overflow-y-hidden'>
+    <div className='w-full h-full overflow-y-hidden pb-32'>
       {/* Search line */}
-      <div className='border-[#A3A1A7] flex items-center justify-between h-14 border-b-2  '>
+      <div className='border-border-color flex items-center justify-between h-14 border-b-2  '>
         <div className='relative mx-3'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -50,7 +67,7 @@ export default function AllCardsContent({
           />
         </div>
         <div className='h-full flex'>
-          <div className='w-52 border-l-2 border-r-2 border-[#A3A1A7] flex items-center justify-center px-5'>
+          <div className='w-52 border-l-2 border-r-2 border-border-color flex items-center justify-center px-5'>
             <ProjectUsers users={users} />
           </div>
           <div className='w-52 flex items-center justify-center px-5'>
@@ -72,19 +89,19 @@ export default function AllCardsContent({
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (
           <>
-            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-[#A3A1A7]'>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>
                 What's new • {filteredCards.length}
               </div>
               <div className='justify-start items-center gap-2 flex'>
-                <RiArrowRightSLine />
+                <RiArrowRightSLine onClick={handleScrollBack} />
                 <div className='text-zinc-700 text-sm font-normal font-monaspace'>
                   {filteredCards.length}
                 </div>
-                <RiArrowLeftSLine />
+                <RiArrowLeftSLine onClick={handleScrollForward} />
               </div>
             </div>
-            <div className='flex overflow-x-scroll'>
+            <div ref={scrollContainerRef} className='flex overflow-x-scroll'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
@@ -98,7 +115,7 @@ export default function AllCardsContent({
                 ))}
             </div>
 
-            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-[#A3A1A7]'>
+            <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-border-color'>
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>All topics</div>
               <div className='justify-start items-end flex '>
                 <div className=' h-5 text-slate-400 text-sm font-medium font-monaspace'>
@@ -110,7 +127,7 @@ export default function AllCardsContent({
 
             <div className='grid grid-cols-3'>
               {filteredCards.map((card, index) => (
-                <div className='border-b-2 border-[#A3A1A7]'>
+                <div className='border-b-2 border-border-color padding-0'>
                   <CardPreview
                     card={card}
                     key={'card-' + index}

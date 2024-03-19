@@ -5,19 +5,13 @@ import { useAuth } from '../../context/AuthContext'
 export default function UserPanel({ user }: { user: IUser }) {
   const { signOut } = useAuth()
   return (
-    <Menu shadow='md' radius='md' width={200} >
+    <Menu shadow='md' radius='md' width={200}>
       <Menu.Target>
-        <div className='flex items-center gap-3 hover:cursor-pointer ' >
-          <Avatar
-            size={24}
-            src={user.avatarUrl}
-            alt={user.name}
-            color={user.color}
-            radius={0}
-          >
+        <div className='flex items-center gap-3 hover:cursor-pointer '>
+          <Avatar size={24} src={user.avatarUrl} alt={user.name} color={user.color} radius={0}>
             {user.name.at(0)}
           </Avatar>
-          <span className='font-monaspace'>{user.name}</span>
+          {/* <span className='font-monaspace'>{user.name}</span> */}
         </div>
       </Menu.Target>
 
