@@ -12,6 +12,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
+  const [buttonColor, setButtonColor] = useState('#EFEFEF')
 
   const onContinue = () => setActiveTab('second')
 
@@ -25,9 +26,30 @@ const CreateProject = (props: ICreateProjectProps) => {
     const res = await createProject(project)
     // window.location.reload(false)
   }
+  // for change colore
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    if (name === 'title') {
+      setTitle(value)
+    } else if (name === 'description') {
+      setDescription(value)
+    }
+    if (title && description) {
+      setButtonColor('#343434')
+    } else {
+      setButtonColor('#EFEFEF')
+    }
+  }
 
   return (
-    <div className='h-screen w-screen grid grid-cols-3 grid-rows-3 divide-x-[1px] divide-y-[1px] divide-gray-border'>
+    <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-gray-border'>
+      <div />
+      <div className='col-span-2' />
+      <div />
+      <div className='row-span-2' />
+      <div className='row-span-2' />
+      <div />
+      <div className='col-span-2' />
       <div />
       <div />
       <div />
@@ -37,39 +59,54 @@ const CreateProject = (props: ICreateProjectProps) => {
       <div />
       <div />
       <Tabs
-        className='col-start-2 row-start-2 col-end-2 row-end-2 p-5'
+        className='col-start-2 row-start-2 col-end-4 row-end-4 p-7'
         color='gray'
         defaultValue='first'
         value={activeTab}
         onChange={setActiveTab}
       >
-        <Tabs.List grow>
+        {/* <Tabs.List grow>
           <Tabs.Tab value='first'>1</Tabs.Tab>
           <Tabs.Tab value='second'>2</Tabs.Tab>
-        </Tabs.List>
+        </Tabs.List> */}
 
-        <Tabs.Panel value='first' className='w-[600px] h-[300px]'>
+        {/* <Tabs.Panel ba value='first' className='w-[600px] h-[300px] '> */}
+        <Tabs.Panel value='first'>
           <input
-            className='block mt-10 align-middle text-[32px] font-monaspace border-none'
-            placeholder='Type project name'
+            className='block align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
+            placeholder='Type new project title'
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name='title'
+            // onChange={(e) => setTitle(e.target.value)}
+            onChange={handleInputChange}
           />
-          <input
-            className='block mt-1 align-middle text-[20px] font-monaspace border-none'
+          {/* <input
+            style={{ backgroundColor: 'red' }}
+            // className='block align-middle text-sm font-monaspace border-none mt-6 w-full h-[240px] '
+            className='block text-sm font-monaspace border-none mt-6 w-full h-[240px]'
             placeholder='Description'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          />
+          /> */}
+
+          <textarea
+            className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[240px] placeholder-slate-400 text-[#47444F] leading-tight'
+            placeholder='Description'
+            value={description}
+            name='description'
+            // onChange={(e) => setDescription(e.target.value)}
+            onChange={handleInputChange}
+          ></textarea>
           <Button
-            className='mt-20 font-monaspace font-thin'
+            className='mt-2 font-monaspace font-thin text-[#A3A1A7] h-12'
             fullWidth
             radius={0}
             variant='filled'
-            color='#464646'
+            // color='#EFEFEF'
+            color={buttonColor}
             onClick={onContinue}
           >
-            Continue
+            Create
           </Button>
         </Tabs.Panel>
 
