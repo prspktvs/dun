@@ -128,7 +128,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
           <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
-      <div className='h-14 border-t-2 border-border-color px-1 flex items-center'>
+      <div className='h-14 border-t-2 border-border-color px-1 flex items-center border-l-2  '>
         <Avatar size={22} src={user.avatarUrl} radius={0} />
         <input
           className='ml-1 h-8 w-full focus:outline-none'

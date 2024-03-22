@@ -13,6 +13,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [buttonColor, setButtonColor] = useState('#EFEFEF')
+  const [buttonActiv, setButtonActiv] = useState('disabled')
 
   const onContinue = () => setActiveTab('second')
 
@@ -26,7 +27,6 @@ const CreateProject = (props: ICreateProjectProps) => {
     const res = await createProject(project)
     // window.location.reload(false)
   }
-  // for change colore
   const handleInputChange = (e) => {
     const { name, value } = e.target
     if (name === 'title') {
@@ -36,8 +36,10 @@ const CreateProject = (props: ICreateProjectProps) => {
     }
     if (title && description) {
       setButtonColor('#343434')
+      setButtonActiv('')
     } else {
       setButtonColor('#EFEFEF')
+      setButtonActiv('disabled')
     }
   }
 
@@ -72,14 +74,22 @@ const CreateProject = (props: ICreateProjectProps) => {
 
         {/* <Tabs.Panel ba value='first' className='w-[600px] h-[300px] '> */}
         <Tabs.Panel value='first'>
-          <input
+          {/* <input
             className='block align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
             placeholder='Type new project title'
             value={title}
             name='title'
             // onChange={(e) => setTitle(e.target.value)}
             onChange={handleInputChange}
-          />
+          /> */}
+          <textarea
+            className='block resize-none align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
+            placeholder='Type new project title'
+            value={title}
+            name='title'
+            // onChange={(e) => setTitle(e.target.value)}
+            onChange={handleInputChange}
+          ></textarea>
           {/* <input
             style={{ backgroundColor: 'red' }}
             // className='block align-middle text-sm font-monaspace border-none mt-6 w-full h-[240px] '
@@ -90,7 +100,7 @@ const CreateProject = (props: ICreateProjectProps) => {
           /> */}
 
           <textarea
-            className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[240px] placeholder-slate-400 text-[#47444F] leading-tight'
+            className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[188px] placeholder-slate-400 text-[#47444F] leading-tight'
             placeholder='Description'
             value={description}
             name='description'
@@ -98,19 +108,20 @@ const CreateProject = (props: ICreateProjectProps) => {
             onChange={handleInputChange}
           ></textarea>
           <Button
-            className='mt-2 font-monaspace font-thin text-[#A3A1A7] h-12'
+            className='mt-6 font-monaspace font-thin text-[#A3A1A7] h-12'
             fullWidth
             radius={0}
             variant='filled'
             // color='#EFEFEF'
             color={buttonColor}
-            onClick={onContinue}
+            onClick={onCreate}
+            disabled={buttonActiv}
           >
             Create
           </Button>
         </Tabs.Panel>
 
-        <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
+        {/* <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
           <TagsInput
             className='font-monaspace mt-5'
             label='Add tags'
@@ -129,7 +140,7 @@ const CreateProject = (props: ICreateProjectProps) => {
           >
             Dun
           </Button>
-        </Tabs.Panel>
+        </Tabs.Panel> */}
       </Tabs>
     </div>
   )
