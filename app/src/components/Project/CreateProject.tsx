@@ -12,7 +12,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
-  const [buttonDisabled, setButtonDisabled] = useState(true)
+  const isTitleEmpty = title.length === 0
 
   const onContinue = () => setActiveTab('second')
 
@@ -26,16 +26,10 @@ const CreateProject = (props: ICreateProjectProps) => {
     const res = await createProject(project)
     // window.location.reload(false)
   }
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    if (name === 'title') {
-      setTitle(value)
-    } else if (name === 'description') {
-      setDescription(value)
-    }
-    if (title.length >= 0) {
-      setButtonDisabled(false)
-    }
+  const handleInputChange = ({ target }) => {
+    const { name, value } = target
+    if (name === 'title') return setTitle(value)
+    setDescription(value)
   }
 
   return (
@@ -109,7 +103,7 @@ const CreateProject = (props: ICreateProjectProps) => {
             variant='filled'
             color='#343434'
             onClick={onCreate}
-            disabled={buttonDisabled}
+            disabled={isTitleEmpty}
           >
             Create
           </Button>
