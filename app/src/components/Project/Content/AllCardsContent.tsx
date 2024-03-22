@@ -28,7 +28,7 @@ export default function AllCardsContent({
 
   useEffect(() => {
     const updatedCards = cards
-      .filter((card) => card.title.includes(search))
+      .filter((card) => card.title.toLowerCase().includes(search.toLowerCase()))
       .sort(({ createdAt: a }, { createdAt: b }) => b - a)
     setFilteredCards(updatedCards)
   }, [search, cards])
@@ -41,7 +41,7 @@ export default function AllCardsContent({
   const handleScrollForward = () => {
     const scrollContainer = scrollContainerRef.current
     if (scrollContainer) {
-      const offset = scrollContainer.offsetWidth / 3 // Assuming each card takes up 1/3 of the container's width
+      const offset = scrollContainer.offsetWidth / 3
       scrollContainer.scrollBy({ left: offset * 3, behavior: 'smooth' })
     }
   }
@@ -58,7 +58,7 @@ export default function AllCardsContent({
     <div className='w-full h-full overflow-y-hidden pb-32'>
       {/* Search line */}
       <div className='border-border-color flex items-center justify-between h-14 border-b-2  '>
-        <div className='relative mx-3'>
+        <div className='relative mx-3 w-full'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
             className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'

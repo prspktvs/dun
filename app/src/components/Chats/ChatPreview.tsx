@@ -70,7 +70,7 @@ export default function ChatPreview({
 
   return (
     <div
-      className='w-full h-52 flex items-center pl-5 border-b-2 border-gray-border hover:cursor-pointer hover:bg-gray-100'
+      className='w-full h-52 flex items-center pl-5 border-b-2 border-border-color hover:cursor-pointer hover:bg-gray-100'
       onClick={onClick}
     >
       <div className='w-full'>
