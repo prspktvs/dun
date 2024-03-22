@@ -12,8 +12,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
-  const [buttonColor, setButtonColor] = useState('#EFEFEF')
-  const [buttonActiv, setButtonActiv] = useState('disabled')
+  const [buttonDisabled, setButtonDisabled] = useState(true)
 
   const onContinue = () => setActiveTab('second')
 
@@ -34,12 +33,8 @@ const CreateProject = (props: ICreateProjectProps) => {
     } else if (name === 'description') {
       setDescription(value)
     }
-    if (title && description) {
-      setButtonColor('#343434')
-      setButtonActiv('')
-    } else {
-      setButtonColor('#EFEFEF')
-      setButtonActiv('disabled')
+    if (title.length > 0 && description.length > 0) {
+      setButtonDisabled(false)
     }
   }
 
@@ -112,10 +107,9 @@ const CreateProject = (props: ICreateProjectProps) => {
             fullWidth
             radius={0}
             variant='filled'
-            // color='#EFEFEF'
-            color={buttonColor}
+            color='#343434'
             onClick={onCreate}
-            disabled={buttonActiv}
+            disabled={buttonDisabled}
           >
             Create
           </Button>
