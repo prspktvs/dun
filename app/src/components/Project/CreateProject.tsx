@@ -33,7 +33,7 @@ const CreateProject = (props: ICreateProjectProps) => {
     } else if (name === 'description') {
       setDescription(value)
     }
-    if (title.length > 0 && description.length > 0) {
+    if (title.length >= 0) {
       setButtonDisabled(false)
     }
   }
