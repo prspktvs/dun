@@ -101,7 +101,7 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine onClick={handleScrollForward} />
               </div>
             </div>
-            <div ref={scrollContainerRef} className='flex overflow-x-scroll'>
+            <div ref={scrollContainerRef} className='flex overflow-x-scroll snap-x snap-mandatory'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
