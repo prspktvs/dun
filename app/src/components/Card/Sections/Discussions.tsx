@@ -24,6 +24,8 @@ export default function Discussions({ users }: { users: IUser[] }) {
       chat.content.toLowerCase().includes(search.toLowerCase()),
     )
     setFilteredChats(updatedChats)
+
+    console.log(filteredChats);
   }, [search, chats])
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
@@ -44,7 +46,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   }
 
   return (
-    <div className='h-full'>
+    <div className='h-screen'>
       <div className='relative p-3 border-b-2 border-border-color'>
         <i className='absolute ri-search-line text-2xl text-gray-400' />
         <input
@@ -53,35 +55,39 @@ export default function Discussions({ users }: { users: IUser[] }) {
           onChange={onSearch}
         />
       </div>
-      {!isEmpty(filteredChats) ? (
-        filteredChats.map((chat) => (
-          <ChatPreview
-            key={'chat-' + chat.id}
-            users={users}
-            chat={chat}
-            onDeleteChat={() => onDeleteChat(chat.id)}
-            onClick={() => openChatById(chat.id)}
-          />
-        ))
-      ) : (
-        <div className='flex flex-col items-center justify-center'>
-          <div className='text-gray-400 font-monaspace mt-5'>No discussions yet</div>
-          <div
-            className='underline font-monaspace text-lg hover:cursor-pointer'
-            onClick={async () => {
-              await saveChatAndMessage({
-                chatId: cardId,
-                cardPath: `projects/${projectId}/cards/${cardId}`,
-                content: 'Card discussion',
-                messageData: undefined,
-              })
-              openChatById(cardId)
-            }}
-          >
-            Start new discussion
+      <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
+        {!isEmpty(filteredChats) ? (
+          filteredChats.map((chat) => (
+            <div className='h-[266px] border-b-2 border-border-color overflow-hidden flex flex-none'>
+              <ChatPreview
+                key={'chat-' + chat.id}
+                users={users}
+                chat={chat}
+                onDeleteChat={() => onDeleteChat(chat.id)}
+                onClick={() => openChatById(chat.id)}
+              />
+            </div>
+          ))
+        ) : (
+          <div className='flex flex-col items-center justify-center'>
+            <div className='text-gray-400 font-monaspace mt-5'>No discussions yet</div>
+            <div
+              className='underline font-monaspace text-lg hover:cursor-pointer'
+              onClick={async () => {
+                await saveChatAndMessage({
+                  chatId: cardId,
+                  cardPath: `projects/${projectId}/cards/${cardId}`,
+                  content: 'Card discussion',
+                  messageData: undefined,
+                })
+                openChatById(cardId)
+              }}
+            >
+              Start new discussion
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
