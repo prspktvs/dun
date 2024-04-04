@@ -6,6 +6,7 @@ import { useChats } from '../../context/ChatContext/ChatContext'
 import { useCallback, useEffect, useState } from 'react'
 import { useEditor } from '../../context/EditorContext/EditorContext'
 import { removeChatById } from '../../services/chats'
+import clsx from 'clsx'
 
 function MessagePreview({
   user,
@@ -66,32 +67,27 @@ export default function ChatPreview({
   const firstMessage = sortedMessages ? sortedMessages[0] : null
   const lastMessage = sortedMessages && sortedMessages.length > 1 ? sortedMessages.at(-1) : null
   const repliesCount = sortedMessages ? sortedMessages.length - 2 : 0
-  const showName =
-    // const messageUser = lastMessage ? chatUsers[lastMessage.authorId] : null
 
-    useEffect(() => {
-      setUnreadMessages(getUnreadMessagesCount(chat.id))
-      // console.log(chatUsers[firstMessage.authorId].name)
-    }, [unreadChats])
+  useEffect(() => {
+    setUnreadMessages(getUnreadMessagesCount(chat.id))
+  }, [unreadChats])
 
-  const disableChat = unreadMessages === 0
+  const isChatDisabled = unreadMessages === 0
 
   return (
-    // <div
-    //   className='w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7  py-3'
-    //   onClick={onClick}
-    // >
     <div className='flex w-full'>
       <div
-        className={`w-2 h-full border-r-2 border-border-color ${
-          disableChat ? 'bg-[#EFEFEF]' : 'bg-[#DBF7CA]'
-        } `}
+        className={clsx(
+          'w-2 h-full border-r-2 border-border-color',
+          isChatDisabled ? 'bg-[#EFEFEF]' : 'bg-[#DBF7CA]',
+        )}
       ></div>
       <div
-        className={`w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7  py-3 ${
-          disableChat ? 'pointer-events-none opacity-50' : ''
-        }`}
-        onClick={disableChat ? undefined : onClick}
+        className={clsx(
+          'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+          isChatDisabled ? 'pointer-events-none opacity-50' : '',
+        )}
+        onClick={isChatDisabled && onClick}
       >
         <div className='w-full ml-4'>
           <div className='relative flex items-center h-10  gap-2 mb-3'>
