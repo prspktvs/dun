@@ -101,11 +101,11 @@ export default function AllCardsContent({
                 <RiArrowLeftSLine onClick={handleScrollForward} />
               </div>
             </div>
-            <div ref={scrollContainerRef} className='flex overflow-x-scroll'>
+            <div ref={scrollContainerRef} className='flex overflow-x-scroll snap-x snap-mandatory'>
               {filteredCards
                 .sort(({ createdAt: a }, { createdAt: b }) => b - a)
                 .map((card, index) => (
-                  <div className='w-1/3 flex-none'>
+                  <div className='w-1/3 flex-none snap-center'>
                     <CardPreview
                       card={card}
                       key={'card-' + index}
@@ -127,12 +127,8 @@ export default function AllCardsContent({
 
             <div className='grid grid-cols-3'>
               {filteredCards.map((card, index) => (
-                <div className='border-b-2 border-border-color padding-0'>
-                  <CardPreview
-                    card={card}
-                    key={'card-' + index}
-                    onClick={() => onChooseCard(card)}
-                  />
+                <div key={'card-' + index} className='border-b-2 border-border-color padding-0'>
+                  <CardPreview card={card} onClick={() => onChooseCard(card)} />
                 </div>
               ))}
             </div>

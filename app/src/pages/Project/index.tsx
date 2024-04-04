@@ -41,16 +41,21 @@ const ProjectPage = (props: IProjectPageProps) => {
   }, [project])
 
   useEffect(() => {
-    if (cardId && !isEmpty(cards)) {
+    if (!cardId) return
+    if (!isEmpty(cards)) {
       const card = cards?.find((card) => card.id === cardId)
-      const emptyCreatedCard: Partial<ICard> = {
-        id: cardId,
-        title: '',
-        content: [],
-        createdAt: new Date(),
-      }
-      setSelectedCard(card || emptyCreatedCard)
+
+      setSelectedCard(card)
+      return
     }
+
+    const emptyCreatedCard: Partial<ICard> = {
+      id: cardId,
+      title: '',
+      content: [],
+      createdAt: new Date(),
+    }
+    setSelectedCard(emptyCreatedCard)
   }, [cards, cardId])
 
   const isLoading = cardsLoading || projectLoading
@@ -58,10 +63,6 @@ const ProjectPage = (props: IProjectPageProps) => {
   const navigate = useNavigate()
 
   const onCreateNewCard = async () => {
-    // const newCard: Partial<ICard> = {
-    //   title: '',
-    // }
-    // const card = await saveOrCreateCard(projectId, newCard)
     const id = genId()
 
     navigate(`/${projectId}/cards/${id}`, { replace: true })
