@@ -68,6 +68,8 @@ export default function ChatPreview({
   const lastMessage = sortedMessages && sortedMessages.length > 1 ? sortedMessages.at(-1) : null
   const repliesCount = sortedMessages ? sortedMessages.length - 2 : 0
 
+  const author = chatUsers?.[firstMessage?.authorId]
+
   useEffect(() => {
     setUnreadMessages(getUnreadMessagesCount(chat.id))
   }, [unreadChats])
@@ -79,7 +81,7 @@ export default function ChatPreview({
       <div
         className={clsx(
           'w-2 h-full border-r-2 border-border-color',
-          isChatDisabled ? 'bg-[#EFEFEF]' : 'bg-[#DBF7CA]',
+          isChatDisabled ? 'bg-[#EFEFEF]' : 'bg-salad',
         )}
       ></div>
       <div
@@ -87,12 +89,12 @@ export default function ChatPreview({
           'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
           isChatDisabled ? 'pointer-events-none opacity-50' : '',
         )}
-        onClick={isChatDisabled && onClick}
+        onClick={!isChatDisabled && onClick}
       >
         <div className='w-full ml-4'>
           <div className='relative flex items-center h-10  gap-2 mb-3'>
             {unreadMessages ? (
-              <div className='h-7 w-7 bg-red-400 border-2 border-black flex items-center justify-center'>
+              <div className='h-7 w-7 bg-salad border-2 border-black flex items-center justify-center'>
                 <span className='font-semibold'>+{unreadMessages}</span>
               </div>
             ) : null}
@@ -101,7 +103,7 @@ export default function ChatPreview({
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-[10px]'>
                   <div className='text-[#A3A1A7]'>
-                    {chatUsers[firstMessage.authorId].name} started a discussion about:
+                    {author ? `${author.name} started a discussion about:` : 'New chat:'}
                   </div>
                   <div>{editorContent || chat.content}</div>
                 </div>
@@ -131,7 +133,7 @@ export default function ChatPreview({
           {!isEmpty(chat?.messages) ? (
             <>
               <MessagePreview
-                user={chatUsers[firstMessage.authorId]}
+                user={author}
                 timestamp={firstMessage.timestamp}
                 message={firstMessage.text}
               />
@@ -141,7 +143,7 @@ export default function ChatPreview({
                 <>
                   <div className='my-3'>
                     <MessagePreview
-                      user={chatUsers[lastMessage.authorId]}
+                      user={author}
                       timestamp={lastMessage.timestamp}
                       message={lastMessage.text}
                     />

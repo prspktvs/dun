@@ -127,12 +127,8 @@ export default function AllCardsContent({
 
             <div className='grid grid-cols-3'>
               {filteredCards.map((card, index) => (
-                <div className='border-b-2 border-border-color padding-0'>
-                  <CardPreview
-                    card={card}
-                    key={'card-' + index}
-                    onClick={() => onChooseCard(card)}
-                  />
+                <div key={'card-' + index} className='border-b-2 border-border-color padding-0'>
+                  <CardPreview card={card} onClick={() => onChooseCard(card)} />
                 </div>
               ))}
             </div>

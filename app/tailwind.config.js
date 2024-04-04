@@ -13,6 +13,7 @@ module.exports = {
       colors: {
         'gray-border': '#B0B0B0',
         'border-color': '#C1B9CF',
+        salad: '#DBF7CA',
       },
     },
   },

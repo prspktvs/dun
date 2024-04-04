@@ -5,15 +5,15 @@ import { useChats } from '../../../context/ChatContext/ChatContext'
 import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services/chats'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import CardPreview from '../CardPreview'
 import ChatPreview from '../../Chats/ChatPreview'
+import { IChat } from '../../../types/Chat'
 
 export default function Discussions({ users }: { users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const { chatId, openChatById } = useChats()
   const [search, setSearch] = useState('')
   const [chats, setChats] = useState([])
-  const [filteredChats, setFilteredChats] = useState([])
+  const [filteredChats, setFilteredChats] = useState<IChat[]>([])
 
   useEffect(() => {
     getAllCardChats(`projects/${projectId}/cards/${cardId}`).then((res) => setChats(res))
@@ -24,8 +24,6 @@ export default function Discussions({ users }: { users: IUser[] }) {
       chat.content.toLowerCase().includes(search.toLowerCase()),
     )
     setFilteredChats(updatedChats)
-
-    console.log(filteredChats);
   }, [search, chats])
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
