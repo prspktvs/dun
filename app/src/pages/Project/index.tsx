@@ -5,14 +5,13 @@ import Card from '../../components/Card'
 import { Button } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import CreateProject from '../../components/Project/CreateProject'
-import { saveOrCreateCard } from '../../services/cards'
 import { useNavigate } from 'react-router-dom'
 import { useFirebaseDocument } from '../../hooks/useFirebaseDocument'
 import { useFirebaseCollection } from '../../hooks/useFirebaseCollection'
 import CreateUser from '../../components/User/CreateUser'
 import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
-import { addUserToProject } from '../../services/project'
+import { addUserToProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
@@ -42,12 +41,10 @@ const ProjectPage = (props: IProjectPageProps) => {
 
   useEffect(() => {
     if (!cardId) return
-    if (!isEmpty(cards)) {
-      const card = cards?.find((card) => card.id === cardId)
 
-      setSelectedCard(card)
-      return
-    }
+    const card = !isEmpty(cards) ? cards?.find((card) => card.id === cardId) : null
+
+    if (card) return setSelectedCard(card)
 
     const emptyCreatedCard: Partial<ICard> = {
       id: cardId,

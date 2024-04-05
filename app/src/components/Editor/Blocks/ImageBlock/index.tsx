@@ -1,7 +1,7 @@
 import { defaultProps } from '@blocknote/core'
 import { createReactBlockSpec, InlineContent } from '@blocknote/react'
 import { useRef, useState } from 'react'
-import { uploadImage } from '../../../../services/firebaseStorage'
+import { uploadImage } from '../../../../services'
 
 const imageSchema = {
   src: {

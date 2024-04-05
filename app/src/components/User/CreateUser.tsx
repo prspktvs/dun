@@ -3,7 +3,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { useState } from 'react'
 import { IUser } from '../../types/User'
 import { genId } from '../../utils'
-import { addUserToProject } from '../../services/project'
+import { addUserToProject } from '../../services'
 
 interface ICreateUserProps {
   projectId: string

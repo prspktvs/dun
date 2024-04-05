@@ -7,7 +7,7 @@ import {
 } from '@blocknote/react'
 import { Button } from '@mantine/core'
 import { useChats } from '../../../context/ChatContext/ChatContext'
-import { createNewChat, saveChatAndMessage } from '../../../services/chats'
+import { createNewChat, saveChatAndMessage } from '../../../services'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import clsx from 'clsx'

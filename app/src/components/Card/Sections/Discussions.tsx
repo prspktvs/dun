@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Chat from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext/ChatContext'
-import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services/chats'
+import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import ChatPreview from '../../Chats/ChatPreview'
@@ -21,7 +21,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   useEffect(() => {
     const updatedChats = chats.filter((chat) =>
-      chat.content.toLowerCase().includes(search.toLowerCase()),
+      chat?.content?.toLowerCase()?.includes(search.toLowerCase()),
     )
     setFilteredChats(updatedChats)
   }, [search, chats])
@@ -56,7 +56,10 @@ export default function Discussions({ users }: { users: IUser[] }) {
       <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
         {!isEmpty(filteredChats) ? (
           filteredChats.map((chat) => (
-            <div className='h-[266px] border-b-2 border-border-color overflow-hidden flex flex-none'>
+            <div
+              key={'filtered-chat-' + chat.id}
+              className='h-[266px] border-b-2 border-border-color overflow-hidden flex flex-none'
+            >
               <ChatPreview
                 key={'chat-' + chat.id}
                 users={users}
