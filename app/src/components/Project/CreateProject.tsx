@@ -1,7 +1,7 @@
 import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
 import { useState } from 'react'
 import { IProject } from '../../types/Project'
-import { createProject } from '../../services/project'
+import { createProject } from '../../services'
 
 interface ICreateProjectProps {
   projectId: string

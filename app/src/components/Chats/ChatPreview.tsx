@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import { useCallback, useEffect, useState } from 'react'
 import { useEditor } from '../../context/EditorContext/EditorContext'
-import { removeChatById } from '../../services/chats'
+
 import clsx from 'clsx'
 
 function MessagePreview({
@@ -74,22 +74,22 @@ export default function ChatPreview({
     setUnreadMessages(getUnreadMessagesCount(chat.id))
   }, [unreadChats])
 
-  const isChatDisabled = unreadMessages === 0
+  const isChatRead = unreadMessages === 0
 
   return (
     <div className='flex w-full'>
       <div
         className={clsx(
           'w-2 h-full border-r-2 border-border-color',
-          isChatDisabled ? 'bg-[#EFEFEF]' : 'bg-salad',
+          isChatRead ? 'bg-[#EFEFEF]' : 'bg-salad',
         )}
       ></div>
       <div
         className={clsx(
           'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
-          isChatDisabled ? 'pointer-events-none opacity-50' : '',
+          isChatRead ? 'opacity-70' : '',
         )}
-        onClick={!isChatDisabled && onClick}
+        onClick={onClick}
       >
         <div className='w-full ml-4'>
           <div className='relative flex items-center h-10  gap-2 mb-3'>

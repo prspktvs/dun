@@ -1,12 +1,12 @@
 import { ITask } from '../../../types/Task'
 import { useState, useEffect } from 'react'
 import { isEmpty } from 'lodash'
-import { getAllUserTasks } from '../../../services/tasks'
+import { getAllUserTasks } from '../../../services'
 import { useAuth } from '../../../context/AuthContext'
 import TaskPreview from '../TaskPreview'
 import { useNavigate } from 'react-router-dom'
 import { Menu } from '@mantine/core'
-import { getAllUserProject } from '../../../services/project'
+import { getAllUserProject } from '../../../services'
 import { genId } from '../../../utils'
 
 interface IMyTasksProps {

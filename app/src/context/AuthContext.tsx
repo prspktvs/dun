@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { auth } from '../config/firebase'
 import firebase from 'firebase/compat/app'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { getOrCreateUser } from '../services/user'
+import { getOrCreateUser } from '../services'
 import { IUser } from '../types/User'
 import { useLocation, useNavigate } from 'react-router-dom'
 

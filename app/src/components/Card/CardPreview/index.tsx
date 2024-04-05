@@ -66,8 +66,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
       <div className='grid grid-cols-5 mt-5'>
         {!isEmpty(imageUrls) ? (
           <div className='flex col-span-2'>
-            {imageUrls?.map((url) => (
-              <Image key={'image-' + url} className='w-20' src={url} alt='' />
+            {imageUrls?.map((url, idx) => (
+              <Image key={'image-' + url + '-' + idx} className='w-20' src={url} alt='' />
             ))}
             {card?.files?.length > 5 ? (
               <span className='ml-3 flex items-center h-full font-semibold underline text-lg'>

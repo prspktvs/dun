@@ -7,8 +7,25 @@ import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard/IconsCard'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard'
+
+function ScrollUpdatedCardControls({
+  length,
+  onLeftClick,
+  onRightClick,
+}: {
+  length: number
+  onLeftClick: () => void
+  onRightClick: () => void
+}) {
+  return (
+    <div className='justify-start items-center gap-2 flex'>
+      <RiArrowRightSLine onClick={onLeftClick} />
+      <div className='text-zinc-700 text-sm font-normal font-monaspace'>{length}</div>
+      <RiArrowLeftSLine onClick={onRightClick} />
+    </div>
+  )
+}
 
 export default function AllCardsContent({
   users,
@@ -28,7 +45,7 @@ export default function AllCardsContent({
 
   useEffect(() => {
     const updatedCards = cards
-      .filter((card) => card.title.toLowerCase().includes(search.toLowerCase()))
+      .filter((card) => card?.title?.toLowerCase()?.includes(search.toLowerCase()))
       .sort(({ createdAt: a }, { createdAt: b }) => b - a)
     setFilteredCards(updatedCards)
   }, [search, cards])
@@ -93,13 +110,11 @@ export default function AllCardsContent({
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>
                 What's new • {filteredCards.length}
               </div>
-              <div className='justify-start items-center gap-2 flex'>
-                <RiArrowRightSLine onClick={handleScrollBack} />
-                <div className='text-zinc-700 text-sm font-normal font-monaspace'>
-                  {filteredCards.length}
-                </div>
-                <RiArrowLeftSLine onClick={handleScrollForward} />
-              </div>
+              <ScrollUpdatedCardControls
+                length={filteredCards.length}
+                onLeftClick={handleScrollBack}
+                onRightClick={handleScrollForward}
+              />
             </div>
             <div ref={scrollContainerRef} className='flex overflow-x-scroll snap-x snap-mandatory'>
               {filteredCards
@@ -117,12 +132,12 @@ export default function AllCardsContent({
 
             <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-y-2 border-border-color'>
               <div className='text-zinc-700 text-sm font-normal font-monaspace'>All topics</div>
-              <div className='justify-start items-end flex '>
+              {/* <div className='justify-start items-end flex'>
                 <div className=' h-5 text-slate-400 text-sm font-medium font-monaspace'>
                   Last modified
                 </div>
                 <RiArrowDown />
-              </div>
+              </div> */}
             </div>
 
             <div className='grid grid-cols-3'>
