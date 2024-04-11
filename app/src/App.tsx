@@ -9,6 +9,7 @@ import ProtectedLayout from './layouts/ProtectedLayout'
 import Logout from './pages/Auth/Logout'
 import ChatProvider from './context/ChatContext/ChatProvider'
 import EditorProvider from './context/EditorContext/EditorProvider'
+import LandingPage from './pages/LandingPage'
 
 export default function App() {
   return (
