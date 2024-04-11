@@ -44,10 +44,11 @@ function useWebRtc(
   onStatus: ({ status }: { status: string }) => void,
   onClose: ({ event }: { event: unknown }) => void,
 ) {
-  const lastId = useRef<string>(id)
-  const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
+  // const lastId = useRef<string>(id)
+  const [doc, setDoc] = useState<Y.Doc>(() => new Y.Doc())
 
   const [provider, setProvider] = useState(
+    () =>
     new HocuspocusProvider({
       url: HOCUSPOCUS_URL,
       name: id,
@@ -58,16 +59,19 @@ function useWebRtc(
   )
 
   useEffect(() => {
-    if (lastId.current === id) return
-    lastId.current = id
+    // if (lastId.current === id) return
+    // lastId.current = id
+    console.log('useWebRTC: ', id)
+
     const yDoc = new Y.Doc()
     const yProvider = new HocuspocusProvider({
       url: HOCUSPOCUS_URL,
       name: id,
-      document: doc,
+      document: yDoc,
       onStatus,
       onClose,
     })
+
     setDoc(yDoc)
     setProvider(yProvider)
 

@@ -7,7 +7,7 @@ import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDown } from './IconsCard'
+import { RiArrowLeftSLine, RiArrowRightSLine } from './IconsCard'
 
 function ScrollUpdatedCardControls({
   length,
