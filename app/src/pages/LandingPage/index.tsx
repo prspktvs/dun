@@ -4,17 +4,18 @@ import LineSection from './LineSection/LineSection'
 import Section2 from './Section2/CardsSection2'
 import Section3 from './Section3/Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
+import Footer from './Footer/Footer'
 
 function LandingPage() {
   return (
     <div className='h-screen w-full overflow-x-hidden'>
       {/* Header */}
       <div className='border-2 m-6 border-black'>
-        <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-border-color'>
+        <div className='flex justify-between items-center border-b-2 bg-[#C5D4D2] h-14 border-black '>
           <div className='border-border-color pl-5 text-4xl text-center  text-black'>
             <Logo />
           </div>
-          <div className='h-full flex items-center p-5 border-l-2 border-border-color'>
+          <div className='h-full flex items-center p-5 border-l-2 border-black'>
             <svg
               width='30'
               height='23'
@@ -35,7 +36,13 @@ function LandingPage() {
           <div className='w-[922.5px] h-[420.5px] mx-auto my-[69px]'>
             <img src='./DUN-Hero 1.jpg' />
           </div>
-          <DualSectionBox/>
+          <DualSectionBox
+            title={'Zero in on the important stuff '}
+            desc={
+              "Hey buddy, count on DUN to make your life easier! We've smoothed out work processes and made team and customer communication a walk in the park for you."
+            }
+            btnTitle={"Let's Dive In for free"}
+          />
         </div>
         <div>
           <LineSection />
@@ -54,8 +61,8 @@ function LandingPage() {
         {/* section-3 */}
         <Section3 />
         <LineSection />
-        {/* section-4 */}
-
+        {/* Footer */}
+        <Footer />
       </div>
     </div>
   )

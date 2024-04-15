@@ -1,4 +1,4 @@
-<svg width="631" height="433" viewBox="0 0 631 433" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="631" height="500" viewBox="0 0 631 500" fill="none" xmlns="http://www.w3.org/2000/svg" >
 <g clip-path="url(#clip0_1918_4242)">
 <rect x="0.5" y="-16.5" width="37" height="37" stroke="#CBB9CF" stroke-opacity="0.3"/>
 <rect x="37.5" y="-16.5" width="37" height="37" stroke="#CBB9CF" stroke-opacity="0.3"/>
@@ -953,7 +953,7 @@
 <path d="M630 439V440H631V439H630ZM592 439H591V440H592V439ZM629 401V439H631V401H629ZM630 438H592V440H630V438ZM593 439V401H591V439H593Z" fill="#CBB9CF" fill-opacity="0.3" mask="url(#path-392-inside-187_1918_4242)"/>
 <path d="M630 439V440H631V439H630ZM592 439H591V440H592V439ZM629 401V439H631V401H629ZM630 438H592V440H630V438ZM593 439V401H591V439H593Z" fill="#CBB9CF" fill-opacity="0.3" mask="url(#path-392-inside-187_1918_4242)"/>
 </g>
-<rect x="0.5" y="0.5" width="629.5" height="432" stroke="#25222C"/>
+<!-- <rect x="0.5" y="0.5" width="629.5" height="432" stroke="#25222C"/> -->
 <defs>
 <clipPath id="clip0_1918_4242">
 <rect width="630.5" height="433" fill="white"/>

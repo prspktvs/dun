@@ -1,13 +1,11 @@
 import React from 'react'
 
-function BoxInformatinSection3() {
+function BoxInformatinSection3({ firstMessage, secondMessage }) {
   return (
     <>
       <div>
-        <div className='w-[781px] h-[81px] flex justify-around items-center border-b-2'>
-          <p className='w-[310px] text-sm'>
-            Hey buddy, ever find yourself lost in the chaos of 50 open tabs?
-          </p>
+        <div className='w-[781px] h-[81px] flex justify-around items-center border-b-2 border-black bg-[#FAF9F6]'>
+          <p className='w-[310px] text-sm'>{firstMessage}</p>
           <svg
             width='41'
             height='7'
@@ -21,9 +19,7 @@ function BoxInformatinSection3() {
               fill='#25222C'
             />
           </svg>
-          <p className='w-[310px] text-sm'>
-            Let DUN set you free from the focus-switching tab dance
-          </p>
+          <p className='w-[310px] text-sm'>{secondMessage}</p>
         </div>
       </div>
     </>
