@@ -1,10 +1,26 @@
 import React from 'react'
+import clsx from 'clsx'
 
-function BoxInformatinSection3({ firstMessage, secondMessage }) {
+interface IFeatureCard {
+  firstMessage: string
+  secondMessage: string
+}
+
+interface IFeatureCardProps extends IFeatureCard {
+  index: number
+}
+
+function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureCardProps) {
+  const isEven = index % 2 === 0
   return (
     <>
       <div>
-        <div className='w-[781px] h-[81px] flex justify-around items-center border-b-2 border-black bg-[#FAF9F6]'>
+        <div
+          className={clsx(
+            'w-[781px] h-[81px] flex justify-around items-center border-b-2 border-black',
+            isEven ? 'bg-[#FAF9F6]' : 'bg-[#F5F0EB]',
+          )}
+        >
           <p className='w-[310px] text-sm'>{firstMessage}</p>
           <svg
             width='41'

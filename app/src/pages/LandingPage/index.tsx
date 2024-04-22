@@ -2,9 +2,10 @@ import React from 'react'
 import Logo from '../../components/ui/Logo'
 import LineSection from './LineSection/LineSection'
 import Section2 from './Section2/CardsSection2'
-import Section3 from './Section3/Section3'
+import Section3 from './Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
-import Footer from './Footer/Footer'
+import Footer from './Footer'
+import {Hamburger}  from './Icons'
 
 function LandingPage() {
   return (
@@ -16,18 +17,7 @@ function LandingPage() {
             <Logo />
           </div>
           <div className='h-full flex items-center p-5 border-l-2 border-black'>
-            <svg
-              width='30'
-              height='23'
-              viewBox='0 0 30 23'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <line x1='0.5' y1='1' x2='29.5' y2='1' stroke='black' />
-              <line x1='0.5' y1='8' x2='29.5' y2='8' stroke='black' />
-              <line x1='0.5' y1='15' x2='29.5' y2='15' stroke='black' />
-              <line x1='0.5' y1='22' x2='29.5' y2='22' stroke='black' />
-            </svg>
+            <Hamburger/>
           </div>
         </div>
 

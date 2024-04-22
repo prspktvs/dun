@@ -41,7 +41,7 @@ export default function AllCardsContent({
 }) {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
-  // const [search, setSearch] = useState('')
+
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
   const scrollContainerRef = useRef(null)
 
