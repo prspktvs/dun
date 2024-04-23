@@ -25,15 +25,13 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
         style={{ backgroundImage }}
         className='w-full h-full justify-center items-center flex  bg-no-repeat bg-cover '
       >
-        <div className='text-lg flex w-[391px] h-min'>
-          {title}
-        </div>
+        <div className='text-lg flex w-[391px] h-min font-["MonaspaceArgon"]'>{title}</div>
       </div>
 
       <div
         style={{ backgroundColor }}
         className={clsx(
-          'w-full h-full flex justify-center items-center',
+          'w-full h-full flex justify-center items-center ',
           isEven ? 'border-black border-l-2' : 'border-black border-r-2',
         )}
       >

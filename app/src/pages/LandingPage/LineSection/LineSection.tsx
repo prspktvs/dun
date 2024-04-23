@@ -5,9 +5,9 @@ function LineSection() {
     <div className='h-[120px] w-full border-t-2 bg-[#F5F0EB] border-b-2 border-t-2 border-[#25222C]'>
       <div>
         <svg
-          width='1260'
+          width='100%'
           height='28'
-          viewBox='0 0 1260 28'
+          viewBox='0 0 100% 28'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
@@ -733,6 +733,7 @@ function LineSection() {
               stroke='#25222C'
               stroke-opacity='0.2'
             />
+            
           </g>
           <defs>
             <clipPath id='clip0_1920_4950'>

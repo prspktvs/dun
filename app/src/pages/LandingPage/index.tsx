@@ -1,11 +1,11 @@
 import React from 'react'
 import Logo from '../../components/ui/Logo'
 import LineSection from './LineSection/LineSection'
-import Section2 from './Section2/CardsSection2'
+import Section2 from './Section2'
 import Section3 from './Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
-import {Hamburger}  from './Icons'
+import { Hamburger } from './Icons'
 
 function LandingPage() {
   return (
@@ -16,9 +16,9 @@ function LandingPage() {
           <div className='border-border-color pl-5 text-4xl text-center  text-black'>
             <Logo />
           </div>
-          <div className='h-full flex items-center p-5 border-l-2 border-black'>
-            <Hamburger/>
-          </div>
+          <button className='h-full flex items-center p-5 border-l-2 border-black bg-[#C5D4D2]'>
+            <Hamburger />
+          </button>
         </div>
 
         {/* section-1 */}
@@ -38,13 +38,13 @@ function LandingPage() {
           <LineSection />
         </div>
         {/* section-2 */}
-        <div className='flex  w-full '>
-          <p className='uppercase text-[40px] m-5'>Let's ramp up that productivity</p>
-          <p className='text-sm w-[393px] ml-auto mr-5 '>
+        <div className='grid grid-cols-2'>
+          <div className='uppercase text-[40px] h-[108px] m-5'>Let's ramp up that productivity</div>
+          <div className='text-sm w-[393px] justify-self-end m-6'>
             DUN's the go-to service for sorting out your work processes and keeping those projects
             in check. Plus, it lets you chat it up with your team and customers all in one place.
             Think of DUN as your go-to app for getting down to some serious "focused work".
-          </p>
+          </div>
         </div>
         <Section2 />
         <LineSection />

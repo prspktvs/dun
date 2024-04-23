@@ -1,10 +1,9 @@
 import React from 'react'
-import imagePath from '../../../assets/Rectangles.svg'
-import Squares from '../../../assets/Squares.svg'
-import Plaid from '../../../assets/Plaid.svg'
-import Lines from '../../../assets/Lines.svg'
+import imagePath from '../../../../public/assets/Rectangles.svg'
+import Squares from '../../../../public/assets/Squares.svg'
+import Plaid from '../../../../public/assets/Plaid.svg'
+import Lines from '../../../../public/assets/Lines.svg'
 import FeatureCard from './FeatureCard'
-
 
 interface IFeatureCard {
   title: string
@@ -21,7 +20,8 @@ const FEATURES: IFeatureCard[] = [
     backgroundImage: `url(${imagePath})`,
   },
   {
-    title: 'One topic equals one neat spot for all files and info related to that case.P.S. Courtesy of DUN.',
+    title:
+      'One topic equals one neat spot for all files and info related to that case.P.S. Courtesy of DUN.',
     backgroundColor: '#CBB9CF',
     image: <img className='w-[499px] h-[342px]' src='./image 132.jpg' alt='description-image' />,
     backgroundImage: `url(${Squares})`,
@@ -39,7 +39,6 @@ const FEATURES: IFeatureCard[] = [
     backgroundImage: `url(${Plaid})`,
   },
 ]
-
 
 function Section2() {
   return (
