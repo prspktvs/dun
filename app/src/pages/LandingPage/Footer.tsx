@@ -26,16 +26,20 @@ function Footer() {
           {/* ////////////////// */}
           <div className='border-l-2 border-r-2  border-black flex-1 flex-col flex'>
             <div className='border-b-2 border-black'>
-              <input className='bg-[#C5D4D2] m-5' type='text' placeholder='name' />
+              <input className='bg-[#C5D4D2] m-5 font-monaspace' type='text' placeholder='name' />
             </div>
             <div>
-              <input className='bg-[#C5D4D2] m-5' type='text' placeholder='message' />
+              <input
+                className='bg-[#C5D4D2] m-5 font-monaspace'
+                type='text'
+                placeholder='message'
+              />
             </div>
           </div>
           {/* /////////////////////// */}
           <div className='flex-1 flex-col flex'>
             <div>
-              <input className='bg-[#C5D4D2] m-5' type='text' placeholder='email' />
+              <input className='bg-[#C5D4D2] m-5 font-monaspace' type='text' placeholder='email' />
             </div>
             <div className='text-center border-t-2  border-black'>
               <button className='w-[410px] h-[52px] bg-black text-white my-2.5 font-monaspace'>
