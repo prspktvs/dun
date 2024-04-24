@@ -17,7 +17,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
   return (
     <div
       className={clsx(
-        'w-full flex justify-around items-center h-[433px] border-black border-t-2 ',
+        'w-full flex justify-around items-center h-[433px] border-black border-t-2 bg-paper',
         isEven ? 'flex-row' : 'flex-row-reverse',
       )}
     >
@@ -25,7 +25,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
         style={{ backgroundImage }}
         className='w-full h-full justify-center items-center flex  bg-no-repeat bg-cover bg-center '
       >
-        <div className='text-lg flex w-[391px] h-min font-["MonaspaceArgon"]'>{title}</div>
+        <div className='text-lg flex w-[391px] h-min font-monaspace'>{title}</div>
       </div>
 
       <div

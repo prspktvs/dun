@@ -1,7 +1,7 @@
 import React from 'react'
 import BoxInformatinSection3 from './BoxInformatinSection3'
 import DualSectionBox from '../DualSectionBox/DualSectionBox'
-import backgroundSection3 from '../../../../public/assets/bgSection3.svg'
+import backgroundSection3 from '/assets/bgSection3.svg'
 import clsx from 'clsx'
 
 interface IFeatureCard {
@@ -38,7 +38,7 @@ function Section3() {
       <div
         style={{ backgroundImage: `url(${backgroundSection3})` }}
         className={clsx(
-          'w-full h-[760px] flex justify-between flex-col bg-no-repeat bg-cover border-t-2',
+          'w-full h-[760px] flex justify-between flex-col bg-no-repeat bg-cover bg-paper border-t-2',
         )}
       >
         <div className='flex justify-around items-center mt-[79px] '>

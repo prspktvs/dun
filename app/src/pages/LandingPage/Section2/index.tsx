@@ -1,8 +1,8 @@
 import React from 'react'
-import imagePath from '../../../../public/assets/Rectangles.svg' 
-import Squares from '../../../../public/assets/Squares.svg'
-import Plaid from '../../../../public/assets/Plaid.svg'
-import Lines from '../../../../public/assets/Lines.svg'
+import imagePath from '/assets/Rectangles.svg' 
+import Squares from '/assets/Squares.svg'
+import Plaid from '/assets/Plaid.svg'
+import Lines from '/assets/Lines.svg'
 import FeatureCard from './FeatureCard'
 
 interface IFeatureCard {

@@ -18,10 +18,10 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
         <div
           className={clsx(
             'w-[781px] h-[81px] flex justify-around items-center border-b-2 border-black',
-            isEven ? 'bg-[#FAF9F6]' : 'bg-[#F5F0EB]',
+            isEven ? 'bg-paper' : 'bg-[#F5F0EB]',
           )}
         >
-          <p className='w-[310px] text-sm font-["MonaspaceArgon"]'>{firstMessage}</p>
+          <p className='w-[310px] text-sm font-monaspace'>{firstMessage}</p>
           <svg
             width='41'
             height='7'
@@ -35,7 +35,7 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
               fill='#25222C'
             />
           </svg>
-          <p className='w-[310px] text-sm font-["MonaspaceArgon"]'>{secondMessage}</p>
+          <p className='w-[310px] text-sm font-monaspace'>{secondMessage}</p>
         </div>
       </div>
     </>

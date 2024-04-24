@@ -126,7 +126,7 @@ export default function AllCardsContent({
                   <div className='w-1/3 flex-none snap-center'>
                     <CardPreview
                       card={card}
-                      key={'card-' + index}
+                      key={'card-number-' + index}
                       onClick={() => onChooseCard(card)}
                     />
                   </div>

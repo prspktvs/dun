@@ -19,7 +19,7 @@ function Footer() {
         </div>
 
         <div className='flex justify-around border-b-2 border-t-2 border-black my-16 '>
-          <p className='flex-1 w-full text-xl ml-5 uppercase flex-1'>
+          <p className='flex-1 w-full text-xl ml-5 uppercase font-rubik'>
             Got Questions, Buddy? Ask Away!
           </p>
 
@@ -42,7 +42,7 @@ function Footer() {
               <input className='bg-[#C5D4D2] m-5 font-monaspace' type='text' placeholder='email' />
             </div>
             <div className='text-center border-t-2  border-black'>
-              <button className='w-[410px] h-[52px] bg-black text-white my-2.5 font-monaspace'>
+              <button className='w-[410px] h-[52px] bg-black text-white my-2.5 font-monaspace hover:cursor-pointer hover:bg-gray-800'>
                 shoot your message to dun
               </button>
             </div>

@@ -14,7 +14,7 @@ function LineSection() {
                 y2='27'
                 fill='none'
                 stroke='#25222c'
-                stroke-opacity='0.2'
+                strokeOpacity='0.2'
               />
               <line
                 x1='8.5'
@@ -23,7 +23,7 @@ function LineSection() {
                 y2='16'
                 fill='none'
                 stroke='#25222c'
-                stroke-opacity='0.2'
+                strokeOpacity='0.2'
               />
               <line
                 x1='16.5'
@@ -32,7 +32,7 @@ function LineSection() {
                 y2='16'
                 fill='none'
                 stroke='#25222c'
-                stroke-opacity='0.2'
+                strokeOpacity='0.2'
               />
               <line
                 x1='24.5'
@@ -41,7 +41,7 @@ function LineSection() {
                 y2='16'
                 fill='none'
                 stroke='#25222c'
-                stroke-opacity='0.2'
+                strokeOpacity='0.2'
               />
               <line
                 x1='32.5'
@@ -50,7 +50,7 @@ function LineSection() {
                 y2='16'
                 fill='none'
                 stroke='#25222c'
-                stroke-opacity='0.2'
+                strokeOpacity='0.2'
               />
             </pattern>
           </defs>
