@@ -39,7 +39,9 @@ function LandingPage() {
         </div>
         {/* section-2 */}
         <div className='grid grid-cols-2'>
-          <div className='uppercase text-[40px] h-[108px] m-5'>Let's ramp up that productivity</div>
+          <div className='uppercase text-[40px] h-[108px] m-5 w-full'>
+            Let's ramp up that productivity
+          </div>
           <div className='text-sm w-[393px] justify-self-end m-6'>
             DUN's the go-to service for sorting out your work processes and keeping those projects
             in check. Plus, it lets you chat it up with your team and customers all in one place.
