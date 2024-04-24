@@ -23,6 +23,8 @@ interface IProjectPageProps {}
 const ProjectPage = (props: IProjectPageProps) => {
   const { id: projectId = '', cardId } = useParams()
   const { user } = useAuth()
+  const [search, setSearch] = useState('')
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   const { data: project, loading: projectLoading } = useFirebaseDocument(`projects/${projectId}`)
 
@@ -34,7 +36,6 @@ const ProjectPage = (props: IProjectPageProps) => {
 
   useEffect(() => {
     if (projectLoading || !user) return
-
     const isUserExists = project?.users?.some(({ id }) => id === user.id)
     if (!isUserExists) addUserToProject(projectId, user)
   }, [project])
@@ -77,10 +78,20 @@ const ProjectPage = (props: IProjectPageProps) => {
       <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-border-color'>
         <div
           onClick={() => navigate(`/${projectId}`)}
-          className='w-80 border-r-2 border-border-color p-5 text-4xl text-center  text-black hover:cursor-pointer'
+          className='w-80 border-r-2 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
         >
           <Logo />
         </div>
+        <div className='justify-self-start pl-6 flex items-center flex-1'>
+          <i className='absolute ri-search-line text-xl text-gray-400' />
+          <input
+            className='block pl-7 align-middle overflow-hidden border-none bg-[#EDEBF3] text-sm font-monaspace'
+            value={search}
+            onChange={onSearch}
+            placeholder='Find it all'
+          />
+        </div>
+
         <div className='h-full flex items-center p-5 border-l-2 border-border-color'>
           <UserPanel user={user} />
         </div>
@@ -99,6 +110,7 @@ const ProjectPage = (props: IProjectPageProps) => {
             projectId={projectId}
             cards={cards}
             users={project.users}
+            search={search}
           />
         )}
       </div>

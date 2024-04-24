@@ -31,15 +31,17 @@ export default function AllCardsContent({
   users,
   cards,
   onCreateNewCard,
+  search,
 }: {
   users: IUser[]
   cards: ICard[]
   projectId: string
   onCreateNewCard: () => void
+  search: string
 }) {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
   const scrollContainerRef = useRef(null)
 
@@ -55,6 +57,7 @@ export default function AllCardsContent({
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
   }
+
   const handleScrollForward = () => {
     const scrollContainer = scrollContainerRef.current
     if (scrollContainer) {
@@ -74,17 +77,17 @@ export default function AllCardsContent({
   return (
     <div className='w-full h-full overflow-y-hidden pb-32'>
       {/* Search line */}
-      <div className='border-border-color flex items-center justify-between h-14 border-b-2  '>
-        <div className='relative mx-3 w-full'>
+      <div className='border-border-color flex items-center justify-between h-14 border-b-2 '>
+        {/* <div className='relative mx-3 w-full'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
             className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
             value={search}
             onChange={onSearch}
           />
-        </div>
-        <div className='h-full flex'>
-          <div className='w-52 border-l-2 border-r-2 border-border-color flex items-center justify-center px-5'>
+        </div> */}
+        <div className='h-full flex w-full '>
+          <div className='w-52 border-r-2 border-border-color flex items-center justify-end px-5 flex-1'>
             <ProjectUsers users={users} />
           </div>
           <div className='w-52 flex items-center justify-center px-5'>
@@ -123,7 +126,7 @@ export default function AllCardsContent({
                   <div className='w-1/3 flex-none snap-center'>
                     <CardPreview
                       card={card}
-                      key={'card-' + index}
+                      key={'card-number-' + index}
                       onClick={() => onChooseCard(card)}
                     />
                   </div>
