@@ -8,7 +8,7 @@ function DualSectionBox({ title, desc, btnTitle }) {
       <div className='grid grid-cols-2 items-center border-t-2 border-black gap-x-2.5 '>
         <p className='text-sm w-[458px] h-[68px] m-5 font-["MonaspaceArgon"]'>{desc}</p>
 
-        <button className='bg-black w-[330px] h-[52px] m-5 text-white text-center text-sm lowercase justify-self-end'>
+        <button className='bg-black w-[330px] h-[52px] m-5 text-white text-center text-sm lowercase justify-self-end font-monaspace'>
           {btnTitle}
         </button>
       </div>
