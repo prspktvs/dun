@@ -1,5 +1,5 @@
 import React from 'react'
-import imagePath from '../../../../public/assets/Rectangles.svg'
+import imagePath from '../../../../public/assets/Rectangles.svg' 
 import Squares from '../../../../public/assets/Squares.svg'
 import Plaid from '../../../../public/assets/Plaid.svg'
 import Lines from '../../../../public/assets/Lines.svg'
