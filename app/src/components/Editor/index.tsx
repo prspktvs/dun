@@ -49,13 +49,13 @@ function useWebRtc(
 
   const [provider, setProvider] = useState(
     () =>
-    new HocuspocusProvider({
-      url: HOCUSPOCUS_URL,
-      name: id,
-      document: doc,
-      onStatus,
-      onClose,
-    }),
+      new HocuspocusProvider({
+        url: HOCUSPOCUS_URL,
+        name: id,
+        document: doc,
+        onStatus,
+        onClose,
+      }),
   )
 
   useEffect(() => {

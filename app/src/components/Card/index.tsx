@@ -98,9 +98,9 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll px-5 w-full z-20'>
+        <div className='h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll w-full z-20  mt-[52px] ml-[88px] mr-[30px] '>
           <input
-            className='block font-rubik align-middle text-[32px] w-full overflow-hidden border-none'
+            className='block font-rubik align-middle text-[32px] overflow-hidden border-none ml-12 mb-6'
             placeholder='Type title'
             ref={inputRef}
             value={title}
