@@ -116,7 +116,7 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      <div className='h-full overflow-y-scroll hide-scrollbar'>
+      <div className=' h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         ) : (

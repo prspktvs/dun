@@ -73,7 +73,6 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
       <div className='w-full px-5 py-3'>
         <div
           className='flex items-center text-sm mb-3 font-monaspace font-normal'
-          style={{ fontFamily: 'MonaspaceArgon' }}
         >
           What to do • {tasks.length}
         </div>
