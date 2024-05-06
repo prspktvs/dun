@@ -2,6 +2,8 @@ import { isEmpty } from 'lodash'
 import { ICard } from '../../../types/Card'
 import { Image } from '@mantine/core'
 import TaskPreview from '../../Task/TaskPreview'
+import { MessageIcon, UpdateIcon } from '../../../components/Project/Content/IconsCard'
+import ProjectUsers from '../../User/ProjectUsers'
 
 interface ICardPreviewProps {
   card: ICard
@@ -28,6 +30,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     ?.filter((file) => file.type === 'image')
     ?.slice(0, 5)
     ?.map((file) => file.url)
+
+  const countChats = card?.chatIds?.length || 0
   const tasks = card?.tasks
   const createdAt = new Date(card.createdAt.seconds * 1000)
   const day = createdAt.getDate()
@@ -38,44 +42,51 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='w-full h-72 p-3 overflow-hidden border-r-2 border-[#A3A1A7]  hover:cursor-pointer'
+      className='h-[23.125rem] p-3 overflow-hidden  border-r-2 border-border-color  hover:cursor-pointer'
       onClick={onClick}
     >
-      <div className='flex items-center justify-between'>
-        <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
-      </div>
-      <div className='text-xl font-semibold font-rubik'>{card.title}</div>
-      <div className='flex items-end'>
-        <div className='col-span-3 overflow-hidden'>
-          {!isEmpty(tasks)
-            ? tasks
-                ?.slice(0, 3)
-                ?.map((task) => <TaskPreview key={'prevtask-' + task.id} task={task} />)
-            : card?.description?.map((line) => (
-                <div key={'description-' + line} className='text-sm'>
-                  {line}
-                </div>
-              ))}
-        </div>
-        {tasks?.length > 4 ? (
-          <span className='ml-3 flex items-center h-full font-semibold underline text-lg'>
-            +{tasks.length - 4}
-          </span>
-        ) : null}
-      </div>
-      <div className='grid grid-cols-5 mt-5'>
-        {!isEmpty(imageUrls) ? (
-          <div className='flex col-span-2'>
-            {imageUrls?.map((url) => (
-              <Image key={'image-' + url} className='w-20' src={url} alt='' />
-            ))}
-            {card?.files?.length > 5 ? (
-              <span className='ml-3 flex items-center h-full font-semibold underline text-lg'>
-                +{card.files.length - 5}
-              </span>
-            ) : null}
+      <div className='m-4'>
+        <div className='flex items-center justify-between mb-2'>
+          <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
+          <div className='flex gap-x-2'>
+            <MessageIcon  count={countChats} />
+            <UpdateIcon count={0} />
           </div>
-        ) : null}
+        </div>
+        <div className='text-lg font-semibold font-rubik not-italic mb-4 '>{card.title}</div>
+        <div className='flex items-end sm:max-w-[390px] md:max-w-[300px] lg:max-w-[450px]'>
+          <div className='col-span-3 overflow-hidden'>
+            {!isEmpty(tasks)
+              ? tasks
+                  ?.slice(0, 3)
+                  ?.map((task) => <TaskPreview key={'prevtask-' + task.id} task={task} />)
+              : card?.description?.map((line) => (
+                  <div key={'description-' + line} className='text-sm'>
+                    {line}
+                  </div>
+                ))}
+          </div>
+          {tasks?.length > 4 ? (
+            <span className='ml-3 flex items-center h-full underline text-sm'>
+              +{tasks.length - 4}
+            </span>
+          ) : null}
+        </div>
+        {/* <div className='grid grid-cols-5 mt-5'> */}
+        <div className='flex mt-5 sm:max-w-[390px] md:max-w-[300px] lg:max-w-[450px] '>
+          {!isEmpty(imageUrls) ? (
+            <div className='flex col-span-2 '>
+              {imageUrls?.map((url, idx) => (
+                <Image key={'image-' + url + '-' + idx} className='w-12' src={url} alt='' />
+              ))}
+              {card?.files?.length > 5 ? (
+                <span className='ml-3 flex items-center h-full font underline text-sm ml-12'>
+                  +{card.files.length - 5}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   )

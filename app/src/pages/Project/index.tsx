@@ -5,24 +5,26 @@ import Card from '../../components/Card'
 import { Button } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import CreateProject from '../../components/Project/CreateProject'
-import { saveOrCreateCard } from '../../services/cards'
 import { useNavigate } from 'react-router-dom'
 import { useFirebaseDocument } from '../../hooks/useFirebaseDocument'
 import { useFirebaseCollection } from '../../hooks/useFirebaseCollection'
 import CreateUser from '../../components/User/CreateUser'
 import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
-import { addUserToProject } from '../../services/project'
+import { addUserToProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
+import { genId } from '../../utils'
 
 interface IProjectPageProps {}
 
 const ProjectPage = (props: IProjectPageProps) => {
   const { id: projectId = '', cardId } = useParams()
   const { user } = useAuth()
+  const [search, setSearch] = useState('')
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   const { data: project, loading: projectLoading } = useFirebaseDocument(`projects/${projectId}`)
 
@@ -30,20 +32,28 @@ const ProjectPage = (props: IProjectPageProps) => {
     `projects/${projectId}/cards`,
   )
 
-  const [selectedCard, setSelectedCard] = useState<ICard | null>(null)
+  const [selectedCard, setSelectedCard] = useState<Partial<ICard> | null>(null)
 
   useEffect(() => {
     if (projectLoading || !user) return
-
     const isUserExists = project?.users?.some(({ id }) => id === user.id)
     if (!isUserExists) addUserToProject(projectId, user)
   }, [project])
 
   useEffect(() => {
-    if (cardId && !isEmpty(cards)) {
-      const card = cards?.find((card) => card.id === cardId)
-      setSelectedCard(card || null)
+    if (!cardId) return
+
+    const card = !isEmpty(cards) ? cards?.find((card) => card.id === cardId) : null
+
+    if (card) return setSelectedCard(card)
+
+    const emptyCreatedCard: Partial<ICard> = {
+      id: cardId,
+      title: '',
+      content: [],
+      createdAt: new Date(),
     }
+    setSelectedCard(emptyCreatedCard)
   }, [cards, cardId])
 
   const isLoading = cardsLoading || projectLoading
@@ -51,12 +61,9 @@ const ProjectPage = (props: IProjectPageProps) => {
   const navigate = useNavigate()
 
   const onCreateNewCard = async () => {
-    const newCard: Partial<ICard> = {
-      title: '',
-    }
-    const card = await saveOrCreateCard(projectId, newCard)
+    const id = genId()
 
-    navigate(`/${projectId}/cards/${card.id}`, { replace: true })
+    navigate(`/${projectId}/cards/${id}`, { replace: true })
   }
 
   if (isLoading) return null
@@ -66,16 +73,26 @@ const ProjectPage = (props: IProjectPageProps) => {
   if (!user) return <CreateUser projectId={projectId} />
 
   return (
-    <div className='h-[calc(100vh_-_84px)]'>
+    <div className='h-screen overflow-y-hidden'>
       {/* Header */}
-      <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-[#A3A1A7]'>
+      <div className='flex justify-between items-center border-b-2 bg-[#EDEBF3] h-14 border-border-color'>
         <div
           onClick={() => navigate(`/${projectId}`)}
-          className='w-80 border-r-2 border-[#A3A1A7] p-5 text-4xl text-center  text-black hover:cursor-pointer'
+          className='w-80 border-r-2 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
         >
           <Logo />
         </div>
-        <div className='h-full flex items-center p-5 border-l-2 border-[#A3A1A7]'>
+        <div className='justify-self-start pl-6 flex items-center flex-1'>
+          <i className='absolute ri-search-line text-xl text-gray-400' />
+          <input
+            className='block pl-7 align-middle overflow-hidden border-none bg-[#EDEBF3] text-sm font-monaspace'
+            value={search}
+            onChange={onSearch}
+            placeholder='Find it all'
+          />
+        </div>
+
+        <div className='h-full flex items-center p-5 border-l-2 border-border-color'>
           <UserPanel user={user} />
         </div>
       </div>
@@ -93,6 +110,7 @@ const ProjectPage = (props: IProjectPageProps) => {
             projectId={projectId}
             cards={cards}
             users={project.users}
+            search={search}
           />
         )}
       </div>

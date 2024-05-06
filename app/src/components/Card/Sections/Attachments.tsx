@@ -11,10 +11,10 @@ function FileTile({ file }: { file: IFile }) {
   }
 }
 
-export default function Attachments({ files }: { files: IFile[] }) {
+export default function Attachments({ files }: { files: IFile[] | null }) {
   return (
     <div className='flex flex-col gap-2 p-3'>
-      {!isEmpty(files) ? (
+      {!isEmpty(files) && files ? (
         files.map((file) => <FileTile key={'f-' + file.id} file={file} />)
       ) : (
         <div className='text-gray-400 font-monaspace'>No attachments yet</div>

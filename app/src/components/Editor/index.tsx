@@ -16,7 +16,6 @@ import suggestion from './Mentions/suggestion'
 import { CustomMention } from './Mentions/CustomMention'
 import { customSchema, slashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
-import { saveOrCreateCard } from '../../services/cards'
 import { debounce } from 'lodash'
 import { Block, PartialBlock } from '@blocknote/core'
 import { ICard } from '../../types/Card'
@@ -45,25 +44,11 @@ function useWebRtc(
   onStatus: ({ status }: { status: string }) => void,
   onClose: ({ event }: { event: unknown }) => void,
 ) {
-  const lastId = useRef<string>(id)
-  const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
+  // const lastId = useRef<string>(id)
+  const [doc, setDoc] = useState<Y.Doc>(() => new Y.Doc())
 
   const [provider, setProvider] = useState(
-    new HocuspocusProvider({
-      url: HOCUSPOCUS_URL,
-      name: id,
-      document: doc,
-      onStatus,
-      onClose,
-    }),
-  )
-
-  useEffect(() => {
-    if (lastId.current === id) return
-    lastId.current = id
-    const doc = new Y.Doc()
-    setDoc(doc)
-    setProvider(
+    () =>
       new HocuspocusProvider({
         url: HOCUSPOCUS_URL,
         name: id,
@@ -71,9 +56,29 @@ function useWebRtc(
         onStatus,
         onClose,
       }),
-    )
+  )
 
-    // return () => provider?.destroy()
+  useEffect(() => {
+    // if (lastId.current === id) return
+    // lastId.current = id
+    console.log('useWebRTC: ', id)
+
+    const yDoc = new Y.Doc()
+    const yProvider = new HocuspocusProvider({
+      url: HOCUSPOCUS_URL,
+      name: id,
+      document: yDoc,
+      onStatus,
+      onClose,
+    })
+
+    setDoc(yDoc)
+    setProvider(yProvider)
+
+    return () => {
+      yDoc.destroy()
+      yProvider.destroy()
+    }
   }, [id])
 
   return { provider, doc }
@@ -91,9 +96,11 @@ function Editor({ projectId, card, users }: IEditorProps) {
       if (status !== 'connected') return
       setEditable(true)
       setLoading(false)
+      console.log('status document', status)
     },
     ({ event }) => {
       setEditable(false)
+      console.log('event CloseDocument', event)
     },
   )
 
@@ -117,7 +124,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
         }),
       ],
     },
-    onEditorContentChange: (editor) => onDebouncedSave(editor),
+    // onEditorContentChange: (editor) => onDebouncedSave(editor),
     collaboration: provider
       ? {
           provider,
@@ -138,7 +145,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
   }, [editable])
 
   const onDebouncedSave = debounce(async (editor) => {
-    console.log('editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
+    console.log('onDebounceSave editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
   }, SAVING_DELAY)
 
   useEffect(() => {

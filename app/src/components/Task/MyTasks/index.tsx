@@ -1,12 +1,13 @@
 import { ITask } from '../../../types/Task'
 import { useState, useEffect } from 'react'
 import { isEmpty } from 'lodash'
-import { getAllUserTasks } from '../../../services/tasks'
+import { getAllUserTasks } from '../../../services'
 import { useAuth } from '../../../context/AuthContext'
 import TaskPreview from '../TaskPreview'
 import { useNavigate } from 'react-router-dom'
 import { Menu } from '@mantine/core'
-import { getAllUserProject } from '../../../services/project'
+import { getAllUserProject } from '../../../services'
+import { genId } from '../../../utils'
 
 interface IMyTasksProps {
   projectId: string
@@ -29,7 +30,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
   const goToProject = (id) => navigate(`/${id}`, { replace: true })
 
   return (
-    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-[#A3A1A7] h-screen'>
+    <div className='flex flex-col items-center gap-1 w-80 border-r-2 border-border-color h-screen'>
       <Menu
         shadow='md'
         width={280}
@@ -38,10 +39,8 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         onChange={(opened) => setMenuOpened(opened)}
       >
         <Menu.Target>
-          <div
-            className=' border-[#A3A1A7] h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'
-          >
-            <span className='font-rubik text-lg '>{title}</span> 
+          <div className=' border-border-color h-14 px-5 w-80 border-b-2 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
+            <span className='font-rubik text-lg '>{title}</span>
 
             {isMenuOpened ? (
               <i className='ri-arrow-down-s-line text-2xl' />
@@ -51,20 +50,30 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
           </div>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Label className='text-lg font-monaspace'>Your projects</Menu.Label>
+          <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
           {projects.map((project, idx) => (
             <Menu.Item
               key={'prjx-' + idx}
-              className='text-lg font-rubik'
+              className='text-md font-rubik'
               onClick={() => goToProject(project.id)}
             >
-              {project.title}
+              {project.title || 'Empty project'}
             </Menu.Item>
           ))}
+          <div className='border-t-[2px] pt-1 mt-1'>
+            <Menu.Item
+              className='text-md font-rubik text-gray-500'
+              onClick={() => (window.location.href = `/${genId()}`)}
+            >
+              Create new project
+            </Menu.Item>
+          </div>
         </Menu.Dropdown>
       </Menu>
       <div className='w-full px-5 py-3'>
-        <div className='flex items-center text-sm mb-3 font-monaspace font-normal'>
+        <div
+          className='flex items-center text-sm mb-3 font-monaspace font-normal'
+        >
           What to do • {tasks.length}
         </div>
         {!isEmpty(tasks) ? (

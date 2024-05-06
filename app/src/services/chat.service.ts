@@ -1,7 +1,7 @@
 import { get, push, ref, remove, set } from 'firebase/database'
 import { db, realtimeDb } from '../config/firebase'
 import { IMessage } from '../types/Chat'
-import { saveChatIdsToCard } from './cards'
+import { saveChatIdsToCard } from './card.service'
 import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore'
 
 export const createNewChat = async ({
