@@ -9,9 +9,9 @@ interface IProjectUsersProps {
 function ProjectUsers({ users }: IProjectUsersProps) {
   return (
     <Tooltip.Group openDelay={200} closeDelay={100}>
-      <Avatar.Group spacing='sm'>
+        <Avatar.Group spacing='sm'>
         {!isEmpty(users)
-          ? users.slice(0, 4).map((user, index) => (
+          ? users.map((user, index) => (
               <Tooltip key={'project-' + user.id} label={index > 3?index+1:user.name} withArrow>
                 <Avatar
                   size={24}

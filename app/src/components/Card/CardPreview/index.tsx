@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash'
 import { ICard } from '../../../types/Card'
 import { Image } from '@mantine/core'
 import TaskPreview from '../../Task/TaskPreview'
-import { Square, Circle } from '../../../components/Project/Content/IconsCard'
+import { MessageIcon, UpdateIcon } from '../../../components/Project/Content/IconsCard'
 import ProjectUsers from '../../User/ProjectUsers'
 
 interface ICardPreviewProps {
@@ -30,6 +30,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     ?.filter((file) => file.type === 'image')
     ?.slice(0, 5)
     ?.map((file) => file.url)
+
+  const countChats = card?.chatIds?.length || 0
   const tasks = card?.tasks
   const createdAt = new Date(card.createdAt.seconds * 1000)
   const day = createdAt.getDate()
@@ -39,11 +41,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     createdAt.getMinutes() < 10 ? '0' + createdAt.getMinutes() : createdAt.getMinutes()
 
   return (
-    // <div
-
-    //   className='min-w-[23.75rem] max-w-[37.5rem] h-[23.125rem] p-3 overflow-hidden  border-r-2 border-border-color  hover:cursor-pointer'
-    //   onClick={onClick}
-    // >
     <div
       className='h-[23.125rem] p-3 overflow-hidden  border-r-2 border-border-color  hover:cursor-pointer'
       onClick={onClick}
@@ -52,8 +49,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         <div className='flex items-center justify-between mb-2'>
           <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
           <div className='flex gap-x-2'>
-            <Square />
-            <Circle />
+            <MessageIcon  count={countChats} />
+            <UpdateIcon count={0} />
           </div>
         </div>
         <div className='text-lg font-semibold font-rubik not-italic mb-4 '>{card.title}</div>

@@ -79,14 +79,6 @@ const CreateProject = (props: ICreateProjectProps) => {
             // onChange={(e) => setTitle(e.target.value)}
             onChange={handleInputChange}
           ></textarea>
-          {/* <input
-            style={{ backgroundColor: 'red' }}
-            // className='block align-middle text-sm font-monaspace border-none mt-6 w-full h-[240px] '
-            className='block text-sm font-monaspace border-none mt-6 w-full h-[240px]'
-            placeholder='Description'
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          /> */}
 
           <textarea
             className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[188px] placeholder-slate-400 text-[#47444F] leading-tight'
