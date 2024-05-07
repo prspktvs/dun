@@ -92,7 +92,7 @@ export default function AllCardsContent({
             <div className='flex items-center gap-x-2'>
               Last modified
               <div className='sm:hidden md:flex'>
-                <UnreadMarker />
+                {/* <UnreadMarker /> */}
               </div>
             </div>
             <div className='sm:hidden md:flex'>Date created</div>
@@ -102,12 +102,12 @@ export default function AllCardsContent({
             <ProjectUsers users={users} />
           </div>
 
-          <div className='flex items-center md:justify-center md:px-5 sm:px-3 '>
+          <div className='flex items-center md:justify-center md:px-5 sm:px-3  '>
             <Button
-              className='font-monaspace'
+              className='font-monaspace bg-[#8279BD]'
               radius={0}
               variant='outline'
-              color='#464646'
+              color='#FFFFFF'
               onClick={onCreateNewCard}
             >
               <span className='pr-1 text-xl font-thin'>+</span>Topic
@@ -116,7 +116,7 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
+      {/* <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
         <div className='text-zinc-700 text-xs font-normal font-monaspace flex gap-x-4'>
           <div className='flex items-center gap-x-2 bg-[#EDEBF3] p-2'>
             Tab <UnreadMarker />
@@ -128,7 +128,7 @@ export default function AllCardsContent({
             Date created <UnreadMarker />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className=' h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>

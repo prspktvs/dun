@@ -49,7 +49,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         <div className='flex items-center justify-between mb-2'>
           <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
           <div className='flex gap-x-2'>
-            <MessageIcon  count={countChats} />
+            <MessageIcon count={countChats} />
             <UpdateIcon count={0} />
           </div>
         </div>
