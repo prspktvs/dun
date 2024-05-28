@@ -3,6 +3,7 @@ import BoxInformatinSection3 from './BoxInformatinSection3'
 import DualSectionBox from '../DualSectionBox/DualSectionBox'
 import backgroundSection3 from '/assets/bgSection3.svg'
 import clsx from 'clsx'
+import { DownArrow } from '../../../components/Project/Content/IconsCard'
 
 interface IFeatureCard {
   firstMessage: string
@@ -37,18 +38,22 @@ function Section3() {
     <>
       <div
         style={{ backgroundImage: `url(${backgroundSection3})` }}
-        className={clsx(
-          'w-full h-[760px] flex justify-between flex-col bg-no-repeat bg-cover bg-paper border-t-2',
-        )}
+        className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-2')}
       >
-        <div className='flex justify-around items-center mt-[79px] '>
-          <img src='./leftMouse.svg' />
-          <div className='border-t-2 border-l-2 border-r-2 border-black'>
+        <div className='flex flex-col justify-around items-center  '>
+          <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10'>
+            <img src='./leftMouse.svg' />
+            <div className='flex justify-center content-center my-4 md:hidden'>
+              <DownArrow />
+            </div>
+            <img src='./rightMouse.svg' className='sm:mb-8 md:mb-0' />
+          </div>
+
+          <div className='border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
             {FEATURES.map((item, index) => (
               <BoxInformatinSection3 key={'feature-' + index} index={index} {...item} />
             ))}
           </div>
-          <img src='./rightMouse.svg' />
         </div>
         <DualSectionBox
           title={'Hey pal, consider it solved!'}

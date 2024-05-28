@@ -91,9 +91,7 @@ export default function AllCardsContent({
             <div className='bg-[#EDEBF3] p-2 '>Last viewed</div>
             <div className='flex items-center gap-x-2'>
               Last modified
-              <div className='sm:hidden md:flex'>
-                {/* <UnreadMarker /> */}
-              </div>
+              <div className='sm:hidden md:flex'>{/* <UnreadMarker /> */}</div>
             </div>
             <div className='sm:hidden md:flex'>Date created</div>
           </div>
