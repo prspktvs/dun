@@ -25,7 +25,7 @@ function LandingPage() {
         <div className='w-full flex flex-col bg-paper '>
           <div className='w-full mx-auto md:my-[79px]   sm:flex sm:justify-center sm:items-center sm:border-b-2 md:border-b-0 border-black'>
             <img
-              className='sm:w-[500px] lg:w-[922.5px] sm:mb-7 lg:h-[420.5px]'
+              className='sm:w-[500px] lg:w-[922.5px] sm:mb-7 lg:h-[420.5px] w-full mt-4'
               src='./DUN-Hero 1.jpg'
             />
           </div>
@@ -40,10 +40,10 @@ function LandingPage() {
         </div>
         {/* section-2 */}
         <div className='grid lg:grid-cols-2 bg-paper sm:grid-cols-1'>
-          <div className='uppercase text-[40px] lg:h-[108px] m-5 w-full'>
+          <div className='uppercase text-[40px] lg:h-[108px] m-5 sm:w-full'>
             Let's ramp up that productivity
           </div>
-          <div className='text-md lg:w-[550px] md:justify-self-end lg:m-6 font-monaspace sm:mx-5 sm:mb-5 '>
+          <div className='text-md lg:w-[550px] md:justify-self-end lg:m-6 font-monaspace sm:mx-5 sm:mb-5 ml-3 '>
             DUN's the go-to service for sorting out your work processes and keeping those projects
             in check. Plus, it lets you chat it up with your team and customers all in one place.
             Think of DUN as your go-to app for getting down to some serious "focused work".

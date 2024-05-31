@@ -17,7 +17,7 @@ function FileTile({ file, onClick }: { file: IFile; onClick: () => void }) {
       {file.type === 'image' && (
         <img
           src={file.url}
-          className='w-full h-40 rounded-md object-cover cursor-pointer'
+          className='w-full h-40 rounded-md object-cover cursor-pointer '
           onClick={onClick}
         />
       )}
@@ -49,13 +49,13 @@ export default function Attachments({ files }: { files: IFile[] | null }) {
   }
 
   return (
-    <div className='flex flex-col gap-2 p-3'>
+    <div className='flex flex-col gap-2 p-3 h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll w-full'>
       <Modal
         styles={{ content: { backgroundColor: 'black' } }}
         opened={opened}
         onClose={close}
         withCloseButton={false}
-        size='auto'
+        size='100%'
         overlayProps={{
           backgroundOpacity: 0.8,
         }}
@@ -69,19 +69,19 @@ export default function Attachments({ files }: { files: IFile[] | null }) {
             <div className='text-white'>Download</div>
           </div>
         </div>
-        <div className='flex justify-center mt-2 items-center gap-x-10 mb-10'>
-          <RiArrowRightSLine onClick={handleNext} className='cursor-pointer text-white' />
+        <div className='flex justify-center mt-2 items-center mb-10'>
+          <RiArrowRightSLine onClick={handlePrevious} className='cursor-pointer text-white' />
 
-          <div className='w-fit'>
+          <div className='w-full flex justify-center items-center'>
             {selectedIndex !== null && files && (
               <Image
                 src={files[selectedIndex].url}
                 alt='Selected attachment'
-                className='h-[600px]'
+                className='h-[600px] w-fit'
               />
             )}
           </div>
-          <RiArrowLeftSLine onClick={handlePrevious} className='cursor-pointer text-white' />
+          <RiArrowLeftSLine onClick={handleNext} className='cursor-pointer text-white' />
         </div>
       </Modal>
 

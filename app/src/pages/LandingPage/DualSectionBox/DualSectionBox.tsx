@@ -16,7 +16,7 @@ function DualSectionBox({
       <p className='text-4xl uppercase leading-10 ml-5 sm:mb-0 md:mb-6'>{title}</p>
 
       <div className='grid lg:grid-cols-2 items-center lg:border-t-2 border-black lg:gap-x-2.5 sm:border-t-0'>
-        <p className='sm:w-10/12 text-sm sm:w-full h-[68px] m-5 font-monaspace md:w-11/12'>
+        <p className='sm:w-10/12 text-sm sm:w-full h-[68px] sm:m-5 font-monaspace md:w-11/12 mb-12 mt-0 ml-5'>
           {desc}
         </p>
 

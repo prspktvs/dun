@@ -40,8 +40,8 @@ function Section3() {
         style={{ backgroundImage: `url(${backgroundSection3})` }}
         className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-2')}
       >
-        <div className='flex flex-col justify-around items-center  '>
-          <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10'>
+        <div className='flex flex-col justify-around items-center'>
+          <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10 flex-col'>
             <img src='./leftMouse.svg' />
             <div className='flex justify-center content-center my-4 md:hidden'>
               <DownArrow />
@@ -49,7 +49,7 @@ function Section3() {
             <img src='./rightMouse.svg' className='sm:mb-8 md:mb-0' />
           </div>
 
-          <div className='border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
+          <div className='w-full border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
             {FEATURES.map((item, index) => (
               <BoxInformatinSection3 key={'feature-' + index} index={index} {...item} />
             ))}
