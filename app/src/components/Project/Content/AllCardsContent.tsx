@@ -7,7 +7,7 @@ import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from './IconsCard'
+import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 
 function ScrollUpdatedCardControls({
   length,
@@ -88,12 +88,12 @@ export default function AllCardsContent({
         </div> */}
         <div  className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-5 '>
-            <div className='bg-[#EDEBF3] p-2 '>Last viewed</div>
-            <div className='flex items-center gap-x-2'>
+            <div className='hidden md:flex'>Last viewed</div>
+            <div className='hidden md:flex'>
               Last modified
-              <div className='sm:hidden md:flex'>{/* <UnreadMarker /> */}</div>
+              <div className='hidden md:flex'>{/* <UnreadMarker /> */}</div>
             </div>
-            <div className='sm:hidden md:flex'>Date created</div>
+            <div className='flex bg-[#EDEBF3] p-2'>Date created</div>
           </div>
 
           <div className='flex h-full items-center border-x-2 border-border-color md:px-7 sm:px-2'>

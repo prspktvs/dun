@@ -6,7 +6,6 @@ import { Modal, Button, Input } from '@mantine/core'
 import { useNavigate, useParams } from 'react-router-dom'
 import Editor from '../Editor'
 import { removeCard, saveOrCreateCard } from '../../services'
-import CardPreview from './CardPreview'
 import Discussions from './Sections/Discussions'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import clsx from 'clsx'
@@ -68,7 +67,7 @@ const Card = ({ card, users }: ICardProps) => {
   }
 
   return (
-    <div className=' w-full'>
+    <div className='w-full'>
       <div className='flex items-center justify-between h-14 border-b-2 border-border-color'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace hover:cursor-pointer' onClick={goBack}>
@@ -109,7 +108,7 @@ const Card = ({ card, users }: ICardProps) => {
           <Editor projectId={projectId} card={card} users={users} />
         </div>
         {/* Card attachments, chats */}
-        <div className=' border-l-2 border-border-color w-full'>
+        <div className='border-l-2 border-border-color w-full'>
           <div className='flex items-center justify-between h-14 border-b-2 border-border-color'>
             <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color '>
               <div

@@ -5,7 +5,7 @@ import Section2 from './Section2'
 import Section3 from './Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
-import { Hamburger } from './Icons'
+import { Hamburger } from '../../components/icons'
 
 function LandingPage() {
   return (
@@ -26,7 +26,7 @@ function LandingPage() {
           <div className='w-full mx-auto md:my-[79px]   sm:flex sm:justify-center sm:items-center sm:border-b-2 md:border-b-0 border-black'>
             <img
               className='sm:w-[500px] lg:w-[922.5px] sm:mb-7 lg:h-[420.5px] w-full mt-4'
-              src='./DUN-Hero 1.jpg'
+              src='./assets/landing/dun-hero.jpg'
             />
           </div>
           <DualSectionBox

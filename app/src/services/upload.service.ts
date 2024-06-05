@@ -5,6 +5,7 @@ export const uploadImage = async (path: string, file: Blob | Uint8Array | ArrayB
   try {
     const snapshot = await uploadBytes(ref(storage, `images/${path}`), file)
     const url = await getDownloadURL(snapshot.ref)
+    
     return url
   } catch (e) {
     console.log(e)

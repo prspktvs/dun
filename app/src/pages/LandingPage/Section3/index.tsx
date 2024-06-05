@@ -1,9 +1,9 @@
 import React from 'react'
 import BoxInformatinSection3 from './BoxInformatinSection3'
 import DualSectionBox from '../DualSectionBox/DualSectionBox'
-import backgroundSection3 from '/assets/bgSection3.svg'
+import GridSvg from '/assets/landing/grid.svg'
 import clsx from 'clsx'
-import { DownArrow } from '../../../components/Project/Content/IconsCard'
+import { DownArrow } from '../../../components/icons'
 
 interface IFeatureCard {
   firstMessage: string
@@ -37,16 +37,16 @@ function Section3() {
   return (
     <>
       <div
-        style={{ backgroundImage: `url(${backgroundSection3})` }}
+        style={{ backgroundImage: `url(${GridSvg})` }}
         className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-2')}
       >
         <div className='flex flex-col justify-around items-center'>
           <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10 flex-col'>
-            <img src='./leftMouse.svg' />
+            <img src='./assets/landing/leftMouse.svg' />
             <div className='flex justify-center content-center my-4 md:hidden'>
               <DownArrow />
             </div>
-            <img src='./rightMouse.svg' className='sm:mb-8 md:mb-0' />
+            <img src='./assets/landing/rightMouse.svg' className='sm:mb-8 md:mb-0' />
           </div>
 
           <div className='w-full border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>

@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { RightArrow, DownArrow } from '../../../components/Project/Content/IconsCard'
+import { RightArrow, DownArrow } from '../../../components/icons'
 
 interface IFeatureCard {
   firstMessage: string
@@ -22,7 +22,7 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
             isEven ? 'bg-paper' : 'bg-[#F5F0EB]',
           )}
         >
-          <p className='w-[310px] text-sm font-monaspace sm:ml-4 md:ml-0 ml-4 '>{firstMessage}</p>
+          <p className='w-[310px] text-sm font-monaspace sm:ml-4 md:ml-0 ml-4 text-center sm:text-left'>{firstMessage}</p>
           <div className='md:flex sm:hidden hidden'>
             <RightArrow />
           </div>
@@ -30,7 +30,7 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
             <DownArrow />
           </div>
 
-          <p className='w-[310px] text-sm font-monaspace ml-4'>{secondMessage}</p>
+          <p className='w-[310px] text-sm font-monaspace ml-4 text-center sm:text-left'>{secondMessage}</p>
         </div>
       </div>
     </>

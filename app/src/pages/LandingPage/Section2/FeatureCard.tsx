@@ -27,7 +27,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
         style={{ backgroundImage }}
         className='w-full h-full justify-center items-center flex  bg-no-repeat bg-cover bg-center '
       >
-        <div className='text-lg flex sm:w-[391px] ml-6 h-min font-monaspace '>{title}</div>
+        <div className='text-lg flex sm:w-[391px] ml-6 h-min font-monaspace text-center sm:text-left'>{title}</div>
       </div>
 
       <div

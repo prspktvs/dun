@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash'
 import { ICard } from '../../../types/Card'
 import { Image } from '@mantine/core'
 import TaskPreview from '../../Task/TaskPreview'
-import { MessageIcon, UpdateIcon } from '../../../components/Project/Content/IconsCard'
+import { MessageIcon, UpdateIcon } from '../../icons'
 import ProjectUsers from '../../User/ProjectUsers'
 
 interface ICardPreviewProps {

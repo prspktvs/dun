@@ -74,7 +74,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
     setNewMessage('')
   }
   return (
-    <div className='h-full flex flex-col'>
+    <div className='h-[calc(100%-_56px)] flex flex-col'>
       <div
         className='underline font-monaspace hover:cursor-pointer p-3 border-b-2 border-border-color'
         onClick={closeChat}
