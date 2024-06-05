@@ -5,7 +5,7 @@ import Section2 from './Section2'
 import Section3 from './Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
-import { Hamburger } from './Icons'
+import { Hamburger } from '../../components/icons'
 
 function LandingPage() {
   return (
@@ -22,9 +22,12 @@ function LandingPage() {
         </div>
 
         {/* section-1 */}
-        <div className='w-full flex flex-col bg-paper'>
-          <div className='w-[922.5px] h-[420.5px] mx-auto my-[69px]'>
-            <img src='./DUN-Hero 1.jpg' />
+        <div className='w-full flex flex-col bg-paper '>
+          <div className='w-full mx-auto md:my-[79px]   sm:flex sm:justify-center sm:items-center sm:border-b-2 md:border-b-0 border-black'>
+            <img
+              className='sm:w-[500px] lg:w-[922.5px] sm:mb-7 lg:h-[420.5px] w-full mt-4'
+              src='./assets/landing/dun-hero.jpg'
+            />
           </div>
           <DualSectionBox
             title='Zero in on the important stuff '
@@ -36,11 +39,11 @@ function LandingPage() {
           <LineSection />
         </div>
         {/* section-2 */}
-        <div className='grid grid-cols-2 bg-paper'>
-          <div className='uppercase text-[40px] h-[108px] m-5 w-full'>
+        <div className='grid lg:grid-cols-2 bg-paper sm:grid-cols-1'>
+          <div className='uppercase text-[40px] lg:h-[108px] m-5 sm:w-full'>
             Let's ramp up that productivity
           </div>
-          <div className='text-md w-[550px] justify-self-end m-6 font-monaspace'>
+          <div className='text-md lg:w-[550px] md:justify-self-end lg:m-6 font-monaspace sm:mx-5 sm:mb-5 ml-3 '>
             DUN's the go-to service for sorting out your work processes and keeping those projects
             in check. Plus, it lets you chat it up with your team and customers all in one place.
             Think of DUN as your go-to app for getting down to some serious "focused work".

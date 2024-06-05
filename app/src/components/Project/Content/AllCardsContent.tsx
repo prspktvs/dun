@@ -7,7 +7,7 @@ import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
-import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from './IconsCard'
+import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 
 function ScrollUpdatedCardControls({
   length,
@@ -75,9 +75,9 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full h-full overflow-hidden pb-32'>
+    <div  className='w-full h-full overflow-hidden pb-32'>
       {/* Search line */}
-      <div className='border-border-color flex items-center justify-between h-14 '>
+      <div  className='border-border-color flex items-center justify-between h-14 '>
         {/* <div className='relative mx-3 w-full'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -86,28 +86,26 @@ export default function AllCardsContent({
             onChange={onSearch}
           />
         </div> */}
-        <div className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
+        <div  className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-5 '>
-            <div className='bg-[#EDEBF3] p-2 '>Last viewed</div>
-            <div className='flex items-center gap-x-2'>
+            <div className='hidden md:flex'>Last viewed</div>
+            <div className='hidden md:flex'>
               Last modified
-              <div className='sm:hidden md:flex'>
-                <UnreadMarker />
-              </div>
+              <div className='hidden md:flex'>{/* <UnreadMarker /> */}</div>
             </div>
-            <div className='sm:hidden md:flex'>Date created</div>
+            <div className='flex bg-[#EDEBF3] p-2'>Date created</div>
           </div>
 
           <div className='flex h-full items-center border-x-2 border-border-color md:px-7 sm:px-2'>
             <ProjectUsers users={users} />
           </div>
 
-          <div className='flex items-center md:justify-center md:px-5 sm:px-3 '>
+          <div className='flex items-center md:justify-center md:px-5 sm:px-3  '>
             <Button
-              className='font-monaspace'
+              className='font-monaspace bg-[#8279BD]'
               radius={0}
               variant='outline'
-              color='#464646'
+              color='#FFFFFF'
               onClick={onCreateNewCard}
             >
               <span className='pr-1 text-xl font-thin'>+</span>Topic
@@ -116,7 +114,7 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
+      {/* <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
         <div className='text-zinc-700 text-xs font-normal font-monaspace flex gap-x-4'>
           <div className='flex items-center gap-x-2 bg-[#EDEBF3] p-2'>
             Tab <UnreadMarker />
@@ -128,7 +126,7 @@ export default function AllCardsContent({
             Date created <UnreadMarker />
           </div>
         </div>
-      </div>
+      </div> */}
       <div className=' h-full overflow-y-scroll hide-scrollbar'>
         {isEmpty(filteredCards) ? (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>

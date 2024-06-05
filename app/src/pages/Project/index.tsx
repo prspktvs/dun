@@ -97,7 +97,7 @@ const ProjectPage = (props: IProjectPageProps) => {
         </div>
       </div>
 
-      <div className='flex h-full w-full'>
+      <div className='flex h-full w-full overflow-y-hidden'>
         {/* Left panel */}
         <MyTasks projectId={projectId} title={project.title} />
 

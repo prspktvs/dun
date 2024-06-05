@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash'
 import { ICard } from '../../../types/Card'
 import { Image } from '@mantine/core'
 import TaskPreview from '../../Task/TaskPreview'
-import { MessageIcon, UpdateIcon } from '../../../components/Project/Content/IconsCard'
+import { MessageIcon, UpdateIcon } from '../../icons'
 import ProjectUsers from '../../User/ProjectUsers'
 
 interface ICardPreviewProps {
@@ -49,7 +49,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         <div className='flex items-center justify-between mb-2'>
           <div className='text-xs text-gray-500 font-monaspace'>{`${day} ${month} at ${hours}:${minutes}`}</div>
           <div className='flex gap-x-2'>
-            <MessageIcon  count={countChats} />
+            <MessageIcon count={countChats} />
             <UpdateIcon count={0} />
           </div>
         </div>

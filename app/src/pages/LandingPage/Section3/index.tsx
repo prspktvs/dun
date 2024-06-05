@@ -1,8 +1,9 @@
 import React from 'react'
 import BoxInformatinSection3 from './BoxInformatinSection3'
 import DualSectionBox from '../DualSectionBox/DualSectionBox'
-import backgroundSection3 from '/assets/bgSection3.svg'
+import GridSvg from '/assets/landing/grid.svg'
 import clsx from 'clsx'
+import { DownArrow } from '../../../components/icons'
 
 interface IFeatureCard {
   firstMessage: string
@@ -36,19 +37,23 @@ function Section3() {
   return (
     <>
       <div
-        style={{ backgroundImage: `url(${backgroundSection3})` }}
-        className={clsx(
-          'w-full h-[760px] flex justify-between flex-col bg-no-repeat bg-cover bg-paper border-t-2',
-        )}
+        style={{ backgroundImage: `url(${GridSvg})` }}
+        className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-2')}
       >
-        <div className='flex justify-around items-center mt-[79px] '>
-          <img src='./leftMouse.svg' />
-          <div className='border-t-2 border-l-2 border-r-2 border-black'>
+        <div className='flex flex-col justify-around items-center'>
+          <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10 flex-col'>
+            <img src='./assets/landing/leftMouse.svg' />
+            <div className='flex justify-center content-center my-4 md:hidden'>
+              <DownArrow />
+            </div>
+            <img src='./assets/landing/rightMouse.svg' className='sm:mb-8 md:mb-0' />
+          </div>
+
+          <div className='w-full border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
             {FEATURES.map((item, index) => (
               <BoxInformatinSection3 key={'feature-' + index} index={index} {...item} />
             ))}
           </div>
-          <img src='./rightMouse.svg' />
         </div>
         <DualSectionBox
           title={'Hey pal, consider it solved!'}

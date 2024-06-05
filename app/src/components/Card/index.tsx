@@ -6,7 +6,6 @@ import { Modal, Button, Input } from '@mantine/core'
 import { useNavigate, useParams } from 'react-router-dom'
 import Editor from '../Editor'
 import { removeCard, saveOrCreateCard } from '../../services'
-import CardPreview from './CardPreview'
 import Discussions from './Sections/Discussions'
 import { useChats } from '../../context/ChatContext/ChatContext'
 import clsx from 'clsx'
@@ -98,7 +97,7 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll w-full z-20  mt-[52px] ml-[88px] mr-[30px] '>
+        <div className='h-[calc(100vh_-_164px)] hide-scrollbar overflow-y-scroll w-full  z-20  mt-[52px] ml-[50px]'>
           <input
             className='block font-rubik align-middle text-[32px] overflow-hidden border-none ml-12 mb-6'
             placeholder='Type title'
@@ -109,37 +108,35 @@ const Card = ({ card, users }: ICardProps) => {
           <Editor projectId={projectId} card={card} users={users} />
         </div>
         {/* Card attachments, chats */}
-        <div className='min-w-[400px] lg:min-w-[500px] xl:min-w-[600px] border-l-2 border-border-color'>
+        <div className='border-l-2 border-border-color w-full'>
           <div className='flex items-center justify-between h-14 border-b-2 border-border-color'>
-            <div className='flex items-center h-full w-[400px] lg:w-[500px] xl:w-[600px]'>
-              <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color'>
-                <div
-                  className={clsx(
-                    'flex items-center justify-center font-monaspace',
-                    activeTab === 'discussions' ? 'bg-black text-white' : '',
-                  )}
-                  onClick={() => setActiveTab('discussions')}
-                >
-                  Discussions • {unreadDiscussions}
-                </div>
-                <div
-                  className={clsx(
-                    'flex items-center justify-center font-monaspace',
-                    activeTab === 'attachments' ? 'bg-black text-white' : '',
-                  )}
-                  onClick={() => setActiveTab('attachments')}
-                >
-                  Attachments • {card?.files?.length || 0}
-                </div>
-                <div
-                  className={clsx(
-                    'flex items-center justify-center font-monaspace',
-                    activeTab === 'updates' ? 'bg-black text-white' : '',
-                  )}
-                  onClick={() => setActiveTab('updates')}
-                >
-                  Updates • 0
-                </div>
+            <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color '>
+              <div
+                className={clsx(
+                  'flex items-center justify-center font-monaspace ',
+                  activeTab === 'discussions' ? 'bg-black text-white' : '',
+                )}
+                onClick={() => setActiveTab('discussions')}
+              >
+                Discussions • {unreadDiscussions}
+              </div>
+              <div
+                className={clsx(
+                  'flex items-center justify-center font-monaspace',
+                  activeTab === 'attachments' ? 'bg-black text-white' : '',
+                )}
+                onClick={() => setActiveTab('attachments')}
+              >
+                Attachments • {card?.files?.length || 0}
+              </div>
+              <div
+                className={clsx(
+                  'flex items-center justify-center font-monaspace',
+                  activeTab === 'updates' ? 'bg-black text-white' : '',
+                )}
+                onClick={() => setActiveTab('updates')}
+              >
+                Updates • 0
               </div>
             </div>
           </div>
