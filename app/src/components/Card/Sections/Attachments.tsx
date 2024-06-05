@@ -11,13 +11,13 @@ import {
 } from '../../Project/Content/IconsCard'
 import { useDisclosure } from '@mantine/hooks'
 
-function FileTile({ file, onClick }: { file: IFile; onClick: () => void }) {
+function FileTile({ file, onClick }) {
   return (
     <>
       {file.type === 'image' && (
         <img
           src={file.url}
-          className='w-full h-40 rounded-md object-cover cursor-pointer '
+          className='w-full h-40 rounded-md object-cover cursor-pointer'
           onClick={onClick}
         />
       )}
@@ -25,11 +25,12 @@ function FileTile({ file, onClick }: { file: IFile; onClick: () => void }) {
   )
 }
 
-export default function Attachments({ files }: { files: IFile[] | null }) {
+export default function Attachments({ files }) {
   const [opened, { open, close }] = useDisclosure(false)
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const [downloaded, setDownloaded] = useState(false)
 
-  const handleImageClick = (index: number) => {
+  const handleImageClick = (index) => {
     setSelectedIndex(index)
     open()
   }
@@ -46,6 +47,11 @@ export default function Attachments({ files }: { files: IFile[] | null }) {
       const prevIndex = (selectedIndex - 1 + files.length) % files.length
       setSelectedIndex(prevIndex)
     }
+  }
+
+  const handleOpenInNewTab = (url) => {
+    setDownloaded(true)
+    window.open(url, '_blank')
   }
 
   return (
@@ -66,7 +72,12 @@ export default function Attachments({ files }: { files: IFile[] | null }) {
           <Plus />
           <div className='flex ml-5 gap-x-1'>
             <DownloadIcon />
-            <div className='text-white'>Download</div>
+            <div
+              onClick={() => handleOpenInNewTab(files[selectedIndex].url)}
+              className='text-white cursor-pointer'
+            >
+              {downloaded ? 'Open' : 'Download'}
+            </div>
           </div>
         </div>
         <div className='flex justify-center mt-2 items-center mb-10'>
@@ -77,7 +88,7 @@ export default function Attachments({ files }: { files: IFile[] | null }) {
               <Image
                 src={files[selectedIndex].url}
                 alt='Selected attachment'
-                className='h-[600px] w-fit'
+                className='h-[600px]'
               />
             )}
           </div>
