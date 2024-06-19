@@ -19,8 +19,8 @@ export default function App() {
           <ChatProvider>
             <EditorProvider>
               <Routes>
-                {/* <Route index path='/' element={<HomePage />} /> */}
-                <Route index path='/' element={<LandingPage />} />
+                <Route index path='/' element={<HomePage />} />
+                {/* <Route index path='/' element={<LandingPage />} /> */}
                 <Route path='/login' element={<Login />} />
                 <Route path='/logout' element={<Logout />} />
                 <Route path='*' />
