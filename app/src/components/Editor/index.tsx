@@ -43,12 +43,13 @@ function useWebRtc(
   id: string,
   onStatus: ({ status }: { status: string }) => void,
   onClose: ({ event }: { event: unknown }) => void,
+  user: IUser,
+  users: IUser[],
 ) {
   // const lastId = useRef<string>(id)
-  const [doc, setDoc] = useState<Y.Doc>(() => new Y.Doc())
+  const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
   const [provider, setProvider] = useState(
-    () =>
       new HocuspocusProvider({
         url: HOCUSPOCUS_URL,
         name: id,
@@ -58,55 +59,9 @@ function useWebRtc(
       }),
   )
 
-  useEffect(() => {
-    // if (lastId.current === id) return
-    // lastId.current = id
-    console.log('useWebRTC: ', id)
-
-    const yDoc = new Y.Doc()
-    const yProvider = new HocuspocusProvider({
-      url: HOCUSPOCUS_URL,
-      name: id,
-      document: yDoc,
-      onStatus,
-      onClose,
-    })
-
-    setDoc(yDoc)
-    setProvider(yProvider)
-
-    return () => {
-      yDoc.destroy()
-      yProvider.destroy()
-    }
-  }, [id])
-
-  return { provider, doc }
-}
-
-function Editor({ projectId, card, users }: IEditorProps) {
-  const [isLoading, setLoading] = useState(true)
-  const [editable, setEditable] = useState(true)
-  const { user } = useAuth()
-  const { chatId } = useChats()
-  const { setEditor } = useEditor()
-  const { provider, doc } = useWebRtc(
-    `${projectId}/cards/${card.id}`,
-    ({ status }) => {
-      if (status !== 'connected') return
-      setEditable(true)
-      setLoading(false)
-      console.log('status document', status)
-    },
-    ({ event }) => {
-      setEditable(false)
-      console.log('event CloseDocument', event)
-    },
-  )
-
   const editor = useBlockNote({
     _tiptapOptions: {
-      editable,
+      editable: false,
       extensions: [
         Mention.configure({
           HTMLAttributes: {
@@ -135,6 +90,31 @@ function Editor({ projectId, card, users }: IEditorProps) {
     blockSchema: customSchema,
     slashMenuItems,
   })
+
+  return { provider, doc, editor }
+}
+
+function Editor({ projectId, card, users }: IEditorProps) {
+  const [isLoading, setLoading] = useState(true)
+  const [editable, setEditable] = useState(true)
+  const { user } = useAuth()
+  const { chatId } = useChats()
+  const { setEditor } = useEditor()
+  const { provider, doc, editor } = useWebRtc(
+    `${projectId}/cards/${card.id}`,
+    ({ status }) => {
+      if (status !== 'connected') return
+      setEditable(true)
+      setLoading(false)
+      console.log('status document', status)
+    },
+    ({ event }) => {
+      setEditable(false)
+      console.log('event CloseDocument', event)
+    },
+    user,
+    users,
+  )
 
   useEffect(() => {
     setEditor(editor)

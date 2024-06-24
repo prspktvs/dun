@@ -105,7 +105,11 @@ const Card = ({ card, users }: ICardProps) => {
             value={title}
             onChange={onTitleChange}
           />
-          <Editor projectId={projectId} card={card} users={users} />
+          <Editor
+            key={card.id} // using the key= prop will completely re-create the editor when the key changes
+            projectId={projectId}
+            card={card}
+            users={users} />
         </div>
         {/* Card attachments, chats */}
         <div className='border-l-2 border-border-color w-full'>
