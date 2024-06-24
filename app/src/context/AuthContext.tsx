@@ -7,7 +7,7 @@ import { IUser } from '../types/User'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 interface AuthContextType {
-  user: IUser | null
+  user: IUser | firebase.User | null
   isAuthenticated: boolean
   loading: boolean
   signInWithGoogle: () => Promise<void>
@@ -57,7 +57,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const userData = await getOrCreateUser(user)
+        const userData = await getOrCreateUser(user as firebase.User)
         setUser(userData)
       }
       setLoading(false)

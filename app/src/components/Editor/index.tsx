@@ -17,9 +17,10 @@ import { CustomMention } from './Mentions/CustomMention'
 import { customSchema, slashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
-import { Block, PartialBlock } from '@blocknote/core'
+import { Block, BlockNoteEditor, PartialBlock } from '@blocknote/core'
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
+import firebase from 'firebase/compat/app'
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
@@ -43,20 +44,20 @@ function useWebRtc(
   id: string,
   onStatus: ({ status }: { status: string }) => void,
   onClose: ({ event }: { event: unknown }) => void,
-  user: IUser,
+  user: IUser | firebase.User | null,
   users: IUser[],
 ) {
   // const lastId = useRef<string>(id)
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
   const [provider, setProvider] = useState(
-      new HocuspocusProvider({
-        url: HOCUSPOCUS_URL,
-        name: id,
-        document: doc,
-        onStatus,
-        onClose,
-      }),
+    new HocuspocusProvider({
+      url: HOCUSPOCUS_URL,
+      name: id,
+      document: doc,
+      onStatus,
+      onClose,
+    }),
   )
 
   const editor = useBlockNote({
@@ -117,7 +118,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
   )
 
   useEffect(() => {
-    setEditor(editor)
+    setEditor(editor as BlockNoteEditor)
   }, [editor])
 
   useEffect(() => {
@@ -147,7 +148,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
         <FormattingToolbarPositioner editor={editor} />
         <HyperlinkToolbarPositioner editor={editor} />
         <SlashMenuPositioner editor={editor} />
-        <SideMenuPositioner editor={editor} sideMenu={CustomSideMenu} />
+        <SideMenuPositioner editor={editor as BlockNoteEditor} sideMenu={CustomSideMenu} />
       </BlockNoteView>
     </>
   )
