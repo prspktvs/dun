@@ -14,7 +14,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/lodash": "^4.14.198",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.16",
@@ -37,7 +37,6 @@
     "@hocuspocus/provider": "^2.5.0",
     "@mantine/core": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
-    "@peppercontent/y-prosemirror": "github:peppercontent/y-prosemirror",
     "@tiptap/core": "^2.1.8",
     "@tiptap/extension-mention": "^2.1.9",
     "@tiptap/pm": "^2.1.10",
@@ -57,8 +56,5 @@
     "y-partykit": "^0.0.6",
     "y-webrtc": "^10.2.5",
     "yjs": "^13.6.8"
-  },
-  "overrides": {
-    "y-prosemirror": "https://github.com/peppercontent/y-prosemirror"
   }
 }
