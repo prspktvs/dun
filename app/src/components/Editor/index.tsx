@@ -74,7 +74,10 @@ function useWebRtc(
           suggestion: {
             ...suggestion,
             items: ({ query }) => {
-              return users.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase()))
+              return (
+                users?.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase())) ||
+                []
+              )
             },
           },
         }),
@@ -97,7 +100,7 @@ function useWebRtc(
 
 function Editor({ projectId, card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
-  const [editable, setEditable] = useState(true)
+  const [editable, setEditable] = useState(false)
   const { user } = useAuth()
   const { chatId } = useChats()
   const { setEditor } = useEditor()

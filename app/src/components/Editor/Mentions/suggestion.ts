@@ -5,12 +5,12 @@ import MentionList from './MentionList'
 
 export default {
   items: ({ query }) => {
-    return users.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase()))
+    return users?.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase()))
   },
 
   render: () => {
-    let component
-    let popup
+    let component: ReactRenderer
+    let popup: unknown
 
     return {
       onStart: (props) => {
@@ -53,13 +53,13 @@ export default {
           return true
         } else if (props.event.key === 'Enter') {
           popup[0].destroy()
-          return component.ref?.onKeyDown(props)
+          return component?.ref?.onKeyDown(props)
         }
-        return component.ref?.onKeyDown(props)
+        return component?.ref?.onKeyDown(props)
       },
 
       onExit() {
-        component.destroy()
+        component?.destroy()
       },
     }
   },

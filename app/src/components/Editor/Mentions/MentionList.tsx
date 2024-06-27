@@ -48,7 +48,7 @@ export default forwardRef((props, ref) => {
 
   return (
     <div className='relative overflow-hidden bg-purple-300 rounded-md'>
-      {props.items.length ? (
+      {props?.items?.length > 0 ? (
         props.items.map((item, index) => (
           <button
             className={`block w-full text-left p-1 ${
