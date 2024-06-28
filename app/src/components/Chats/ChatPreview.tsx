@@ -61,8 +61,10 @@ export default function ChatPreview({
     ? Object.values(chat?.messages)?.sort((a, b) => a.timestamp - b.timestamp)
     : null
 
-  const editorContent = editor.topLevelBlocks.find((block) => block.id === chat.id)?.content?.[0]
-    ?.text
+  const editorContent =
+    editor && !isEmpty(editor.topLevelBlocks)
+      ? editor.topLevelBlocks.find((block) => block.id === chat.id)?.content?.[0]?.text
+      : ''
 
   const firstMessage = sortedMessages ? sortedMessages[0] : null
   const lastMessage = sortedMessages && sortedMessages.length > 1 ? sortedMessages.at(-1) : null
