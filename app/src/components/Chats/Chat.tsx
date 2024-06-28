@@ -32,7 +32,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
 
-      if (editor) {
+      if (editor && !isEmpty(editor.topLevelBlocks)) {
         const block = editor.topLevelBlocks.find((block) => block.id === chat.id)
 
         setContent(block?.content?.[0]?.text)

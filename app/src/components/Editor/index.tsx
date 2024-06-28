@@ -68,7 +68,7 @@ function useWebRtc(
           HTMLAttributes: {
             class: 'mention',
           },
-          renderLabel({ options, node }) {
+          renderText({ options, node }) {
             return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
           },
           suggestion: {
