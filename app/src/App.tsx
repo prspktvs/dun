@@ -10,10 +10,13 @@ import Logout from './pages/Auth/Logout'
 import ChatProvider from './context/ChatContext/ChatProvider'
 import EditorProvider from './context/EditorContext/EditorProvider'
 import LandingPage from './pages/LandingPage'
+import { Notifications } from '@mantine/notifications'
+import '@mantine/notifications/styles.css'
 
 export default function App() {
   return (
     <MantineProvider>
+      <Notifications position='top-right' />
       <BrowserRouter>
         <AuthProvider>
           <ChatProvider>
