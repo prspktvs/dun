@@ -4,13 +4,13 @@ interface IClickableIconProps {
 
 export const RiArrowRightSLine = ({ onClick }: IClickableIconProps) => (
   <svg
-    width='24'
-    height='24'
+    width='48'
+    height='48'
     viewBox='0 0 24 24'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
     onClick={onClick}
-    className='cursor-pointer text-white'
+    className='cursor-pointer text-white hover:bg-black/80'
   >
     <path
       d='M9.57819 12.0535C10.2388 11.518 10.8266 11.0378 11.4179 10.5617C12.3864 9.78212 13.3694 9.02045 14.3206 8.21955C14.7172 7.8856 15.0509 7.47237 15.4071 7.08925C15.56 6.92477 15.6936 6.71307 15.5122 6.51482C15.3109 6.29463 15.0913 6.43326 14.9232 6.60451C13.1159 8.44754 10.8786 9.71207 8.89286 11.3153C8.30774 11.7878 8.2315 12.1857 8.72693 12.7703C8.88029 12.9577 9.0468 13.1333 9.22514 13.2959C10.5212 14.4362 11.8088 15.5874 13.1305 16.6959C13.5548 17.0517 14.0696 17.2968 14.5533 17.5737C14.6358 17.6209 14.8531 17.6018 14.8659 17.5633C14.9137 17.422 14.966 17.2153 14.8996 17.1128C14.6383 16.71 14.378 16.2866 14.0342 15.9637C13.2043 15.1844 12.3262 14.4593 11.4709 13.7084C10.9679 13.2667 10.4722 12.8162 9.97119 12.372C9.8616 12.275 9.74365 12.1874 9.57819 12.0535Z'
@@ -21,13 +21,13 @@ export const RiArrowRightSLine = ({ onClick }: IClickableIconProps) => (
 
 export const RiArrowLeftSLine = ({ onClick }: IClickableIconProps) => (
   <svg
-    width='24'
-    height='24'
+    width='48'
+    height='48'
     viewBox='0 0 24 24'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
     onClick={onClick}
-    className='cursor-pointer text-white'
+    className='cursor-pointer text-white hover:bg-black/80'
   >
     <g id='Icons / Default icons/Arrow down'>
       <path

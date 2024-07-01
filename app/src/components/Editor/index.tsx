@@ -26,8 +26,8 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
-import { useChats } from '../../context/ChatContext/ChatContext'
-import { useEditor } from '../../context/EditorContext/EditorContext'
+import { useChats } from '../../context/ChatContext'
+import { useEditor } from '../../context/EditorContext'
 
 const SAVING_DELAY = 2000
 

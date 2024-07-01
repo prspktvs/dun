@@ -8,9 +8,9 @@ import { Avatar } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import { saveChatAndMessage } from '../../services'
 import { useParams } from 'react-router-dom'
-import { useChats } from '../../context/ChatContext/ChatContext'
+import { useChats } from '../../context/ChatContext'
 import { IMessage } from '../../types/Chat'
-import { useEditor } from '../../context/EditorContext/EditorContext'
+import { useEditor } from '../../context/EditorContext'
 
 export default function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const { id: projectId, cardId } = useParams()

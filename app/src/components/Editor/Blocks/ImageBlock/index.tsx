@@ -2,6 +2,7 @@ import { defaultProps } from '@blocknote/core'
 import { createReactBlockSpec, InlineContent } from '@blocknote/react'
 import { useRef, useState } from 'react'
 import { uploadImage } from '../../../../services'
+import { usePreview } from '../../../../context/FilePreviewContext'
 
 const imageSchema = {
   src: {
@@ -22,6 +23,8 @@ const ImageBlock = createReactBlockSpec({
   render: ({ block, editor }) => {
     const { props } = block
     const { src: defaultSrc, alt } = props
+
+    const { setFileUrl } = usePreview()
 
     const [src, setSrc] = useState(defaultSrc)
 
@@ -47,7 +50,8 @@ const ImageBlock = createReactBlockSpec({
     if (src || defaultSrc)
       return (
         <img
-          className='max-h-[300px] max-w-[300px]'
+          className='max-h-[300px] max-w-[300px] hover:cursor-pointer'
+          onClick={() => setFileUrl(src || defaultSrc)}
           src={src || defaultSrc}
           alt={alt}
           contentEditable={false}

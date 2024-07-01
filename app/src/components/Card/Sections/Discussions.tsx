@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Chat from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
-import { useChats } from '../../../context/ChatContext/ChatContext'
+import { useChats } from '../../../context/ChatContext'
 import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'

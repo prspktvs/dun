@@ -6,7 +6,7 @@ import {
   SideMenuProps,
 } from '@blocknote/react'
 import { Button } from '@mantine/core'
-import { useChats } from '../../../context/ChatContext/ChatContext'
+import { useChats } from '../../../context/ChatContext'
 import { createNewChat, saveChatAndMessage } from '../../../services'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'

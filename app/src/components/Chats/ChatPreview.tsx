@@ -2,9 +2,9 @@ import { Avatar, Blockquote, Menu } from '@mantine/core'
 import { IChat, IMessage } from '../../types/Chat'
 import { IUser } from '../../types/User'
 import { isEmpty } from 'lodash'
-import { useChats } from '../../context/ChatContext/ChatContext'
+import { useChats } from '../../context/ChatContext'
 import { useCallback, useEffect, useState } from 'react'
-import { useEditor } from '../../context/EditorContext/EditorContext'
+import { useEditor } from '../../context/EditorContext'
 
 import clsx from 'clsx'
 
