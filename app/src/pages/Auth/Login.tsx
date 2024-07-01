@@ -14,9 +14,9 @@ export default function AuthPage() {
   const location = useLocation()
 
   useEffect(() => {
-    if (user) {
-      navigate(-1) // return back to the previous page
-    }
+    if (!user) return
+
+    navigate(-1) // return back to the previous page
   }, [user])
 
   return (
