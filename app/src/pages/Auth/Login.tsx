@@ -3,20 +3,19 @@ import { useAuth } from '../../context/AuthContext'
 import { Button } from '@mantine/core'
 import { AuthTabs } from '../../components/Auth'
 import Logo from '../../components/ui/Logo'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
-export type Tab = 'login' | 'signup' | 'verification'
+export type Tab = 'login' | 'signup' | 'verification' | 'forgot'
 
 export default function AuthPage() {
   const [tab, setTab] = useState<Tab>('login')
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const { from } = location.state || { from: { pathname: '/' } }
 
   useEffect(() => {
     if (user) {
-      navigate(from)
+      navigate(-1) // return back to the previous page
     }
   }, [user])
 

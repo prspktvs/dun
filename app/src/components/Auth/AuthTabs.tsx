@@ -50,7 +50,12 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
   const [password, setPassword] = useState<string>('')
   const [isPassHidden, setPassHidden] = useState<boolean>(true)
 
-  const { loginWithEmailAndPassword, registerWithEmailAndPassword, signInWithGoogle } = useAuth()
+  const {
+    loginWithEmailAndPassword,
+    registerWithEmailAndPassword,
+    signInWithGoogle,
+    forgotPassword,
+  } = useAuth()
 
   const login = async () => {
     if (!email || !password) return notifyError(FILL_ALL_FIELDS_MESSAGE)
@@ -95,6 +100,39 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
           >
             DUN
           </button>
+        </div>
+      </>
+    )
+  }
+
+  if (tab === 'forgot') {
+    return (
+      <>
+        <div className='w-full px-5 py-3 border-b-2 font-monaspace text-sm'>
+          Please enter your email address.
+        </div>
+        <div className='flex border-b-2 font-monaspace'>
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className='ml-7 my-3 outline-none w-full pr-3'
+            placeholder='Email'
+            type='email'
+          />
+        </div>
+        <div className='p-1 border-b-2 divide-gray-border'>
+          <button
+            onClick={() => forgotPassword(email)}
+            className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace hover:cursor-pointer'
+          >
+            {isLoading ? <Loader color='rgba(255, 255, 255, 1)' /> : 'Reset password'}
+          </button>
+        </div>
+        <div
+          onClick={() => setTab('login')}
+          className='mt-5 w-full text-center font-monaspace text-[#8279BD] cursor-pointer'
+        >
+          Back to log in
         </div>
       </>
     )
@@ -151,10 +189,14 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
           )}
         </button>
       </div>
-      <div className='flex w-full items-center justify-center border-t-2 pt-3 divide-gray-border font-monaspace'>
-        or
-      </div>
-      <div className='flex justify-center gap-x-3 mb-4 font-medium text-[#47444F] my-5'>
+      <button
+        onClick={() => setTab('forgot')}
+        className='flex w-full items-center justify-end px-5 border-t-2 pt-1 divide-gray-border font-monaspace bg-transparent cursor-pointer text-[#8279BD]'
+      >
+        Forgot password?
+      </button>
+      <div className='flex w-full items-center justify-center font-monaspace'>or</div>
+      <div className='flex justify-center gap-x-3 mb-4 font-medium text-[#47444F] mt-2'>
         <button
           className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer'
           onClick={signInWithGoogle}
@@ -174,15 +216,22 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
 export default function AuthTabs(props: IAuthTabsProps) {
   const { tab, setTab } = props
   const isSignUp = tab === 'signup'
-  const loggedIn = tab === 'verification'
+  const isVerification = tab === 'verification'
+  const isForgot = tab === 'forgot'
 
   return (
-    <div>
-      <div className='flex'>
+    <div className='h-full'>
+      <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
         <div className='flex-1  border-l-2 h-full'>
           <div className='w-full h-[65px] flex items-center text-xl pl-7 font-monospace border-b-2 divide-gray-border font-monaspace'>
-            {loggedIn ? 'Email verification' : isSignUp ? 'Create an account' : 'Log in'}
+            {isVerification
+              ? 'Email verification'
+              : isSignUp
+              ? 'Create an account'
+              : isForgot
+              ? 'Forgot password'
+              : 'Log in'}
           </div>
           <AuthForm tab={tab} setTab={setTab} />
         </div>
