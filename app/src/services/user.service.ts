@@ -28,3 +28,13 @@ export const getOrCreateUser = async (user: firebase.User): Promise<IUser | null
 
   return newUser
 }
+
+export const updateUser = async (user: IUser): Promise<void> => {
+  const userRef = doc(collection(db, 'users'), user.id)
+
+  try {
+    await setDoc(userRef, user, { merge: true })
+  } catch (error) {
+    console.error('Error updating user document', error)
+  }
+}
