@@ -2,9 +2,9 @@ import { Avatar, Blockquote, Menu } from '@mantine/core'
 import { IChat, IMessage } from '../../types/Chat'
 import { IUser } from '../../types/User'
 import { isEmpty } from 'lodash'
-import { useChats } from '../../context/ChatContext/ChatContext'
+import { useChats } from '../../context/ChatContext'
 import { useCallback, useEffect, useState } from 'react'
-import { useEditor } from '../../context/EditorContext/EditorContext'
+import { useEditor } from '../../context/EditorContext'
 
 import clsx from 'clsx'
 
@@ -61,8 +61,10 @@ export default function ChatPreview({
     ? Object.values(chat?.messages)?.sort((a, b) => a.timestamp - b.timestamp)
     : null
 
-  const editorContent = editor.topLevelBlocks.find((block) => block.id === chat.id)?.content?.[0]
-    ?.text
+  const editorContent =
+    editor && !isEmpty(editor.topLevelBlocks)
+      ? editor.topLevelBlocks.find((block) => block.id === chat.id)?.content?.[0]?.text
+      : ''
 
   const firstMessage = sortedMessages ? sortedMessages[0] : null
   const lastMessage = sortedMessages && sortedMessages.length > 1 ? sortedMessages.at(-1) : null

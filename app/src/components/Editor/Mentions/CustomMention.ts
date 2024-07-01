@@ -7,7 +7,7 @@ import { getBlockInfoFromPos } from './helper'
 
 export type MentionOptions = {
   HTMLAttributes: Record<string, any>
-  renderLabel: (props: { options: MentionOptions; node: ProseMirrorNode }) => string
+  renderText: (props: { options: MentionOptions; node: ProseMirrorNode }) => string
   suggestion: Omit<SuggestionOptions, 'editor'>
 }
 
@@ -19,7 +19,7 @@ export const CustomMention = Node.create<MentionOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
-      renderLabel({ options, node }) {
+      renderText({ options, node }) {
         return `${options.suggestion.char}${node.attrs.name ?? node.attrs.uid}`
       },
       suggestion: {
@@ -139,7 +139,7 @@ export const CustomMention = Node.create<MentionOptions>({
         { ...this.options.HTMLAttributes, class: 'mention', 'data-content-type': this.name },
         HTMLAttributes,
       ),
-      this.options.renderLabel({
+      this.options.renderText({
         options: this.options,
         node,
       }),
@@ -148,7 +148,7 @@ export const CustomMention = Node.create<MentionOptions>({
 
   renderText({ node }) {
     console.log('renderText', arguments)
-    return this.options.renderLabel({
+    return this.options.renderText({
       options: this.options,
       node,
     })

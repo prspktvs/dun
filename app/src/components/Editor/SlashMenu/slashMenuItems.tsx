@@ -41,7 +41,7 @@ const insertTask: ReactSlashMenuItem<typeof customSchema> = {
 }
 
 export const slashMenuItems = [
-  ...getDefaultReactSlashMenuItems(customSchema),
+  ...getDefaultReactSlashMenuItems(customSchema).filter((item) => item.name !== 'Image'),
   insertTask,
   insertImage,
 ]

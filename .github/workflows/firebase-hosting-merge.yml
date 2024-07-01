@@ -10,8 +10,15 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: npm run build
+      - name: Checkout entrypoint ./app
+        uses: actions/checkout@v3
+        with:
+            projectId: dun-app
+            entryPoint: ./app
+
+      - name: Install dependencies and build vite project
+        run: npm i && npm run build
+        working-directory: ./app
         env:
           NODE_ENV: development
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
@@ -22,10 +29,12 @@ jobs:
           VITE_APP_ID: ${{ secrets.VITE_APP_ID }}
           VITE_DATABASE_URL: ${{ secrets.VITE_DATABASE_URL }}
           VITE_HOCUSPOCUS_URL: ${{ secrets.VITE_HOCUSPOCUS_URL }}
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_DUN_IMBA }}"
           channelId: live
           projectId: dun-imba
-          entryPoint: ./firebase
+          entryPoint: ./app

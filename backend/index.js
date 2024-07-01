@@ -40,7 +40,7 @@ const onLoadDocument = async (data) => {
 
     return new Y.Doc()
   } catch (e) {
-    console.log(e)
+    console.error('> Error in onLoadDocument:\n', e)
   }
 }
 
@@ -80,7 +80,7 @@ const onStoreDocument = async (data) => {
 
     await batch.commit()
   } catch (e) {
-    console.error(e)
+    console.error('> Error in onStoreDocument:\n', e)
   }
 }
 
@@ -88,12 +88,18 @@ const onDisconnect = async (data) => {
   // console.log(data.socketId, ' is disconnected.')
 }
 
+const onDestroy = () => {
+  console.log('> Server is destroyed.')
+}
+
 const server = new Hocuspocus({
   port: process.env.PORT || 3000,
+  timeout: 5000,
   onConnect,
   onLoadDocument,
   onStoreDocument,
   onDisconnect,
+  onDestroy,
 })
 
-server.listen()
+server.listen(() => console.log('> WebSocket server is running on port', process.env.PORT || 3000))

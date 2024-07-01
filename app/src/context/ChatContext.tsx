@@ -1,10 +1,18 @@
+import { createContext, useContext } from 'react'
 import { useEffect, useState } from 'react'
-import { ChatContext } from './ChatContext'
 import { off, onValue, ref } from 'firebase/database'
-import { realtimeDb } from '../../config/firebase'
-import { IMessage } from '../../types/Chat'
+import { realtimeDb } from '../config/firebase'
+import { IMessage } from '../types/Chat'
 
-const ChatProvider = ({ children }: { children: React.ReactNode }) => {
+export type ChatContext = {
+  chatId: string
+  openChatById: (id: string) => void
+  unreadChats: { id: string; unreadCount: number }[]
+  getUnreadMessagesCount: (id: string) => number
+  closeChat: () => void
+}
+
+export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [chatId, setChatId] = useState('')
   const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
 
@@ -49,4 +57,12 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>
 }
 
-export default ChatProvider
+export const ChatContext = createContext<ChatContext | undefined>(undefined)
+
+export const useChats = (): ChatContext => {
+  const context = useContext(ChatContext)
+  if (!context) {
+    throw new Error('useChats must be used within a ChatProvider')
+  }
+  return context
+}

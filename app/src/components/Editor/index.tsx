@@ -26,8 +26,8 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
-import { useChats } from '../../context/ChatContext/ChatContext'
-import { useEditor } from '../../context/EditorContext/EditorContext'
+import { useChats } from '../../context/ChatContext'
+import { useEditor } from '../../context/EditorContext'
 
 const SAVING_DELAY = 2000
 
@@ -68,7 +68,7 @@ function useWebRtc(
           HTMLAttributes: {
             class: 'mention',
           },
-          renderLabel({ options, node }) {
+          renderText({ options, node }) {
             return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
           },
           suggestion: {

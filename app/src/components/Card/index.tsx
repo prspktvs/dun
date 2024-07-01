@@ -7,11 +7,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Editor from '../Editor'
 import { removeCard, saveOrCreateCard } from '../../services'
 import Discussions from './Sections/Discussions'
-import { useChats } from '../../context/ChatContext/ChatContext'
+import { useChats } from '../../context/ChatContext'
 import clsx from 'clsx'
 import Attachments from './Sections/Attachments'
 import _debounce from 'lodash/debounce'
 import Updates from './Sections/Updates'
+import { FilePreviewProvider } from '../../context/FilePreviewContext'
 
 interface ICardProps {
   card: ICard
@@ -109,7 +110,8 @@ const Card = ({ card, users }: ICardProps) => {
             key={card.id} // using the key= prop will completely re-create the editor when the key changes
             projectId={projectId}
             card={card}
-            users={users} />
+            users={users}
+          />
         </div>
         {/* Card attachments, chats */}
         <div className='border-l-2 border-border-color w-full'>
@@ -166,4 +168,13 @@ const Card = ({ card, users }: ICardProps) => {
   )
 }
 
-export default Card
+const CardWithPreview = (props: ICardProps) => {
+  const { card } = props
+  return (
+    <FilePreviewProvider files={card?.files}>
+      <Card {...props} />
+    </FilePreviewProvider>
+  )
+}
+
+export default CardWithPreview
