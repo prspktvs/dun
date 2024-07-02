@@ -17,10 +17,11 @@ import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 import { genId } from '../../utils'
+import { ProjectProvider } from '../../context/ProjectContext'
 
 interface IProjectPageProps {}
 
-const ProjectPage = (props: IProjectPageProps) => {
+const Project = (props: IProjectPageProps) => {
   const { id: projectId = '', cardId } = useParams()
   const { user } = useAuth()
   const [search, setSearch] = useState('')
@@ -115,6 +116,15 @@ const ProjectPage = (props: IProjectPageProps) => {
         )}
       </div>
     </div>
+  )
+}
+
+const ProjectPage = () => {
+  const { id: projectId = '' } = useParams()
+  return (
+    <ProjectProvider projectId={projectId}>
+      <Project />
+    </ProjectProvider>
   )
 }
 

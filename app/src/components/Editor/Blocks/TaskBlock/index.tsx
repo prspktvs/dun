@@ -71,7 +71,7 @@ const TaskBlock = createReactBlockSpec({
     const isBlockActive = block === editor.getTextCursorPosition().block
 
     return (
-      <div className='relative flex gap-4 items-center' tabIndex={0}>
+      <div className='relative flex gap-4 items-start' tabIndex={0}>
         {/* <input
           type='checkbox'
           checked={block.props.isDone}
@@ -80,9 +80,9 @@ const TaskBlock = createReactBlockSpec({
         <div onClick={() => editor.updateBlock(block, { props: { isDone: !block.props.isDone } })}>
           <CustomCheckbox checked={block.props.isDone} />
         </div>
-        <InlineContent as='div' />
+        <InlineContent as='div' className='mt-[2px]' />
         {!block?.content[0]?.text && isBlockActive ? (
-          <div className='absolute left-9 text-gray-300 flex items-center italic'>
+          <div className='absolute left-9 mt-[2px] text-gray-300 flex items-center italic'>
             <div className='cursor' />
             Enter a text or type '@' to mention user
           </div>

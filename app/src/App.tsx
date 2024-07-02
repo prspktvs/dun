@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
 import ProjectPage from './pages/Project'
 import HomePage from './pages/Home'
 import { MantineProvider } from '@mantine/core'

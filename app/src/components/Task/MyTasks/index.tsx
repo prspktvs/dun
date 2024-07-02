@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { Menu } from '@mantine/core'
 import { getAllUserProject } from '../../../services'
 import { genId } from '../../../utils'
+import { useProject } from '../../../context/ProjectContext'
 
 interface IMyTasksProps {
   projectId: string
@@ -15,15 +16,14 @@ interface IMyTasksProps {
 }
 
 function MyTasks({ projectId, title }: IMyTasksProps) {
-  const [tasks, setTasks] = useState([])
   const [isMenuOpened, setMenuOpened] = useState(false)
   const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
+  const { tasks } = useProject()
   const { user } = useAuth()
 
   useEffect(() => {
-    getAllUserTasks(projectId, user).then((data) => setTasks(data))
     getAllUserProject(user.id).then((data) => setProjects(data))
   }, [])
 
@@ -71,9 +71,7 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         </Menu.Dropdown>
       </Menu>
       <div className='w-full px-5 py-3'>
-        <div
-          className='flex items-center text-sm mb-3 font-monaspace font-normal'
-        >
+        <div className='flex items-center text-sm mb-3 font-monaspace font-normal'>
           What to do • {tasks.length}
         </div>
         {!isEmpty(tasks) ? (

@@ -78,7 +78,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
                 await saveChatAndMessage({
                   chatId: cardId,
                   cardPath: `projects/${projectId}/cards/${cardId}`,
-                  content: 'Card discussion',
+                  content: 'Topic main discussion',
                   messageData: undefined,
                 })
                 openChatById(cardId)

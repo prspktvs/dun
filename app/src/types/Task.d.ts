@@ -9,4 +9,5 @@ export interface ITask extends PartialBlock {
     users?: IUser[]
     isDone: boolean
   }
+  cardPath?: string 
 }

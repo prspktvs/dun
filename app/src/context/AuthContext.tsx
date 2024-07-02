@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth'
@@ -43,6 +44,7 @@ interface AuthContextType {
   signOut: () => Promise<void>
   loginWithEmailAndPassword: (credentials: ILoginCredentials) => Promise<void>
   registerWithEmailAndPassword: (credentials: IRegisterCredentials) => Promise<void>
+  forgotPassword: (email: string) => Promise<void>
 }
 
 const defaultValue = {
@@ -53,6 +55,7 @@ const defaultValue = {
   signOut: async () => {},
   registerWithEmailAndPassword: async () => {},
   loginWithEmailAndPassword: async () => {},
+  forgotPassword: async () => {},
 }
 
 export const AuthContext = React.createContext<AuthContextType>(defaultValue)
@@ -138,6 +141,17 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     }
   }
 
+  const forgotPassword = async (email: string) => {
+    try {
+      if (!email) return notifyError('Please enter your email')
+      await sendPasswordResetEmail(auth, email)
+
+      notifySuccess('Password reset email sent on your email. Please check.')
+    } catch (error) {
+      console.error('Error forgot password:', error)
+    }
+  }
+
   const signOut = async () => {
     try {
       await auth.signOut()
@@ -167,6 +181,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     signOut,
     registerWithEmailAndPassword,
     loginWithEmailAndPassword,
+    forgotPassword,
   }
 
   return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
