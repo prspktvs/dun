@@ -82,7 +82,7 @@ export default function ChatPreview({
     <div className='flex w-full'>
       <div
         className={clsx(
-          'w-2 h-full border-r-2 border-border-color',
+          'w-2 h-full border-r-1 border-border-color',
           isChatRead ? 'bg-[#EFEFEF]' : 'bg-salad',
         )}
       ></div>

@@ -75,9 +75,9 @@ export default function AllCardsContent({
   }
 
   return (
-    <div  className='w-full h-full overflow-hidden pb-32'>
+    <div className='w-full h-full overflow-hidden pb-32'>
       {/* Search line */}
-      <div  className='border-border-color flex items-center justify-between h-14 '>
+      <div className='border-border-color flex items-center justify-between h-14 '>
         {/* <div className='relative mx-3 w-full'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -86,7 +86,7 @@ export default function AllCardsContent({
             onChange={onSearch}
           />
         </div> */}
-        <div  className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
+        <div className='h-full flex w-full border-b-1 border-border-color sm:gap-x-1 '>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-5 '>
             <div className='hidden md:flex'>Last viewed</div>
             <div className='hidden md:flex'>
@@ -96,7 +96,7 @@ export default function AllCardsContent({
             <div className='flex bg-[#EDEBF3] p-2'>Date created</div>
           </div>
 
-          <div className='flex h-full items-center border-x-2 border-border-color md:px-7 sm:px-2'>
+          <div className='flex h-full items-center border-x-1 border-border-color md:px-7 sm:px-2'>
             <ProjectUsers users={users} />
           </div>
 
@@ -133,7 +133,7 @@ export default function AllCardsContent({
         ) : (
           <div className='grid xl:grid-cols-3 lg:grid-cols-2 '>
             {filteredCards.map((card, index) => (
-              <div key={'card-' + index} className='border-b-2 border-border-color padding-0'>
+              <div key={'card-' + index} className='border-b-1 border-border-color padding-0'>
                 <CardPreview card={card} onClick={() => onChooseCard(card)} />
               </div>
             ))}

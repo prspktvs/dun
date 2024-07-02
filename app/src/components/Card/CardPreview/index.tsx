@@ -42,7 +42,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-3 overflow-hidden  border-r-2 border-border-color  hover:cursor-pointer'
+      className='h-[23.125rem] p-3 overflow-hidden  border-r-1 border-border-color  hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='m-4'>

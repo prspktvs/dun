@@ -45,7 +45,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   return (
     <div className='h-screen'>
-      <div className='relative p-3 border-b-2 border-border-color'>
+      <div className='relative p-3 border-b-1 border-border-color'>
         <i className='absolute ri-search-line text-2xl text-gray-400' />
         <input
           className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
@@ -58,7 +58,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
           filteredChats.map((chat) => (
             <div
               key={'filtered-chat-' + chat.id}
-              className='h-[266px] border-b-2 border-border-color overflow-hidden flex flex-none'
+              className='h-[266px] border-b-1 border-border-color overflow-hidden flex flex-none'
             >
               <ChatPreview
                 key={'chat-' + chat.id}
