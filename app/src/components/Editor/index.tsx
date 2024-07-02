@@ -55,15 +55,10 @@ function useWebRtc(
       url: HOCUSPOCUS_URL,
       name: id,
       document: doc,
-      onOpen: (e) => {
-        console.log('onOpen', e)
-      },
       onStatus,
       onClose,
     }),
   )
-
-  console.log('> useCollabEditor rendered')
 
   const editor = useBlockNote({
     _tiptapOptions: {

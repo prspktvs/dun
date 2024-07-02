@@ -64,7 +64,7 @@ export const ProjectContext = createContext<ProjectContext | undefined>(undefine
 export const useProject = (): ProjectContext => {
   const context = useContext(ProjectContext)
   if (!context) {
-    throw new Error('useProject must be used within a EditorProvider')
+    throw new Error('useProject must be used within a ProjectProvider')
   }
   return context
 }

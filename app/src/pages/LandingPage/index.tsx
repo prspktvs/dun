@@ -12,7 +12,7 @@ import { Navigate } from 'react-router-dom'
 function LandingPage() {
   const { user } = useAuth()
 
-  if (user) return <Navigate to={`/${user.lastProjectId}`} />
+  if (user && user?.lastProjectId) return <Navigate to={`/${user.lastProjectId}`} />
 
   return (
     <div className='h-screen w-full overflow-x-hidden bg-[#F5F0EB]'>
