@@ -1,4 +1,6 @@
-import { Hocuspocus } from '@hocuspocus/server'
+import { Hocuspocus, Server } from '@hocuspocus/server'
+import { Redis } from "@hocuspocus/extension-redis";
+import { Logger } from "@hocuspocus/extension-logger";
 import { TiptapTransformer } from '@hocuspocus/transformer'
 import { db } from './firebase.js'
 import * as Y from 'yjs'
@@ -96,16 +98,23 @@ process.on('uncaughtException', function(err) {
 	console.log('uncaughtException', err)
 })
 
-
 const server = new Hocuspocus({
   port: process.env.PORT || 3000,
-  timeout: 5000,
-  onConnect,
-  onLoadDocument,
-  onStoreDocument,
-  onDisconnect,
-  onDestroy,
+  // timeout: 5000,
+  extensions: [
+    new Logger(),
+    new Redis({
+      host: "127.0.0.1",
+      port: 6379,
+    }),
+  ],
+  // onConnect,
+  // onLoadDocument,
+  // onStoreDocument,
+  // onDisconnect,
+  // onDestroy,
 })
+
 
 
 server.listen(() => console.log('> WebSocket server is running on port', process.env.PORT || 3000))
