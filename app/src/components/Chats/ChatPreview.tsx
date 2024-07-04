@@ -33,7 +33,7 @@ function MessagePreview({
           </span>
         </div>
         <div className='overflow-y-auto max-h-[72px]'>
-          <span className='text-sm text-[#46434E]'>{message}</span>
+          <span className='text-sm text-[#46434E] line-clamp-2'>{message}</span>
         </div>
       </div>
     </>
@@ -71,6 +71,7 @@ export default function ChatPreview({
   const repliesCount = sortedMessages ? sortedMessages.length - 2 : 0
 
   const author = chatUsers?.[firstMessage?.authorId]
+  const secondAuthor = chatUsers?.[lastMessage?.authorId]
 
   useEffect(() => {
     setUnreadMessages(getUnreadMessagesCount(chat.id))
@@ -105,7 +106,7 @@ export default function ChatPreview({
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-[10px]'>
                   <div className='text-[#A3A1A7]'>
-                    {author ? `${author.name} started a discussion about:` : 'New chat:'}
+                    {author ? `${author.name} started a discussion about:` : 'New discussion:'}
                   </div>
                   <div>{editorContent || chat.content}</div>
                 </div>
@@ -127,7 +128,7 @@ export default function ChatPreview({
                   }}
                   className='text-red-600'
                 >
-                  Delete chat
+                  Delete discussion
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
@@ -145,7 +146,7 @@ export default function ChatPreview({
                 <>
                   <div className='my-3'>
                     <MessagePreview
-                      user={author}
+                      user={secondAuthor}
                       timestamp={lastMessage.timestamp}
                       message={lastMessage.text}
                     />
