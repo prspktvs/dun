@@ -17,3 +17,5 @@ dist
 firebase-debug.log
 .firebase/
 bun.lockb
+
+.vscode/

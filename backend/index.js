@@ -85,12 +85,17 @@ const onStoreDocument = async (data) => {
 }
 
 const onDisconnect = async (data) => {
-  // console.log(data.socketId, ' is disconnected.')
+  console.log(data.socketId, ' is disconnected.')
 }
 
 const onDestroy = () => {
   console.log('> Server is destroyed.')
 }
+
+process.on('uncaughtException', function(err) {
+	console.log('uncaughtException', err)
+})
+
 
 const server = new Hocuspocus({
   port: process.env.PORT || 3000,
@@ -101,5 +106,6 @@ const server = new Hocuspocus({
   onDisconnect,
   onDestroy,
 })
+
 
 server.listen(() => console.log('> WebSocket server is running on port', process.env.PORT || 3000))
