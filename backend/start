@@ -1,0 +1,18 @@
+#!/bin/bash
+
+docker rm -f dun-build || true
+docker run -d --name dun-build \
+  --env-file ./.env -v /etc/hosts:/etc/hosts \
+  -v $PWD:/app node:20 \
+  bash -c 'cd /app && npm install && npm start'
+
+/usr/bin/update-docker-hosts
+
+# echo "Waiting for server..."
+# until $(curl --max-time 5 --output /dev/null --silent --head --fail http://dun-build.docker:3000/signin); do sleep 1 && echo -n .; done;
+
+docker rm -f dun-prev || true
+docker rename dun dun-prev || true
+docker rename dun-build dun
+
+/usr/bin/update-docker-hosts

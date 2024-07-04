@@ -50,7 +50,7 @@ function useWebRtc(
   // const lastId = useRef<string>(id)
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
-  const [provider, setProvider] = useState(
+  const [provider, setProvider] = useState(() =>
     new HocuspocusProvider({
       url: HOCUSPOCUS_URL,
       name: id,
@@ -59,6 +59,7 @@ function useWebRtc(
       onClose,
     }),
   )
+  console.log('useWebRtc', provider)
 
   const editor = useBlockNote({
     _tiptapOptions: {
