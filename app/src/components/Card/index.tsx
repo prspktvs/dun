@@ -69,7 +69,7 @@ const Card = ({ card, users }: ICardProps) => {
 
   return (
     <div className='w-full'>
-      <div className='flex items-center justify-between h-14 border-b-2 border-border-color'>
+      <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
@@ -114,8 +114,8 @@ const Card = ({ card, users }: ICardProps) => {
           />
         </div>
         {/* Card attachments, chats */}
-        <div className='border-l-2 border-border-color w-full'>
-          <div className='flex items-center justify-between h-14 border-b-2 border-border-color'>
+        <div className='border-l-1 border-border-color w-full'>
+          <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
             <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color '>
               <div
                 className={clsx(

@@ -53,6 +53,8 @@ export const getAllCardChats = async (cardPath: string) => {
 
   const { chatIds } = card.data()
 
+  if(!chatIds) return []
+
   const snapshots = await Promise.all(
     chatIds.map((chatId: string) => {
       const messagesRef = ref(realtimeDb, `chats/${chatId}`)
