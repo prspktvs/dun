@@ -1,12 +1,6 @@
 import { db } from '../config/firebase'
 import { IUser } from '../types/User'
 import {
-  getFirestore,
-  collection,
-  doc,
-  addDoc,
-  setDoc,
-  getDoc,
   getDocs,
   collectionGroup,
   where,
@@ -16,11 +10,9 @@ import { extractCardPath } from '../utils'
 import { ITask } from '../types/Task'
 
 export const getAllUserTasks = async (projectId: string, user: IUser): Promise<ITask[]> => {
-  const { id } = user
+  if (!user?.id) return []
 
-  if (!id) return []
-
-  const queryTasks = query(collectionGroup(db, 'tasks'), where('users', 'array-contains', id))
+  const queryTasks = query(collectionGroup(db, 'tasks'), where('users', 'array-contains', user.id))
   const snapshots = await getDocs(queryTasks)
   const tasks: ITask[] = []
   snapshots.forEach(

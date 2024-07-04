@@ -114,7 +114,7 @@ export default function AllCardsContent({
         </div>
       </div>
       {/* Cards */}
-      {/* <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-2 border-border-color'>
+      {/* <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-1 border-border-color'>
         <div className='text-zinc-700 text-xs font-normal font-monaspace flex gap-x-4'>
           <div className='flex items-center gap-x-2 bg-[#EDEBF3] p-2'>
             Tab <UnreadMarker />

@@ -93,7 +93,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
             <p>Please check your spam folder, resend email or contact us at dun@gmail.co.</p>
           </div>
         </div>
-        <div className='p-1 border-t-2 divide-gray-border'>
+        <div className='p-1 border-t-1 divide-gray-border'>
           <button
             onClick={() => setTab('login')}
             className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace cursor-pointer'
@@ -108,10 +108,10 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
   if (tab === 'forgot') {
     return (
       <>
-        <div className='w-full px-5 py-3 border-b-2 font-monaspace text-sm'>
+        <div className='w-full px-5 py-3 border-b-1 font-monaspace text-sm'>
           Please enter your email address.
         </div>
-        <div className='flex border-b-2 font-monaspace'>
+        <div className='flex border-b-1 font-monaspace'>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
@@ -120,7 +120,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
             type='email'
           />
         </div>
-        <div className='p-1 border-b-2 divide-gray-border'>
+        <div className='p-1 border-b-1 divide-gray-border'>
           <button
             onClick={() => forgotPassword(email)}
             className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace hover:cursor-pointer'
@@ -140,7 +140,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
 
   return (
     <>
-      <div className='flex border-b-2 font-monaspace'>
+      <div className='flex border-b-1 font-monaspace'>
         <input
           onChange={(e) => setEmail(e.target.value)}
           value={email}
@@ -150,7 +150,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
         />
 
         {tab === 'signup' && (
-          <span className='border-l-2 w-full'>
+          <span className='border-l-1 w-full'>
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
@@ -175,7 +175,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
           {isPassHidden ? <HideIcon /> : <UnhideIcon />}
         </div>
       </div>
-      <div className='p-1 border-t-2 divide-gray-border'>
+      <div className='p-1 border-t-1 divide-gray-border'>
         <button
           onClick={tab === 'signup' ? signUp : login}
           className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace hover:cursor-pointer'
@@ -191,7 +191,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       </div>
       <button
         onClick={() => setTab('forgot')}
-        className='flex w-full items-center justify-end px-5 border-t-2 pt-1 divide-gray-border font-monaspace bg-transparent cursor-pointer text-[#8279BD]'
+        className='flex w-full items-center justify-end px-5 border-t-1 pt-1 divide-gray-border font-monaspace bg-transparent cursor-pointer text-[#8279BD]'
       >
         Forgot password?
       </button>
@@ -223,8 +223,8 @@ export default function AuthTabs(props: IAuthTabsProps) {
     <div className='h-full'>
       <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
-        <div className='flex-1  border-l-2 h-full'>
-          <div className='w-full h-[65px] flex items-center text-xl pl-7 font-monospace border-b-2 divide-gray-border font-monaspace'>
+        <div className='flex-1  border-l-1 h-full'>
+          <div className='w-full h-[65px] flex items-center text-xl pl-7 font-monospace border-b-1 divide-gray-border font-monaspace'>
             {isVerification
               ? 'Email verification'
               : isSignUp

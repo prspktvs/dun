@@ -38,7 +38,7 @@ function Section3() {
     <>
       <div
         style={{ backgroundImage: `url(${GridSvg})` }}
-        className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-2')}
+        className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-1')}
       >
         <div className='flex flex-col justify-around items-center'>
           <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10 flex-col'>
@@ -49,7 +49,7 @@ function Section3() {
             <img src='./assets/landing/rightMouse.svg' className='sm:mb-8 md:mb-0' />
           </div>
 
-          <div className='w-full border-t-2  md:border-l-2 md:border-r-2 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
+          <div className='w-full border-t-1  md:border-l-1 md:border-r-1 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
             {FEATURES.map((item, index) => (
               <BoxInformatinSection3 key={'feature-' + index} index={index} {...item} />
             ))}
