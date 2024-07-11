@@ -69,7 +69,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
         timestamp: Date.now(),
       },
       content: 'Discussion',
-      cardPath: `projects/${projectId}/cards/${cardId}`,
+      cardId,
     })
     setNewMessage('')
   }

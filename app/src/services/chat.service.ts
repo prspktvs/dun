@@ -1,22 +1,21 @@
 import { get, push, ref, remove, set } from 'firebase/database'
 import { db, realtimeDb } from '../config/firebase'
 import { IMessage } from '../types/Chat'
-import { saveChatIdsToCard } from './card.service'
+import { getCardById, saveChatIdsToCard, updateCard } from './card.service'
 import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore'
 
 export const createNewChat = async ({
   chatId,
-  cardPath,
+  cardId,
   content,
 }: {
   chatId: string
-  cardPath: string | undefined
+  cardId: string | undefined
   content: string
 }) => {
   const chatRef = ref(realtimeDb, `chats/${chatId}`)
   await set(chatRef, { id: chatId, content, messages: [] })
-
-  if (cardPath) await saveChatIdsToCard(cardPath, [chatId])
+  if (cardId) await updateCard({ id: cardId, chatIds: [chatId] })
 }
 
 const saveMessage = async (chatId: string, messageData: IMessage) => {
@@ -26,37 +25,35 @@ const saveMessage = async (chatId: string, messageData: IMessage) => {
 
 export const saveChatAndMessage = async ({
   chatId,
-  cardPath,
+  cardId,
   content,
   messageData,
 }: {
   chatId: string
-  cardPath: string
+  cardId: string
   content: string
   messageData: IMessage | undefined
 }) => {
   const chatRef = ref(realtimeDb, `chats/${chatId}`)
   const chatSnapshot = await get(chatRef)
+  console.log('SNAP',chatSnapshot.exists())
 
   if (!chatSnapshot.exists()) {
-    await createNewChat({ chatId, cardPath, content })
+    await createNewChat({ chatId, cardId, content })
   }
 
   if (messageData) await saveMessage(chatId, messageData)
 }
 
-export const getAllCardChats = async (cardPath: string) => {
-  const cardRef = doc(db, cardPath)
-  const card = await getDoc(cardRef)
+export const getAllCardChats = async (cardId: string) => {
+  const card = await getCardById(cardId)
 
-  if (!card.exists()) return []
-
-  const { chatIds } = card.data()
+  if (!card) return []
 
   if(!chatIds) return []
 
   const snapshots = await Promise.all(
-    chatIds.map((chatId: string) => {
+    card?.chatIds.map((chatId: string) => {
       const messagesRef = ref(realtimeDb, `chats/${chatId}`)
       return get(messagesRef)
     }),

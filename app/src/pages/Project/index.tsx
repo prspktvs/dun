@@ -11,13 +11,14 @@ import { useFirebaseCollection } from '../../hooks/useFirebaseCollection'
 import CreateUser from '../../components/User/CreateUser'
 import ProjectUsers from '../../components/User/ProjectUsers'
 import MyTasks from '../../components/Task/MyTasks'
-import { addUserToProject } from '../../services'
+import { addUserToProject, getProjectCards } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
 import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 import { genId } from '../../utils'
-import { ProjectProvider } from '../../context/ProjectContext'
+import { ProjectProvider, useProject } from '../../context/ProjectContext'
+import { createCard } from '../../services'
 
 interface IProjectPageProps {}
 
@@ -27,16 +28,13 @@ const Project = (props: IProjectPageProps) => {
   const [search, setSearch] = useState('')
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
-  const { data: project, loading: projectLoading } = useFirebaseDocument(`projects/${projectId}`)
-
-  const { data: cards, loading: cardsLoading } = useFirebaseCollection(
-    `projects/${projectId}/cards`,
-  )
+  const { project, isLoading, cards, optimisticCreateCard } = useProject()
 
   const [selectedCard, setSelectedCard] = useState<Partial<ICard> | null>(null)
 
   useEffect(() => {
-    if (projectLoading || !user) return
+    if (isLoading || !user) return
+
     const isUserExists = project?.users?.some(({ id }) => id === user.id)
     if (!isUserExists) addUserToProject(projectId, user)
   }, [project])
@@ -51,18 +49,18 @@ const Project = (props: IProjectPageProps) => {
     const emptyCreatedCard: Partial<ICard> = {
       id: cardId,
       title: '',
-      content: [],
+      chatIds: [],
       createdAt: new Date(),
     }
     setSelectedCard(emptyCreatedCard)
   }, [cards, cardId])
 
-  const isLoading = cardsLoading || projectLoading
-
   const navigate = useNavigate()
 
   const onCreateNewCard = async () => {
     const id = genId()
+
+    await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
     navigate(`/${projectId}/cards/${id}`, { replace: true })
   }

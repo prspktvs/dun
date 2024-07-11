@@ -8,27 +8,20 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev:redis": "docker run -p 6379:6379 -d redis/redis-stack-server:latest",
 		"deploy": "rsync -ravz --exclude=.git *.js nodes start package.json package-lock.json root@api.dun.wtf:/root/dun/ && ssh root@api.dun.wtf 'cd dun && ./start'"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@blocknote/core": "^0.9.4",
-		"@blocknote/react": "^0.9.3",
 		"@hocuspocus/extension-logger": "^2.13.5",
-		"@hocuspocus/extension-redis": "^2.13.5",
+		"@hocuspocus/extension-sqlite": "^2.13.5",
 		"@hocuspocus/server": "^2.13.2",
 		"@hocuspocus/transformer": "^2.13.2",
-		"@redis/json": "^1.0.6",
-		"@tiptap/extension-mention": "^2.1.11",
-		"@types/node": "^18.0.6",
-		"firebase-admin": "^11.11.0",
-		"node-fetch": "^3.2.6",
-		"react": "^18.2.0",
-		"redis": "^4.6.15",
-		"yjs": "^13.6.8"
+		"body-parser": "^1.20.2",
+		"cors": "^2.8.5",
+		"express": "^4.19.2",
+		"socket.io": "^4.7.5"
 	},
 	"devDependencies": {
 		"dotenv": "^16.3.1",

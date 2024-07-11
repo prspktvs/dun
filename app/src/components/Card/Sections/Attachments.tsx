@@ -37,7 +37,6 @@ function FileTile({ file, onClick }: IFileTileProps) {
 
 export default function Attachments({ files }: IAttachmentsProps) {
   const { setFileUrl } = usePreview()
-
   return (
     <div className='flex flex-col gap-2 p-3 h-[calc(100vh_-_164px)] overflow-y-scroll w-full'>
       {!isEmpty(files) && files ? (
