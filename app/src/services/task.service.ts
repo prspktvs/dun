@@ -8,7 +8,8 @@ import {
 } from 'firebase/firestore'
 import { extractCardPath } from '../utils'
 import { ITask } from '../types/Task'
-import { BACKEND_URL } from '../constants/app'
+
+const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
 export const getAllUserTasks = async (projectId: string, user: IUser): Promise<ITask[]> => {
   if (!projectId || !user) {

@@ -13,7 +13,8 @@ import {
 import { ICard } from '../types/Card'
 import { genId } from '../utils'
 import { db } from '../config/firebase'
-import { BACKEND_URL } from '../constants/app'
+
+const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
 export const getCardById = async (cardId: string): Promise<ICard | null> => {
   try {
