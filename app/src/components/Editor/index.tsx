@@ -37,8 +37,8 @@ interface IEditorProps {
   users: IUser[]
 }
 
-const HOCUSPOCUS_URL = process.env.VITE_HOCUSPOCUS_URL || ''
-console.log('HOCUSPOCUS_URL', HOCUSPOCUS_URL)
+const BACKEND_URL = process.env.VITE_BACKEND_URL || ''
+console.log('BACKEND_URL', BACKEND_URL)
 
 function useWebRtc(
   id: string,
@@ -53,7 +53,7 @@ function useWebRtc(
   const [provider, setProvider] = useState(
     () =>
       new HocuspocusProvider({
-        url: HOCUSPOCUS_URL,
+        url: `${BACKEND_URL}/collaboration`,
         name: id,
         document: doc,
         onStatus,

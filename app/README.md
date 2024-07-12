@@ -18,5 +18,5 @@ VITE_MESSAGING_SENDER_ID=
 VITE_APP_ID=
 
 # hocuspocus for example: ws://localhost:80
-VITE_HOCUSPOCUS_URL=
+VITE_BACKEND_URL=
 ```

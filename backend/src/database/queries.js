@@ -37,7 +37,7 @@ export const SELECT_USER_TASKS_QUERY = `SELECT tasks.* FROM tasks JOIN cards ON 
 
 export const SELECT_TASKS_BY_IDS_QUERY = `SELECT * FROM tasks WHERE id IN (?)`
 
-export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = `SELECT cards.*, COALESCE(json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id`
+export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id`
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 

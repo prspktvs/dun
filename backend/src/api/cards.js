@@ -10,12 +10,13 @@ export const getAllProjectCards = async (req, res) => {
   try {
     const id = req.query.projectId
     const cards = await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY, [id])
+
     res.status(200).json(
       cards.map((card) => ({
         ...card,
         description: JSON.parse(card.description),
         chatIds: JSON.parse(card.chatIds),
-        files: JSON.parse(card.files),
+        files: JSON.parse(card?.files || '[]'),
       })),
     )
   } catch (error) {
@@ -32,8 +33,8 @@ export const getCardById = async (req, res) => {
 
     res.status(200).json({
       ...card,
-      description: JSON.parse(card.description),
-      chatIds: JSON.parse(card.chatIds),
+      description: JSON.parse(card?.description || '[]'),
+      chatIds: JSON.parse(card?.chatIds || '[]'),
     })
   } catch (error) {
     console.log(error)
@@ -48,9 +49,9 @@ export const createCard = async (req, res) => {
     await runQuery(INSERT_NEW_CARD_QUERY, [
       id,
       title,
-      JSON.stringify(description),
+      JSON.stringify(description || []),
       JSON.stringify(createdAt),
-      JSON.stringify(chatIds),
+      JSON.stringify(chatIds || []),
       projectId,
     ])
     res.status(201).send({ id, title, description, createdAt, chatIds, projectId })
