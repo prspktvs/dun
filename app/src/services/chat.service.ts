@@ -50,7 +50,7 @@ export const getAllCardChats = async (cardId: string) => {
 
   if (!card) return []
 
-  if(!chatIds) return []
+  if(!card?.chatIds) return []
 
   const snapshots = await Promise.all(
     card?.chatIds.map((chatId: string) => {

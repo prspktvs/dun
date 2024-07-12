@@ -4,8 +4,6 @@ import { useAuth } from './AuthContext'
 import { createCard, getAllUserTasks, getProjectCards, removeCard, updateCard } from '../services'
 
 import { updateUser } from '../services/user.service'
-import io from 'socket.io-client'
-import { BACKEND_URL } from '../constants/app'
 import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
@@ -45,7 +43,9 @@ export const ProjectProvider = ({
 
     fetchData()
 
-    const ws = new WebSocket(`ws://localhost:3000/updates?userId=${user.id}&projectId=${projectId}`)
+    const ws = new WebSocket(
+      `${process.env.VITE_BACKEND_URL}/updates?userId=${user.id}&projectId=${projectId}`,
+    )
     ws.onopen = () => {
       console.log('WebSocket connected')
     }
