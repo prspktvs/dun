@@ -16,7 +16,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
 
   useEffect(() => {
-    getAllCardChats(`projects/${projectId}/cards/${cardId}`).then((res) => setChats(res))
+    getAllCardChats(cardId).then((res) => setChats(res))
   }, [chatId])
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
               onClick={async () => {
                 await saveChatAndMessage({
                   chatId: cardId,
-                  cardPath: `projects/${projectId}/cards/${cardId}`,
+                  cardId,
                   content: 'Topic main discussion',
                   messageData: undefined,
                 })

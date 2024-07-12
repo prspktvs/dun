@@ -1,7 +1,10 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import { useProject } from '../../../context/ProjectContext'
 
 export default forwardRef((props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const { project } = useProject()
 
   const selectItem = (index) => {
     const item = props.items[index]
@@ -48,8 +51,8 @@ export default forwardRef((props, ref) => {
 
   return (
     <div className='relative overflow-hidden bg-purple-300 rounded-md'>
-      {props?.items?.length > 0 ? (
-        props.items.map((item, index) => (
+      {project?.users?.length > 0 ? (
+        project.users.map((item, index) => (
           <button
             className={`block w-full text-left p-1 ${
               index === selectedIndex

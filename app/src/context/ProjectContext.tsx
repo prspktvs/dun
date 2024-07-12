@@ -1,14 +1,23 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { ITask } from '../types/Task'
 import { useAuth } from './AuthContext'
-import { getAllUserProject, getAllUserTasks } from '../services'
-import { collectionGroup, onSnapshot, query, where } from 'firebase/firestore'
-import { db } from '../config/firebase'
-import { extractCardPath } from '../utils'
+import { createCard, getAllUserTasks, getProjectCards, removeCard, updateCard } from '../services'
+
 import { updateUser } from '../services/user.service'
+import io from 'socket.io-client'
+import { BACKEND_URL } from '../constants/app'
+import { ICard } from '../types/Card'
+import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
+import { IProject } from '../types/Project'
 
 export type ProjectContext = {
+  project: IProject
+  cards: ICard[]
   tasks: ITask[]
+  isLoading: boolean
+  optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
+  optimisticUpdateCard: (card: Partial<ICard>) => Promise<void>
+  optimisticDeleteCard: (cardId: string) => Promise<void>
 }
 
 export const ProjectProvider = ({
@@ -19,42 +28,98 @@ export const ProjectProvider = ({
   children: React.ReactNode
 }) => {
   const { user } = useAuth()
+  const [cards, setCards] = useState<ICard[]>([])
   const [tasks, setTasks] = useState<ITask[]>([])
 
+  const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
+
   useEffect(() => {
-    async function bootstrap() {
-      const data = await getAllUserTasks(projectId, user)
-      setTasks(data)
+    if (!projectId || !user) return
+    async function fetchData() {
+      await getAllUserTasks(projectId, user).then((data) => setTasks(data))
+      await getProjectCards(projectId).then((data) => setCards(data))
 
       const updatedUser = { ...user, lastProjectId: projectId }
       await updateUser(updatedUser)
     }
 
-    bootstrap()
-  }, [projectId])
+    fetchData()
 
-  useEffect(() => {
-    if (!projectId || !user) return
+    const socket = io(BACKEND_URL)
+    socket.emit('subscribe', { userId: user?.id })
+    socket.emit('joinProject', { projectId })
 
-    const q = query(collectionGroup(db, 'tasks'), where('users', 'array-contains', user.id))
+    socket.on('update_tasks', (data) => {
+      const { deletedTasks, updatedTasks } = data
 
-    const unsubscribe = onSnapshot(q, (snapshots) => {
-      const newTasks: ITask[] = []
+      if (deletedTasks.length > 0) {
+        setTasks((prev) => prev.filter((task) => !deletedTasks.includes(task.id)))
+      }
 
-      snapshots.forEach(
-        (snap) =>
-          snap.ref.path.includes(`projects/${projectId}`) &&
-          newTasks.push({ ...snap.data(), cardPath: extractCardPath(snap.ref.path) }),
-      )
+      if (updatedTasks.length > 0) {
+        setTasks((prev) => {
+          const t: ITask[] = [...prev]
+          updatedTasks.forEach((task: ITask) => {
+            const index = prev.findIndex((t) => t.id === task.id)
+            if (index > -1) {
+              t[index] = task
+            } else {
+              t.push(task)
+            }
+          })
 
-      setTasks(newTasks)
+          return t
+        })
+      }
     })
 
-    return () => unsubscribe()
+    socket.on('update_cards', (data) => {
+      setCards((prev) => {
+        return prev.map((card) => (card.id === data.id ? { ...card, ...data } : card))
+      })
+    })
+
+    return () => {
+      socket.disconnect()
+    }
   }, [projectId, user])
 
+  const optimisticCreateCard = async (card: Partial<ICard>) => {
+    try {
+      const newCard = await createCard(projectId, card)
+      if (!newCard) return
+      setCards((prev) => [...prev, newCard])
+    } catch (error) {}
+  }
+
+  const optimisticUpdateCard = async (card: ICard) => {
+    try {
+      await updateCard(card)
+      setCards((prev) => {
+        const index = prev.findIndex((c) => c.id === card.id)
+        if (index > -1) {
+          prev[index] = card
+        }
+        return prev
+      })
+    } catch (error) {}
+  }
+
+  const optimisticDeleteCard = async (cardId: string) => {
+    try {
+      await removeCard(cardId)
+      setCards((prev) => prev.filter((card) => card.id !== cardId))
+    } catch (error) {}
+  }
+
   const contextValue: ProjectContext = {
+    project,
+    cards,
     tasks,
+    isLoading,
+    optimisticCreateCard,
+    optimisticUpdateCard,
+    optimisticDeleteCard,
   }
   return <ProjectContext.Provider value={contextValue}>{children}</ProjectContext.Provider>
 }

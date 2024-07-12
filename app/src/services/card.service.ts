@@ -13,60 +13,69 @@ import {
 import { ICard } from '../types/Card'
 import { genId } from '../utils'
 import { db } from '../config/firebase'
+import { BACKEND_URL } from '../constants/app'
 
-export const saveOrCreateCard = async (
-  projectId: string,
-  card: ICard = {},
-): Promise<ICard | null> => {
+export const getCardById = async (cardId: string): Promise<ICard | null> => {
+  try {
+    if (!cardId) return null
+    
+    const res = await fetch(`${BACKEND_URL}/api/cards/${cardId}`)
+    return await res.json()
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+export const createCard = async (projectId: string, card: Partial<ICard>): Promise<ICard | null> => {
   try {
     if (!projectId) return null
 
-    if (!card.id && !card.createdAt) {
-      card.id = genId()
-      card.createdAt = new Date()
-    }
+    const res = await fetch(`${BACKEND_URL}/api/cards`, {method: 'POST', headers: {
+      'Content-Type': 'application/json',
+    }, body: JSON.stringify({ ...card, projectId })})
+    return await res.json()
+    
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 
-    const projectRef = doc(collection(db, 'projects'), projectId)
-    const cardRef = doc(collection(projectRef, 'cards'), card.id)
-    const tasksRef = collection(cardRef, 'tasks')
+}
 
-    if (card.content) {
-      const images = card.content
-        .filter((block) => block.type === 'image')
-        .map(({ props }) => ({ type: 'image', url: props.src }))
+export const updateCard = async (
+  card: ICard,
+): Promise<ICard | null> => {
+  try {
+    if (!card.id) return null
 
-      await setDoc(cardRef, { files: images }, { merge: true })
+    const res = await fetch(`${BACKEND_URL}/api/cards/${card.id}`, {method: 'PATCH', headers: {
+      'Content-Type': 'application/json',
+    }, body: JSON.stringify(card)})
 
-      const tasks = card.content.filter((block) => block.type === 'task')
-
-      const taskPromises = tasks.map((task) => setDoc(doc(tasksRef, task.id), task))
-      await Promise.all([...taskPromises])
-    }
-
-    await setDoc(cardRef, card)
-
-    return card
+    return await res.json()
   } catch (e) {
     return null
   }
 }
 
-export const removeCard = async (projectId: string, cardId: string) => {
+export const removeCard = async (cardId: string) => {
   try {
-    if (!projectId || !cardId) return null
-    await deleteDoc(doc(collection(db, 'projects', projectId, 'cards'), cardId))
+    if (!cardId) return null
+    await fetch(`${BACKEND_URL}/api/cards/${cardId}`, { method: 'DELETE' })
   } catch (e) {
     console.error(e)
     return null
   }
 }
 
-export const saveChatIdsToCard = async (path: string, chatIds: string[]) => {
+export const getProjectCards = async (projectId: string): Promise<ICard[]> => {
   try {
-    const cardRef = doc(db, path)
-    await updateDoc(cardRef, { chatIds: arrayUnion(...chatIds) })
+    if (!projectId) return []
+    const res = await fetch(`${BACKEND_URL}/api/cards?projectId=${projectId}`)
+    return await res.json()
   } catch (e) {
     console.error(e)
-    return null
+    return []
   }
 }

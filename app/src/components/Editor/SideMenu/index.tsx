@@ -31,7 +31,7 @@ export default function CustomSideMenu(props: SideMenuProps) {
             onClick={async (e) => {
               await saveChatAndMessage({
                 chatId: blockId,
-                cardPath: `projects/${projectId}/cards/${cardId}`,
+                cardId,
                 content: props?.block?.content?.[0]?.text || 'Discussion',
                 messageData: undefined,
               })

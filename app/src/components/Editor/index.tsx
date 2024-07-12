@@ -51,14 +51,16 @@ function useWebRtc(
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
   const [provider, setProvider] = useState(
-    new HocuspocusProvider({
-      url: HOCUSPOCUS_URL,
-      name: id,
-      document: doc,
-      onStatus,
-      onClose,
-    }),
+    () =>
+      new HocuspocusProvider({
+        url: HOCUSPOCUS_URL,
+        name: id,
+        document: doc,
+        onStatus,
+        onClose,
+      }),
   )
+  console.log('useWebRtc', provider)
 
   const editor = useBlockNote({
     _tiptapOptions: {
@@ -110,11 +112,9 @@ function Editor({ projectId, card, users }: IEditorProps) {
       if (status !== 'connected') return
       setEditable(true)
       setLoading(false)
-      console.log('status document', status)
     },
     ({ event }) => {
       setEditable(false)
-      console.log('event CloseDocument', event)
     },
     user,
     users,

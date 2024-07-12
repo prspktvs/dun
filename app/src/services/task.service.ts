@@ -8,18 +8,16 @@ import {
 } from 'firebase/firestore'
 import { extractCardPath } from '../utils'
 import { ITask } from '../types/Task'
+import { BACKEND_URL } from '../constants/app'
 
 export const getAllUserTasks = async (projectId: string, user: IUser): Promise<ITask[]> => {
-  if (!user?.id) return []
+  if (!projectId || !user) {
+    console.error('projectId or user is missing')
+    return []
+  }
 
-  const queryTasks = query(collectionGroup(db, 'tasks'), where('users', 'array-contains', user.id))
-  const snapshots = await getDocs(queryTasks)
-  const tasks: ITask[] = []
-  snapshots.forEach(
-    (snap) =>
-      snap.ref.path.includes(`projects/${projectId}`) &&
-      tasks.push({ ...snap.data(), cardPath: extractCardPath(snap.ref.path) }),
-  )
+  const res = await fetch(`${BACKEND_URL}/api/tasks?projectId=${projectId}&userId=${user?.id}`)
+  const data = await res.json()
 
-  return tasks
+  return data.tasks.map((task: ITask) => ({ ...task, cardPath: `${projectId}/cards/${task.card_id}` }))
 }

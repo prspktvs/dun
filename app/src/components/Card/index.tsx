@@ -5,7 +5,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { Modal, Button, Input } from '@mantine/core'
 import { useNavigate, useParams } from 'react-router-dom'
 import Editor from '../Editor'
-import { removeCard, saveOrCreateCard } from '../../services'
+import { removeCard, updateCard } from '../../services'
 import Discussions from './Sections/Discussions'
 import { useChats } from '../../context/ChatContext'
 import clsx from 'clsx'
@@ -13,6 +13,7 @@ import Attachments from './Sections/Attachments'
 import _debounce from 'lodash/debounce'
 import Updates from './Sections/Updates'
 import { FilePreviewProvider } from '../../context/FilePreviewContext'
+import { useProject } from '../../context/ProjectContext'
 
 interface ICardProps {
   card: ICard
@@ -21,8 +22,10 @@ interface ICardProps {
 
 const Card = ({ card, users }: ICardProps) => {
   const { id: projectId = '' } = useParams()
-  const [title, setTitle] = useState(card.title)
+  const { optimisticDeleteCard, optimisticUpdateCard } = useProject()
   const { closeChat, unreadChats } = useChats()
+
+  const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
     'discussions',
   )
@@ -46,18 +49,20 @@ const Card = ({ card, users }: ICardProps) => {
     if (!title.length) inputRef.current?.focus()
   }, [])
 
-  const onSave = (t) => saveOrCreateCard(projectId, { ...card, title: t })
+  const onSaveTitle = (t) => optimisticUpdateCard({ ...card, title: t })
 
   const onDebouncedSave = useCallback(
     _debounce(async (title) => {
-      await onSave(title)
+      await onSaveTitle(title)
     }, 1500),
     [],
   )
 
   const onRemoveCard = async () => {
+    if (!card?.id) return
+
     if (confirm('Are you sure?')) {
-      await removeCard(projectId, card.id)
+      await optimisticDeleteCard(card.id)
       goBack()
     }
   }
@@ -88,7 +93,7 @@ const Card = ({ card, users }: ICardProps) => {
               className='font-monaspace font-thin'
               radius={0}
               color='#464646'
-              onClick={() => onSave(title)}
+              onClick={() => onSaveTitle(title)}
             >
               Save
             </Button>
@@ -159,7 +164,7 @@ const Card = ({ card, users }: ICardProps) => {
       {/* Footer */}
       {/* <div className='mx-3 flex gap-5 justify-end'>
           <div className='w-[250px]'>
-            <Button radius={0} fullWidth variant='filled' color='#464646' onClick={onSave}>
+            <Button radius={0} fullWidth variant='filled' color='#464646' onClick={onSaveTitle}>
               Save
             </Button>
           </div>

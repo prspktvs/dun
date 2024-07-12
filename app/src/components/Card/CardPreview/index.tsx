@@ -33,7 +33,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   const countChats = card?.chatIds?.length || 0
   const tasks = card?.tasks
-  const createdAt = new Date(card.createdAt.seconds * 1000)
+  const createdAt = new Date(card.createdAt)
   const day = createdAt.getDate()
   const month = months[createdAt.getMonth()]
   const hours = createdAt.getHours() < 10 ? '0' + createdAt.getHours() : createdAt.getHours()
@@ -60,8 +60,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
               ? tasks
                   ?.slice(0, 3)
                   ?.map((task) => <TaskPreview key={'prevtask-' + task.id} task={task} />)
-              : card?.description?.map((line) => (
-                  <div key={'description-' + line} className='text-sm'>
+              : card?.description?.map((line, index) => (
+                  <div key={'description-' + line + index} className='text-sm'>
                     {line}
                   </div>
                 ))}

@@ -14,4 +14,5 @@ export interface ICard {
   tasks: ITask[] | null
   users: IUser[] | null
   files: IFile[] | null
+  project_id: string
 }
