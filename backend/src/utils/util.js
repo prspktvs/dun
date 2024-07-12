@@ -10,7 +10,6 @@ import {
   UPDATE_CARD_DESCRIPTION_QUERY,
 } from '../database/queries.js'
 import parser from './parser.js'
-import { io } from '../server.js'
 
 class UserNotifications {
   notifications = {}
@@ -66,7 +65,10 @@ const deleteUnusedContent = async ({ deleteTaskIds, deleteFilesIds }) => {
   await runQuery(DELETE_UNUSED_FILES_QUERY(filesPlaceholders), deleteFilesIds)
 }
 
-const onStoreDocument = async (data) => {
+const onStoreDocument = async ({
+  data,
+  broadcast: { sendMessageToUser, sendMessageToProject },
+}) => {
   const json = TiptapTransformer.fromYdoc(data.document, 'document-store')
 
   const splitted = data.documentName.split('/')
@@ -85,7 +87,7 @@ const onStoreDocument = async (data) => {
   const currentTasks = new Map(res.map((task) => [task.id, task]))
   const deleteTasks = [...currentTasks.values()].filter((t) => !taskIds.includes(t.id))
   const deleteTaskIds = deleteTasks.map((t) => t.id)
-  const deleteFiles = JSON.parse(currentCard.files).filter(
+  const deleteFiles = JSON.parse(currentCard?.files || '[]').filter(
     (file) => !allFiles.map((f) => f.id).includes(file.id),
   )
   const deleteFilesIds = deleteFiles.map((f) => f.id)
@@ -110,10 +112,12 @@ const onStoreDocument = async (data) => {
 
   // Send updates
   if (isCardUpdated)
-    io.to(projectId).emit('update_cards', { id: cardId, description, files: allFiles })
+    sendMessageToProject(projectId, { id: cardId, description, files: allFiles, type: 'card' })
+  // io.to(projectId).emit('update_cards', { id: cardId, description, files: allFiles })
 
   Object.keys(notifications).forEach((userId) => {
-    io.to(userId).emit('update_tasks', notifications[userId])
+    sendMessageToUser(userId, { ...notifications[userId], type: 'tasks' })
+    // io.to(userId).emit('update_tasks', notifications[userId])
   })
 }
 

@@ -8,7 +8,7 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"deploy": "rsync -ravz --exclude=.git *.js nodes start package.json package-lock.json root@api.dun.wtf:/root/dun/ && ssh root@api.dun.wtf 'cd dun && ./start'"
+		"deploy": "rsync -ravz --exclude=.git *.js src start docker-compose.yml Dockerfile package.json package-lock.json root@api.dun.wtf:/root/dun/ && ssh root@api.dun.wtf 'cd dun && ./start'"
 	},
 	"keywords": [],
 	"author": "",
@@ -21,7 +21,7 @@
 		"body-parser": "^1.20.2",
 		"cors": "^2.8.5",
 		"express": "^4.19.2",
-		"socket.io": "^4.7.5"
+		"express-ws": "^5.0.2"
 	},
 	"devDependencies": {
 		"dotenv": "^16.3.1",
