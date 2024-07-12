@@ -45,43 +45,43 @@ export const ProjectProvider = ({
 
     fetchData()
 
-    const socket = io(BACKEND_URL)
-    socket.emit('subscribe', { userId: user?.id })
-    socket.emit('joinProject', { projectId })
+    // const socket = io(BACKEND_URL)
+    // socket.emit('subscribe', { userId: user?.id })
+    // socket.emit('joinProject', { projectId })
 
-    socket.on('update_tasks', (data) => {
-      const { deletedTasks, updatedTasks } = data
+    // socket.on('update_tasks', (data) => {
+    //   const { deletedTasks, updatedTasks } = data
 
-      if (deletedTasks.length > 0) {
-        setTasks((prev) => prev.filter((task) => !deletedTasks.includes(task.id)))
-      }
+    //   if (deletedTasks.length > 0) {
+    //     setTasks((prev) => prev.filter((task) => !deletedTasks.includes(task.id)))
+    //   }
 
-      if (updatedTasks.length > 0) {
-        setTasks((prev) => {
-          const t: ITask[] = [...prev]
-          updatedTasks.forEach((task: ITask) => {
-            const index = prev.findIndex((t) => t.id === task.id)
-            if (index > -1) {
-              t[index] = task
-            } else {
-              t.push(task)
-            }
-          })
+    //   if (updatedTasks.length > 0) {
+    //     setTasks((prev) => {
+    //       const t: ITask[] = [...prev]
+    //       updatedTasks.forEach((task: ITask) => {
+    //         const index = prev.findIndex((t) => t.id === task.id)
+    //         if (index > -1) {
+    //           t[index] = task
+    //         } else {
+    //           t.push(task)
+    //         }
+    //       })
 
-          return t
-        })
-      }
-    })
+    //       return t
+    //     })
+    //   }
+    // })
 
-    socket.on('update_cards', (data) => {
-      setCards((prev) => {
-        return prev.map((card) => (card.id === data.id ? { ...card, ...data } : card))
-      })
-    })
+    // socket.on('update_cards', (data) => {
+    //   setCards((prev) => {
+    //     return prev.map((card) => (card.id === data.id ? { ...card, ...data } : card))
+    //   })
+    // })
 
-    return () => {
-      socket.disconnect()
-    }
+    // return () => {
+    //   socket.disconnect()
+    // }
   }, [projectId, user])
 
   const optimisticCreateCard = async (card: Partial<ICard>) => {
