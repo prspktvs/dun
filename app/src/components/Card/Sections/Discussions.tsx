@@ -12,7 +12,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const { chatId, openChatById } = useChats()
   const [search, setSearch] = useState('')
-  const [chats, setChats] = useState([])
+  const [chats, setChats] = useState<IChat[]>([])
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
 
   useEffect(() => {
@@ -20,9 +20,14 @@ export default function Discussions({ users }: { users: IUser[] }) {
   }, [chatId])
 
   useEffect(() => {
-    const updatedChats = chats.filter((chat) =>
-      chat?.content?.toLowerCase()?.includes(search.toLowerCase()),
-    )
+    const updatedChats = chats.filter((chat) => {
+      console.log(chat)
+      const chatMessages = chat?.messages ? Object.values(chat.messages).map((m) => m.text) : []
+      return (
+        chat?.content?.toLowerCase()?.includes(search.toLowerCase()) ||
+        chatMessages.some((m) => m.toLowerCase().includes(search.toLowerCase()))
+      )
+    })
     setFilteredChats(updatedChats)
   }, [search, chats])
 
@@ -46,11 +51,12 @@ export default function Discussions({ users }: { users: IUser[] }) {
   return (
     <div className='h-screen'>
       <div className='relative p-3 border-b-1 border-border-color'>
-        <i className='absolute ri-search-line text-2xl text-gray-400' />
+        <i className='absolute top-[9px] ri-search-line text-xl text-gray-400' />
         <input
-          className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
+          className='block pl-7 align-middle text-md w-full overflow-hidden border-none font-monaspace'
           value={search}
           onChange={onSearch}
+          placeholder='Search'
         />
       </div>
       <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
