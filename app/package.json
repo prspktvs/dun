@@ -16,6 +16,7 @@
     "@types/lodash": "^4.14.198",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.0.6",
+    "@types/react-mentions": "^4.1.13",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
@@ -48,6 +49,7 @@
     "lodash": "^4.17.21",
     "prosemirror-model": "^1.19.3",
     "react-firebase-hooks": "^5.1.1",
+    "react-mentions": "^4.4.10",
     "react-router-dom": "^6.16.0",
     "tippy.js": "^6.3.7",
     "yjs": "^13.6.8"

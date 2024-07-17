@@ -50,7 +50,7 @@ export default forwardRef((props, ref) => {
   }))
 
   return (
-    <div className='relative overflow-hidden bg-purple-300 rounded-md'>
+    <div className='relative overflow-hidden bg-purple-300 rounded-md max-h-[200px]'>
       {project?.users?.length > 0 ? (
         project.users.map((item, index) => (
           <button

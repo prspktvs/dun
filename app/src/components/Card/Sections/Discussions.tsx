@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Chat from '../../Chats/Chat'
+import { Chat } from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
 import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services'
