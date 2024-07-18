@@ -40,19 +40,11 @@ const Project = (props: IProjectPageProps) => {
   }, [project])
 
   useEffect(() => {
-    if (!cardId) return
+    if (!cardId && isEmpty(cards)) return
 
-    const card = !isEmpty(cards) ? cards?.find((card) => card.id === cardId) : null
+    const card = cards?.find((card) => card.id === cardId)
 
-    if (card) return setSelectedCard(card)
-
-    const emptyCreatedCard: Partial<ICard> = {
-      id: cardId,
-      title: '',
-      chatIds: [],
-      createdAt: new Date(),
-    }
-    setSelectedCard(emptyCreatedCard)
+    setSelectedCard(card as Partial<ICard>)
   }, [cards, cardId])
 
   const navigate = useNavigate()

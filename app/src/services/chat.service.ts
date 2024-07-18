@@ -36,7 +36,6 @@ export const saveChatAndMessage = async ({
 }) => {
   const chatRef = ref(realtimeDb, `chats/${chatId}`)
   const chatSnapshot = await get(chatRef)
-  console.log('SNAP',chatSnapshot.exists())
 
   if (!chatSnapshot.exists()) {
     await createNewChat({ chatId, cardId, content })

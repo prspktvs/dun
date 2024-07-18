@@ -14,6 +14,7 @@ import { useEditor } from '../../context/EditorContext'
 
 import { MentionsInput, Mention } from 'react-mentions'
 import { useProject } from '../../context/ProjectContext'
+import suggestion from '../Editor/Mentions/suggestion'
 
 export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
 
@@ -116,7 +117,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   return (
     <div className='h-[calc(100%-_56px)] flex flex-col'>
       <div
-        className='underline font-monaspace hover:cursor-pointer p-3 border-b-1 border-border-color'
+        className='underline font-monaspace text-sm hover:cursor-pointer p-3 border-b-1 border-border-color'
         onClick={closeChat}
       >
         {'<'} Back to discussions
@@ -126,7 +127,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         {content ? (
           <div className='h-10 flex gap-3 mb-3 items-center font-monaspace'>
             <div className='h-full w-[3px] bg-gray-500' />
-            <div>{content}</div>
+            <div className='text-sm'>{content}</div>
           </div>
         ) : null}
         {!isEmpty(messages) ? (
@@ -171,13 +172,19 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       <div className='h-14 border-t-1 border-border-color px-1 flex items-center'>
         <Avatar size={22} src={user.avatarUrl} radius={0} />
         <MentionsInput
-          singleLine
           className='ml-1 w-full'
           style={{
             '&multiLine': {
-              input: { outline: 0, border: 0 },
+              input: {
+                outline: 0,
+                border: 0,
+                overflow: 'visible',
+                resize: 'none',
+                whiteSpace: 'pre-wrap',
+              },
             },
             '&singleLine': { input: { outline: 0, border: 0 } },
+            suggestions: { borderRadius: 8, border: '1px solid #000' },
           }}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
@@ -186,6 +193,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         >
           <Mention
             className='mention z-10 bg-white relative'
+            style={{ fontWeight: 600 }}
             trigger='@'
             data={project.users?.map((user) => ({ id: user.id, display: user.name }))}
             displayTransform={(id, display) => {
@@ -195,7 +203,9 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
               return (
                 <div
                   className={`block w-full text-left p-1 ${
-                    focused ? 'bg-purple-500 text-white border-none' : 'bg-purple-300 border-none'
+                    focused
+                      ? 'text-black font-bold border-1 border-black rounded-md'
+                      : 'border-none'
                   }`}
                 >
                   {'@' + suggestion.display}

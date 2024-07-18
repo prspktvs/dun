@@ -43,7 +43,8 @@
 }
 
 .mention {
-	color: rgb(168 85 247);
+	color: black;
+  font-weight: 600;
 }
 
 

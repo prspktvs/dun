@@ -53,10 +53,10 @@ export default function Discussions({ users }: { users: IUser[] }) {
       <div className='relative p-3 border-b-1 border-border-color'>
         <i className='absolute top-[9px] ri-search-line text-xl text-gray-400' />
         <input
-          className='block pl-7 align-middle text-md w-full overflow-hidden border-none font-monaspace'
+          className='block pl-7 align-middle text-sm w-full overflow-hidden border-none font-monaspace'
           value={search}
           onChange={onSearch}
-          placeholder='Search'
+          placeholder='Find it'
         />
       </div>
       <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
