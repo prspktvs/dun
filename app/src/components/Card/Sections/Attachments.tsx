@@ -27,7 +27,7 @@ function FileTile({ file, onClick }: IFileTileProps) {
       {file.type === 'image' && (
         <img
           src={file.url}
-          className='w-full h-40 rounded-md object-cover cursor-pointer'
+          className='w-full h-40 rounded-md object-cover cursor-pointer border-1 border-border-color'
           onClick={onClick}
         />
       )}

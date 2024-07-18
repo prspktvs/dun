@@ -66,7 +66,7 @@ const Project = (props: IProjectPageProps) => {
   return (
     <div className='h-screen overflow-y-hidden'>
       {/* Header */}
-      <div className='flex justify-between items-center border-b-1 bg-[#EDEBF3] h-14 border-border-color'>
+      <div className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-border-color'>
         <div
           onClick={() => navigate(`/${projectId}`)}
           className='w-80 border-r-1 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
@@ -76,7 +76,7 @@ const Project = (props: IProjectPageProps) => {
         <div className='justify-self-start pl-6 flex items-center flex-1'>
           <i className='absolute ri-search-line text-xl text-gray-400' />
           <input
-            className='block pl-7 align-middle overflow-hidden border-none bg-[#EDEBF3] text-sm font-monaspace'
+            className='block pl-7 align-middle overflow-hidden border-none bg-grayBg text-sm font-monaspace'
             value={search}
             onChange={onSearch}
             placeholder='Find it all'

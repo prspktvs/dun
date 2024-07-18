@@ -15,6 +15,7 @@ import { useEditor } from '../../context/EditorContext'
 import { MentionsInput, Mention } from 'react-mentions'
 import { useProject } from '../../context/ProjectContext'
 import suggestion from '../Editor/Mentions/suggestion'
+import AvatarDun from '../ui/Avatar'
 
 export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
 
@@ -117,19 +118,20 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   return (
     <div className='h-[calc(100%-_56px)] flex flex-col'>
       <div
-        className='underline font-monaspace text-sm hover:cursor-pointer p-3 border-b-1 border-border-color'
+        className='flex gap-3 items-center font-monaspace px-3 hover:cursor-pointer border-b-1 border-border-color'
         onClick={closeChat}
       >
-        {'<'} Back to discussions
+        <div className='text-2xl font-bold'>{'<'}</div>
+        <div>
+          {content ? (
+            <div className='h-full border-l-1 border-border-color px-2 py-1 flex gap-3 items-center font-monaspace'>
+              <div className='text-sm'>{content}</div>
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div ref={chatRef} className='h-20 grow p-3 space-y-1 hide-scrollbar overflow-y-scroll'>
-        {content ? (
-          <div className='h-10 flex gap-3 mb-3 items-center font-monaspace'>
-            <div className='h-full w-[3px] bg-gray-500' />
-            <div className='text-sm'>{content}</div>
-          </div>
-        ) : null}
         {!isEmpty(messages) ? (
           messages.map((message, index) => {
             const messageUser = chatUsers[message.authorId]
@@ -146,14 +148,14 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
               date.toDateString() === new Date().toDateString() ? 'Today' : `${day} ${month}`
 
             return (
-              <div key={index} className='w-full '>
+              <div key={index} className='w-full'>
                 {isAnotherDay ? (
-                  <span className='flex justify-center text-gray-400 font-monaspace mb-3'>
-                    {dayMessage}
-                  </span>
+                  <div className='flex justify-center text-xs text-gray-400 font-monaspace my-2'>
+                    <span className='border-[0.5px] py-[2px] px-1 rounded-sm'>{dayMessage}</span>
+                  </div>
                 ) : null}
                 <div className='flex gap-1 items-center font-semibold'>
-                  <Avatar size={24} src={messageUser.avatarUrl} radius={0} />
+                  <AvatarDun user={messageUser} />
                   <span className='font-rubik'>
                     {messageUser.name}
                     <span className='ml-3 text-sm text-gray-400 font-monaspace font-thin'>
@@ -161,7 +163,9 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                     </span>
                   </span>
                 </div>
-                <span className='font-rubik'>{renderMessage(message.text)}</span>
+                <span className='font-rubik w-full whitespace-normal break-words'>
+                  {renderMessage(message.text)}
+                </span>
               </div>
             )
           })
@@ -169,16 +173,15 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
-      <div className='h-14 border-t-1 border-border-color px-1 flex items-center'>
-        <Avatar size={22} src={user.avatarUrl} radius={0} />
+      <div className='h-14 border-t-1 border-border-color px-1 flex w-full items-center'>
+        <AvatarDun user={user} />
         <MentionsInput
-          className='ml-1 w-full'
+          className='ml-1 flex-1'
           style={{
             '&multiLine': {
               input: {
                 outline: 0,
                 border: 0,
-                overflow: 'visible',
                 resize: 'none',
                 whiteSpace: 'pre-wrap',
               },
@@ -186,13 +189,14 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
             '&singleLine': { input: { outline: 0, border: 0 } },
             suggestions: { borderRadius: 8, border: '1px solid #000' },
           }}
+          onKeyDown={(e) => e.key === 'Enter' && handleMessageSend()}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Type a message...'
           forceSuggestionsAboveCursor={true}
         >
           <Mention
-            className='mention z-10 bg-white relative'
+            className='relative mention z-10 bg-white right-[1px] top-[1px] text-[15.5px] px-[0.5px]'
             style={{ fontWeight: 600 }}
             trigger='@'
             data={project.users?.map((user) => ({ id: user.id, display: user.name }))}

@@ -14,6 +14,7 @@ import _debounce from 'lodash/debounce'
 import Updates from './Sections/Updates'
 import { FilePreviewProvider } from '../../context/FilePreviewContext'
 import { useProject } from '../../context/ProjectContext'
+import UnreadIndicator from '../ui/UnreadIndicator'
 
 interface ICardProps {
   card: ICard
@@ -111,7 +112,7 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_132px)] w-full hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 mt-[20px] ml-[30px]'>
+        <div className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
             className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
             rows={1}
@@ -128,35 +129,44 @@ const Card = ({ card, users }: ICardProps) => {
           />
         </div>
         {/* Card attachments, chats */}
-        <div className='border-l-1 border-border-color'>
+        <div className='border-l-1 border-border-color w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
-            <div className='grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+            <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color '>
               <div
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-xs lg:text-sm',
-                  activeTab === 'discussions' ? 'bg-black text-white' : '',
+                  activeTab === 'discussions'
+                    ? 'bg-white text-black'
+                    : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('discussions')}
               >
-                Discussions • {unreadDiscussions}
+                Discussions• {card.chatIds?.length || 0}
+                <UnreadIndicator
+                  size='sm'
+                  count={unreadDiscussions}
+                  className='relative -top-2 left-1'
+                />
               </div>
               <div
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-xs lg:text-sm',
-                  activeTab === 'attachments' ? 'bg-black text-white' : '',
+                  activeTab === 'attachments'
+                    ? 'bg-white text-black'
+                    : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('attachments')}
               >
-                Attachments • {card?.files?.length || 0}
+                Attachments• {card?.files?.length || 0}
               </div>
               <div
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-xs lg:text-sm',
-                  activeTab === 'updates' ? 'bg-black text-white' : '',
+                  activeTab === 'updates' ? 'bg-white text-black' : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('updates')}
               >
-                Updates • 0
+                Updates
               </div>
             </div>
           </div>

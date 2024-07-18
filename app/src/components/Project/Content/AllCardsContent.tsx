@@ -98,7 +98,7 @@ export default function AllCardsContent({
               Last modified
               <div className='hidden md:flex'>{/* <UnreadMarker /> */}</div>
             </div>
-            <div className='flex bg-[#EDEBF3] p-2'>Date created</div>
+            <div className='flex bg-grayBg p-2'>Date created</div>
           </div>
 
           <div className='flex h-full items-center border-x-1 border-border-color md:px-7 sm:px-2'>
