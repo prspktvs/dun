@@ -48,7 +48,12 @@ export default function AllCardsContent({
   useEffect(() => {
     const updatedCards = cards
       .filter((card) => card?.title?.toLowerCase()?.includes(search.toLowerCase()))
-      .sort(({ createdAt: a }, { createdAt: b }) => b - a)
+      .sort((a, b) => {
+        if (a.createdAt > b.createdAt) return -1
+        if (a.createdAt < b.createdAt) return 1
+        return
+      })
+
     setFilteredCards(updatedCards)
   }, [search, cards])
 

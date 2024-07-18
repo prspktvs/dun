@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useEditor } from '../../context/EditorContext'
 
 import clsx from 'clsx'
+import { renderMessage } from './Chat'
 
 function MessagePreview({
   user,
@@ -33,7 +34,7 @@ function MessagePreview({
           </span>
         </div>
         <div className='overflow-y-auto max-h-[72px]'>
-          <span className='text-sm text-[#46434E] line-clamp-2'>{message}</span>
+          <span className='text-sm text-[#46434E] line-clamp-2'>{renderMessage(message)}</span>
         </div>
       </div>
     </>

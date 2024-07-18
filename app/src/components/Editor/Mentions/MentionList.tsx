@@ -7,7 +7,7 @@ export default forwardRef((props, ref) => {
   const { project } = useProject()
 
   const selectItem = (index) => {
-    const item = props.items[index]
+    const item = project?.users[index]
 
     if (item) {
       props.command({ label: item.name, id: item.id })
@@ -15,18 +15,18 @@ export default forwardRef((props, ref) => {
   }
 
   const upHandler = () => {
-    setSelectedIndex((selectedIndex + props.items.length - 1) % props.items.length)
+    setSelectedIndex((selectedIndex + project?.users.length - 1) % project?.users.length)
   }
 
   const downHandler = () => {
-    setSelectedIndex((selectedIndex + 1) % props.items.length)
+    setSelectedIndex((selectedIndex + 1) % project?.users.length)
   }
 
   const enterHandler = () => {
     selectItem(selectedIndex)
   }
 
-  useEffect(() => setSelectedIndex(0), [props.items])
+  useEffect(() => setSelectedIndex(0), [project?.users])
 
   useImperativeHandle(ref, () => ({
     onKeyDown: ({ event }) => {

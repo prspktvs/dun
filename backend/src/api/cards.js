@@ -67,6 +67,7 @@ export const updateCard = async (req, res) => {
     const updateFields = req.body
 
     delete updateFields.projectId
+    delete updateFields.files
 
     const card = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
 
@@ -82,6 +83,7 @@ export const updateCard = async (req, res) => {
 
     const newFields = {
       ...updateFields,
+      description: JSON.stringify(updateFields.description),
       chatIds: JSON.stringify(chatIds),
       project_id: card.project_id,
     }

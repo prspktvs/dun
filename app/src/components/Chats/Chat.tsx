@@ -12,10 +12,38 @@ import { useChats } from '../../context/ChatContext'
 import { IMessage } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
 
-export default function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
+import { MentionsInput, Mention } from 'react-mentions'
+import { useProject } from '../../context/ProjectContext'
+
+export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
+
+export const renderMessage = (message: string) => {
+  const mentionRegex = /(@\[.*?\]\(.*?\))/g
+
+  const parts = message.split(mentionRegex)
+
+  const renderedParts = parts.map((part, index) => {
+    const match = part.match(/@\[(.*?)\]\((.*?)\)/)
+    if (match) {
+      const [, name, id] = match
+      return (
+        <span key={'mention-id-' + id} className='mention'>
+          @{name}
+        </span>
+      )
+    }
+
+    return part
+  })
+
+  return renderedParts
+}
+
+export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const [messages, setMessages] = useState<IMessage[]>([])
   const { editor } = useEditor()
+  const { project } = useProject()
   const [content, setContent] = useState('Card discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
@@ -31,6 +59,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
     const messagesRef = ref(realtimeDb, `chats/${chatId}`)
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
+      console.log(chat)
 
       if (editor && !isEmpty(editor.topLevelBlocks)) {
         const block = editor.topLevelBlocks.find((block) => block.id === chat.id)
@@ -61,18 +90,29 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
 
   const handleMessageSend = async () => {
     if (newMessage === '') return alert('Message cannot be empty')
+
+    let mentions: string[] = []
+    newMessage.split(mentionsPattern).forEach((part, index) => {
+      if (index % 3 === 1) {
+        const id = newMessage.split(mentionsPattern)[index + 1]
+        mentions.push(id)
+      }
+    })
+
     await saveChatAndMessage({
       chatId,
       messageData: {
         text: newMessage,
         authorId: user?.id || '',
         timestamp: Date.now(),
+        mentions,
       },
       content: 'Discussion',
       cardId,
     })
     setNewMessage('')
   }
+
   return (
     <div className='h-[calc(100%-_56px)] flex flex-col'>
       <div
@@ -120,7 +160,7 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
                     </span>
                   </span>
                 </div>
-                <span className='font-rubik'>{message.text}</span>
+                <span className='font-rubik'>{renderMessage(message.text)}</span>
               </div>
             )
           })
@@ -130,14 +170,40 @@ export default function Chat({ chatId, users }: { chatId: string; users: IUser[]
       </div>
       <div className='h-14 border-t-1 border-border-color px-1 flex items-center'>
         <Avatar size={22} src={user.avatarUrl} radius={0} />
-        <input
-          className='ml-1 h-8 w-full focus:outline-none'
-          placeholder='Type a message...'
-          type='text'
+        <MentionsInput
+          singleLine
+          className='ml-1 w-full'
+          style={{
+            '&multiLine': {
+              input: { outline: 0, border: 0 },
+            },
+            '&singleLine': { input: { outline: 0, border: 0 } },
+          }}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleMessageSend()}
-        />
+          placeholder='Type a message...'
+          forceSuggestionsAboveCursor={true}
+        >
+          <Mention
+            className='mention z-10 bg-white relative'
+            trigger='@'
+            data={project.users?.map((user) => ({ id: user.id, display: user.name }))}
+            displayTransform={(id, display) => {
+              return `@${display}`
+            }}
+            renderSuggestion={(suggestion, search, highlightedDisplay, index, focused) => {
+              return (
+                <div
+                  className={`block w-full text-left p-1 ${
+                    focused ? 'bg-purple-500 text-white border-none' : 'bg-purple-300 border-none'
+                  }`}
+                >
+                  {'@' + suggestion.display}
+                </div>
+              )
+            }}
+          />
+        </MentionsInput>
         <button onClick={handleMessageSend}>
           <i className='ri-send-plane-2-line'></i>
         </button>
