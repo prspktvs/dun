@@ -89,7 +89,7 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
           <div style={{ transform: `scale(${scale / 100})`, width: '100%', height: '100%' }}>
             {selectedIndex !== null && !isEmpty(files) && (
               <Image
-                src={files?.[selectedIndex].url}
+                src={files?.[selectedIndex]?.url}
                 alt='Dun selected attachment'
                 className='w-full h-full object-contain select-none'
                 onClick={stopPropagationWrapper(() => {})}

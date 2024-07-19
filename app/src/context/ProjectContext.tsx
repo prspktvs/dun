@@ -13,6 +13,7 @@ export type ProjectContext = {
   cards: ICard[]
   tasks: ITask[]
   isLoading: boolean
+  updateCard: (card: Partial<ICard>) => void
   optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
   optimisticUpdateCard: (card: Partial<ICard>) => Promise<void>
   optimisticDeleteCard: (cardId: string) => Promise<void>
@@ -105,13 +106,7 @@ export const ProjectProvider = ({
   const optimisticUpdateCard = async (card: ICard) => {
     try {
       await updateCard(card)
-      setCards((prev) => {
-        const index = prev.findIndex((c) => c.id === card.id)
-        if (index > -1) {
-          prev[index] = card
-        }
-        return prev
-      })
+      _updateCard(card)
     } catch (error) {}
   }
 
@@ -122,11 +117,22 @@ export const ProjectProvider = ({
     } catch (error) {}
   }
 
+  const _updateCard = (card: Partial<ICard>) => {
+    setCards((prev) => {
+      const index = prev.findIndex((c) => c.id === card.id)
+      if (index > -1) {
+        prev[index] = { ...prev[index], ...card }
+      }
+      return prev
+    })
+  }
+
   const contextValue: ProjectContext = {
     project,
     cards,
     tasks,
     isLoading,
+    updateCard: _updateCard,
     optimisticCreateCard,
     optimisticUpdateCard,
     optimisticDeleteCard,
