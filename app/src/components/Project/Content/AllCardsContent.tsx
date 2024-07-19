@@ -8,6 +8,7 @@ import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
+import ButtonDun from '../../ui/buttons/ButtonDun'
 
 function ScrollUpdatedCardControls({
   length,
@@ -101,20 +102,14 @@ export default function AllCardsContent({
             <div className='flex bg-grayBg p-2'>Date created</div>
           </div>
 
-          <div className='flex h-full items-center border-x-1 border-border-color md:px-7 sm:px-2'>
+          <div className='flex h-full items-center border-l-1 border-border-color md:px-7 sm:px-2'>
             <ProjectUsers users={users} />
           </div>
 
-          <div className='flex items-center md:justify-center md:px-5 sm:px-3  '>
-            <Button
-              className='font-monaspace bg-[#8279BD]'
-              radius={0}
-              variant='outline'
-              color='#FFFFFF'
-              onClick={onCreateNewCard}
-            >
+          <div className='h-full w-48 border-l-1 border-border-color'>
+            <ButtonDun onClick={onCreateNewCard}>
               <span className='pr-1 text-xl font-thin'>+</span>Topic
-            </Button>
+            </ButtonDun>
           </div>
         </div>
       </div>

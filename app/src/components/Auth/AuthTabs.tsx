@@ -7,6 +7,7 @@ import { Loader, LoadingOverlay } from '@mantine/core'
 import { set } from 'lodash'
 import { notifyError } from '../../utils/notifications'
 import { FILL_ALL_FIELDS_MESSAGE } from '../../constants/messages'
+import ButtonDun from '../ui/buttons/ButtonDun'
 
 interface IAuthTabsProps {
   tab: string
@@ -175,11 +176,8 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
           {isPassHidden ? <HideIcon /> : <UnhideIcon />}
         </div>
       </div>
-      <div className='p-1 border-t-1 divide-gray-border'>
-        <button
-          onClick={tab === 'signup' ? signUp : login}
-          className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace hover:cursor-pointer'
-        >
+      <div className='h-14 border-t-1 divide-gray-border'>
+        <ButtonDun onClick={tab === 'signup' ? signUp : login}>
           {isLoading ? (
             <Loader color='rgba(255, 255, 255, 1)' />
           ) : tab === 'signup' ? (
@@ -187,7 +185,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
           ) : (
             'Log in'
           )}
-        </button>
+        </ButtonDun>
       </div>
       <button
         onClick={() => setTab('forgot')}
@@ -196,7 +194,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
         Forgot password?
       </button>
       <div className='flex w-full items-center justify-center font-monaspace'>or</div>
-      <div className='flex justify-center gap-x-3 mb-4 font-medium text-[#47444F] mt-2'>
+      <div className='flex justify-center gap-x-3 font-medium text-[#47444F]'>
         <button
           className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer'
           onClick={signInWithGoogle}
@@ -224,7 +222,7 @@ export default function AuthTabs(props: IAuthTabsProps) {
       <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
         <div className='flex-1  border-l-1 h-full'>
-          <div className='w-full h-[65px] flex items-center text-xl pl-7 font-monospace border-b-1 divide-gray-border font-monaspace'>
+          <div className='w-full h-[54px] flex items-center text-xl pl-7 font-monospace border-b-1 divide-gray-border font-monaspace'>
             {isVerification
               ? 'Email verification'
               : isSignUp
