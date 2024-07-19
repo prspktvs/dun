@@ -8,6 +8,8 @@ import { useEditor } from '../../context/EditorContext'
 
 import clsx from 'clsx'
 import { renderMessage } from './Chat'
+import AvatarDun from '../ui/Avatar'
+import UnreadIndicator from '../ui/UnreadIndicator'
 
 function MessagePreview({
   user,
@@ -27,14 +29,16 @@ function MessagePreview({
     <>
       <div className='max-w-7xl'>
         <div className='flex gap-1 items-center font-semibold mb-1'>
-          <Avatar size={24} src={user.avatarUrl} radius={0} className='border border-neutral-600' />
+          <AvatarDun user={user} />
           <span className='text-sm text-zinc-700'>
             {user.name}
             <span className='ml-3 text-[10px]  text-gray-400 font-normal'>{time}</span>
           </span>
         </div>
-        <div className='overflow-y-auto max-h-[72px]'>
-          <span className='text-sm text-[#46434E] line-clamp-2'>{renderMessage(message)}</span>
+        <div className='overflow-hidden max-h-[72px] w-5/6'>
+          <span className='text-sm text-[#46434E] line-clamp-2 truncate'>
+            {renderMessage(message)}
+          </span>
         </div>
       </div>
     </>
@@ -68,8 +72,11 @@ export default function ChatPreview({
       : ''
 
   const firstMessage = sortedMessages ? sortedMessages[0] : null
-  const lastMessage = sortedMessages && sortedMessages.length > 1 ? sortedMessages.at(-1) : null
-  const repliesCount = sortedMessages ? sortedMessages.length - 2 : 0
+  const lastMessage =
+    sortedMessages && sortedMessages.length > 1
+      ? sortedMessages.at(-1)
+      : sortedMessages?.[0] || null
+  const repliesCount = sortedMessages ? sortedMessages.length - 1 : 0
 
   const author = chatUsers?.[firstMessage?.authorId]
   const secondAuthor = chatUsers?.[lastMessage?.authorId]
@@ -97,19 +104,15 @@ export default function ChatPreview({
       >
         <div className='w-full ml-4'>
           <div className='relative flex items-center h-10  gap-2 mb-3'>
-            {unreadMessages ? (
-              <div className='h-7 w-7 bg-salad border-2 border-black flex items-center justify-center'>
-                <span className='font-semibold'>+{unreadMessages}</span>
-              </div>
-            ) : null}
+            {unreadMessages ? <UnreadIndicator count={unreadMessages} /> : null}
             {chat.content ? (
               <div className='h-full flex gap-2 items-center font-monaspace w-11/12 '>
                 <div className='h-full w-[3px] bg-gray-500' />
-                <div className='flex flex-col text-[10px]'>
+                <div className='flex flex-col text-[11px]'>
                   <div className='text-[#A3A1A7]'>
                     {author ? `${author.name} started a discussion about:` : 'New discussion:'}
                   </div>
-                  <div>{editorContent || chat.content}</div>
+                  <div className='line-clamp-2'>{editorContent || chat.content}</div>
                 </div>
               </div>
             ) : null}
@@ -136,13 +139,6 @@ export default function ChatPreview({
           </div>
           {!isEmpty(chat?.messages) ? (
             <>
-              <MessagePreview
-                user={author}
-                timestamp={firstMessage.timestamp}
-                message={firstMessage.text}
-              />
-              <div className='w-full h-px bg-zinc-100 my-3'></div>
-
               {lastMessage ? (
                 <>
                   <div className='my-3'>
@@ -153,8 +149,8 @@ export default function ChatPreview({
                     />
                   </div>
                   {repliesCount ? (
-                    <div className='w-full font-monaspace text-right font-semibold pr-5 underline text-[#8279BD] text-sm'>
-                      {repliesCount} more replies
+                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-[#8279BD] text-sm'>
+                      {repliesCount}+ replies
                     </div>
                   ) : null}
                 </>

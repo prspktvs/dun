@@ -19,6 +19,7 @@ const stopPropagationWrapper =
   }
 
 export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IAttachmentsProps) {
+  console.log('files', files)
   const defaultIndex = files?.findIndex((f) => f.url === fileUrl) ?? 0
   const [selectedIndex, setSelectedIndex] = useState<number | null>(defaultIndex)
   const [scale, setScale] = useState<number>(100)

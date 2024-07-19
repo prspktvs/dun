@@ -50,14 +50,14 @@ export default forwardRef((props, ref) => {
   }))
 
   return (
-    <div className='relative overflow-hidden bg-purple-300 rounded-md'>
+    <div className='relative overflow-hidden border-1 border-black rounded-[8px]'>
       {project?.users?.length > 0 ? (
         project.users.map((item, index) => (
           <button
             className={`block w-full text-left p-1 ${
               index === selectedIndex
-                ? 'bg-purple-500 text-white border-none'
-                : 'bg-transparent border-none'
+                ? 'text-black font-bold border-1 border-black rounded-md'
+                : 'border-none'
             }`}
             key={index}
             onClick={() => selectItem(index)}

@@ -43,7 +43,8 @@
 }
 
 .mention {
-	color: rgb(168 85 247);
+	color: black;
+  font-weight: 600;
 }
 
 
@@ -77,4 +78,19 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.scale-button {
+  transition: transform 0.2s ease;
+  height: 100%;
+  width: 100%;
+  transform: scale(0.95);
+}
+
+.scale-button:hover {
+  transform: scale(1);
+}
+
+.scale-button:active {
+  transform: scale(0.85);
 }

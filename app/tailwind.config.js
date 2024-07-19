@@ -16,6 +16,8 @@ module.exports = {
       colors: {
         'gray-border': '#B0B0B0',
         'border-color': '#C1B9CF',
+        grayBg: '#EFEFEF',
+        inactiveText: '#6F6D73',
         paper: '#FAF9F6',
         salad: '#DBF7CA',
       },
