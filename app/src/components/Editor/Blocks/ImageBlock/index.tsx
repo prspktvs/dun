@@ -3,6 +3,8 @@ import { createReactBlockSpec, InlineContent } from '@blocknote/react'
 import { useEffect, useRef, useState } from 'react'
 import { uploadImage } from '../../../../services'
 import { usePreview } from '../../../../context/FilePreviewContext'
+import { useProject } from '../../../../context/ProjectContext'
+import { useParams } from 'react-router-dom'
 
 const imageSchema = {
   src: {
@@ -23,6 +25,9 @@ const ImageBlock = createReactBlockSpec({
   render: ({ block, editor }) => {
     const { props } = block
     const { src: defaultSrc, alt } = props
+    const { cardId } = useParams()
+
+    const { updateCard } = useProject()
 
     const { setFileUrl } = usePreview()
 
@@ -38,6 +43,9 @@ const ImageBlock = createReactBlockSpec({
       const newFileName = `${timestamp}.${fileExtension}`
 
       const url = await uploadImage(newFileName, file)
+      if (!url) return
+
+      updateCard({ id: cardId, files: [{ id: block.id, type: 'image', url }] })
       console.log('Uploaded', url)
 
       editor.updateBlock(block, { props: { src: url } })

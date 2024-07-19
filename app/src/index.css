@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Rubik:wght@400;500;600&display=swap');
 
 @font-face {
   font-family: 'MonaspaceArgon';
@@ -17,6 +17,11 @@
   border-width: 0;
   border-style: solid;
   border-color: theme('borderColor.DEFAULT', currentColor);
+}
+
+button {
+  cursor: pointer;
+  background: transparent;
 }
 
 .border {

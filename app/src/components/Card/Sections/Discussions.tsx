@@ -9,6 +9,43 @@ import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
 import clsx from 'clsx'
 
+function AddNewChat({ onClick }) {
+  return (
+    <>
+      <div
+        className='h-[120px] border-b-1 border-border-color overflow-hidden flex flex-none'
+        onClick={onClick}
+      >
+        <div className='flex w-full'>
+          <div className={clsx('w-2 h-full border-r-1 border-border-color', 'bg-[#EFEFEF]')} />
+          <div
+            className={clsx(
+              'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+              'opacity-70',
+            )}
+          >
+            <div className='flex flex-col items-center justify-between'>
+              <div className='h-8 flex gap-2 items-center font-monaspace w-11/12 '>
+                <div className='h-full w-[3px] bg-gray-500' />
+                <div className='flex flex-col text-12'>
+                  <div className='text-[#969696]'>Major topic discussion</div>
+                </div>
+              </div>
+              <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
+                No messages yet,{' '}
+                <span className='text-[#8279BD] font-bold hover:underline'>start a discussion</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='font-monaspace text-16 text-center w-full px-16 mt-3 text-[#969696]'>
+        Hover over the content and click the comment icon on the left to start a new discussion
+      </div>
+    </>
+  )
+}
+
 export default function Discussions({ users }: { users: IUser[] }) {
   const { id: projectId, cardId } = useParams()
   const { chatId, openChatById } = useChats()
@@ -86,44 +123,12 @@ export default function Discussions({ users }: { users: IUser[] }) {
               />
             </div>
           ))
-        ) : (
-          <div
-            className='h-[120px] border-b-1 border-border-color overflow-hidden flex flex-none'
-            onClick={async () => {
-              await saveChatAndMessage({
-                chatId: cardId,
-                cardId,
-                content: 'Major topic discussion',
-                messageData: undefined,
-              })
-              openChatById(cardId)
-            }}
-          >
-            <div className='flex w-full'>
-              <div className={clsx('w-2 h-full border-r-1 border-border-color', 'bg-[#EFEFEF]')} />
-              <div
-                className={clsx(
-                  'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
-                  'opacity-70',
-                )}
-              >
-                <div className='flex flex-col items-center justify-between'>
-                  <div className='h-8 flex gap-2 items-center font-monaspace w-11/12 '>
-                    <div className='h-full w-[3px] bg-gray-500' />
-                    <div className='flex flex-col text-[12px]'>
-                      <div className='text-[#969696]'>Major topic discussion</div>
-                    </div>
-                  </div>
-                  <div className='font-monaspace mb-5 ml-3 text-[12px] text-[#969696] hover:cursor-pointer'>
-                    No messages yet,{' '}
-                    <span className='text-[#8279BD] font-bold hover:underline'>
-                      start a discussion
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        ) : search ? (
+          <div className='font-monaspace text-16 text-center w-full px-16 mt-3 text-[#969696]'>
+            No found chats
           </div>
+        ) : (
+          <AddNewChat onClick={onCreateNewDiscussion} />
         )}
       </div>
     </div>

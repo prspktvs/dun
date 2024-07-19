@@ -45,7 +45,7 @@ export const createCard = async (projectId: string, card: Partial<ICard>): Promi
 }
 
 export const updateCard = async (
-  card: ICard,
+  card: Partial<ICard>,
 ): Promise<ICard | null> => {
   try {
     if (!card.id) return null

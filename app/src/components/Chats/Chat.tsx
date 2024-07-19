@@ -12,7 +12,7 @@ import { useChats } from '../../context/ChatContext'
 import { IMessage } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
 
-import { MentionsInput, Mention } from 'react-mentions'
+import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 import { useProject } from '../../context/ProjectContext'
 import suggestion from '../Editor/Mentions/suggestion'
 import AvatarDun from '../ui/Avatar'
@@ -52,6 +52,8 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const { user } = useAuth()
   const chatUsers = users.reduce((acc, user) => ({ ...acc, [user.id]: user }), {})
   const chatRef = React.useRef<HTMLDivElement>(null)
+  const firstMessage = messages[0]
+  const author = chatUsers[firstMessage?.author]
 
   useLayoutEffect(() => {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
@@ -123,11 +125,12 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       >
         <div className='text-2xl font-bold'>{'<'}</div>
         <div>
-          {content ? (
-            <div className='h-full border-l-1 border-border-color px-2 py-1 flex gap-3 items-center font-monaspace'>
-              <div className='text-sm'>{content}</div>
+          <div className='h-full border-l-1 border-border-color px-2 py-1 gap-3 font-monaspace'>
+            <div className='text-sm text-[#A3A1A7]'>
+              {author ? `${author.name} started a discussion about:` : 'New discussion:'}
             </div>
-          ) : null}
+            <div className='text-sm'>{content || 'Major topic discussion'}</div>
+          </div>
         </div>
       </div>
 
@@ -156,16 +159,18 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                 ) : null}
                 <div className='flex gap-1 items-center font-semibold'>
                   <AvatarDun user={messageUser} />
-                  <span className='font-rubik'>
+                  <span className='font-rubik text-14 font-medium ml-1'>
                     {messageUser.name}
-                    <span className='ml-3 text-sm text-gray-400 font-monaspace font-thin'>
+                    <span className='ml-2 text-sm text-gray-400 font-monaspace font-thin'>
                       {time}
                     </span>
                   </span>
                 </div>
-                <span className='font-rubik w-full whitespace-normal break-words'>
-                  {renderMessage(message.text)}
-                </span>
+                <div className='ml-8 mb-5'>
+                  <span className='whitespace-normal break-words font-commissioner'>
+                    {renderMessage(message.text)}
+                  </span>
+                </div>
               </div>
             )
           })
@@ -176,7 +181,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       <div className='h-14 border-t-1 border-border-color px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
-          className='ml-1 flex-1'
+          className='ml-1 flex-1 font-commissioner'
           style={{
             '&multiLine': {
               input: {
@@ -192,14 +197,19 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           onKeyDown={(e) => e.key === 'Enter' && handleMessageSend()}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder='Type a message...'
+          placeholder='Your comment'
           forceSuggestionsAboveCursor={true}
         >
           <Mention
             className='relative mention z-10 bg-white right-[1px] top-[1px] text-[15.5px] px-[0.5px]'
             style={{ fontWeight: 600 }}
             trigger='@'
-            data={project.users?.map((user) => ({ id: user.id, display: user.name }))}
+            data={
+              project.users?.map((user) => ({
+                id: user.id,
+                display: user.name,
+              })) as SuggestionDataItem[]
+            }
             displayTransform={(id, display) => {
               return `@${display}`
             }}
@@ -219,7 +229,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           />
         </MentionsInput>
         <button onClick={handleMessageSend}>
-          <i className='ri-send-plane-2-line'></i>
+          <i className='ri-send-plane-2-line text-xl' />
         </button>
       </div>
     </div>
