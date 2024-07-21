@@ -26,6 +26,7 @@ import {
   EMAIL_VERIFIED_MESSAGE,
   LOGGED_IN_MESSAGE,
 } from '../constants/messages'
+import { registerForPushNotifications } from '../utils/push'
 
 interface ILoginCredentials {
   email: string
@@ -63,6 +64,7 @@ export const AuthContext = React.createContext<AuthContextType>(defaultValue)
 export const AuthProvider = (props: { children: React.ReactNode }) => {
   const [user, setUser] = useState<firebase.User | IUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [token, setToken] = useState<string | null>(null)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -166,6 +168,9 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       if (user) {
         const userData = await getOrCreateUser(user as firebase.User)
         setUser(userData)
+
+        const token = await user.getIdToken()
+        setToken(token)
       }
       setLoading(false)
     })
@@ -173,10 +178,17 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    if (token) {
+      registerForPushNotifications(token)
+    }
+  }, [token])
+
   const value = {
     isAuthenticated: !!user,
     loading,
     user,
+    token,
     signInWithGoogle,
     signOut,
     registerWithEmailAndPassword,

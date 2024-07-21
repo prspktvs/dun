@@ -26,7 +26,7 @@ export const ProjectProvider = ({
   projectId: string
   children: React.ReactNode
 }) => {
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const [cards, setCards] = useState<ICard[]>([])
   const [tasks, setTasks] = useState<ITask[]>([])
 
@@ -45,7 +45,7 @@ export const ProjectProvider = ({
     fetchData()
 
     const ws = new WebSocket(
-      `${process.env.VITE_BACKEND_URL}/updates?userId=${user.id}&projectId=${projectId}`,
+      `${process.env.VITE_BACKEND_URL}/updates?userId=${user.id}&projectId=${projectId}&token=${token}`,
     )
     ws.onopen = () => {
       console.log('WebSocket connected')

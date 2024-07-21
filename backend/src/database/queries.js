@@ -1,4 +1,4 @@
-export const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
+const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   id TEXT PRIMARY KEY,
   title TEXT,
   description TEXT,
@@ -7,7 +7,7 @@ export const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   project_id TEXT
 )`
 
-export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
+const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   id TEXT PRIMARY KEY,
   isDone INTEGER,
   text TEXT,
@@ -16,13 +16,30 @@ export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
 
-export const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS files (
+const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS files (
   id TEXT PRIMARY KEY,
   type TEXT,
   url TEXT,
   card_id TEXT,
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
+
+const CREATE_PUSH_TOKENS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS push_tokens (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  subscription TEXT
+)`
+
+export const CREATE_ALL_INDEXES = [
+  'CREATE INDEX IF NOT EXISTS card_id_index ON tasks (card_id)',
+  'CREATE INDEX IF NOT EXISTS project_id_index ON cards (project_id)',
+  'CREATE INDEX IF NOT EXISTS card_id_index ON files (card_id)',
+  'CREATE INDEX IF NOT EXISTS user_id_index ON push_tokens (user_id)',
+  'CREATE INDEX IF NOT EXISTS user_id ON push_tokens (user_id)',
+]
+
+export const CREATE_TABLES_QUERIES = [CREATE_CARDS_TABLE_QUERY, CREATE_TASKS_TABLE_QUERY, CREATE_FILES_TABLE_QUERY, CREATE_PUSH_TOKENS_TABLE_QUERY]
+
 
 export const INSERT_NEW_CARD_QUERY =
   'INSERT INTO cards (id, title, description, createdAt, chatIds, project_id) VALUES (?, ?, ?, ?, ?, ?)'
@@ -52,3 +69,7 @@ export const DELETE_UNUSED_FILES_QUERY = (placeholders) =>
   `DELETE FROM files WHERE id IN (${placeholders})`
 
 export const DELETE_CARD_QUERY = 'DELETE FROM cards WHERE id = ?'
+
+export const SAVE_PUSH_TOKEN = 'INSERT OR REPLACE INTO push_tokens (id, user_id, subscription) VALUES (?, ?, ?)'
+export const DELETE_PUSH_TOKEN = 'DELETE FROM push_tokens WHERE user_id = ? AND id = ?'
+export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'

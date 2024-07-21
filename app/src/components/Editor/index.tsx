@@ -46,6 +46,7 @@ function useWebRtc(
   onClose: ({ event }: { event: unknown }) => void,
   user: IUser | firebase.User | null,
   users: IUser[],
+  token: string,
 ) {
   // const lastId = useRef<string>(id)
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
@@ -54,13 +55,14 @@ function useWebRtc(
     () =>
       new HocuspocusProvider({
         url: `${BACKEND_URL}/collaboration`,
+        token: token,
         name: id,
         document: doc,
         onStatus,
         onClose,
       }),
   )
-  console.log('useWebRtc', provider)
+  // console.log('useWebRtc', provider)
 
   const editor = useBlockNote({
     _tiptapOptions: {
@@ -103,7 +105,7 @@ function useWebRtc(
 function Editor({ projectId, card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const { chatId } = useChats()
   const { setEditor } = useEditor()
   const { provider, doc, editor } = useWebRtc(
@@ -118,6 +120,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
     },
     user,
     users,
+    token
   )
 
   useEffect(() => {

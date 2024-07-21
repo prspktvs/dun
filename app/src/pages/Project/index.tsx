@@ -100,7 +100,7 @@ const Project = (props: IProjectPageProps) => {
             onCreateNewCard={onCreateNewCard}
             projectId={projectId}
             cards={cards}
-            users={project.users}
+            users={project.users || []}
             search={search}
           />
         )}
