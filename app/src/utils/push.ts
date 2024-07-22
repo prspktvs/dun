@@ -20,7 +20,7 @@ function urlBase64ToUint8Array(base64String) {
 navigator.serviceWorker.register('/service-worker.js')
 const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
-function apiCall(url: string, token: string, method = 'GET', body?: string) {
+async function apiCall(url: string, token: string, method = 'GET', body?: string) {
   return fetch(BACKEND_URL + url, {
     method,
     body,
@@ -29,17 +29,11 @@ function apiCall(url: string, token: string, method = 'GET', body?: string) {
       Authorization: `Bearer ${token}`,
     },
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      return response.json()
-    })
 }
 
 export async function registerForPushNotifications(token: string) {
   const result = await Notification.requestPermission()
-  console.log('registerForPushNotifications', token, result)
+  // console.log('registerForPushNotifications', token, result)
   if (result === 'granted') {
     const registration = await navigator.serviceWorker.ready;
     console.log('registration', registration);

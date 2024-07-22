@@ -27,3 +27,29 @@ self.addEventListener("notificationclick", (event) => {
       }),
   );
 });
+
+async function updateSubscription(event) {
+  const subscription = await self.registration.pushManager
+    .subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+    })
+
+  fetch("/push/patch-subscription", {
+    method: "PATCH",
+    body: JSON.stringify({
+      old: event.oldSubscription,
+      current: subscription,
+    }),
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/pushsubscriptionchange_event
+ * Pushsubscriptionchange event listener.
+ */
+self.addEventListener("pushsubscriptionchange", (event) => {
+  console.log("pushsubscriptionchange", event);
+  event.waitUntil(updateSubscription(event).catch(console.error))
+});

@@ -72,4 +72,5 @@ export const DELETE_CARD_QUERY = 'DELETE FROM cards WHERE id = ?'
 
 export const SAVE_PUSH_TOKEN = 'INSERT OR REPLACE INTO push_tokens (id, user_id, subscription) VALUES (?, ?, ?)'
 export const DELETE_PUSH_TOKEN = 'DELETE FROM push_tokens WHERE user_id = ? AND id = ?'
+export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'
