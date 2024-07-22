@@ -16,3 +16,8 @@ export function extractCardPath(input: string): string | null {
 
   return null
 }
+
+export function getWsUrl(url: string) {
+  const protocol = url.includes('https') ? 'wss' : 'ws'
+  return url.replace(/^https?:\/\//, `${protocol}://`)
+}

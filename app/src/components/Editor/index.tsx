@@ -28,6 +28,7 @@ import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
 import { useChats } from '../../context/ChatContext'
 import { useEditor } from '../../context/EditorContext'
+import { getWsUrl } from '../../utils/index'
 
 const SAVING_DELAY = 2000
 
@@ -37,7 +38,7 @@ interface IEditorProps {
   users: IUser[]
 }
 
-const BACKEND_URL = process.env.VITE_BACKEND_URL || ''
+const BACKEND_URL = getWsUrl(process.env.VITE_BACKEND_URL || '')
 console.log('BACKEND_URL', BACKEND_URL)
 
 function useWebRtc(
