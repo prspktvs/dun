@@ -3,6 +3,11 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      screens: {
+        'h-sm': { raw: '(min-height: 400px)' },
+        'h-md': { raw: '(min-height: 750px)' },
+        'h-lg': { raw: '(min-height: 1000px)' },
+      },
       borderWidth: {
         '1': '1px',
       },
