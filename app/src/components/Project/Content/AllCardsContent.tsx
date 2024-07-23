@@ -6,7 +6,6 @@ import { IUser } from '../../../types/User'
 import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
 import { useNavigate, useParams } from 'react-router'
-import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 
 function ScrollUpdatedCardControls({
@@ -91,7 +90,7 @@ export default function AllCardsContent({
   return (
     <div className='w-full h-full overflow-hidden pb-32'>
       {/* Search line */}
-      <div  className='border-border-color flex items-center justify-between h-14 '>
+      <div className='border-border-color flex items-center justify-between h-14 '>
         {/* <div className='relative mx-3 w-full'>
           <i className='absolute ri-search-line text-2xl text-gray-400' />
           <input
@@ -100,7 +99,7 @@ export default function AllCardsContent({
             onChange={onSearch}
           />
         </div> */}
-        <div  className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
+        <div className='h-full flex w-full border-b-2 border-border-color sm:gap-x-1 '>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-5 '>
             <div className='hidden md:flex'>Last viewed</div>
             <div className='hidden md:flex'>
@@ -130,7 +129,7 @@ export default function AllCardsContent({
               onClick={onCreateNewCard}
             >
               <span className='pr-1 text-xl font-thin'>+</span>Topic
-            </ButtonDun>
+            </Button>
           </div>
         </div>
       </div>
