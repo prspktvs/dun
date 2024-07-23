@@ -46,6 +46,46 @@ export default function Attachments({ files }: IAttachmentsProps) {
       ) : (
         <div className='text-gray-400 font-monaspace'>No attachments yet</div>
       )}
+      <Modal
+        styles={{ content: { backgroundColor: 'black' } }}
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+        size='100%'
+        overlayProps={{
+          backgroundOpacity: 0.8,
+        }}
+      >
+        <div className='flex justify-center items-center gap-x-1 my-3 font-monaspace text-lg '>
+          <Minus onClick={handleZoomOut} />
+          <div className='text-white'>{scale}%</div>
+          <Plus onClick={handleZoomIn} />
+          <div
+            className='flex ml-5 gap-x-1 cursor-pointer'
+            onClick={() => selectedIndex !== null && handleDownload(files[selectedIndex].url)}
+          >
+            <DownloadIcon />
+            <div className='text-white'>Download</div>
+          </div>
+        </div>
+        <div className='flex justify-center mt-2 items-center mb-10'>
+          <RiArrowRightSLine onClick={handlePrevious}/>
+
+          <div className='flex justify-center items-center w-full h-[560px] overflow-hidden'>
+            <div style={{ transform: `scale(${scale / 100})`, width: '100%', height: '100%' }}>
+              {selectedIndex !== null && !isEmpty(files) && (
+                <Image
+                  src={files?.[selectedIndex].url}
+                  alt='Dun selected attachment'
+                  className='w-full h-full object-contain select-none'
+                />
+              )}
+            </div>
+          </div>
+
+          <RiArrowLeftSLine onClick={handleNext} />
+        </div>
+      </Modal>
     </div>
   )
 }

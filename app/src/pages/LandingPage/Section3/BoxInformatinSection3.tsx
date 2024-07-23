@@ -31,10 +31,14 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
           <div className='mr-4 md:hidden'>
             <DownArrow />
           </div>
+<<<<<<< HEAD
 
           <p className='w-[310px] text-sm font-monaspace ml-4 text-center sm:text-left'>
             {secondMessage}
           </p>
+=======
+          <p className='w-[310px] text-sm font-monaspace ml-4 text-center sm:text-left'>{secondMessage}</p>
+>>>>>>> 27b36bd (add setting in project)
         </div>
       </div>
     </>
