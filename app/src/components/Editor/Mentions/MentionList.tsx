@@ -6,6 +6,10 @@ export default forwardRef((props, ref) => {
 
   const { project } = useProject()
 
+  const suggestions = project?.users?.filter((user) =>
+    user.name.toLowerCase().startsWith(props.query.toLowerCase()),
+  )
+
   const selectItem = (index) => {
     const item = project?.users[index]
 
@@ -50,9 +54,9 @@ export default forwardRef((props, ref) => {
   }))
 
   return (
-    <div className='relative overflow-hidden border-1 border-black rounded-[8px]'>
-      {project?.users?.length > 0 ? (
-        project.users.map((item, index) => (
+    <div className='relative overflow-hidden border-1 border-black rounded-[8px] bg-white'>
+      {suggestions && suggestions?.length > 0 ? (
+        suggestions.map((item, index) => (
           <button
             className={`block w-full text-left p-1 ${
               index === selectedIndex

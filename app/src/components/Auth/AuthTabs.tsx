@@ -34,7 +34,7 @@ function LeftTab({
           </div>
           <div className='flex mt-40 font-medium'>
             <span>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</span>
-            <span className='ml-5 text-[#7b759b] cursor-pointer' onClick={toggleTab}>
+            <span className='ml-5 text-[#7b759b] cursor-pointer z-50' onClick={toggleTab}>
               {isSignUp ? 'Log in' : 'Sign up'}
             </span>
           </div>
@@ -196,16 +196,16 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       <div className='flex w-full items-center justify-center font-monaspace'>or</div>
       <div className='flex justify-center gap-x-3 font-medium text-[#47444F]'>
         <button
-          className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer'
+          className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer z-50'
           onClick={signInWithGoogle}
         >
           <GoogleLogo />
           Continue with Google
         </button>
-        <button className='px-4 bg-white border flex justify-center items-center gap-x-2 hover:cursor-pointer'>
+        {/* <button className='px-4 bg-white border flex justify-center items-center gap-x-2 hover:cursor-pointer'>
           <AppleLogo />
           Continue with Apple
-        </button>
+        </button> */}
       </div>
     </>
   )

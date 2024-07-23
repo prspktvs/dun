@@ -10,7 +10,6 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
     const snap = await getDoc(projectRef)
     const { users } = snap.data()
     const newUsers = users ? [...users, user] : [user]
-    console.log(users, newUsers)
     await setDoc(projectRef, { users: newUsers }, { merge: true })
   } catch (e) {
     console.log(e)
