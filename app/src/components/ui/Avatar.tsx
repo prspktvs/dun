@@ -5,7 +5,6 @@ import { IUser } from '../../types/User'
 export default function AvatarDun({ user }: { user: IUser }) {
   const name = user.name.split(' ')
   const initials = name.length > 1 ? name[0].charAt(0) + name[1]?.charAt(0) : name[0].charAt(0)
-  console.log(user.name, initials)
   return (
     <Avatar
       size={24}

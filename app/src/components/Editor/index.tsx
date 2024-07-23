@@ -13,7 +13,6 @@ import {
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import suggestion from './Mentions/suggestion'
-import { CustomMention } from './Mentions/CustomMention'
 import { customSchema, slashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
@@ -121,7 +120,7 @@ function Editor({ projectId, card, users }: IEditorProps) {
     },
     user,
     users,
-    token
+    token,
   )
 
   useEffect(() => {
