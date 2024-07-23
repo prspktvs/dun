@@ -41,7 +41,7 @@ const saveAllTasksAndFiles = ({ cardId, allTasks, allFiles, currentTasks, userNo
           currentTasks.get(task.id).users == JSON.stringify(task.users)
         )
           return
-
+        console.log(INSERT_TASK_QUERY, task.id, +task.isDone, task.text, JSON.stringify(task.users), cardId)
         tasks_stmt.run(task.id, +task.isDone, task.text, JSON.stringify(task.users), cardId)
 
         userNotifications.addToUserNotifications(task, 'updated')
@@ -51,7 +51,9 @@ const saveAllTasksAndFiles = ({ cardId, allTasks, allFiles, currentTasks, userNo
       const files_stmt = db.prepare(INSERT_FILES_QUERY)
       allFiles.forEach((file) => {
         files_stmt.run(file.id, file.type, file.url, cardId)
+        console.log(INSERT_FILES_QUERY, file.id, file.type, file.url, cardId)
       })
+
       files_stmt.finalize()
 
       resolve()
@@ -69,6 +71,7 @@ const onStoreDocument = async ({
   data,
   broadcast: { sendMessageToUser, sendMessageToProject },
 }) => {
+  const user = data.context?.user
   const json = TiptapTransformer.fromYdoc(data.document, 'document-store')
 
   const splitted = data.documentName.split('/')
@@ -84,6 +87,7 @@ const onStoreDocument = async ({
 
   const currentCard = await getQuery(SELECT_CARD_WITH_FILES_QUERY, cardId)
   const res = await allQuery(SELECT_ALL_CARD_TASKS_QUERY, cardId)
+
   const currentTasks = new Map(res.map((task) => [task.id, task]))
   const deleteTasks = [...currentTasks.values()].filter((t) => !taskIds.includes(t.id))
   const deleteTaskIds = deleteTasks.map((t) => t.id)

@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Server } from '@hocuspocus/server'
 import { Logger } from '@hocuspocus/extension-logger'
 import { sqliteExtension } from './src/database/index.js'

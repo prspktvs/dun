@@ -8,6 +8,7 @@ export const db = sqliteExtension.db
 
 export async function runQuery(query, params = []) {
   return new Promise((resolve, reject) => {
+    console.log(query, params)
     db.run(query, params, function (err) {
       if (err) {
         reject(err)
@@ -20,6 +21,7 @@ export async function runQuery(query, params = []) {
 
 export async function getQuery(query, params = []) {
   return new Promise((resolve, reject) => {
+    console.log(query, params)
     db.get(query, params, (err, row) => {
       if (err) {
         reject(err)
@@ -32,6 +34,7 @@ export async function getQuery(query, params = []) {
 
 export async function allQuery(query, params = []) {
   return new Promise((resolve, reject) => {
+    console.log(query, params)
     db.all(query, params, (err, rows) => {
       if (err) {
         reject(err)

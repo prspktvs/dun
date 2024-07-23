@@ -7,6 +7,7 @@ import { updateUser } from '../services/user.service'
 import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
+import { getWsUrl } from '../utils/index'
 
 export type ProjectContext = {
   project: IProject
@@ -26,7 +27,7 @@ export const ProjectProvider = ({
   projectId: string
   children: React.ReactNode
 }) => {
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const [cards, setCards] = useState<ICard[]>([])
   const [tasks, setTasks] = useState<ITask[]>([])
 
@@ -44,9 +45,11 @@ export const ProjectProvider = ({
 
     fetchData()
 
-    const ws = new WebSocket(
-      `${process.env.VITE_BACKEND_URL}/updates?userId=${user.id}&projectId=${projectId}`,
-    )
+    // Firefox thows an error if the url has http:// instead ls ws://
+    const wsHost = getWsUrl(process.env.VITE_BACKEND_URL)
+    const wsUrl = `${wsHost}/updates?userId=${user.id}&projectId=${projectId}&token=${token}`
+
+    const ws = new WebSocket(wsUrl)
     ws.onopen = () => {
       console.log('WebSocket connected')
     }

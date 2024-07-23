@@ -12,6 +12,7 @@ import { EditorProvider } from './context/EditorContext'
 import LandingPage from './pages/LandingPage'
 import { Notifications } from '@mantine/notifications'
 import '@mantine/notifications/styles.css'
+import './utils/push'
 
 export default function App() {
   return (
