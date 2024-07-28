@@ -12,6 +12,9 @@ const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   isDone INTEGER,
   text TEXT,
   users TEXT,
+  author TEXT DEFAULT '',
+  priority TEXT DEFAULT 'Low',
+  status TEXT DEFAULT 'Planned',
   card_id TEXT,
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
@@ -38,13 +41,17 @@ export const CREATE_ALL_INDEXES = [
   'CREATE INDEX IF NOT EXISTS user_id ON push_tokens (user_id)',
 ]
 
-export const CREATE_TABLES_QUERIES = [CREATE_CARDS_TABLE_QUERY, CREATE_TASKS_TABLE_QUERY, CREATE_FILES_TABLE_QUERY, CREATE_PUSH_TOKENS_TABLE_QUERY]
-
+export const CREATE_TABLES_QUERIES = [
+  CREATE_CARDS_TABLE_QUERY,
+  CREATE_TASKS_TABLE_QUERY,
+  CREATE_FILES_TABLE_QUERY,
+  CREATE_PUSH_TOKENS_TABLE_QUERY,
+]
 
 export const INSERT_NEW_CARD_QUERY =
   'INSERT INTO cards (id, title, description, createdAt, chatIds, project_id) VALUES (?, ?, ?, ?, ?, ?)'
 
-export const INSERT_TASK_QUERY = `INSERT OR REPLACE INTO tasks (id, isDone, text, users, card_id) VALUES (?, ?, ?, ?, ?)`
+export const INSERT_TASK_QUERY = `INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
 export const INSERT_FILES_QUERY = `INSERT OR REPLACE INTO files (id, type, url, card_id) VALUES (?, ?, ?, ?)`
 
@@ -70,7 +77,8 @@ export const DELETE_UNUSED_FILES_QUERY = (placeholders) =>
 
 export const DELETE_CARD_QUERY = 'DELETE FROM cards WHERE id = ?'
 
-export const SAVE_PUSH_TOKEN = 'INSERT OR REPLACE INTO push_tokens (id, user_id, subscription) VALUES (?, ?, ?)'
+export const SAVE_PUSH_TOKEN =
+  'INSERT OR REPLACE INTO push_tokens (id, user_id, subscription) VALUES (?, ?, ?)'
 export const DELETE_PUSH_TOKEN = 'DELETE FROM push_tokens WHERE user_id = ? AND id = ?'
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'

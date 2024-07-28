@@ -7,6 +7,7 @@ docker run -d --name dun-build \
   bash -c 'cd /app && npm install && npm start'
 
 docker logs dun-build -f &
+
 /usr/bin/update-docker-hosts
 
 # echo "Waiting for server..."

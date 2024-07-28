@@ -1,26 +1,34 @@
 import { useEffect, useState, useRef } from 'react'
 import {
-  BlockNoteView,
-  DragHandle,
-  FormattingToolbarPositioner,
-  HyperlinkToolbarPositioner,
-  SideMenu,
-  SideMenuPositioner,
-  SlashMenuItem,
-  SlashMenuPositioner,
-  useBlockNote,
+  BasicTextStyleButton,
+  BlockTypeSelect,
+  blockTypeSelectItems,
+  FileCaptionButton,
+  FormattingToolbar,
+  FormattingToolbarController,
+  SideMenuController,
+  SuggestionMenuController,
+  TextAlignButton,
+  useCreateBlockNote,
 } from '@blocknote/react'
+import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import suggestion from './Mentions/suggestion'
-import { customSchema, slashMenuItems } from './SlashMenu/slashMenuItems'
+import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
-import { Block, BlockNoteEditor, PartialBlock } from '@blocknote/core'
+import {
+  BlockNoteEditor,
+  BlockNoteSchema,
+  defaultBlockSpecs,
+  defaultInlineContentSpecs,
+  defaultStyleSpecs,
+  filterSuggestionItems,
+} from '@blocknote/core'
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
 import firebase from 'firebase/compat/app'
-
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert, Loader } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
@@ -28,6 +36,24 @@ import CustomSideMenu from './SideMenu'
 import { useChats } from '../../context/ChatContext'
 import { useEditor } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
+import '@blocknote/mantine/style.css'
+import TaskBlock from './Blocks/TaskBlock'
+import { uploadFile } from '../../services/upload.service'
+import ImageBlock from './Blocks/ImageBlock'
+
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    image: ImageBlock,
+    task: TaskBlock,
+  },
+  inlineContentSpecs: {
+    ...defaultInlineContentSpecs,
+  },
+  styleSpecs: {
+    ...defaultStyleSpecs,
+  },
+})
 
 const SAVING_DELAY = 2000
 
@@ -64,7 +90,7 @@ function useWebRtc(
   )
   // console.log('useWebRtc', provider)
 
-  const editor = useBlockNote({
+  const editor = useCreateBlockNote({
     _tiptapOptions: {
       editable: false,
       extensions: [
@@ -95,8 +121,8 @@ function useWebRtc(
           user: { name: user.name, color: user.color },
         }
       : undefined,
-    blockSchema: customSchema,
-    slashMenuItems,
+    schema,
+    uploadFile,
   })
 
   return { provider, doc, editor }
@@ -150,11 +176,39 @@ function Editor({ projectId, card, users }: IEditorProps) {
           Loading...
         </Alert>
       )}
-      <BlockNoteView editor={editor} theme='light'>
-        <FormattingToolbarPositioner editor={editor} />
-        <HyperlinkToolbarPositioner editor={editor} />
-        <SlashMenuPositioner editor={editor} />
-        <SideMenuPositioner editor={editor as BlockNoteEditor} sideMenu={CustomSideMenu} />
+      <BlockNoteView editor={editor} theme='light' sideMenu={false} slashMenu={false}>
+        {/* <FormattingToolbarController
+          formattingToolbar={() => (
+            <FormattingToolbar
+              blockTypeSelectItems={[
+                {
+                  name: 'paragraph',
+                  type: 'paragraph',
+                  isSelected: () => false,
+                  icon: undefined,
+                },
+              ]}
+            >
+              <BlockTypeSelect key={'blockTypeSelect'} />
+
+              <BasicTextStyleButton basicTextStyle={'bold'} key={'boldStyleButton'} />
+              <BasicTextStyleButton basicTextStyle={'italic'} key={'italicStyleButton'} />
+              <BasicTextStyleButton basicTextStyle={'underline'} key={'underlineStyleButton'} />
+              <BasicTextStyleButton basicTextStyle={'strike'} key={'strikeStyleButton'} />
+              <BasicTextStyleButton key={'codeStyleButton'} basicTextStyle={'code'} />
+
+              <TextAlignButton textAlignment={'left'} key={'textAlignLeftButton'} />
+              <TextAlignButton textAlignment={'center'} key={'textAlignCenterButton'} />
+              <TextAlignButton textAlignment={'right'} key={'textAlignRightButton'} />
+            </FormattingToolbar>
+          )}
+        /> */}
+        <SideMenuController sideMenu={CustomSideMenu} />
+        <SuggestionMenuController
+          triggerCharacter='/'
+          suggestionMenuComponent={CustomSlashMenu}
+          getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
+        />
       </BlockNoteView>
     </>
   )

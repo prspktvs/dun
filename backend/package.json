@@ -8,7 +8,7 @@
 		"dev": "nodemon index.js",
 		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"deploy": "rsync -ravz --exclude=.git *.js src start docker-compose.yml Dockerfile package.json package-lock.json root@api.dun.wtf:/root/dun/ && ssh root@api.dun.wtf 'cd dun && ./start'"
+		"deploy": "rsync -ravz --exclude=.git *.js src start .dockerignore docker-compose.yml Dockerfile package.json package-lock.json root@api.dun.wtf:/root/dun/ && ssh root@api.dun.wtf 'cd dun && ./start'"
 	},
 	"keywords": [],
 	"author": "",

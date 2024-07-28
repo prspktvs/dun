@@ -38,13 +38,35 @@ const saveAllTasksAndFiles = ({ cardId, allTasks, allFiles, currentTasks, userNo
           currentTasks.has(task.id) &&
           +currentTasks.get(task.id).isDone == task.isDone &&
           currentTasks.get(task.id).text == task.text &&
+          currentTasks.get(task.id).priority == task.priority &&
+          currentTasks.get(task.id).status == task.status &&
+          currentTasks.get(task.id).author == task.author &&
           currentTasks.get(task.id).users == JSON.stringify(task.users)
         )
           return
-        console.log(INSERT_TASK_QUERY, task.id, +task.isDone, task.text, JSON.stringify(task.users), cardId)
-        tasks_stmt.run(task.id, +task.isDone, task.text, JSON.stringify(task.users), cardId)
+        console.log(
+          INSERT_TASK_QUERY,
+          task.id,
+          +task.isDone,
+          task.text,
+          task.priority,
+          task.status,
+          task.author,
+          JSON.stringify(task.users),
+          cardId,
+        )
+        tasks_stmt.run(
+          task.id,
+          +task.isDone,
+          task.text,
+          task.priority,
+          task.status,
+          task.author,
+          JSON.stringify(task.users),
+          cardId,
+        )
 
-        userNotifications.addToUserNotifications(task, 'updated')
+        userNotifications.addToUserNotifications({ ...task, card_id: cardId }, 'updated')
       })
       tasks_stmt.finalize()
 
@@ -78,7 +100,7 @@ const onStoreDocument = async ({
   const projectId = splitted[0]
   const cardId = splitted[2]
 
-  const { allTasks, allFiles, description } = parser(json)
+  const { tasks: allTasks, files: allFiles, mentions: allMentions, description } = parser(json)
 
   const userNotifications = new UserNotifications()
   const { notifications } = userNotifications
@@ -109,7 +131,7 @@ const onStoreDocument = async ({
 
   deleteTasks?.forEach((task) => {
     userNotifications.addToUserNotifications(
-      { ...task, isDone: Boolean(task.isDone), users: JSON.parse(task.users) },
+      { ...task, isDone: Boolean(task.isDone), users: JSON.parse(task.users), card_id: cardId },
       'deleted',
     )
   })
