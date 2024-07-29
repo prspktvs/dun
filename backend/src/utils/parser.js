@@ -57,30 +57,7 @@ function parseContainer(container, addContent) {
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
       const parsedBlock = parseBlock(block)
-      console.log(parsedBlock)
       switch (parsedBlock.type) {
-        case 'paragraph':
-          parsedBlock?.content?.forEach((content) => {
-            if (content.type === 'mention') {
-              addContent('mentions', {
-                text: parsedBlock?.content
-                  ?.map((content) => {
-                    switch (content.type) {
-                      case 'text':
-                      case 'mention':
-                        return content.text
-                      case 'link':
-                        return content.content.text
-                      default:
-                        return ''
-                    }
-                  })
-                  ?.join(''),
-                user: content.id,
-              })
-            }
-          })
-          break
         case 'task':
           addContent('tasks', {
             id: blockId,
@@ -114,6 +91,27 @@ function parseContainer(container, addContent) {
           })
           break
         default:
+          parsedBlock?.content?.forEach((content) => {
+            if (content.type === 'mention') {
+              addContent('mentions', {
+                id: blockId,
+                text: parsedBlock?.content
+                  ?.map((content) => {
+                    switch (content.type) {
+                      case 'text':
+                      case 'mention':
+                        return content.text
+                      case 'link':
+                        return content.content.text
+                      default:
+                        return ''
+                    }
+                  })
+                  ?.join(''),
+                user: content.id,
+              })
+            }
+          })
           break
       }
 
