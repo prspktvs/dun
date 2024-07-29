@@ -1,78 +1,48 @@
-import { defaultProps } from '@blocknote/core'
-import { createReactBlockSpec, InlineContent } from '@blocknote/react'
-import { useEffect, useRef, useState } from 'react'
-import { uploadImage } from '../../../../services'
-import { usePreview } from '../../../../context/FilePreviewContext'
-import { useProject } from '../../../../context/ProjectContext'
-import { useParams } from 'react-router-dom'
+import {
+  BlockFromConfig,
+  BlockNoteEditor,
+  createAddFileButton,
+  createBlockSpec,
+  imageBlockConfig,
+  imageParse,
+  imageRender,
+  imageToExternalHTML,
+} from '@blocknote/core'
 
-const imageSchema = {
-  src: {
-    default: 'https://via.placeholder.com/1000',
-  },
-  alt: {
-    default: 'image',
-  },
-}
+const ImageBlock = createBlockSpec(imageBlockConfig, {
+  render: (
+    block: BlockFromConfig<typeof imageBlockConfig, any, any>,
+    editor: BlockNoteEditor<any, any, any>,
+  ) => {
+    const { dom, destroy } = imageRender(block, editor)
 
-const ImageBlock = createReactBlockSpec({
-  type: 'image',
-  propSchema: {
-    ...defaultProps,
-    ...imageSchema,
-  },
-  containsInlineContent: false,
-  render: ({ block, editor }) => {
-    const { props } = block
-    const { src: defaultSrc, alt } = props
-    const { cardId } = useParams()
+    if (block.props.url) {
+      dom.style.position = 'relative'
+      const button = document.createElement('button')
+      button.className =
+        'absolute top-1 right-1 p-1 h-6 w-6 bg-gray-100 border-1 border-black rounded-[4px] flex items-center justify-center'
+      button.onclick = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
 
-    const { updateCard } = useProject()
+        const event = new CustomEvent('open-file-preview', { detail: block.props.url })
+        window.dispatchEvent(event)
+      }
 
-    const { setFileUrl } = usePreview()
+      const icon = document.createElement('i')
+      icon.className = 'ri-fullscreen-fill'
 
-    const [src, setSrc] = useState(defaultSrc)
-
-    const inputRef = useRef(null)
-
-    const handleChange = async (e) => {
-      const file = e.target.files[0]
-
-      const timestamp = new Date().getTime()
-      const fileExtension = file.name.split('.').pop()
-      const newFileName = `${timestamp}.${fileExtension}`
-
-      const url = await uploadImage(newFileName, file)
-      if (!url) return
-
-      updateCard({ id: cardId, files: [{ id: block.id, type: 'image', url }] })
-      console.log('Uploaded', url)
-
-      editor.updateBlock(block, { props: { src: url } })
-
-      if (url) setSrc(url)
+      button.appendChild(icon)
+      dom.appendChild(button)
     }
 
-    const handleClick = () => inputRef.current?.click()
-
-    if (src || defaultSrc)
-      return (
-        <img
-          className='max-h-[300px] max-w-[300px] hover:cursor-pointer'
-          onClick={() => setFileUrl(src || defaultSrc)}
-          src={src || defaultSrc}
-          alt={alt}
-          contentEditable={false}
-        />
-      )
-
-    return (
-      <div>
-        <input ref={inputRef} type='file' accept='image/*' onChange={handleChange} hidden />
-        <button onClick={handleClick}>Choose your image</button>
-      </div>
-    )
+    return {
+      dom,
+      destroy,
+    }
   },
+  parse: imageParse,
+  toExternalHTML: imageToExternalHTML,
 })
 
 export default ImageBlock

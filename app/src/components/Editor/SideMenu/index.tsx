@@ -1,10 +1,4 @@
-import {
-  AddBlockButton,
-  DragHandle,
-  SideMenu,
-  SideMenuButton,
-  SideMenuProps,
-} from '@blocknote/react'
+import { AddBlockButton, DragHandleButton, SideMenu, SideMenuProps } from '@blocknote/react'
 import { Button } from '@mantine/core'
 import { useChats } from '../../../context/ChatContext'
 import { createNewChat, saveChatAndMessage } from '../../../services'
@@ -20,28 +14,28 @@ export default function CustomSideMenu(props: SideMenuProps) {
   const unreadCount = getUnreadMessagesCount(blockId)
 
   return (
-    <SideMenu>
-      <div className='flex'>
-        <SideMenuButton>
-          <i
-            className={clsx(
-              'text-xl',
-              unreadCount > 0 ? 'text-red-700 ri-message-3-fill' : 'ri-message-3-line',
-            )}
-            onClick={async (e) => {
-              await saveChatAndMessage({
-                chatId: blockId,
-                cardId,
-                content: props?.block?.content?.[0]?.text || 'Discussion',
-                messageData: undefined,
-              })
-              openChatById(blockId)
-            }}
-          />
-        </SideMenuButton>
+    <SideMenu {...props}>
+      <div className='flex items-start mt-1 mr-1'>
+        <i
+          className={clsx(
+            'relative text-xl -top-[2px] pr-[2px] hover:cursor-pointer',
+            unreadCount > 0
+              ? 'text-red-700 ri-message-3-fill'
+              : 'ri-message-3-line text-[#CFCFCF] hover:bg',
+          )}
+          onClick={async (e) => {
+            await saveChatAndMessage({
+              chatId: blockId,
+              cardId,
+              content: props?.block?.content?.[0]?.text || 'Discussion',
+              messageData: undefined,
+            })
+            openChatById(blockId)
+          }}
+        />
 
         <AddBlockButton {...props} />
-        <DragHandle {...props} />
+        <DragHandleButton {...props} />
       </div>
     </SideMenu>
   )

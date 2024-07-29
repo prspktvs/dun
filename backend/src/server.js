@@ -5,14 +5,11 @@ import { onStoreDocument } from './utils/util.js'
 import { Server as HocusPocusServer } from '@hocuspocus/server'
 import routes from './routes.js'
 import { runQuery, sqliteExtension } from './database/index.js'
-import {
-  CREATE_TABLES_QUERIES,
-  CREATE_ALL_INDEXES,
-} from './database/queries.js'
+import { CREATE_TABLES_QUERIES, CREATE_ALL_INDEXES } from './database/queries.js'
 import createPushAPI from './push.js'
 
-function parseJwt (token) {
-  return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+function parseJwt(token) {
+  return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
 }
 
 // @TODO: move to redis
@@ -24,12 +21,12 @@ const hocusPocusServer = HocusPocusServer.configure({
   onStoreDocument: async (data) =>
     onStoreDocument({ data, broadcast: { sendMessageToProject, sendMessageToUser } }),
   async onAuthenticate(data) {
-    const { token } = data;
+    const { token } = data
 
     // @TODO: verify token https://firebase.google.com/docs/auth/admin/verify-id-tokens#web
     return {
       user: parseJwt(token),
-    };
+    }
   },
   extensions: [sqliteExtension],
 })
@@ -70,11 +67,20 @@ const sendNotification = createPushAPI(app, '/push/')
 
 export function sendMessageToUser(userId, message) {
   // @TODO: add all other types of notifications
-  const updatedTasks = message.updatedTasks.map(task => task.text)
-  if (updatedTasks) {
+  const updatedTasks = message.updatedTasks.map((task) => task.text)
+  const mentions = message.mentions.map((m) => m.text)
+
+  if (updatedTasks.length > 0) {
     sendNotification(userId, {
       title: 'Tasks updated',
       body: `Tasks: ${updatedTasks.join(', ')} have been updated`,
+    })
+  }
+
+  if (mentions.length > 0) {
+    sendNotification(userId, {
+      title: 'Mentions',
+      body: `You have been mentioned in: ${mentions.join(', ')}`,
     })
   }
 
@@ -94,8 +100,8 @@ export function sendMessageToProject(projectId, message) {
 }
 
 export async function bootstrapExpress() {
-  await Promise.all(CREATE_TABLES_QUERIES.map(q => runQuery(q)))
-  await Promise.all(CREATE_ALL_INDEXES.map(q => runQuery(q)))
+  await Promise.all(CREATE_TABLES_QUERIES.map((q) => runQuery(q)))
+  await Promise.all(CREATE_ALL_INDEXES.map((q) => runQuery(q)))
 
   const PORT = process.env.PORT || 3000
   app.listen(PORT, () => {

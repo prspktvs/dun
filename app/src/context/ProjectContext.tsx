@@ -8,11 +8,13 @@ import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
+import { IUser } from '../types/User'
 
 export type ProjectContext = {
   project: IProject
   cards: ICard[]
   tasks: ITask[]
+  users: IUser[]
   isLoading: boolean
   updateCard: (card: Partial<ICard>) => void
   optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
@@ -132,6 +134,7 @@ export const ProjectProvider = ({
 
   const contextValue: ProjectContext = {
     project,
+    users: project?.users || [],
     cards,
     tasks,
     isLoading,

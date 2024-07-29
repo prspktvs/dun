@@ -26,6 +26,8 @@ const Card = ({ card, users }: ICardProps) => {
   const { optimisticDeleteCard, optimisticUpdateCard } = useProject()
   const { closeChat, unreadChats } = useChats()
 
+  const files = card.files?.filter((file) => file.url) || []
+
   const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
     'discussions',
@@ -157,7 +159,7 @@ const Card = ({ card, users }: ICardProps) => {
                 )}
                 onClick={() => setActiveTab('attachments')}
               >
-                Attachments• {card?.files?.length || 0}
+                Attachments• {files.length || 0}
               </div>
               <div
                 className={clsx(
@@ -173,7 +175,7 @@ const Card = ({ card, users }: ICardProps) => {
           {
             {
               discussions: <Discussions users={users} />,
-              attachments: <Attachments files={card.files} />,
+              attachments: <Attachments files={files} />,
               updates: <Updates />,
             }[activeTab]
           }

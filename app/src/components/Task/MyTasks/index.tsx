@@ -1,5 +1,5 @@
 import { ITask } from '../../../types/Task'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { isEmpty } from 'lodash'
 
 import { useAuth } from '../../../context/AuthContext'
@@ -9,6 +9,7 @@ import { Menu } from '@mantine/core'
 import { getAllUserProject } from '../../../services'
 import { genId } from '../../../utils'
 import { useProject } from '../../../context/ProjectContext'
+import clsx from 'clsx'
 
 interface IMyTasksProps {
   projectId: string
@@ -20,7 +21,18 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
   const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
-  const { tasks } = useProject()
+  const { tasks, cards } = useProject()
+
+  const cardsTitles = useMemo(
+    () =>
+      cards.reduce((acc, card) => {
+        acc[card.id] = card.title
+        return acc
+      }, {}),
+    [cards],
+  )
+  const groupedTasksById = useMemo(() => Object.groupBy(tasks, (task) => task.card_id), [tasks])
+
   const { user } = useAuth()
 
   useEffect(() => {
@@ -70,23 +82,32 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
           </div>
         </Menu.Dropdown>
       </Menu>
-      <div className='w-full px-5 py-3'>
-        <div className='flex items-center text-sm mb-3 font-monaspace font-normal'>
-          What to do • {tasks.length}
+      <div className='flex-1 w-full px-5 py-3 overflow-y-scroll pb-12'>
+        <div
+          className={clsx(
+            ' border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
+            !isEmpty(tasks) ? 'bg-salad' : 'bg-gray-50',
+          )}
+        >
+          <span className='text-12 font-normal font-monaspace'>
+            {!isEmpty(tasks) ? 'New tasks for you' : 'No new tasks for you'}
+          </span>
         </div>
-        {!isEmpty(tasks) ? (
-          tasks.map((task, idx) => (
-            <div
-              key={'my-task-' + idx}
-              onClick={() => navigate(`/${task?.cardPath}`, { replace: true })}
-              className='rounded-md p-1 hover:cursor-pointer hover:bg-gray-100'
-            >
-              <TaskPreview task={task} />
-            </div>
-          ))
-        ) : (
-          <div className='text-gray-400'>No tasks found</div>
-        )}
+        {Object.keys(groupedTasksById).map((cardId) => (
+          <div key={'grouped-tasks-card-id-' + cardId}>
+            <div className='text-14 font-bold'>{cardsTitles[cardId]}</div>
+            {groupedTasksById[cardId].map((task, idx) => (
+              <div
+                key={'grouped-task-' + task.id}
+                onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
+                className='rounded-md p-1 hover:cursor-pointer hover:bg-gray-100'
+              >
+                <TaskPreview task={task} />
+              </div>
+            ))}
+            <div className='mb-5' />
+          </div>
+        ))}
       </div>
     </div>
   )

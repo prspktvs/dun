@@ -37,7 +37,7 @@ function parseContent(content, styles = {}) {
   }
 }
 
-function parseBlock(block, addMention) {
+function parseBlock(block) {
   const type = block.type
   const props = block.attrs
   const content = block?.content?.map((content) => parseContent(content)) ?? []
@@ -45,23 +45,25 @@ function parseBlock(block, addMention) {
   return { type, props, content }
 }
 
-function parseContainer(container, addTask, addFile) {
+function parseContainer(container, addContent) {
   const blockId = container.attrs.id
   const blockBackground = container.attrs.backgroundColor
   const blockTextColor = container.attrs.textColor
   const children =
     container.content
       ?.filter((block) => block.type === 'blockGroup')[0]
-      ?.content?.map((con) => parseContainer(con, addTask)) ?? []
+      ?.content?.map((con) => parseContainer(con, addContent)) ?? []
   const block = container.content
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
       const parsedBlock = parseBlock(block)
       switch (parsedBlock.type) {
         case 'task':
-          addTask({
+          addContent('tasks', {
             id: blockId,
             isDone: parsedBlock.props.isDone,
+            priority: parsedBlock.props.priority,
+            status: parsedBlock.props.status,
             text: parsedBlock?.content
               ?.map((content) => {
                 switch (content.type) {
@@ -75,19 +77,41 @@ function parseContainer(container, addTask, addFile) {
                 }
               })
               ?.join(''),
+            author: parsedBlock.props.author,
             users: parsedBlock?.content
               ?.filter((content) => content.type === 'mention')
               ?.map((mention) => mention.id),
           })
           break
         case 'image':
-          addFile({
+          addContent('files', {
             id: blockId,
             type: 'image',
             url: parsedBlock.props.src || parsedBlock.props.url,
           })
           break
         default:
+          parsedBlock?.content?.forEach((content) => {
+            if (content.type === 'mention') {
+              addContent('mentions', {
+                id: blockId,
+                text: parsedBlock?.content
+                  ?.map((content) => {
+                    switch (content.type) {
+                      case 'text':
+                      case 'mention':
+                        return content.text
+                      case 'link':
+                        return content.content.text
+                      default:
+                        return ''
+                    }
+                  })
+                  ?.join(''),
+                user: content.id,
+              })
+            }
+          })
           break
       }
 
@@ -101,27 +125,27 @@ function parseContainer(container, addTask, addFile) {
         },
       }
     })
-
-  return { ...block[0], children }
 }
 
-function parseBlockGroup(block, addTask, addFile) {
-  return block.content?.map((container) => parseContainer(container, addTask, addFile))
+function parseBlockGroup(block, addContent) {
+  return block.content?.map((container) => parseContainer(container, addContent))
 }
 
 function parseBNXmlToBlocks(data) {
-  const allTasks = []
-  const allFiles = []
-  const addTask = (task) => allTasks.push(task)
-  const addFile = (file) => allFiles.push(file)
+  const content = {
+    tasks: [],
+    files: [],
+    mentions: [],
+  }
+  const addContent = (type, data) => content[type].push(data)
 
-  const blocks = data.content?.map((block) => parseBlockGroup(block, addTask, addFile))
-
-  const description = blocks[0]
-    ?.filter((block) => block.type !== 'task')
+  const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
+  const description = blocks
+    ?.filter((block) => block && block.type !== 'task')
     ?.map((block) =>
       block?.content
         ?.map((content) => {
+          if (!content) return ''
           switch (content.type) {
             case 'text':
             case 'mention':
@@ -137,7 +161,7 @@ function parseBNXmlToBlocks(data) {
     ?.filter((line) => line !== '')
     ?.slice(0, 3)
 
-  return { allTasks, allFiles, description }
+  return { ...content, description }
 }
 
 export default parseBNXmlToBlocks

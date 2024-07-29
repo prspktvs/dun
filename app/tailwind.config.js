@@ -29,6 +29,12 @@ module.exports = {
       colors: {
         'gray-border': '#B0B0B0',
         'border-color': '#C1B9CF',
+        priority: {
+          low: '#00A3FF',
+          medium: '#F5CC63',
+          high: '#FFB774',
+          urgent: '#FF7475',
+        },
         grayBg: '#EFEFEF',
         inactiveText: '#6F6D73',
         paper: '#FAF9F6',

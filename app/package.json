@@ -32,8 +32,9 @@
     "vite": "^3.0.4"
   },
   "dependencies": {
-    "@blocknote/core": "^0.9.4",
-    "@blocknote/react": "^0.9.4",
+    "@blocknote/core": "^0.15.3",
+    "@blocknote/mantine": "^0.15.3",
+    "@blocknote/react": "^0.15.3",
     "@headlessui/react": "^0.0.0-insiders.f016dc5",
     "@hocuspocus/provider": "^2.13.2",
     "@mantine/core": "^7.0.0",
