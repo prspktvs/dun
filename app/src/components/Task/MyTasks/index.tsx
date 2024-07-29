@@ -83,8 +83,15 @@ function MyTasks({ projectId, title }: IMyTasksProps) {
         </Menu.Dropdown>
       </Menu>
       <div className='flex-1 w-full px-5 py-3 overflow-y-scroll pb-12'>
-        <div className='bg-salad border-black flex items-center justify-center w-36 h-6 border-1 mb-3'>
-          <span className='text-12 font-normal font-monaspace'>New tasks for you</span>
+        <div
+          className={clsx(
+            ' border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
+            !isEmpty(tasks) ? 'bg-salad' : 'bg-gray-50',
+          )}
+        >
+          <span className='text-12 font-normal font-monaspace'>
+            {!isEmpty(tasks) ? 'New tasks for you' : 'No new tasks for you'}
+          </span>
         </div>
         {Object.keys(groupedTasksById).map((cardId) => (
           <div key={'grouped-tasks-card-id-' + cardId}>
