@@ -65,40 +65,44 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
       onClose={onClose}
       withCloseButton={false}
       fullScreen
+      padding={0}
+      m={0}
       onClick={onClose}
     >
-      <div className='flex justify-center items-center gap-x-1 my-3 font-monaspace text-lg'>
-        <Minus onClick={stopPropagationWrapper(handleZoomOut)} />
-        <div className='text-white'>{scale}%</div>
-        <Plus onClick={stopPropagationWrapper(handleZoomIn)} />
-        <div
-          className='flex ml-5 gap-x-1 cursor-pointer'
-          onClick={() =>
-            selectedIndex !== null &&
-            stopPropagationWrapper(handleDownload(files[selectedIndex].url))
-          }
-        >
-          <DownloadIcon />
-          <div className='text-white'>Download</div>
-        </div>
-      </div>
-      <div className='flex justify-center mt-2 items-center mb-10 gap-3'>
-        <RiArrowRightSLine onClick={stopPropagationWrapper(handlePrevious)} />
-
-        <div className='flex justify-center items-center w-full h-[560px] overflow-hidden'>
-          <div style={{ transform: `scale(${scale / 100})`, width: '100%', height: '100%' }}>
-            {selectedIndex !== null && !isEmpty(files) && (
-              <Image
-                src={files?.[selectedIndex]?.url}
-                alt='Dun selected attachment'
-                className='w-full h-full object-contain select-none'
-                onClick={stopPropagationWrapper(() => {})}
-              />
-            )}
+      <div className='h-screen flex-1'>
+        <div className='flex h-12 justify-center items-center gap-x-1 font-monaspace text-lg'>
+          <Minus onClick={stopPropagationWrapper(handleZoomOut)} />
+          <div className='text-white'>{scale}%</div>
+          <Plus onClick={stopPropagationWrapper(handleZoomIn)} />
+          <div
+            className='flex ml-5 gap-x-1 cursor-pointer'
+            onClick={() =>
+              selectedIndex !== null &&
+              stopPropagationWrapper(handleDownload(files[selectedIndex].url))
+            }
+          >
+            <DownloadIcon />
+            <div className='text-white select-none'>Download</div>
           </div>
         </div>
+        <div className='flex h-[calc(100%_-_60px)] justify-center mt-2 items-center mb-0'>
+          <RiArrowRightSLine onClick={stopPropagationWrapper(handlePrevious)} />
 
-        <RiArrowLeftSLine onClick={stopPropagationWrapper(handleNext)} />
+          <div className='flex justify-center items-center w-full h-full overflow-hidden'>
+            <div style={{ transform: `scale(${scale / 100})`, width: '100%', height: '100%' }}>
+              {selectedIndex !== null && !isEmpty(files) && (
+                <Image
+                  src={files?.[selectedIndex]?.url}
+                  alt='Dun selected attachment'
+                  className='w-full h-full object-contain select-none '
+                  onClick={stopPropagationWrapper(() => {})}
+                />
+              )}
+            </div>
+          </div>
+
+          <RiArrowLeftSLine onClick={stopPropagationWrapper(handleNext)} />
+        </div>
       </div>
     </Modal>
   )

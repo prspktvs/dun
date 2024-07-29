@@ -15,15 +15,30 @@ const ImageBlock = createBlockSpec(imageBlockConfig, {
     editor: BlockNoteEditor<any, any, any>,
   ) => {
     const { dom, destroy } = imageRender(block, editor)
-    dom.addEventListener('click', (e) => {})
 
-    const _destroy = () => {
-      dom.removeEventListener('click', (e) => {})
-      destroy && destroy()
+    if (block.props.url) {
+      dom.style.position = 'relative'
+      const button = document.createElement('button')
+      button.className =
+        'absolute top-1 right-1 p-1 h-6 w-6 bg-gray-100 border-1 border-black rounded-[4px] flex items-center justify-center'
+      button.onclick = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const event = new CustomEvent('open-file-preview', { detail: block.props.url })
+        window.dispatchEvent(event)
+      }
+
+      const icon = document.createElement('i')
+      icon.className = 'ri-fullscreen-fill'
+
+      button.appendChild(icon)
+      dom.appendChild(button)
     }
+
     return {
       dom,
-      destroy: _destroy,
+      destroy,
     }
   },
   parse: imageParse,

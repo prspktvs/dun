@@ -90,7 +90,7 @@ const insertTask = (editor: BlockNoteEditor) => ({
 export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => [
   ...getDefaultReactSlashMenuItems(editor).filter(
     (item: DefaultReactSuggestionItem) =>
-      console.log(item) || !EXCLUDED_KEYS.includes((item as DefaultSuggestionItem).title),
+      !EXCLUDED_KEYS.includes((item as DefaultSuggestionItem).title),
   ),
   insertTask(editor),
   insertImage(editor),
