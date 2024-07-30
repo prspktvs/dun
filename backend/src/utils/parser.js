@@ -92,12 +92,12 @@ function parseContainer(container, addContent) {
           break
         default:
           parsedBlock?.content?.forEach((content) => {
-            if (content.type === 'mention') {
+            if (content?.type === 'mention') {
               addContent('mentions', {
                 id: blockId,
                 text: parsedBlock?.content
                   ?.map((content) => {
-                    switch (content.type) {
+                    switch (content?.type) {
                       case 'text':
                       case 'mention':
                         return content.text
