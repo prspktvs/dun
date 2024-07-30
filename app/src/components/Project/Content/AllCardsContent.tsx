@@ -78,7 +78,7 @@ export default function AllCardsContent({
   }
 
   return (
-    <div className='w-full h-full overflow-hidden pb-32'>
+    <main className='w-full h-full overflow-hidden pb-32'>
       {/* Search line */}
       <div className='border-border-color flex items-center justify-between h-14 '>
         {/* <div className='relative mx-3 w-full'>
@@ -137,6 +137,6 @@ export default function AllCardsContent({
           </div>
         )}
       </div>
-    </div>
+    </main>
   )
 }

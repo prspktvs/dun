@@ -2,15 +2,10 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { ICard } from '../../types/Card'
 import Card from '../../components/Card'
-import { Button } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import CreateProject from '../../components/Project/CreateProject'
 import { useNavigate } from 'react-router-dom'
-import { useFirebaseDocument } from '../../hooks/useFirebaseDocument'
-import { useFirebaseCollection } from '../../hooks/useFirebaseCollection'
 import CreateUser from '../../components/User/CreateUser'
-import ProjectUsers from '../../components/User/ProjectUsers'
-import MyTasks from '../../components/Task/MyTasks'
 import { addUserToProject, getProjectCards } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import Logo from '../../components/ui/Logo'
@@ -18,8 +13,8 @@ import UserPanel from '../../components/User/UserPanel'
 import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 import { genId } from '../../utils'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
-import { createCard } from '../../services'
 import { useSearch } from '../../components/ui/Search'
+import LeftPanel from '../../components/Project/LeftPanel'
 
 interface IProjectPageProps {}
 
@@ -67,8 +62,7 @@ const Project = (props: IProjectPageProps) => {
 
   return (
     <div className='h-screen overflow-y-hidden'>
-      {/* Header */}
-      <div className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-border-color'>
+      <header className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-border-color'>
         <div
           onClick={() => navigate(`/${projectId}`)}
           className='w-80 border-r-1 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
@@ -83,23 +77,22 @@ const Project = (props: IProjectPageProps) => {
             onChange={onSearch}
             placeholder='Find it all'
           />
-          {search.loading
-          ? <div className='absolute right-0 top-0 bottom-0 flex items-center justify-center w-12 bg-grayBg'>
+          {search.loading ? (
+            <div className='absolute right-0 top-0 bottom-0 flex items-center justify-center w-12 bg-grayBg'>
               <i className='ri-loader-2-line animate-spin text-gray-400' />
             </div>
-          : null}
+          ) : null}
         </div>
 
         <div className='h-full flex items-center p-5 '>
           <UserPanel user={user} />
         </div>
-      </div>
+      </header>
 
       <div className='flex h-full w-full overflow-y-hidden'>
         {/* Left panel */}
-        <MyTasks projectId={projectId} title={project.title} />
+        <LeftPanel projectId={projectId} title={project.title} />
 
-        {/* Right panel */}
         {selectedCard && selectedCard.id === cardId ? (
           <Card card={selectedCard} users={project.users} />
         ) : (

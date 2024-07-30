@@ -84,7 +84,7 @@ const Card = ({ card, users }: ICardProps) => {
   }
 
   return (
-    <div className='w-[calc(100%_-_320px)]'>
+    <main className='w-[calc(100%_-_320px)]'>
       <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace text-sm hover:cursor-pointer' onClick={goBack}>
@@ -114,7 +114,7 @@ const Card = ({ card, users }: ICardProps) => {
 
       <div className='flex'>
         {/* Main content editor */}
-        <div className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
+        <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
             className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
             rows={1}
@@ -129,9 +129,9 @@ const Card = ({ card, users }: ICardProps) => {
             card={card}
             users={users}
           />
-        </div>
+        </section>
         {/* Card attachments, chats */}
-        <div className='border-l-1 border-border-color w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+        <aside className='border-l-1 border-border-color w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
             <div className='w-full grid grid-cols-3 h-full  divide-x-[1px] divide-gray-border border-border-color '>
               <div
@@ -179,15 +179,15 @@ const Card = ({ card, users }: ICardProps) => {
               updates: <Updates />,
             }[activeTab]
           }
-        </div>
+        </aside>
       </div>
-    </div>
+    </main>
   )
 }
 
 const CardWithPreview = (props: ICardProps) => {
   const { card } = props
-  console.log('UPDATED CARD', card)
+
   return (
     <FilePreviewProvider files={card?.files}>
       <Card {...props} />
