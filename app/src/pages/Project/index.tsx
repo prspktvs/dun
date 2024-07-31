@@ -19,14 +19,16 @@ import AllCardsContent from '../../components/Project/Content/AllCardsContent'
 import { genId } from '../../utils'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
 import { createCard } from '../../services'
+import { useSearch } from '../../components/ui/Search'
 
 interface IProjectPageProps {}
 
 const Project = (props: IProjectPageProps) => {
   const { id: projectId = '', cardId } = useParams()
   const { user } = useAuth()
-  const [search, setSearch] = useState('')
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
+  const [searchText, setSearchText] = useState('')
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)
+  const search = useSearch(searchText, projectId)
 
   const { project, isLoading, cards, optimisticCreateCard } = useProject()
 
@@ -77,10 +79,15 @@ const Project = (props: IProjectPageProps) => {
           <i className='absolute ri-search-line text-xl text-gray-400' />
           <input
             className='block pl-7 align-middle overflow-hidden border-none bg-grayBg text-sm font-monaspace'
-            value={search}
+            value={searchText}
             onChange={onSearch}
             placeholder='Find it all'
           />
+          {search.loading
+          ? <div className='absolute right-0 top-0 bottom-0 flex items-center justify-center w-12 bg-grayBg'>
+              <i className='ri-loader-2-line animate-spin text-gray-400' />
+            </div>
+          : null}
         </div>
 
         <div className='h-full flex items-center p-5 '>

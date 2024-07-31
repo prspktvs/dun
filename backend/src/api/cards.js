@@ -4,7 +4,38 @@ import {
   INSERT_NEW_CARD_QUERY,
   SELECT_ALL_CARDS_BY_PROJECTID_QUERY,
   SELECT_CARD_BY_ID_QUERY,
+  SELECT_ALL_CARDS_BY_IDS
 } from '../database/queries.js'
+import { searchDocuments } from '../utils/typesense.js'
+
+function deserializeCard(card) {
+  return {
+    ...card,
+    description: JSON.parse(card.description),
+    chatIds: JSON.parse(card.chatIds),
+    files: JSON.parse(card?.files || '[]'),
+  }
+}
+
+export const searchCards = async (req, res) => {
+  try {
+    const { q, project_id } = req.query
+    const results = await searchDocuments({
+      q,
+      query_by: "title,content,author",
+      filter_by: `project_id:=${project_id} && (public:=true || author:=${req.user.id} || user_ids:=${req.user.id})`,
+    })
+    console.log(results)
+    const cardIds = results.hits.map((hit) => `'${hit.document.id}'`).join(',')
+    const cards = cardIds?.length ?
+      await allQuery(SELECT_ALL_CARDS_BY_IDS.replace('$IDS', cardIds), [project_id]) // :derp; https://github.com/TryGhost/node-sqlite3/issues/762
+      : []
+    res.json(cards.map(deserializeCard))
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Internal server error')
+  }
+}
 
 export const getAllProjectCards = async (req, res) => {
   try {
@@ -12,12 +43,7 @@ export const getAllProjectCards = async (req, res) => {
     const cards = await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY, [id])
 
     res.status(200).json(
-      cards.map((card) => ({
-        ...card,
-        description: JSON.parse(card.description),
-        chatIds: JSON.parse(card.chatIds),
-        files: JSON.parse(card?.files || '[]'),
-      })),
+      cards.map(deserializeCard),
     )
   } catch (error) {
     console.log(error)

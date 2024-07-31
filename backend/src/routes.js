@@ -1,6 +1,6 @@
 import express from 'express'
 import { getUserTasks } from './api/tasks.js'
-import { createCard, deleteCard, getAllProjectCards, getCardById, updateCard } from './api/cards.js'
+import { searchCards, createCard, deleteCard, getAllProjectCards, getCardById, updateCard } from './api/cards.js'
 
 const router = express.Router()
 
@@ -9,6 +9,7 @@ router.get('/tasks', getUserTasks)
 
 // cards
 router.get('/cards', getAllProjectCards)
+router.get('/cards/search', searchCards)
 router.get('/cards/:id', getCardById)
 router.post('/cards', createCard)
 router.patch('/cards/:id', updateCard)

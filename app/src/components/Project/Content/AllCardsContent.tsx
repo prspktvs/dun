@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 import ButtonDun from '../../ui/buttons/ButtonDun'
+import { ISearchResult } from '../../components/ui/Search'
 
 function ScrollUpdatedCardControls({
   length,
@@ -38,7 +39,7 @@ export default function AllCardsContent({
   cards: ICard[]
   projectId: string
   onCreateNewCard: () => void
-  search: string
+  search: { q:string, loading: boolean; results: ISearchResult[] }
 }) {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
@@ -47,16 +48,12 @@ export default function AllCardsContent({
   const scrollContainerRef = useRef(null)
 
   useEffect(() => {
-    const updatedCards = cards
-      .filter((card) => card?.title?.toLowerCase()?.includes(search.toLowerCase()))
-      .sort((a, b) => {
-        if (a.createdAt > b.createdAt) return -1
-        if (a.createdAt < b.createdAt) return 1
-        return
-      })
-
-    setFilteredCards(updatedCards)
-  }, [search, cards])
+    setFilteredCards(
+      search.q
+        ? search.results
+        : cards
+    )
+  }, [search.q, cards])
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
