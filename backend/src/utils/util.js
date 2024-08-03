@@ -10,8 +10,10 @@ import {
   SELECT_CARD_WITH_FILES_QUERY,
   SELECT_MENTIONS_QUERY,
   UPDATE_CARD_DESCRIPTION_QUERY,
+  SELECT_CARD_BY_ID_QUERY
 } from '../database/queries.js'
 import parser from './parser.js'
+import { addDocument } from './typesense.js'
 
 class UserNotifications {
   notifications = {}
@@ -123,7 +125,24 @@ const onStoreDocument = async ({
   const projectId = splitted[0]
   const cardId = splitted[2]
 
-  const { tasks: allTasks, files: allFiles, mentions: allMentions, description } = parser(json)
+  const { tasks: allTasks, files: allFiles, mentions: allMentions, description, text } = parser(json)
+
+  // without await to not block the response
+  // @TODO: optimize card title
+  addDocument({
+    id: cardId,
+    title: (await getQuery(SELECT_CARD_BY_ID_QUERY, [cardId]))?.title,
+    project_id: projectId,
+    content: text,
+    updated_at: Date.now(),
+    created_at: Date.now(),
+    author_id: user.user_id,
+    author: user.name,
+    public: true, // @TODO
+    user_ids: [user.user_id] // @TODO
+  }).then(
+    (res) => console.log('Document added to typesense', res),
+  ).catch(console.error)
 
   const { notifications, addToUserNotifications } = new UserNotifications()
 

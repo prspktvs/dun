@@ -70,6 +70,7 @@ export const UPDATE_CARD_DESCRIPTION_QUERY = 'UPDATE cards SET description = ? W
 export const SELECT_USER_TASKS_QUERY = `SELECT tasks.* FROM tasks JOIN cards ON tasks.card_id = cards.id WHERE cards.project_id = ? AND tasks.users LIKE ?`
 
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id`
+export const SELECT_ALL_CARDS_BY_IDS = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? AND cards.id in ($IDS) GROUP BY cards.id`
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 

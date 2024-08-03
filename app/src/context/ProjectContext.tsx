@@ -39,6 +39,7 @@ export const ProjectProvider = ({
     if (!projectId || !user) return
     async function fetchData() {
       await getAllUserTasks(projectId, user).then((data) => setTasks(data))
+      // @TODO: implement lazy loading on scroll
       await getProjectCards(projectId).then((data) => setCards(data))
 
       const updatedUser = { ...user, lastProjectId: projectId }

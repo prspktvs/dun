@@ -131,6 +131,16 @@ function parseBlockGroup(block, addContent) {
   return block.content?.map((container) => parseContainer(container, addContent))
 }
 
+function getContentText(blocks) {
+  return blocks.map(b => {
+    return [
+      getContentText(b.content || []).flat().join(' '),
+      b.text,
+      b.attrs?.label ? '@'+b.attrs?.label : '',
+    ].filter(Boolean)
+  })
+}
+
 function parseBNXmlToBlocks(data) {
   const content = {
     tasks: [],
@@ -140,28 +150,30 @@ function parseBNXmlToBlocks(data) {
   const addContent = (type, data) => content[type].push(data)
 
   const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
-  const description = blocks
-    ?.filter((block) => block && block.type !== 'task')
-    ?.map((block) =>
-      block?.content
-        ?.map((content) => {
-          if (!content) return ''
-          switch (content.type) {
-            case 'text':
-            case 'mention':
-              return content.text
-            case 'link':
-              return content.content.text
-            default:
-              return ''
-          }
-        })
-        ?.join(''),
-    )
-    ?.filter((line) => line !== '')
-    ?.slice(0, 3)
+  // const description = blocks
+  //   ?.filter((block) => block && block.type !== 'task')
+  //   ?.map((block) =>
+  //     block?.content
+  //       ?.map((content) => {
+  //         if (!content) return ''
+  //         switch (content.type) {
+  //           case 'text':
+  //           case 'mention':
+  //             return content.text
+  //           case 'link':
+  //             return content.content.text
+  //           default:
+  //             return ''
+  //         }
+  //       })
+  //       ?.join(''),
+  //   )
+  //   ?.filter((line) => line !== '')
+  //   ?.slice(0, 3)
+  const description =  data.content?.map((b) => getContentText(b.content).join('\n'))
+  const text = description.join('\n')
 
-  return { ...content, description }
+  return { ...content, description, text }
 }
 
 export default parseBNXmlToBlocks

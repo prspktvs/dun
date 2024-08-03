@@ -171,6 +171,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
         const token = await user.getIdToken()
         setToken(token)
+        localStorage.setItem('token', token)
       }
       setLoading(false)
     })

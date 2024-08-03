@@ -35,7 +35,7 @@ app.use(express.json())
 app.use(cors({ origin: '*' }))
 app.use((req, _, next) => {
   // parse token
-  const token = req.headers.authorization?.split('Bearer ')[1]
+  const token = req.headers.authorization?.split('Bearer ')[1] || req.query.token
   if (token) {
     req.user = parseJwt(token)
   }
