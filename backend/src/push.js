@@ -16,16 +16,26 @@ webPush.setVapidDetails(
 export default function createPushAPI(app, route) {
 
   async function sendNotification(userId, payload) {
+    console.log('sendNotification', userId, payload)
     const pushTokens = await allQuery(GET_PUSH_TOKENS, [userId]);
     await Promise.all(
       pushTokens.map(async (pushToken) => {
         const subscription = JSON.parse(pushToken.subscription);
-        console.log('pushToken', pushToken, 'subscription', subscription, 'payload', payload)
+        // console.log('pushToken', pushToken, 'subscription', subscription)
         await webPush.sendNotification(subscription, JSON.stringify(payload))
+          .catch((error) => {
+            console.error("Error", error);
+            if (error.statusCode === 410) {
+              console.log('delete push token', subscription.keys.auth)
+              return runQuery(DELETE_PUSH_TOKEN_BY_ID, [subscription.keys.auth]);
+            }
+          });
       })
+
     ).catch((error) => {
-      console.error("sendNotification", error);
+      console.error("Error", error);
     })
+
   }
 
   app.get(route + "vapidPublicKey", function (req, res) {

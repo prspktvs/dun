@@ -1,5 +1,6 @@
 export interface IMessage {
   authorId: string
+  author: string
   text: string
   timestamp: number
   mentions: string[]

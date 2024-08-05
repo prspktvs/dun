@@ -95,6 +95,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const handleMessageSend = async () => {
     if (newMessage === '') return alert('Message cannot be empty')
 
+    console.log('user', user)
     let mentions: string[] = []
     newMessage.split(mentionsPattern).forEach((part, index) => {
       if (index % 3 === 1) {
@@ -102,11 +103,13 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         mentions.push(id)
       }
     })
+    console.log('mentions', mentions)
 
     await saveChatAndMessage({
       chatId,
       messageData: {
         text: newMessage,
+        author: user?.name || '',
         authorId: user?.id || '',
         timestamp: Date.now(),
         mentions,

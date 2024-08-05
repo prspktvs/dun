@@ -7,6 +7,7 @@ import routes from './routes.js'
 import { runQuery, sqliteExtension } from './database/index.js'
 import { CREATE_TABLES_QUERIES, CREATE_ALL_INDEXES } from './database/queries.js'
 import createPushAPI from './push.js'
+import { getSendPushToChatFn } from './api/chats.js'
 
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
@@ -41,6 +42,8 @@ app.use((req, _, next) => {
   }
   next()
 })
+
+
 app.use('/api', routes)
 
 const clients = []
@@ -64,6 +67,9 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
+const sentPushToChat = getSendPushToChatFn(sendNotification)
+
+app.post('/internal/chat/:cardId', sentPushToChat)
 
 export function sendMessageToUser(userId, message) {
   // @TODO: add all other types of notifications
