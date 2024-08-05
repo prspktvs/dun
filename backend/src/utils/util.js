@@ -192,7 +192,7 @@ const onStoreDocument = async ({
   }
   // Send updates
   newMentions.forEach((mention) => {
-    addToUserNotifications('mention', { ...mention, users: [mention.user] })
+    addToUserNotifications('mention', { cardId, projectId,  ...mention, users: [mention.user] })
   })
 
   const isCardUpdated =
@@ -202,7 +202,7 @@ const onStoreDocument = async ({
     sendMessageToProject(projectId, { id: cardId, description, files: allFiles, type: 'card' })
 
   Object.keys(notifications).forEach((userId) => {
-    sendMessageToUser(userId, { ...notifications[userId], type: 'tasks' })
+    sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId })
   })
 }
 

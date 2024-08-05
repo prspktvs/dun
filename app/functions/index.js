@@ -9,13 +9,17 @@ admin.initializeApp({
   credential: admin.credential.cert(creds),
 });
 
-const API_HOST = process.env.FUNCTIONS_EMULATOR
+const isDev = Boolean(process.env.FUNCTIONS_EMULATOR)
+const REGION = isDev ? 'us-central1' : 'europe-west1';
+const API_HOST = isDev
   ? 'http://localhost:3000'
   : 'https://api.dun.wtf';
 
+console.log('API_HOST', API_HOST, 'REGION', REGION);
+
 exports.onWrittenFunction = onValueWritten({
-  ref: "/chats/{cardId}/messages/{messageId}",
-  region: "europe-west1"
+  ref: "/chats/{chatId}/messages/{messageId}",
+  region: REGION
 },
   (event) => {
     console.log('event', event)
@@ -23,12 +27,14 @@ exports.onWrittenFunction = onValueWritten({
     if (!event.data.after.exists()) {
       return null;
     }
+
     const msg = event.data.after.val();
     console.log('msg', msg, 'params', event.params);
+    const data = { ...msg, ...event.params };
 
-    fetch(`${API_HOST}/internal/chat/${event.params.cardId}`, {
+    fetch(`${API_HOST}/internal/chat/${event.params.chatId}`, {
       method: 'POST',
-      body: JSON.stringify(msg),
+      body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json'},
     })
       .then(response => response.json())

@@ -9,7 +9,15 @@ self.addEventListener('push', function(event) {
 });
 
 self.addEventListener("notificationclick", (event) => {
-  console.log("SW: On notification click: ", event.notification.tag);
+  console.log("SW: On notification click: ", event);
+  const data = event.notification.data;
+  const url = [
+    data.projectId ? `/${data.projectId}` : "/",
+    data.projectId && data.cardId ? `/cards/${data.cardId}` : ""
+    // @TODO: when routing for chats is ready
+    // @eugeek data.projectId && data.cardId && data.chatId ? `/chats/${data.chatId}` : ""
+  ].join("");
+
   event.notification.close();
 
   // This looks to see if the current is already open and
@@ -21,9 +29,16 @@ self.addEventListener("notificationclick", (event) => {
       })
       .then((clientList) => {
         for (const client of clientList) {
-          if (client.url === "/" && "focus" in client) return client.focus();
+          console.log('client', client, client.url)
+          if ("focus" in client) {
+            client.postMessage({
+              type: "navigate",
+              url: url,
+            });
+            return client.focus();
+          }
         }
-        if (clients.openWindow) return clients.openWindow("/");
+        if (clients.openWindow) return clients.openWindow(url);
       }),
   );
 });
