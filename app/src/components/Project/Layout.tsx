@@ -33,7 +33,7 @@ export function ProjectLayoutWithProtection() {
   if (loading)
     return (
       <div className='h-screen w-screen flex justify-center items-center'>
-        <Loader type='dots' />
+        <Loader type='dots' color='#8279BD' />
       </div>
     )
 

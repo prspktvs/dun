@@ -196,7 +196,7 @@ export function CardPage() {
         <Card card={card} />
       ) : (
         <div className='h-full w-full flex justify-center items-center'>
-          <Loader type='dots' />
+          <Loader type='dots' color='#8279BD' />
         </div>
       )}
     </FilePreviewProvider>
