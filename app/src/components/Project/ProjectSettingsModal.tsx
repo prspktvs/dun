@@ -145,7 +145,7 @@ export default function ProjectSettingsModal({
         <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
           {!isEmpty(users)
             ? users.map((user, index) => (
-                <div className='my-2 ml-3 flex items-center gap-3'>
+                <div key={'ps-user-' + user.id} className='my-2 ml-3 flex items-center gap-3'>
                   <AvatarDun user={user} size={40} />
                   <div className='flex flex-col'>
                     <span className='text-base font-medium '>{user.name}</span>

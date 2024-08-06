@@ -188,7 +188,7 @@ const TaskBlock = createReactBlockSpec(
         return () => document.removeEventListener('keydown', handler)
       }, [])
 
-      const isBlockActive = block === editor.getTextCursorPosition().block
+      const isBlockActive = block === editor?.getTextCursorPosition()?.block
 
       return (
         <div className='w-full'>
