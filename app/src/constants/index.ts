@@ -1,0 +1,1 @@
+export const DUN_URL = 'https://dun.wtf'

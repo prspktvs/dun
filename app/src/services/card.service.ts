@@ -13,70 +13,56 @@ import {
 import { ICard } from '../types/Card'
 import { genId } from '../utils'
 import { db } from '../config/firebase'
+import { apiRequest } from '../utils/api'
 
 const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
 export const getCardById = async (cardId: string): Promise<ICard | null> => {
-  try {
-    if (!cardId) return null
-    
-    const res = await fetch(`${BACKEND_URL}/api/cards/${cardId}`)
-    return await res.json()
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+  if (!cardId) return null
+  
+  const res = await apiRequest<ICard>(`cards/${cardId}`)
+  return res
 }
 
 export const createCard = async (projectId: string, card: Partial<ICard>): Promise<ICard | null> => {
-  try {
-    if (!projectId) return null
+  if (!projectId) return null
 
-    const res = await fetch(`${BACKEND_URL}/api/cards`, {method: 'POST', headers: {
+  const res = await apiRequest<ICard>(`cards`, { 
+    method: 'POST', 
+    headers: {
       'Content-Type': 'application/json',
-    }, body: JSON.stringify({ ...card, projectId })})
-    return await res.json()
-    
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+    }, 
+    body: JSON.stringify({ ...card, projectId })
+  })
 
+  return res
 }
 
 export const updateCard = async (
   card: Partial<ICard>,
 ): Promise<ICard | null> => {
-  try {
-    if (!card.id) return null
+  if (!card.id) return null
 
-    const res = await fetch(`${BACKEND_URL}/api/cards/${card.id}`, {method: 'PATCH', headers: {
+  const res = await apiRequest<ICard>(`cards/${card.id}`, {
+    method: 'PATCH', 
+    headers: {
       'Content-Type': 'application/json',
-    }, body: JSON.stringify(card)})
+    }, 
+    body: JSON.stringify(card)
+  })
 
-    return await res.json()
-  } catch (e) {
-    return null
-  }
+  return res
 }
 
 export const removeCard = async (cardId: string) => {
-  try {
-    if (!cardId) return null
-    await fetch(`${BACKEND_URL}/api/cards/${cardId}`, { method: 'DELETE' })
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+  if (!cardId) return null
+
+  await apiRequest(`cards/${cardId}`, { method: 'DELETE' })
 }
 
-export const getProjectCards = async (projectId: string): Promise<ICard[]> => {
-  try {
-    if (!projectId) return []
-    const res = await fetch(`${BACKEND_URL}/api/cards?projectId=${projectId}`)
-    return await res.json()
-  } catch (e) {
-    console.error(e)
-    return []
-  }
+export const getProjectCards = async (projectId: string, sortedBy = 'created'): Promise<ICard[]> => {
+  if (!projectId) return []
+  
+  const res = await apiRequest<ICard[]>(`cards?projectId=${projectId}&sort=${sortedBy}`)
+  return res
 }

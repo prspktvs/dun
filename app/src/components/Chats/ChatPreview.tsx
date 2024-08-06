@@ -28,13 +28,15 @@ function MessagePreview({
   return (
     <>
       <div className='max-w-7xl'>
-        <div className='flex gap-1 items-center font-semibold mb-1'>
-          <AvatarDun user={user} />
-          <span className='text-sm text-zinc-700 font-rubik font-medium ml-1'>
-            {user.name}
-            <span className='ml-2 text-10  text-gray-400 font-normal'>{time}</span>
-          </span>
-        </div>
+        {user ? (
+          <div className='flex gap-1 items-center font-semibold mb-1'>
+            <AvatarDun user={user} />
+            <span className='text-sm text-zinc-700 font-rubik font-medium ml-1'>
+              {user?.name}
+              <span className='ml-2 text-10  text-gray-400 font-normal'>{time}</span>
+            </span>
+          </div>
+        ) : null}
         <div className='overflow-hidden max-h-[72px] w-5/6'>
           <span className='text-sm text-[#46434E] font-commissioner line-clamp-2 truncate'>
             {renderMessage(message)}

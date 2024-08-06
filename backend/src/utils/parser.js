@@ -125,6 +125,8 @@ function parseContainer(container, addContent) {
         },
       }
     })
+
+  return block
 }
 
 function parseBlockGroup(block, addContent) {
@@ -132,11 +134,13 @@ function parseBlockGroup(block, addContent) {
 }
 
 function getContentText(blocks) {
-  return blocks.map(b => {
+  return blocks.map((b) => {
     return [
-      getContentText(b.content || []).flat().join(' '),
+      getContentText(b.content || [])
+        .flat()
+        .join(' '),
       b.text,
-      b.attrs?.label ? '@'+b.attrs?.label : '',
+      b.attrs?.label ? '@' + b.attrs?.label : '',
     ].filter(Boolean)
   })
 }
@@ -150,28 +154,27 @@ function parseBNXmlToBlocks(data) {
   const addContent = (type, data) => content[type].push(data)
 
   const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
-  // const description = blocks
-  //   ?.filter((block) => block && block.type !== 'task')
-  //   ?.map((block) =>
-  //     block?.content
-  //       ?.map((content) => {
-  //         if (!content) return ''
-  //         switch (content.type) {
-  //           case 'text':
-  //           case 'mention':
-  //             return content.text
-  //           case 'link':
-  //             return content.content.text
-  //           default:
-  //             return ''
-  //         }
-  //       })
-  //       ?.join(''),
-  //   )
-  //   ?.filter((line) => line !== '')
-  //   ?.slice(0, 3)
-  const description =  data.content?.map((b) => getContentText(b.content).join('\n'))
-  const text = description.join('\n')
+
+  const description = blocks[0]
+    ?.filter((block) => (block?.[0] ? block[0].type !== 'task' : block.type !== 'task'))
+    ?.map((block) =>
+      block[0]?.content
+        ?.map((content) => {
+          if (!content) return ''
+          switch (content.type) {
+            case 'text':
+            case 'mention':
+              return content.text
+            case 'link':
+              return content.content.text
+            default:
+              return ''
+          }
+        })
+        ?.join(''),
+    )
+    ?.filter((line) => line !== '')
+    ?.slice(0, 3)
 
   return { ...content, description, text }
 }

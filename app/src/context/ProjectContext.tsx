@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ITask } from '../types/Task'
 import { useAuth } from './AuthContext'
 import { createCard, getAllUserTasks, getProjectCards, removeCard, updateCard } from '../services'
-
 import { updateUser } from '../services/user.service'
 import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
@@ -16,6 +15,10 @@ export type ProjectContext = {
   tasks: ITask[]
   users: IUser[]
   isLoading: boolean
+  search: string
+  sortType: 'createdAt' | 'updatedAt'
+  setSearch: (search: string) => void
+  setSortType: (type: 'createdAt' | 'updatedAt') => void
   updateCard: (card: Partial<ICard>) => void
   optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
   optimisticUpdateCard: (card: Partial<ICard>) => Promise<void>
@@ -32,18 +35,33 @@ export const ProjectProvider = ({
   const { user, token } = useAuth()
   const [cards, setCards] = useState<ICard[]>([])
   const [tasks, setTasks] = useState<ITask[]>([])
+  const [search, setSearch] = useState('')
+  const [sortType, setSortType] = useState<ProjectContext['sortType']>('createdAt')
 
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
 
   useEffect(() => {
+    console.log('TEST')
+    if (!projectId) return
+    async function fetchData() {
+      const allCards = await getProjectCards(projectId, sortType)
+
+      setCards(allCards)
+    }
+
+    fetchData()
+  }, [projectId, sortType])
+
+  useEffect(() => {
     if (!projectId || !user) return
     async function fetchData() {
-      await getAllUserTasks(projectId, user).then((data) => setTasks(data))
-      // @TODO: implement lazy loading on scroll
-      await getProjectCards(projectId).then((data) => setCards(data))
-
       const updatedUser = { ...user, lastProjectId: projectId }
-      await updateUser(updatedUser)
+
+      const [allTasks] = await Promise.all([
+        getAllUserTasks(projectId, user),
+        updateUser(updatedUser),
+      ])
+      setTasks(allTasks)
     }
 
     fetchData()
@@ -135,10 +153,15 @@ export const ProjectProvider = ({
 
   const contextValue: ProjectContext = {
     project,
+
     users: project?.users || [],
+    search,
     cards,
     tasks,
     isLoading,
+    sortType,
+    setSortType,
+    setSearch,
     updateCard: _updateCard,
     optimisticCreateCard,
     optimisticUpdateCard,

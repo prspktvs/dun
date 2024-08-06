@@ -9,15 +9,15 @@ export type Tab = 'login' | 'signup' | 'verification' | 'forgot'
 
 export default function AuthPage() {
   const [tab, setTab] = useState<Tab>('login')
-  const { user } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
-    if (!user) return
+    if (!isAuthenticated || loading) return
 
     navigate(-1) // return back to the previous page
-  }, [user])
+  }, [isAuthenticated, loading])
 
   return (
     <div className='h-screen w-screen grid grid-cols-8 grid-rows-12 divide-x-[1px] divide-y-[2px]'>

@@ -3,10 +3,8 @@ import { useProject } from '../../context/ProjectContext'
 import { ITask, TaskPriority } from '../../types/Task.d.ts'
 
 const TaskPreview = ({ task }: { task: ITask }) => {
-  const { isDone, text, author, status, priority } = task
-  const { users } = useProject()
+  const { isDone, text, status, priority } = task
 
-  const authorName = users.find((u) => u.id === author)?.name
   return (
     <div>
       <div className='flex items-start w-full gap-1 overflow-hidden whitespace-nowrap'>
@@ -17,13 +15,13 @@ const TaskPreview = ({ task }: { task: ITask }) => {
         )}
         <span className='text-14 font-rubik line-clamp-2 text-wrap'>{text}</span>
       </div>
-      <div className='flex gap-3 ml-[18px]'>
-        <span className='font-rubik text-14 text-[#969696] font-medium hover:cursor-pointer'>
+      <div className='flex gap-2 ml-[18px]'>
+        <span className='font-rubik text-14 text-[#969696] font-normal hover:cursor-pointer'>
           {status}
         </span>
         <span
           className={clsx(
-            'font-rubik text-14 text-[#969696] font-medium hover:cursor-pointer',
+            'font-rubik text-14 text-[#969696] font-normal hover:cursor-pointer',
             priority === TaskPriority.Low
               ? 'text-priority-low'
               : priority === TaskPriority.Medium
@@ -36,11 +34,6 @@ const TaskPreview = ({ task }: { task: ITask }) => {
           {priority}
         </span>
       </div>
-      {!authorName ? null : (
-        <div className='text-12  ml-[18px]'>
-          Created by <span>{authorName}</span>
-        </div>
-      )}
     </div>
   )
 }

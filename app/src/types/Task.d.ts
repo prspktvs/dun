@@ -2,6 +2,7 @@ import { PartialBlock } from '@blocknote/core'
 import { IUser } from './User'
 
 export enum TaskStatus {
+  NoStatus = 'no status',
   Planned = 'Planned',
   InProgress = 'In progress',
   InReview = 'In review',
@@ -9,6 +10,7 @@ export enum TaskStatus {
 }
 
 export enum TaskPriority {
+  NoPriority = 'no priority',
   Low = 'Low',
   Medium = 'Medium',
   High = 'High',

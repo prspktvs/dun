@@ -10,97 +10,66 @@ import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 import ButtonDun from '../../ui/buttons/ButtonDun'
 import { ISearchResult } from '../../components/ui/Search'
+import clsx from 'clsx'
+import { useProject } from '../../../context/ProjectContext'
 
-function ScrollUpdatedCardControls({
-  length,
-  onLeftClick,
-  onRightClick,
+function SortButton({
+  children,
+  isActive,
+  onClick,
 }: {
-  length: number
-  onLeftClick: () => void
-  onRightClick: () => void
+  children: React.ReactNode
+  isActive?: boolean
+  onClick?: () => void
 }) {
   return (
-    <div className='justify-start items-center gap-2 flex'>
-      <RiArrowRightSLine onClick={onLeftClick} />
-      <div className='text-zinc-700 text-sm font-normal font-monaspace'>{length}</div>
-      <RiArrowLeftSLine onClick={onRightClick} />
-    </div>
+    <button onClick={onClick} className={clsx('', isActive && 'bg-grayBg')}>
+      {children}
+    </button>
   )
 }
 
 export default function AllCardsContent({
-  users,
-  cards,
   onCreateNewCard,
   search,
 }: {
-  users: IUser[]
-  cards: ICard[]
-  projectId: string
   onCreateNewCard: () => void
-  search: { q:string, loading: boolean; results: ISearchResult[] }
+  search: { q: string; loading: boolean; results: ISearchResult[] }
 }) {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
+
+  const { setSortType, sortType, cards, users } = useProject()
 
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
   const scrollContainerRef = useRef(null)
 
   useEffect(() => {
-    setFilteredCards(
-      search.q
-        ? search.results
-        : cards
-    )
+    setFilteredCards(search.q ? search.results : cards)
   }, [search.q, cards])
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
   }
 
-  const handleScrollForward = () => {
-    const scrollContainer = scrollContainerRef.current
-    if (scrollContainer) {
-      const offset = scrollContainer.offsetWidth / 3
-      scrollContainer.scrollBy({ left: offset * 3, behavior: 'smooth' })
-    }
-  }
-
-  const handleScrollBack = () => {
-    const scrollContainer = scrollContainerRef.current
-    if (scrollContainer) {
-      const offset = scrollContainer.offsetWidth / 3
-      scrollContainer.scrollBy({ left: -offset * 3, behavior: 'smooth' })
-    }
-  }
-
   return (
     <main className='w-full h-full overflow-hidden pb-32'>
-      {/* Search line */}
-      <div className='border-border-color flex items-center justify-between h-14 '>
-        {/* <div className='relative mx-3 w-full'>
-          <i className='absolute ri-search-line text-2xl text-gray-400' />
-          <input
-            className='block pl-7 align-middle text-xl w-full overflow-hidden border-none'
-            value={search}
-            onChange={onSearch}
-          />
-        </div> */}
+      <section className='border-border-color flex items-center justify-between h-14 '>
         <div className='h-full flex w-full border-b-1 border-border-color sm:gap-x-1 '>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-5 '>
-            <div className='hidden md:flex'>Last viewed</div>
-            <div className='hidden md:flex'>
+            <SortButton
+              onClick={() => setSortType('updatedAt')}
+              isActive={sortType === 'updatedAt'}
+            >
               Last modified
-              <div className='hidden md:flex'>{/* <UnreadMarker /> */}</div>
-            </div>
-            <div className='flex bg-grayBg p-2'>Date created</div>
-          </div>
-
-          <div className='flex h-full items-center border-l-1 border-border-color md:px-7 sm:px-2'>
-            <ProjectUsers users={users} />
+            </SortButton>
+            <SortButton
+              onClick={() => setSortType('createdAt')}
+              isActive={sortType === 'createdAt'}
+            >
+              Date created
+            </SortButton>
+            {/* <SortButton>Archived</SortButton> */}
           </div>
 
           <div className='h-full w-48 border-l-1 border-border-color'>
@@ -109,7 +78,7 @@ export default function AllCardsContent({
             </ButtonDun>
           </div>
         </div>
-      </div>
+      </section>
       {/* Cards */}
       {/* <div className='w-full h-14 px-6 py-3 bg-stone-50 justify-between items-center inline-flex border-b-1 border-border-color'>
         <div className='text-zinc-700 text-xs font-normal font-monaspace flex gap-x-4'>

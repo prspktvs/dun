@@ -8,8 +8,7 @@ import {
 } from 'firebase/firestore'
 import { extractCardPath } from '../utils'
 import { ITask } from '../types/Task'
-
-const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
+import { apiRequest } from '../utils/api'
 
 export const getAllUserTasks = async (projectId: string, user: IUser): Promise<ITask[]> => {
   if (!projectId || !user) {
@@ -17,8 +16,7 @@ export const getAllUserTasks = async (projectId: string, user: IUser): Promise<I
     return []
   }
 
-  const res = await fetch(`${BACKEND_URL}/api/tasks?projectId=${projectId}&userId=${user?.id}`)
-  const data = await res.json()
+  const { tasks } = await apiRequest<{ tasks: ITask[]}>(`tasks?projectId=${projectId}&userId=${user?.id}`)
 
-  return data.tasks.map((task: ITask) => ({ ...task, cardPath: `${projectId}/cards/${task.card_id}` }))
+  return tasks.map((task: ITask) => ({ ...task, cardPath: `${projectId}/cards/${task.card_id}` }))
 }

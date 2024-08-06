@@ -3,6 +3,7 @@ const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   title TEXT,
   description TEXT,
   createdAt TEXT,
+  updatedAt TEXT,
   chatIds TEXT,
   project_id TEXT
 )`
@@ -65,12 +66,13 @@ export const INSERT_FILES_QUERY = `INSERT OR REPLACE INTO files (id, type, url, 
 
 export const INSERT_MENTION_QUERY = `INSERT OR REPLACE INTO mentions (id, text, user_id) VALUES (?, ?, ?)`
 
-export const UPDATE_CARD_DESCRIPTION_QUERY = 'UPDATE cards SET description = ? WHERE id = ?'
+export const UPDATE_CARD_QUERY = 'UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?'
 
 export const SELECT_USER_TASKS_QUERY = `SELECT tasks.* FROM tasks JOIN cards ON tasks.card_id = cards.id WHERE cards.project_id = ? AND tasks.users LIKE ?`
 
-export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id`
 export const SELECT_ALL_CARDS_BY_IDS = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? AND cards.id in ($IDS) GROUP BY cards.id`
+export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) =>
+  `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id ORDER BY ${orderBy} DESC`
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
