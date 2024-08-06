@@ -176,7 +176,7 @@ function parseBNXmlToBlocks(data) {
     ?.filter((line) => line !== '')
     ?.slice(0, 3)
 
-  return { ...content, description, text }
+  return { ...content, description }
 }
 
 export default parseBNXmlToBlocks

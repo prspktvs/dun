@@ -7,6 +7,8 @@ import ButtonDun from '../../components/ui/buttons/ButtonDun'
 import { isEmpty } from 'lodash'
 import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
+import { useSearch } from '../../components/ui/Search'
+import { Loader } from '@mantine/core'
 
 function SortButton({
   children,
@@ -25,20 +27,17 @@ function SortButton({
 }
 
 export function CardsPage() {
-  const { id: projectId } = useParams()
+  const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
 
-  const { setSortType, sortType, cards, search, optimisticCreateCard } = useProject()
+  const { setSortType, sortType, cards, search: searchText, optimisticCreateCard } = useProject()
+  const search = useSearch(searchText, projectId)
 
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
-    const updatedCards = cards.filter((card) =>
-      card?.title?.toLowerCase()?.includes(search.toLowerCase()),
-    )
-
-    setFilteredCards(updatedCards)
-  }, [search, cards])
+    setFilteredCards(search.q ? search.results : cards)
+  }, [search.q, cards])
 
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
@@ -80,9 +79,7 @@ export function CardsPage() {
         </div>
       </section>
       <section className=' h-full overflow-y-scroll hide-scrollbar'>
-        {isEmpty(filteredCards) ? (
-          <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
-        ) : (
+        {!isEmpty(filteredCards) ? (
           <div className='grid xl:grid-cols-3 lg:grid-cols-2 '>
             {filteredCards.map((card, index) => (
               <div key={'card-' + index} className='border-b-1 border-border-color padding-0'>
@@ -90,6 +87,12 @@ export function CardsPage() {
               </div>
             ))}
           </div>
+        ) : search.loading ? (
+          <div className='h-full w-full flex justify-center items-center'>
+            <Loader type='dots' color='#8279BD' />
+          </div>
+        ) : (
+          <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         )}
       </section>
     </div>

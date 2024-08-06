@@ -10,6 +10,7 @@ import {
   SELECT_CARD_WITH_FILES_QUERY,
   SELECT_MENTIONS_QUERY,
   SELECT_CARD_BY_ID_QUERY,
+  UPDATE_CARD_QUERY,
 } from '../database/queries.js'
 import parser from './parser.js'
 import { addDocument } from './typesense.js'
