@@ -24,6 +24,17 @@ button {
   background: transparent;
 }
 
+ul {
+  list-style-type: none;  
+  padding: 0;            
+  margin: 0;             
+}
+
+li {
+  margin: 0;           
+  padding: 0;           
+}
+
 .border {
   border: 1px solid #000;
 }

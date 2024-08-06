@@ -1,32 +1,30 @@
+import { useNavigate, useParams } from 'react-router-dom'
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { useDisclosure } from '@mantine/hooks'
-import { Modal, Button, Input } from '@mantine/core'
-import { useNavigate, useParams } from 'react-router-dom'
-import Editor from '../Editor'
-import { removeCard, updateCard } from '../../services'
-import Discussions from './Sections/Discussions'
-import { useChats } from '../../context/ChatContext'
-import clsx from 'clsx'
-import Attachments from './Sections/Attachments'
-import _debounce from 'lodash/debounce'
-import Updates from './Sections/Updates'
-import { FilePreviewProvider } from '../../context/FilePreviewContext'
 import { useProject } from '../../context/ProjectContext'
-import UnreadIndicator from '../ui/UnreadIndicator'
+import { useChats } from '../../context/ChatContext'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import _debounce from 'lodash/debounce'
+import { Button, Loader } from '@mantine/core'
+import Editor from '../../components/Editor'
+import clsx from 'clsx'
+import UnreadIndicator from '../../components/ui/UnreadIndicator'
+import Discussions from '../../components/Card/Sections/Discussions'
+import Attachments from '../../components/Card/Sections/Attachments'
+import Updates from '../../components/Card/Sections/Updates'
+import { FilePreviewProvider } from '../../context/FilePreviewContext'
+import { isEmpty } from 'lodash'
 
 interface ICardProps {
   card: ICard
-  users: IUser[]
 }
 
-const Card = ({ card, users }: ICardProps) => {
+const Card = ({ card }: ICardProps) => {
   const { id: projectId = '' } = useParams()
-  const { optimisticDeleteCard, optimisticUpdateCard } = useProject()
+  const { optimisticDeleteCard, optimisticUpdateCard, users } = useProject()
   const { closeChat, unreadChats } = useChats()
 
-  const files = card.files?.filter((file) => file.url) || []
+  const files = card?.files?.filter((file) => file.url) || []
 
   const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
@@ -84,7 +82,7 @@ const Card = ({ card, users }: ICardProps) => {
   }
 
   return (
-    <main className='w-[calc(100%_-_320px)]'>
+    <div className='w-[calc(100%_-_320px)]'>
       <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
         <div className='flex items-center mx-3 justify-between grow'>
           <div className='underline font-monaspace text-sm hover:cursor-pointer' onClick={goBack}>
@@ -181,18 +179,26 @@ const Card = ({ card, users }: ICardProps) => {
           }
         </aside>
       </div>
-    </main>
+    </div>
   )
 }
 
-const CardWithPreview = (props: ICardProps) => {
-  const { card } = props
+export function CardPage() {
+  const { cardId } = useParams()
+  const { cards } = useProject()
+  console.log('cards', cards, cardId)
+
+  const card = cards?.find((card) => card.id === cardId)
 
   return (
-    <FilePreviewProvider files={card?.files}>
-      <Card {...props} />
+    <FilePreviewProvider files={card?.files || []}>
+      {card ? (
+        <Card card={card} />
+      ) : (
+        <div className='h-full w-full flex justify-center items-center'>
+          <Loader type='dots' color='#8279BD' />
+        </div>
+      )}
     </FilePreviewProvider>
   )
 }
-
-export default CardWithPreview

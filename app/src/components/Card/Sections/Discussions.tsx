@@ -97,7 +97,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   }
 
   return (
-    <div className='h-screen'>
+    <section className='h-screen'>
       <div className='relative p-3 border-b-1 border-border-color'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
@@ -110,7 +110,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
       <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
         {!isEmpty(filteredChats) ? (
           filteredChats.map((chat) => (
-            <div
+            <article
               key={'filtered-chat-' + chat.id}
               className='h-[160px] border-b-1 border-border-color overflow-hidden flex flex-none'
             >
@@ -121,7 +121,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
                 onDeleteChat={() => onDeleteChat(chat.id)}
                 onClick={() => openChatById(chat.id)}
               />
-            </div>
+            </article>
           ))
         ) : search ? (
           <div className='font-monaspace text-16 text-center w-full px-16 mt-3 text-[#969696]'>
@@ -131,6 +131,6 @@ export default function Discussions({ users }: { users: IUser[] }) {
           <AddNewChat onClick={onCreateNewDiscussion} />
         )}
       </div>
-    </div>
+    </section>
   )
 }

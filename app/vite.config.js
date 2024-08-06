@@ -10,6 +10,6 @@ export default defineConfig(({ command, mode }) => {
     },
     build: {
       sourcemap: true,
-    }
+    },
   }
 })

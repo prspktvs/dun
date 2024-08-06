@@ -9,8 +9,8 @@ import {
   SELECT_ALL_CARD_TASKS_QUERY,
   SELECT_CARD_WITH_FILES_QUERY,
   SELECT_MENTIONS_QUERY,
-  UPDATE_CARD_DESCRIPTION_QUERY,
-  SELECT_CARD_BY_ID_QUERY
+  SELECT_CARD_BY_ID_QUERY,
+  UPDATE_CARD_QUERY,
 } from '../database/queries.js'
 import parser from './parser.js'
 import { addDocument } from './typesense.js'
@@ -125,7 +125,13 @@ const onStoreDocument = async ({
   const projectId = splitted[0]
   const cardId = splitted[2]
 
-  const { tasks: allTasks, files: allFiles, mentions: allMentions, description, text } = parser(json)
+  const {
+    tasks: allTasks,
+    files: allFiles,
+    mentions: allMentions,
+    description,
+    text,
+  } = parser(json)
 
   // without await to not block the response
   // @TODO: optimize card title
@@ -139,10 +145,10 @@ const onStoreDocument = async ({
     author_id: user.user_id,
     author: user.name,
     public: true, // @TODO
-    user_ids: [user.user_id] // @TODO
-  }).then(
-    (res) => console.log('Document added to typesense', res),
-  ).catch(console.error)
+    user_ids: [user.user_id], // @TODO
+  })
+    .then((res) => console.log('Document added to typesense', res))
+    .catch(console.error)
 
   const { notifications, addToUserNotifications } = new UserNotifications()
 
@@ -176,7 +182,7 @@ const onStoreDocument = async ({
       currentTasks,
       addToUserNotifications,
     }),
-    runQuery(UPDATE_CARD_DESCRIPTION_QUERY, [JSON.stringify(description), cardId]),
+    runQuery(UPDATE_CARD_QUERY, [JSON.stringify(description), new Date().toISOString(), cardId]),
     deleteUnusedContent({ deleteTaskIds, deleteFilesIds }),
   ])
 
@@ -192,7 +198,7 @@ const onStoreDocument = async ({
   }
   // Send updates
   newMentions.forEach((mention) => {
-    addToUserNotifications('mention', { cardId, projectId,  ...mention, users: [mention.user] })
+    addToUserNotifications('mention', { cardId, projectId, ...mention, users: [mention.user] })
   })
 
   const isCardUpdated =

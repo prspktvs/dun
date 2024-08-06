@@ -1,4 +1,4 @@
-import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs } from 'firebase/firestore'
+import { getFirestore, collection, doc, deleteDoc, setDoc, getDoc, getDocs } from 'firebase/firestore'
 import { IProject } from '../types/Project'
 import { IUser } from '../types/User'
 import { db } from '../config/firebase'
@@ -12,7 +12,7 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
     const newUsers = users ? [...users, user] : [user]
     await setDoc(projectRef, { users: newUsers }, { merge: true })
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return null
   }
 }
@@ -27,6 +27,32 @@ export const createProject = async (project: Partial<IProject>) => {
 
     return null
   } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+export const updateProject = async (project: Partial<IProject>) => {
+  try {
+    const projectRef = doc(collection(db, 'projects'), project.id)
+    const snap = await setDoc(projectRef, project, { merge: true })
+    console.log('updated!!!', project)
+    if (snap) return project
+
+    return null
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+
+export const deleteProject = async (projectId: string) => {
+  try {
+    const projectRef = doc(collection(db, 'projects'), projectId)
+    await deleteDoc(projectRef)
+
+  } catch (e) {
+    console.error(e)
     return null
   }
 }
@@ -45,6 +71,7 @@ export const getAllUserProject = async (userId: string) => {
     })
     return projects
   } catch (e) {
+    console.error(e)
     return null
   }
 }

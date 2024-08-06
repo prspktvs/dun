@@ -2,12 +2,13 @@ import { BlockSchema, defaultProps, PartialBlock, PropSchema } from '@blocknote/
 import { createReactBlockSpec } from '@blocknote/react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { insertOrUpdateBlock } from '../../../../utils/editor'
-import { Menu } from '@mantine/core'
+import { Group, Menu, Popover } from '@mantine/core'
 import { ITask, TaskPriority, TaskStatus } from '../../../../types/Task.d.ts'
 import clsx from 'clsx'
 import { useProject } from '../../../../context/ProjectContext'
 import { IUser } from '../../../../types/User'
 import { useAuth } from '../../../../context/AuthContext'
+import { RiArrowDown } from '../../../Project/Content/IconsCard/IconsCard'
 
 type Task = {
   isDone: {
@@ -44,9 +45,12 @@ const StatusDropdown = ({
   return (
     <Menu>
       <Menu.Target>
-        <span className='font-rubik text-[#969696] font-medium hover:cursor-pointer'>{status}</span>
+        <span className='flex items-center font-rubik text-[#969696] hover:cursor-pointer'>
+          {status}
+          <RiArrowDown />
+        </span>
       </Menu.Target>
-      <Menu.Dropdown>
+      <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
         <Menu.Item onClick={() => updateStatus(TaskStatus.Planned)}>Planned</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InProgress)}>In progress</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InReview)}>In review</Menu.Item>
@@ -68,40 +72,37 @@ const PriorityDropdown = ({
       <Menu.Target>
         <span
           className={clsx(
-            'font-rubik text-[#969696] font-medium hover:cursor-pointer',
+            'flex items-center font-rubik text-[#969696] hover:cursor-pointer',
             priority === TaskPriority.Low
               ? 'text-priority-low'
               : priority === TaskPriority.Medium
               ? 'text-priority-medium'
               : priority === TaskPriority.High
               ? 'text-priority-high'
-              : 'text-priority-urgent',
+              : priority === TaskPriority.Urgent
+              ? 'text-priority-urgent'
+              : '',
           )}
         >
           {priority}
+          <RiArrowDown />
         </span>
       </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          className='text-priority-low font-bold'
-          onClick={() => updatePriority(TaskPriority.Low)}
-        >
+      <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+        <Menu.Item className='text-priority-low' onClick={() => updatePriority(TaskPriority.Low)}>
           Low
         </Menu.Item>
         <Menu.Item
-          className='text-priority-medium font-bold'
+          className='text-priority-medium'
           onClick={() => updatePriority(TaskPriority.Medium)}
         >
           Medium
         </Menu.Item>
-        <Menu.Item
-          className='text-priority-high font-bold'
-          onClick={() => updatePriority(TaskPriority.High)}
-        >
+        <Menu.Item className='text-priority-high' onClick={() => updatePriority(TaskPriority.High)}>
           High
         </Menu.Item>
         <Menu.Item
-          className='text-priority-urgent font-bold'
+          className='text-priority-urgent'
           onClick={() => updatePriority(TaskPriority.Urgent)}
         >
           Urgent
@@ -119,10 +120,10 @@ const taskSchema: Partial<PropSchema> | Partial<Task> = {
     default: false,
   },
   status: {
-    default: 'Planned',
+    default: TaskStatus.NoStatus,
   },
   priority: {
-    default: 'Low',
+    default: TaskPriority.NoPriority,
   },
   author: {
     default: '',
@@ -145,12 +146,12 @@ const TaskBlock = createReactBlockSpec(
     render: ({ block, editor, contentRef }) => {
       const { status, priority, author } = block.props
 
+      const [opened, setOpened] = useState(false)
       const { user } = useAuth()
       const { users } = useProject()
-      const createdBy = useMemo(
-        () => users.find((user: IUser) => user.id === author),
-        [user, author, users],
-      )
+      const inputRef = useRef<HTMLDivElement>(null)
+
+      const onClose = () => setOpened(false)
 
       useEffect(() => {
         if (!block.props.author && user) {
@@ -191,35 +192,64 @@ const TaskBlock = createReactBlockSpec(
 
       return (
         <div className='w-full'>
-          <div className='relative flex gap-4 items-start w-full' tabIndex={0}>
-            <div
-              onClick={() => editor.updateBlock(block, { props: { isDone: !block.props.isDone } })}
-            >
-              <CustomCheckbox checked={block.props.isDone} />
-            </div>
-            <div ref={contentRef} className='mt-[2px]' />
-            {!(block?.content[0]?.text || block?.content[0]?.href) && isBlockActive ? (
-              <div className='absolute left-9 mt-[2px] text-gray-300 flex items-center italic'>
-                <div className='cursor' />
-                Enter a text or type '@' to mention user
+          <Popover position='top-start' offset={6}>
+            <Popover.Target>
+              <div className='relative flex gap-4 items-start w-full' tabIndex={0}>
+                <div
+                  onClick={() =>
+                    editor.updateBlock(block, { props: { isDone: !block.props.isDone } })
+                  }
+                >
+                  <CustomCheckbox checked={block.props.isDone} />
+                </div>
+                <div ref={contentRef} className='mt-[2px]' />
+                {!(block?.content[0]?.text || block?.content[0]?.href) && isBlockActive ? (
+                  <div className='absolute left-9 mt-[2px] text-gray-300 flex items-center italic'>
+                    <div className='cursor' />
+                    Enter a text or type '@' to mention user
+                  </div>
+                ) : (
+                  <div className='mt-[5px] flex gap-2 items-center'>
+                    {status !== TaskStatus.NoStatus && (
+                      <span className='flex text-14 font-rubik text-[#969696] hover:cursor-pointer'>
+                        {status}
+                      </span>
+                    )}
+                    {priority !== TaskPriority.NoPriority && (
+                      <span
+                        className={clsx(
+                          'flex text-14 items-center font-rubik text-[#969696] hover:cursor-pointer',
+                          priority === TaskPriority.Low
+                            ? 'text-priority-low'
+                            : priority === TaskPriority.Medium
+                            ? 'text-priority-medium'
+                            : priority === TaskPriority.High
+                            ? 'text-priority-high'
+                            : priority === TaskPriority.Urgent
+                            ? 'text-priority-urgent'
+                            : '',
+                        )}
+                      >
+                        {priority}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
-            ) : null}
-          </div>
-          <div className='flex gap-3'>
-            <StatusDropdown
-              status={status}
-              updateStatus={(status) => editor.updateBlock(block, { props: { status } })}
-            />
-            <PriorityDropdown
-              priority={priority}
-              updatePriority={(priority) => editor.updateBlock(block, { props: { priority } })}
-            />
-          </div>
-          {!createdBy ? null : (
-            <div className='text-12'>
-              Created by <span>{createdBy.name}</span>
-            </div>
-          )}
+            </Popover.Target>
+            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-white'>
+              <StatusDropdown
+                status={status}
+                updateStatus={(status) => editor.updateBlock(block, { props: { status } })}
+              />
+              <div className='border-l-1 w-[1px] h-8 border-border-color' />
+              <PriorityDropdown
+                priority={priority}
+                updatePriority={(priority) => editor.updateBlock(block, { props: { priority } })}
+              />
+            </Popover.Dropdown>
+          </Popover>
+
           <div className='mb-3' />
         </div>
       )

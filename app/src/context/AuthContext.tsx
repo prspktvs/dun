@@ -41,6 +41,7 @@ interface AuthContextType {
   user: IUser | firebase.User | null
   isAuthenticated: boolean
   loading: boolean
+  token: string
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   loginWithEmailAndPassword: (credentials: ILoginCredentials) => Promise<void>
