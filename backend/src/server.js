@@ -7,6 +7,7 @@ import routes from './routes.js'
 import { runQuery, sqliteExtension } from './database/index.js'
 import { CREATE_TABLES_QUERIES, CREATE_ALL_INDEXES } from './database/queries.js'
 import createPushAPI from './push.js'
+import { getSendPushToChatFn } from './api/chats.js'
 
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
@@ -41,6 +42,8 @@ app.use((req, _, next) => {
   }
   next()
 })
+
+
 app.use('/api', routes)
 
 const clients = []
@@ -64,9 +67,13 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
+const sentPushToChat = getSendPushToChatFn(sendNotification)
+
+app.post('/internal/chat/:chatId', sentPushToChat)
 
 export function sendMessageToUser(userId, message) {
   // @TODO: add all other types of notifications
+  const { cardId, projectId } = message
   const updatedTasks = message.updatedTasks.map((task) => task.text)
   const mentions = message.mentions.map((m) => m.text)
 
@@ -74,6 +81,7 @@ export function sendMessageToUser(userId, message) {
     sendNotification(userId, {
       title: 'Tasks updated',
       body: `Tasks: ${updatedTasks.join(', ')} have been updated`,
+      data: { cardId, projectId, tasks: message.updatedTasks }
     })
   }
 
@@ -81,6 +89,7 @@ export function sendMessageToUser(userId, message) {
     sendNotification(userId, {
       title: 'Mentions',
       body: `You have been mentioned in: ${mentions.join(', ')}`,
+      data: { cardId, projectId, mentions: message.mentions }
     })
   }
 

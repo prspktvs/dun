@@ -74,6 +74,8 @@ export const SELECT_ALL_CARDS_BY_IDS = `SELECT cards.*, COALESCE((SELECT json_gr
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
+export const SELECT_CARD_BY_CHAT_ID = 'SELECT * FROM cards WHERE chatIds LIKE ?'
+
 export const SELECT_CARD_WITH_FILES_QUERY = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM cards WHERE cards.id = ?`
 
 export const SELECT_ALL_CARD_TASKS_QUERY = `SELECT * FROM tasks WHERE card_id = ?`

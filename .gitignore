@@ -22,3 +22,4 @@ bun.lockb
 
 # local sqlite database
 sqlite.db
+*key.json

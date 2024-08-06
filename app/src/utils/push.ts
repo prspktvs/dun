@@ -18,6 +18,14 @@ function urlBase64ToUint8Array(base64String) {
 
 // Register a Service Worker.
 navigator.serviceWorker.register('/service-worker.js')
+
+navigator.serviceWorker.addEventListener("message", (event) => {
+  console.log('sw message', event.data);
+  if (event.data.type === 'navigate') {
+    window.location.href = event.data.url;
+  }
+});
+
 const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
 async function apiCall(url: string, token: string, method = 'GET', body?: string) {
