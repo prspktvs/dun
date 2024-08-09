@@ -51,6 +51,7 @@ const StatusDropdown = ({
         </span>
       </Menu.Target>
       <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+        <Menu.Item onClick={() => updateStatus(TaskStatus.NoStatus)}>no status</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.Planned)}>Planned</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InProgress)}>In progress</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InReview)}>In review</Menu.Item>
@@ -81,7 +82,7 @@ const PriorityDropdown = ({
               ? 'text-priority-high'
               : priority === TaskPriority.Urgent
               ? 'text-priority-urgent'
-              : '',
+              : 'text-[#969696]',
           )}
         >
           {priority}
@@ -89,6 +90,12 @@ const PriorityDropdown = ({
         </span>
       </Menu.Target>
       <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+        <Menu.Item
+          className='text-[#969696]'
+          onClick={() => updatePriority(TaskPriority.NoPriority)}
+        >
+          no priority
+        </Menu.Item>
         <Menu.Item className='text-priority-low' onClick={() => updatePriority(TaskPriority.Low)}>
           Low
         </Menu.Item>
@@ -145,11 +152,11 @@ const TaskBlock = createReactBlockSpec(
   {
     render: ({ block, editor, contentRef }) => {
       const { status, priority, author } = block.props
-
       const [opened, setOpened] = useState(false)
       const { user } = useAuth()
       const { users } = useProject()
       const inputRef = useRef<HTMLDivElement>(null)
+      const isNextBlockTask = useRef(true)
 
       const onClose = () => setOpened(false)
 
@@ -160,29 +167,33 @@ const TaskBlock = createReactBlockSpec(
       }, [user])
 
       useEffect(() => {
+        isNextBlockTask.current = true
+      }, [block.content])
+
+      useEffect(() => {
         const handler = (e: KeyboardEvent) => {
           const prevBlock = editor.getTextCursorPosition().prevBlock
           const nextBlock = editor.getTextCursorPosition().nextBlock
 
           switch (e.key) {
             case 'Enter':
-              if (prevBlock?.type === 'task' && prevBlock?.content?.[0]?.text) {
+              if (
+                prevBlock?.content?.[0]?.text &&
+                prevBlock?.type === 'task' &&
+                isNextBlockTask.current
+              ) {
                 insertOrUpdateBlock(editor, {
                   type: 'task',
                 } as PartialBlock<BlockSchema>)
                 return
               }
             case 'Backspace':
-              if (prevBlock?.content?.[0]?.text) {
-                document.removeEventListener('keydown', handler)
-                return
-              }
+              isNextBlockTask.current = false
+              return
             default:
               return
           }
         }
-
-        document.removeEventListener('keydown', handler)
         document.addEventListener('keydown', handler)
 
         return () => document.removeEventListener('keydown', handler)
