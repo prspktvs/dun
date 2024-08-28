@@ -101,7 +101,7 @@ export function MyWorkPage() {
 
     await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
-    navigate(`/${projectId}/cards/${id}`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
   }
   return (
     <div className='w-full h-full overflow-hidden pb-32'>

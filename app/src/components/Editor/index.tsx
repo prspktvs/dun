@@ -15,6 +15,7 @@ import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import suggestion from './Mentions/suggestion'
+import { Loader as MantineLoader } from '@mantine/core'
 import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
@@ -30,7 +31,7 @@ import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
-import { Alert, Loader } from '@mantine/core'
+import { Alert } from '@mantine/core'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
 import { useChats } from '../../context/ChatContext'
@@ -40,6 +41,7 @@ import '@blocknote/mantine/style.css'
 import TaskBlock from './Blocks/TaskBlock'
 import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
+import { Loader } from '../ui/Loader'
 
 const schema = BlockNoteSchema.create({
   blockSpecs: {
@@ -166,13 +168,11 @@ function Editor({ projectId, card, users }: IEditorProps) {
   }, [onDebouncedSave])
 
   return isLoading ? (
-    <div className='flex justify-center items-center h-full w-full'>
-      <Loader />
-    </div>
+    <Loader />
   ) : (
     <>
       {!editable && (
-        <Alert variant='light' color='red' title='' icon={<Loader color='red' size={20} />}>
+        <Alert variant='light' color='red' title='' icon={<MantineLoader color='red' size={20} />}>
           Loading...
         </Alert>
       )}

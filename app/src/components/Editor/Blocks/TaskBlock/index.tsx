@@ -161,7 +161,7 @@ const TaskBlock = createReactBlockSpec(
       const onClose = () => setOpened(false)
 
       useEffect(() => {
-        if (!block.props.author && user) {
+        if (!block?.props?.author && user) {
           editor.updateBlock(block, { props: { author: user.id } })
         }
       }, [user])
@@ -213,14 +213,15 @@ const TaskBlock = createReactBlockSpec(
                 >
                   <CustomCheckbox checked={block.props.isDone} />
                 </div>
-                <div ref={contentRef} className='mt-[2px]' />
+
+                <span className='inline-block mt-[2px]' ref={contentRef} />
                 {!(block?.content[0]?.text || block?.content[0]?.href) && isBlockActive ? (
                   <div className='absolute left-9 mt-[2px] text-gray-300 flex items-center italic'>
                     <div className='cursor' />
                     Enter a text or type '@' to mention user
                   </div>
                 ) : (
-                  <div className='mt-[5px] flex gap-2 items-center'>
+                  <span className='mt-[5px] flex gap-2 items-center'>
                     {status !== TaskStatus.NoStatus && (
                       <span className='flex text-14 font-rubik text-[#969696] hover:cursor-pointer'>
                         {status}
@@ -244,7 +245,7 @@ const TaskBlock = createReactBlockSpec(
                         {priority}
                       </span>
                     )}
-                  </div>
+                  </span>
                 )}
               </div>
             </Popover.Target>

@@ -4,8 +4,8 @@ import LeftPanel from './LeftPanel'
 import { Navigate, Outlet, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
-import { Loader, LoadingOverlay } from '@mantine/core'
 import CreateProject from './CreateProject'
+import { Loader } from '../ui/Loader'
 
 export function ProjectLayout() {
   const { id: projectId = '' } = useParams()
@@ -30,14 +30,9 @@ export function ProjectLayoutWithProtection() {
 
   const from = cardId ? `/${projectId}/cards/${cardId}` : `/${projectId}`
 
-  if (loading)
-    return (
-      <div className='h-screen w-screen flex justify-center items-center'>
-        <Loader type='dots' color='#8279BD' />
-      </div>
-    )
-
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <ProjectProvider projectId={projectId}>
       {!isAuthenticated ? <Navigate to='/login' state={{ from }} /> : <ProjectLayout />}
     </ProjectProvider>

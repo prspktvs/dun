@@ -9,7 +9,10 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
     const projectRef = doc(collection(db, 'projects'), projectId)
     const snap = await getDoc(projectRef)
     const { users } = snap.data()
-    const newUsers = users ? [...users, user] : [user]
+    const isUserFound = users?.find((u) => u.id === user.id)
+    if (isUserFound) return console.log('User already exists in project')
+
+    const newUsers = users?.length > 0 ? [...users, user] : [user]
     await setDoc(projectRef, { users: newUsers }, { merge: true })
   } catch (e) {
     console.error(e)
@@ -36,7 +39,6 @@ export const updateProject = async (project: Partial<IProject>) => {
   try {
     const projectRef = doc(collection(db, 'projects'), project.id)
     const snap = await setDoc(projectRef, project, { merge: true })
-    console.log('updated!!!', project)
     if (snap) return project
 
     return null

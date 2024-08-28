@@ -1,4 +1,4 @@
-import { Button, CopyButton, Modal } from '@mantine/core'
+import { Button, CopyButton } from '@mantine/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { debounce } from 'lodash'
@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { DUN_URL } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import clsx from 'clsx'
+import { Modal } from '../ui/modals/Modal'
 
 export default function ProjectSettingsModal({
   opened,
@@ -46,32 +47,7 @@ export default function ProjectSettingsModal({
   const projectUrl = useMemo(() => DUN_URL + `/${projectId}`, [projectId])
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      overlayProps={{
-        backgroundOpacity: 0.6,
-        blur: 3,
-      }}
-      centered
-      padding={0}
-      title={<span className='font-monaspace p-0 m-0'>Project settings</span>}
-      size='60%'
-      radius={0}
-      styles={{
-        header: {
-          position: 'relative',
-          zIndex: 202,
-        },
-        content: {
-          position: 'relative',
-          backgroundColor: 'white',
-          boxShadow: '14px 14px 0px 0px #C1BAD0',
-          padding: 0,
-          overflow: 'hidden',
-        },
-      }}
-    >
+    <Modal opened={opened} onClose={onClose} title='Project settings'>
       <div className='flex flex-col justify-between'>
         <div>
           <div className='px-5'>

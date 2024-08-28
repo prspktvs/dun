@@ -5,6 +5,8 @@ const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   createdAt TEXT,
   updatedAt TEXT,
   chatIds TEXT,
+  users TEXT,
+  author TEXT,
   project_id TEXT
 )`
 
@@ -58,7 +60,7 @@ export const CREATE_TABLES_QUERIES = [
 ]
 
 export const INSERT_NEW_CARD_QUERY =
-  'INSERT INTO cards (id, title, description, createdAt, chatIds, project_id) VALUES (?, ?, ?, ?, ?, ?)'
+  'INSERT INTO cards (id, title, description, createdAt, chatIds, users, author, project_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
 
 export const INSERT_TASK_QUERY = `INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
@@ -66,14 +68,28 @@ export const INSERT_FILES_QUERY = `INSERT OR REPLACE INTO files (id, type, url, 
 
 export const INSERT_MENTION_QUERY = `INSERT OR REPLACE INTO mentions (id, text, user_id) VALUES (?, ?, ?)`
 
+export const INSERT_NEW_USERS_TO_CARD_QUERY = 'UPDATE cards SET users = ? WHERE id = ?'
+
 export const UPDATE_CARD_QUERY = 'UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?'
 
 export const SELECT_USER_TASKS_QUERY = `SELECT tasks.* FROM tasks JOIN cards ON tasks.card_id = cards.id WHERE cards.project_id = ? AND tasks.users LIKE ?`
 
 export const SELECT_ALL_CARDS_BY_IDS = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? AND cards.id in ($IDS) GROUP BY cards.id`
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) =>
-  `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? GROUP BY cards.id ORDER BY ${orderBy} DESC`
-
+  `SELECT cards.*, 
+          COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) 
+                    FROM files 
+                    WHERE cards.id = files.card_id), '[]') AS files 
+   FROM cards 
+   LEFT JOIN files ON cards.id = files.card_id 
+   WHERE cards.project_id = ? 
+     AND (cards.author = ? OR EXISTS (
+       SELECT 1 
+       FROM json_each(cards.users) 
+       WHERE json_each.value = ?
+     ))
+   GROUP BY cards.id 
+   ORDER BY ${orderBy} DESC`
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
 export const SELECT_CARD_BY_CHAT_ID = 'SELECT * FROM cards WHERE chatIds LIKE ?'

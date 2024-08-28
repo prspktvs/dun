@@ -63,7 +63,6 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
     const messagesRef = ref(realtimeDb, `chats/${chatId}`)
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
-      console.log(chat)
 
       if (editor && !isEmpty(editor.topLevelBlocks)) {
         const block = editor.topLevelBlocks.find((block) => block.id === chat.id)
@@ -95,7 +94,6 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const handleMessageSend = async () => {
     if (newMessage === '') return alert('Message cannot be empty')
 
-    console.log('user', user)
     let mentions: string[] = []
     newMessage.split(mentionsPattern).forEach((part, index) => {
       if (index % 3 === 1) {
@@ -103,7 +101,6 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         mentions.push(id)
       }
     })
-    console.log('mentions', mentions)
 
     await saveChatAndMessage({
       chatId,
@@ -163,7 +160,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                 <div className='flex gap-1 items-center font-semibold'>
                   <AvatarDun user={messageUser} />
                   <span className='font-rubik text-14 font-medium ml-1'>
-                    {messageUser.name}
+                    {messageUser?.name}
                     <span className='ml-2 text-sm text-gray-400 font-monaspace font-thin'>
                       {time}
                     </span>

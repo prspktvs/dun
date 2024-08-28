@@ -28,10 +28,7 @@ export const createCard = async (projectId: string, card: Partial<ICard>): Promi
   if (!projectId) return null
 
   const res = await apiRequest<ICard>(`cards`, { 
-    method: 'POST', 
-    headers: {
-      'Content-Type': 'application/json',
-    }, 
+    method: 'POST',
     body: JSON.stringify({ ...card, projectId })
   })
 
@@ -45,9 +42,6 @@ export const updateCard = async (
 
   const res = await apiRequest<ICard>(`cards/${card.id}`, {
     method: 'PATCH', 
-    headers: {
-      'Content-Type': 'application/json',
-    }, 
     body: JSON.stringify(card)
   })
 
@@ -65,4 +59,21 @@ export const getProjectCards = async (projectId: string, sortedBy = 'created'): 
   
   const res = await apiRequest<ICard[]>(`cards?projectId=${projectId}&sort=${sortedBy}`)
   return res
+}
+
+export const shareCard = async (cardId: string, userIds: string[]) => {
+  if (!cardId) return null
+
+  await apiRequest(`cards/${cardId}/share`, {
+    method: 'POST',
+    body: JSON.stringify({ userIds })
+  })
+}
+
+export const unshareCard = async (cardId: string, userId: string) => {
+  if (!cardId || !userId) return null
+
+  await apiRequest(`cards/${cardId}/share/${userId}`, {
+    method: 'DELETE',
+  })
 }

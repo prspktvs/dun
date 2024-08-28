@@ -17,7 +17,6 @@ import { ProjectLayoutWithProtection } from './components/Project/Layout'
 import { CardsPage } from './pages/Project/Cards'
 import { CardPage } from './pages/Project/Card'
 import { MyWorkPage } from './pages/Project/Work'
-import { ProjectProvider } from './context/ProjectContext'
 
 export default function App() {
   return (

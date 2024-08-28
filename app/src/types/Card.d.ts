@@ -12,7 +12,8 @@ export interface ICard {
   description: string[] | null
   chatIds: string[] | null
   tasks: ITask[] | null
-  users: IUser[] | null
+  users: IUser['id'][] | null
   files: IFile[] | null
+  author: IUser['id']
   project_id: string
 }

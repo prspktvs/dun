@@ -3,11 +3,11 @@ import { Tab } from '../../pages/Auth/Login'
 import Logo from '../ui/Logo'
 import { AppleLogo, GoogleLogo, HideIcon, UnhideIcon } from '../icons'
 import { useAuth } from '../../context/AuthContext'
-import { Loader, LoadingOverlay } from '@mantine/core'
 import { set } from 'lodash'
 import { notifyError } from '../../utils/notifications'
 import { FILL_ALL_FIELDS_MESSAGE } from '../../constants/messages'
 import ButtonDun from '../ui/buttons/ButtonDun'
+import { Loader } from '../ui/Loader'
 
 interface IAuthTabsProps {
   tab: string
@@ -126,7 +126,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
             onClick={() => forgotPassword(email)}
             className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace hover:cursor-pointer'
           >
-            {isLoading ? <Loader color='rgba(255, 255, 255, 1)' /> : 'Reset password'}
+            {isLoading ? <Loader /> : 'Reset password'}
           </button>
         </div>
         <div
@@ -178,13 +178,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       </div>
       <div className='h-14 border-t-1 divide-gray-border'>
         <ButtonDun onClick={tab === 'signup' ? signUp : login}>
-          {isLoading ? (
-            <Loader color='rgba(255, 255, 255, 1)' />
-          ) : tab === 'signup' ? (
-            'Continue'
-          ) : (
-            'Log in'
-          )}
+          {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
         </ButtonDun>
       </div>
       <button
