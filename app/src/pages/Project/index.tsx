@@ -30,13 +30,6 @@ const Project = (props: IProjectPageProps) => {
   const [selectedCard, setSelectedCard] = useState<Partial<ICard> | null>(null)
 
   useEffect(() => {
-    if (isLoading || !user) return
-
-    const isUserExists = project?.users?.some(({ id }) => id === user.id)
-    if (!isUserExists) addUserToProject(projectId, user)
-  }, [project])
-
-  useEffect(() => {
     if (!cardId && isEmpty(cards)) return
 
     const card = cards?.find((card) => card.id === cardId)
@@ -51,7 +44,7 @@ const Project = (props: IProjectPageProps) => {
 
     await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
-    navigate(`/${projectId}/cards/${id}`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
   }
 
   if (isLoading) return null

@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
 import { useProject } from '../../context/ProjectContext'
 import { useChats } from '../../context/ChatContext'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import _debounce from 'lodash/debounce'
-import { Button, Loader } from '@mantine/core'
+import { Button, Menu } from '@mantine/core'
 import Editor from '../../components/Editor'
 import clsx from 'clsx'
 import UnreadIndicator from '../../components/ui/UnreadIndicator'
@@ -14,6 +14,11 @@ import Attachments from '../../components/Card/Sections/Attachments'
 import Updates from '../../components/Card/Sections/Updates'
 import { FilePreviewProvider } from '../../context/FilePreviewContext'
 import { isEmpty } from 'lodash'
+import { Loader } from '../../components/ui/Loader'
+import ButtonDun from '../../components/ui/buttons/ButtonDun'
+import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
+import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
+import { useAuth } from '../../context/AuthContext'
 
 interface ICardProps {
   card: ICard
@@ -21,10 +26,17 @@ interface ICardProps {
 
 const Card = ({ card }: ICardProps) => {
   const { id: projectId = '' } = useParams()
+  const location = useLocation()
+  const [isShareModalOpened, setIsShareModalOpened] = useState(location.hash === '#share')
   const { optimisticDeleteCard, optimisticUpdateCard, users } = useProject()
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
   const { closeChat, unreadChats } = useChats()
 
+  const { user } = useAuth()
+
   const files = card?.files?.filter((file) => file.url) || []
+
+  const isAuthor = card.author === user?.id
 
   const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
@@ -70,10 +82,8 @@ const Card = ({ card }: ICardProps) => {
   const onRemoveCard = async () => {
     if (!card?.id) return
 
-    if (confirm('Are you sure?')) {
-      await optimisticDeleteCard(card.id)
-      goBack()
-    }
+    await optimisticDeleteCard(card.id)
+    goBack()
   }
 
   const goBack = () => {
@@ -84,29 +94,42 @@ const Card = ({ card }: ICardProps) => {
   return (
     <div className='w-[calc(100%_-_320px)]'>
       <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
-        <div className='flex items-center mx-3 justify-between grow'>
+        <div className='flex items-center mx-3 justify-between grow h-full'>
           <div className='underline font-monaspace text-sm hover:cursor-pointer' onClick={goBack}>
             {'<'} Back to topics
           </div>
-          <div className='flex gap-1'>
-            <Button
-              className='font-monaspace font-thin'
-              radius={0}
-              variant='outline'
-              color='#464646'
-              onClick={onRemoveCard}
-            >
-              Remove
-            </Button>
-            <Button
-              className='font-monaspace font-thin'
-              radius={0}
-              color='#464646'
-              onClick={() => onSaveTitle(title)}
-            >
-              Save
-            </Button>
-          </div>
+          {isAuthor && (
+            <div className='flex items-center gap-1 h-full'>
+              <ButtonDun onClick={() => setIsShareModalOpened(true)}>Share topic</ButtonDun>
+              <Menu shadow='md' radius={0} width={200}>
+                <Menu.Target>
+                  <i
+                    onClick={(e) => e.stopPropagation()}
+                    className='ri-more-2-fill text-2xl cursor-pointer'
+                  />
+                </Menu.Target>
+
+                <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
+                  <Menu.Item
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowConfirmModal(true)
+                    }}
+                    className='text-red-600'
+                  >
+                    Remove topic
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+              <ConfirmModal
+                message='Are you sure you want to remove this topic?'
+                confirmText='Remove'
+                onClose={() => setShowConfirmModal(false)}
+                onConfirm={onRemoveCard}
+                opened={showConfirmModal}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -179,6 +202,11 @@ const Card = ({ card }: ICardProps) => {
           }
         </aside>
       </div>
+      <ShareTopicModal
+        opened={isShareModalOpened}
+        onClose={() => setIsShareModalOpened(false)}
+        card={card}
+      />
     </div>
   )
 }
@@ -186,19 +214,12 @@ const Card = ({ card }: ICardProps) => {
 export function CardPage() {
   const { cardId } = useParams()
   const { cards } = useProject()
-  console.log('cards', cards, cardId)
 
   const card = cards?.find((card) => card.id === cardId)
 
   return (
     <FilePreviewProvider files={card?.files || []}>
-      {card ? (
-        <Card card={card} />
-      ) : (
-        <div className='h-full w-full flex justify-center items-center'>
-          <Loader type='dots' color='#8279BD' />
-        </div>
-      )}
+      {card ? <Card card={card} /> : <Loader />}
     </FilePreviewProvider>
   )
 }

@@ -1,7 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ITask } from '../types/Task'
 import { useAuth } from './AuthContext'
-import { createCard, getAllUserTasks, getProjectCards, removeCard, updateCard } from '../services'
+import {
+  addUserToProject,
+  createCard,
+  getAllUserTasks,
+  getProjectCards,
+  removeCard,
+  updateCard,
+} from '../services'
 import { updateUser } from '../services/user.service'
 import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
@@ -14,6 +21,7 @@ export type ProjectContext = {
   cards: ICard[]
   tasks: ITask[]
   users: IUser[]
+  author: IUser['id']
   isLoading: boolean
   search: string
   sortType: 'createdAt' | 'updatedAt'
@@ -41,7 +49,6 @@ export const ProjectProvider = ({
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
 
   useEffect(() => {
-    console.log('TEST')
     if (!projectId) return
     async function fetchData() {
       const allCards = await getProjectCards(projectId, sortType)
@@ -65,6 +72,8 @@ export const ProjectProvider = ({
     }
 
     fetchData()
+
+    addUserToProject(projectId, user)
 
     // Firefox thows an error if the url has http:// instead ls ws://
     const wsHost = getWsUrl(process.env.VITE_BACKEND_URL)
@@ -121,13 +130,14 @@ export const ProjectProvider = ({
 
   const optimisticCreateCard = async (card: Partial<ICard>) => {
     try {
-      const newCard = await createCard(projectId, card)
+      const data = { ...card, author: user.id, users: [] }
+      const newCard = await createCard(projectId, data)
       if (!newCard) return
       setCards((prev) => [...prev, newCard])
     } catch (error) {}
   }
 
-  const optimisticUpdateCard = async (card: ICard) => {
+  const optimisticUpdateCard = async (card: Partial<ICard>) => {
     try {
       await updateCard(card)
       _updateCard(card)
@@ -136,25 +146,27 @@ export const ProjectProvider = ({
 
   const optimisticDeleteCard = async (cardId: string) => {
     try {
-      await removeCard(cardId)
       setCards((prev) => prev.filter((card) => card.id !== cardId))
+      await removeCard(cardId)
     } catch (error) {}
   }
 
   const _updateCard = (card: Partial<ICard>) => {
     setCards((prev) => {
-      const index = prev.findIndex((c) => c.id === card.id)
-      if (index > -1) {
-        prev[index] = { ...prev[index], ...card }
-      }
-      return prev
+      const updatedCards = prev.map((c) => {
+        if (c.id === card.id) {
+          return { ...c, ...card }
+        }
+        return c
+      })
+      return updatedCards
     })
   }
 
   const contextValue: ProjectContext = {
     project,
-
     users: project?.users || [],
+    author: project?.author,
     search,
     cards,
     tasks,

@@ -2,6 +2,8 @@ import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
 import { useState } from 'react'
 import { IProject } from '../../types/Project'
 import { createProject } from '../../services'
+import { useAuth } from '../../context/AuthContext'
+import { IUser } from '../../types/User.d.ts'
 
 interface ICreateProjectProps {
   projectId: string
@@ -14,6 +16,8 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [tags, setTags] = useState<string[]>([])
   const isTitleEmpty = title.length === 0
 
+  const { user } = useAuth()
+
   const onContinue = () => setActiveTab('second')
 
   const onCreate = async () => {
@@ -21,11 +25,12 @@ const CreateProject = (props: ICreateProjectProps) => {
       id: props.projectId,
       title,
       description,
+      users: [user as IUser],
       tags: tags.map((tag) => tag.toLowerCase()),
     }
     const res = await createProject(project)
-    // window.location.reload(false)
   }
+
   const handleInputChange = ({ target }) => {
     const { name, value } = target
     if (name === 'title') return setTitle(value)
@@ -56,27 +61,12 @@ const CreateProject = (props: ICreateProjectProps) => {
         value={activeTab}
         onChange={setActiveTab}
       >
-        {/* <Tabs.List grow>
-          <Tabs.Tab value='first'>1</Tabs.Tab>
-          <Tabs.Tab value='second'>2</Tabs.Tab>
-        </Tabs.List> */}
-
-        {/* <Tabs.Panel ba value='first' className='w-[600px] h-[300px] '> */}
         <Tabs.Panel value='first'>
-          {/* <input
-            className='block align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
-            placeholder='Type new project title'
-            value={title}
-            name='title'
-            // onChange={(e) => setTitle(e.target.value)}
-            onChange={handleInputChange}
-          /> */}
           <textarea
             className='block resize-none align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
             placeholder='Type new project title'
             value={title}
             name='title'
-            // onChange={(e) => setTitle(e.target.value)}
             onChange={handleInputChange}
           ></textarea>
 
@@ -85,7 +75,6 @@ const CreateProject = (props: ICreateProjectProps) => {
             placeholder='Description'
             value={description}
             name='description'
-            // onChange={(e) => setDescription(e.target.value)}
             onChange={handleInputChange}
           ></textarea>
           <Button
@@ -100,28 +89,6 @@ const CreateProject = (props: ICreateProjectProps) => {
             Create
           </Button>
         </Tabs.Panel>
-
-        {/* <Tabs.Panel value='second' className='w-[600px] h-[300px]'>
-          <TagsInput
-            className='font-monaspace mt-5'
-            label='Add tags'
-            value={tags}
-            onChange={setTags}
-            placeholder='Enter tag'
-          />
-
-          <Button
-            className='mt-10 font-thin font-monaspace'
-            fullWidth
-            radius={0}
-            variant='filled'
-            color='#464646'
-            onClick={onCreate}
-          
-          >
-            Dun
-          </Button>
-        </Tabs.Panel> */}
       </Tabs>
     </div>
   )

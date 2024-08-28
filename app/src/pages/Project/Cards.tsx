@@ -8,7 +8,8 @@ import { isEmpty } from 'lodash'
 import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'
-import { Loader } from '@mantine/core'
+import { Loader } from '../../components/ui/Loader'
+import { useAuth } from '../../context/AuthContext'
 
 function SortButton({
   children,
@@ -46,9 +47,14 @@ export function CardsPage() {
   const onCreateNewCard = async () => {
     const id = genId()
 
-    await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
+    await optimisticCreateCard({
+      id,
+      title: '',
+      chatIds: [],
+      createdAt: new Date(),
+    })
 
-    navigate(`/${projectId}/cards/${id}`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
   }
 
   return (
@@ -88,9 +94,7 @@ export function CardsPage() {
             ))}
           </div>
         ) : search.loading ? (
-          <div className='h-full w-full flex justify-center items-center'>
-            <Loader type='dots' color='#8279BD' />
-          </div>
+          <Loader />
         ) : (
           <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
         )}

@@ -137,7 +137,6 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
     try {
       await signInWithPopup(auth, provider)
-      console.log(from)
       navigate(from)
     } catch (error) {
       console.error('Error signing in with Google:', error)

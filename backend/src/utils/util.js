@@ -135,20 +135,6 @@ const onStoreDocument = async ({
 
   // without await to not block the response
   // @TODO: optimize card title
-  addDocument({
-    id: cardId,
-    title: (await getQuery(SELECT_CARD_BY_ID_QUERY, [cardId]))?.title,
-    project_id: projectId,
-    content: text,
-    updated_at: Date.now(),
-    created_at: Date.now(),
-    author_id: user.user_id,
-    author: user.name,
-    public: true, // @TODO
-    user_ids: [user.user_id], // @TODO
-  })
-    .then((res) => console.log('Document added to typesense', res))
-    .catch(console.error)
 
   const { notifications, addToUserNotifications } = new UserNotifications()
 
@@ -196,6 +182,22 @@ const onStoreDocument = async ({
       })
     })
   }
+  console.log(currentCard)
+  addDocument({
+    id: cardId,
+    title: currentCard?.title,
+    project_id: projectId,
+    content: text,
+    updated_at: Date.now(),
+    created_at: Date.now(),
+    author_id: user.user_id,
+    author: user.name,
+    public: false, // @TODO
+    user_ids: JSON.parse(currentCard.users || '[]'),
+  })
+    .then((res) => console.log('Document added to typesense', res))
+    .catch(console.error)
+
   // Send updates
   newMentions.forEach((mention) => {
     addToUserNotifications('mention', { cardId, projectId, ...mention, users: [mention.user] })

@@ -51,6 +51,7 @@ const StatusDropdown = ({
         </span>
       </Menu.Target>
       <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+        <Menu.Item onClick={() => updateStatus(TaskStatus.NoStatus)}>no status</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.Planned)}>Planned</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InProgress)}>In progress</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InReview)}>In review</Menu.Item>
@@ -81,7 +82,7 @@ const PriorityDropdown = ({
               ? 'text-priority-high'
               : priority === TaskPriority.Urgent
               ? 'text-priority-urgent'
-              : '',
+              : 'text-[#969696]',
           )}
         >
           {priority}
@@ -89,6 +90,12 @@ const PriorityDropdown = ({
         </span>
       </Menu.Target>
       <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+        <Menu.Item
+          className='text-[#969696]'
+          onClick={() => updatePriority(TaskPriority.NoPriority)}
+        >
+          no priority
+        </Menu.Item>
         <Menu.Item className='text-priority-low' onClick={() => updatePriority(TaskPriority.Low)}>
           Low
         </Menu.Item>
@@ -145,19 +152,23 @@ const TaskBlock = createReactBlockSpec(
   {
     render: ({ block, editor, contentRef }) => {
       const { status, priority, author } = block.props
-
       const [opened, setOpened] = useState(false)
       const { user } = useAuth()
       const { users } = useProject()
       const inputRef = useRef<HTMLDivElement>(null)
+      const isNextBlockTask = useRef(true)
 
       const onClose = () => setOpened(false)
 
       useEffect(() => {
-        if (!block.props.author && user) {
+        if (!block?.props?.author && user) {
           editor.updateBlock(block, { props: { author: user.id } })
         }
       }, [user])
+
+      useEffect(() => {
+        isNextBlockTask.current = true
+      }, [block.content])
 
       useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -166,23 +177,23 @@ const TaskBlock = createReactBlockSpec(
 
           switch (e.key) {
             case 'Enter':
-              if (prevBlock?.type === 'task' && prevBlock?.content?.[0]?.text) {
+              if (
+                prevBlock?.content?.[0]?.text &&
+                prevBlock?.type === 'task' &&
+                isNextBlockTask.current
+              ) {
                 insertOrUpdateBlock(editor, {
                   type: 'task',
                 } as PartialBlock<BlockSchema>)
                 return
               }
             case 'Backspace':
-              if (prevBlock?.content?.[0]?.text) {
-                document.removeEventListener('keydown', handler)
-                return
-              }
+              isNextBlockTask.current = false
+              return
             default:
               return
           }
         }
-
-        document.removeEventListener('keydown', handler)
         document.addEventListener('keydown', handler)
 
         return () => document.removeEventListener('keydown', handler)
@@ -202,14 +213,15 @@ const TaskBlock = createReactBlockSpec(
                 >
                   <CustomCheckbox checked={block.props.isDone} />
                 </div>
-                <div ref={contentRef} className='mt-[2px]' />
+
+                <span className='inline-block mt-[2px]' ref={contentRef} />
                 {!(block?.content[0]?.text || block?.content[0]?.href) && isBlockActive ? (
                   <div className='absolute left-9 mt-[2px] text-gray-300 flex items-center italic'>
                     <div className='cursor' />
                     Enter a text or type '@' to mention user
                   </div>
                 ) : (
-                  <div className='mt-[5px] flex gap-2 items-center'>
+                  <span className='mt-[5px] flex gap-2 items-center'>
                     {status !== TaskStatus.NoStatus && (
                       <span className='flex text-14 font-rubik text-[#969696] hover:cursor-pointer'>
                         {status}
@@ -233,7 +245,7 @@ const TaskBlock = createReactBlockSpec(
                         {priority}
                       </span>
                     )}
-                  </div>
+                  </span>
                 )}
               </div>
             </Popover.Target>

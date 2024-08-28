@@ -59,7 +59,6 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   useEffect(() => {
     const updatedChats = chats.filter((chat) => {
-      console.log(chat)
       const chatMessages = chat?.messages ? Object.values(chat.messages).map((m) => m.text) : []
       return (
         chat?.content?.toLowerCase()?.includes(search.toLowerCase()) ||
