@@ -53,8 +53,12 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
             <UpdateIcon count={0} />
           </div>
         </div>
-        <div className='text-lg font-semibold font-rubik not-italic mb-4 '>{card.title}</div>
-        <div className='flex items-end sm:max-w-[390px] md:max-w-[300px] lg:max-w-[450px]'>
+        <div className="h-[62px] w-[352px] flex-col justify-start items-start gap-3 inline-flex">
+  <div className="self-stretch text-[#46434e] text-xl font-medium font-['Rubik'] leading-7 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+    {card.title}
+  </div>
+</div>
+  <div className='flex items-end sm:max-w-[390px] md:max-w-[300px] lg:max-w-[450px]'>
           <div className='col-span-3 overflow-hidden'>
             {!isEmpty(tasks)
               ? tasks
