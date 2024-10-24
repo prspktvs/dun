@@ -186,3 +186,29 @@ export const unshareCard = async (req, res) => {
     res.status(500).send('Internal server error')
   }
 }
+
+// New endpoint for retrieving cards with tasks
+export const getAllCardsWithTasks = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; 
+    const query = `
+      SELECT 
+        cards.*, 
+        tasks.id AS task_id, 
+        tasks.text AS task_text, 
+        tasks.status AS task_status 
+      FROM 
+        cards 
+      LEFT JOIN 
+        tasks ON cards.id = tasks.card_id 
+      WHERE 
+        cards.project_id = ?
+    `;
+    
+    const data = await allQuery(query, [projectId]);  // Execute the query to the database
+
+    res.json(data);  // Return the result to the client
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving cards', error });
+    }
+    };
