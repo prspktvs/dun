@@ -3,24 +3,20 @@ import cors from 'cors';
 import expressWs from 'express-ws';
 import { onStoreDocument } from './utils/util.js';
 import { Server as HocusPocusServer } from '@hocuspocus/server';
-import routes from './routes.js';  // Подключение маршрутов
+import routes from './routes.js';
 import { runQuery, sqliteExtension } from './database/index.js';
 import { CREATE_TABLES_QUERIES, CREATE_ALL_INDEXES } from './database/queries.js';
 import createPushAPI from './push.js';
 import { getSendPushToChatFn } from './api/chats.js';
 
-// Парсинг JWT токена
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
 
-// @TODO: move to redis
-const presence = {};  
+const presence = {};
 
-// Инициализация Express приложения
 const app = express();
-expressWs(app); 
-
+expressWs(app);
 
 const hocusPocusServer = HocusPocusServer.configure({
   onStoreDocument: async (data) =>
@@ -29,13 +25,11 @@ const hocusPocusServer = HocusPocusServer.configure({
     const { token } = data;
     return { user: parseJwt(token) };  
   },
-  extensions: [sqliteExtension],  
+  extensions: [sqliteExtension],
 });
 
-// Миддлвары
-app.use(express.json());  
-app.use(cors({ origin: '*' }));  
-
+app.use(express.json());
+app.use(cors({ origin: '*' }));
 
 app.use((req, _, next) => {
   const token = req.headers.authorization?.split('Bearer ')[1] || req.query.token;
@@ -45,9 +39,7 @@ app.use((req, _, next) => {
   next();
 });
 
-
 app.use('/api', routes);
-
 
 const clients = [];
 app.ws('/updates', (ws, req) => {
@@ -65,15 +57,12 @@ app.ws('/updates', (ws, req) => {
   });
 });
 
-
 app.ws('/collaboration', (websocket, request) => {
   hocusPocusServer.handleConnection(websocket, request);
 });
 
-
 const sendNotification = createPushAPI(app, '/push/');
 const sendPushToChat = getSendPushToChatFn(sendNotification);
-
 
 app.post('/internal/chat/:chatId', sendPushToChat);
 
@@ -105,7 +94,6 @@ export function sendMessageToUser(userId, message) {
   });
 }
 
-
 export function sendMessageToProject(projectId, message) {
   clients.forEach((client) => {
     if (client.projectId === projectId) {
@@ -114,16 +102,14 @@ export function sendMessageToProject(projectId, message) {
   });
 }
 
-
 export async function bootstrapExpress() {
-  await Promise.all(CREATE_TABLES_QUERIES.map((q) => runQuery(q)));  
-  await Promise.all(CREATE_ALL_INDEXES.map((q) => runQuery(q)));  
+  await Promise.all(CREATE_TABLES_QUERIES.map((q) => runQuery(q)));
+  await Promise.all(CREATE_ALL_INDEXES.map((q) => runQuery(q)));
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`  > HTTP: Express server is running on ${PORT}`);
   });
 }
-
 
 bootstrapExpress();

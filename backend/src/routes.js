@@ -1,24 +1,31 @@
-// routes.js
-import { Router } from 'express';
+import express from 'express';
 import { getUserTasks, createTask, getTasksWithCards } from './api/tasks.js';
 import {
   searchCards,
   createCard,
-  deleteCard,
   getAllProjectCards,
   getCardById,
+  deleteCard,
   updateCard,
   shareCard,
   unshareCard,
   getAllCardsWithTasks,
 } from './api/cards.js';
 
-const router = Router();
+const router = express.Router();
 
 // tasks
-router.get('/tasks', getUserTasks);
+router.get('/tasks', (req, res) => {
+  const { includeCards } = req.query;
+
+  if (includeCards === 'true') {
+    return getTasksWithCards(req, res);
+  }
+
+  return getUserTasks(req, res);
+});
+
 router.post('/tasks', createTask);
-router.get('/tasks-with-cards', getTasksWithCards);  // Новый маршрут для получения задач с карточками
 
 // cards
 router.get('/cards', getAllProjectCards);

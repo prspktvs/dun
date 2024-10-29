@@ -1,4 +1,3 @@
-// index.js
 import { ExtendedSQLite } from './ExtendedSQLite.js';
 import { CREATE_TASKS_TABLE_QUERY, CREATE_CARDS_TABLE_QUERY, CREATE_ALL_INDEXES } from './queries.js';
 
@@ -10,7 +9,6 @@ const schema = `
 
 export const sqliteExtension = new ExtendedSQLite({
   database: 'sqlite.db',
-  schema: schema,
 });
 
 export const db = sqliteExtension.db;
