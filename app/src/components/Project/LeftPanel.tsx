@@ -1,10 +1,7 @@
-import { ITask } from '../../types/Task'
 import { useState, useEffect, useMemo } from 'react'
 import { isEmpty } from 'lodash'
-
 import { useAuth } from '../../context/AuthContext'
-
-import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
 import { getAllUserProject } from '../../services'
 import { genId } from '../../utils'
@@ -17,14 +14,14 @@ import ProjectSettingsModal from './ProjectSettingsModal'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
-
   const location = useLocation()
   const [isMenuOpened, setMenuOpened] = useState(false)
   const [isSettingsOpened, setSettingsOpened] = useState(false)
   const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
-  const { tasks, cards, project } = useProject()
+  const { tasks, cards, project, topics } = useProject()
+  const topicCount = topics?.length || 0 // Подсчет количества тем
 
   const cardsTitles = useMemo(
     () =>
@@ -55,9 +52,8 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className=' border-border-color h-14 px-5 w-80 border-b-1 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
               <span className='font-rubik text-lg '>{project?.title || 'Empty project'}</span>
-
               {isMenuOpened ? (
                 <i className='ri-arrow-down-s-line text-2xl' />
               ) : (
@@ -92,7 +88,7 @@ function LeftPanel() {
       </section>
       <nav className='w-full border-b-1 border-border-color px-5 pb-1'>
         <ul>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton
               isActive={location.pathname.endsWith('my-work') && !isSettingsOpened}
               onClick={() => navigate('my-work')}
@@ -100,15 +96,15 @@ function LeftPanel() {
               My work
             </LeftPanelButton>
           </li>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton
               isActive={location.pathname.endsWith(projectId) && !isSettingsOpened}
               onClick={() => navigate(`/${projectId}`)}
             >
-              Topics
+              Topics ・{topicCount}
             </LeftPanelButton>
           </li>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton isActive={isSettingsOpened} onClick={() => setSettingsOpened(true)}>
               Project settings
             </LeftPanelButton>
@@ -118,7 +114,7 @@ function LeftPanel() {
       <section className='flex-1 w-full px-5 py-3 overflow-y-scroll pb-12'>
         <div
           className={clsx(
-            ' border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
+            'border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
             !isEmpty(tasks) ? 'bg-salad' : 'bg-gray-50',
           )}
         >
@@ -129,7 +125,7 @@ function LeftPanel() {
         {Object.keys(groupedTasksById).map((cardId) => (
           <div key={'grouped-tasks-card-id-' + cardId}>
             <div className='text-14 font-bold'>{cardsTitles[cardId]}</div>
-            {groupedTasksById[cardId].map((task, idx) => (
+            {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
                 onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
