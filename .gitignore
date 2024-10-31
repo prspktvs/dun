@@ -19,6 +19,7 @@ firebase-debug.log
 bun.lockb
 
 .vscode/
+.idea
 
 # local sqlite database
 sqlite.db

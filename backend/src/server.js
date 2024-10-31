@@ -12,7 +12,7 @@ import { getSendPushToChatFn } from './api/chats.js';
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
-
+// @TODO: move to redis
 const presence = {};
 
 const app = express();
@@ -23,6 +23,8 @@ const hocusPocusServer = HocusPocusServer.configure({
     onStoreDocument({ data, broadcast: { sendMessageToProject, sendMessageToUser } }),
   async onAuthenticate(data) {
     const { token } = data;
+
+    // @TODO: verify token https://firebase.google.com/docs/auth/admin/verify-id-tokens#web
     return { user: parseJwt(token) };  
   },
   extensions: [sqliteExtension],
@@ -32,6 +34,8 @@ app.use(express.json());
 app.use(cors({ origin: '*' }));
 
 app.use((req, _, next) => {
+
+  // parse token
   const token = req.headers.authorization?.split('Bearer ')[1] || req.query.token;
   if (token) {
     req.user = parseJwt(token);
@@ -66,6 +70,7 @@ const sendPushToChat = getSendPushToChatFn(sendNotification);
 
 app.post('/internal/chat/:chatId', sendPushToChat);
 
+  // @TODO: add all other types of notifications
 export function sendMessageToUser(userId, message) {
   const { cardId, projectId } = message;
   const updatedTasks = message.updatedTasks.map((task) => task.text);

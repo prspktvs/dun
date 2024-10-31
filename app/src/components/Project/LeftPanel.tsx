@@ -111,32 +111,39 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
-      <section className='flex-1 w-full px-5 py-3 overflow-y-scroll pb-12'>
+      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
         <div
           className={clsx(
-            'border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
-            !isEmpty(tasks) ? 'bg-salad' : 'bg-gray-50',
+            'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
+            !isEmpty(tasks) ? 'bg-[#DBF7CA]' : 'bg-gray-50',
           )}
         >
-          <span className='text-12 font-normal font-monaspace'>
+          <span className='text-[10px] text-[#46434e] font-normal font-monaspace'>
             {!isEmpty(tasks) ? 'New tasks for you' : 'No new tasks for you'}
           </span>
         </div>
+
+        {/* Отображение задач по категориям */}
         {Object.keys(groupedTasksById).map((cardId) => (
-          <div key={'grouped-tasks-card-id-' + cardId}>
-            <div className='text-14 font-bold'>{cardsTitles[cardId]}</div>
+          <div key={'grouped-tasks-card-id-' + cardId} className='mb-7'>
+            {/* Заголовок категории задач */}
+            <div className='text-[#46434e] text-sm font-bold mb-3'>{cardsTitles[cardId]}</div>
+
+            {/* Отображение задач */}
             {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
                 onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
-                className='rounded-md p-1 hover:cursor-pointer hover:bg-gray-100'
+                className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
                 <TaskPreview task={task} />
               </div>
             ))}
-            <div className='mb-5' />
           </div>
         ))}
+
+        {/* Кнопка для отображения оставшихся задач */}
+        <div className='text-[#8279bd] text-sm font-semibold font-monaspace pl-1'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>

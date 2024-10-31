@@ -37,6 +37,7 @@
     "@blocknote/react": "^0.15.3",
     "@headlessui/react": "^0.0.0-insiders.f016dc5",
     "@hocuspocus/provider": "^2.13.2",
+    "date-fns": "^2.x.x",
     "@mantine/core": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
     "@mantine/notifications": "^7.11.0",

@@ -1,5 +1,5 @@
-import express from 'express';
-import { getUserTasks, createTask, getTasksWithCards } from './api/tasks.js';
+import express from 'express'
+import { getUserTasks, getTasksWithCards } from './api/tasks.js'
 import {
   searchCards,
   createCard,
@@ -10,32 +10,30 @@ import {
   shareCard,
   unshareCard,
   getAllCardsWithTasks,
-} from './api/cards.js';
+} from './api/cards.js'
 
-const router = express.Router();
+const router = express.Router()
 
 // tasks
 router.get('/tasks', (req, res) => {
-  const { includeCards } = req.query;
+  const { includeCards } = req.query
 
   if (includeCards === 'true') {
-    return getTasksWithCards(req, res);
+    return getTasksWithCards(req, res)
   }
 
-  return getUserTasks(req, res);
-});
-
-router.post('/tasks', createTask);
+  return getUserTasks(req, res)
+})
 
 // cards
-router.get('/cards', getAllProjectCards);
-router.get('/cards/search', searchCards);
-router.get('/cards/:id', getCardById);
-router.post('/cards', createCard);
-router.patch('/cards/:id', updateCard);
-router.delete('/cards/:id', deleteCard);
-router.post('/cards/:id/share', shareCard);
-router.delete('/cards/:id/share/:userId', unshareCard);
-router.get('/project/:projectId/tasks', getAllCardsWithTasks);
+router.get('/cards', getAllProjectCards)
+router.get('/cards/search', searchCards)
+router.get('/cards/:id', getCardById)
+router.post('/cards', createCard)
+router.patch('/cards/:id', updateCard)
+router.delete('/cards/:id', deleteCard)
+router.post('/cards/:id/share', shareCard)
+router.delete('/cards/:id/share/:userId', unshareCard)
+router.get('/project/:projectId/tasks', getAllCardsWithTasks)
 
-export default router;
+export default router
