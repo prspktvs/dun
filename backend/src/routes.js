@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUserTasks, getTasksWithCards } from './api/tasks.js'
+import { getUserTasks } from './api/tasks.js'
 import {
   searchCards,
   createCard,
