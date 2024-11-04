@@ -12,18 +12,22 @@ export function ProjectHeader() {
   const { search, setSearch } = useProject()
 
   return (
-    <header className='flex justify-between items-center border-b-1 bg-[#edebf3] h-14 border-border-color'>
+    <header className='flex justify-between items-center border-b bg-[#edebf3] h-14 border-border-color'>
       <div
         onClick={() => navigate(`/${projectId}`)}
-        className='w-80 border-r-1 border-border-color p-2 flex justify-center items-center text-black hover:cursor-pointer'
+        className='w-80 border-r border-border-color p-2 flex justify-center items-center text-black hover:cursor-pointer'
       >
         <Logo />
       </div>
       <div className='flex-1 flex items-center px-6 relative bg-[#edebf3]'>
         <SearchIcon className='absolute left-0 pl-1 w-5 h-5 text-[#969696]' />
-        <span className="text-[#969696] text-sm font-normal font-['MonaspaceArgon'] pl-4">
-          Find it all
-        </span>
+        <input
+          type='text'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder='Find it all'
+          className="pl-8 pr-4 py-2 w-full bg-[#edebf3] text-[#969696] text-sm font-normal font-['MonaspaceArgon'] border-none focus:outline-none"
+        />
       </div>
       <div className='h-full flex items-center p-5'>
         <UserPanel user={user} />

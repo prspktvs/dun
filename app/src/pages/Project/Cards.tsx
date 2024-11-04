@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useProject } from '../../context/ProjectContext'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ICard } from '../../types/Card'
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
 import { isEmpty } from 'lodash'
@@ -9,7 +9,6 @@ import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
-import { useAuth } from '../../context/AuthContext'
 
 function SortButton({
   children,
@@ -25,9 +24,8 @@ function SortButton({
       onClick={onClick}
       className={clsx('px-4 py-2 rounded', isActive ? 'bg-grayBg' : 'text-[#969696]')}
     >
-      {/* Обертка для текста с заданными стилями */}
-      <span className="text-[#555555] text-xs font-normal font-['Monaspace Argon Var']">
-        {children} {/* Текст кнопки */}
+      <span className='text-[#555555] text-xs font-normal font-["Monaspace Argon Var"]'>
+        {children}
       </span>
     </button>
   )
@@ -65,10 +63,10 @@ export function CardsPage() {
 
   return (
     <div className='w-full h-full overflow-hidden pb-32'>
-      <section className='border-border-color flex items-center justify-between h-14 '>
-        <div className='h-full flex w-full border-b-1 border-border-color sm:gap-x-1 justify-center '>
+      <section className='border-border-color flex items-center justify-between h-14'>
+        <div className='h-full flex w-full border-b-1 border-border-color sm:gap-x-1 justify-center'>
           <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-6'>
-            <div className='text-xs text-[#47444F] font-normal font-monaspace '>Sort by:</div>
+            <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
             <SortButton
               onClick={() => setSortType('updatedAt')}
               isActive={sortType === 'updatedAt'}
@@ -84,19 +82,18 @@ export function CardsPage() {
             <SortButton onClick={() => setSortType('archived')} isActive={sortType === 'archived'}>
               Archived
             </SortButton>
-            {/* <SortButton>Archived</SortButton> */}
           </div>
 
-          <div className='h-full w-48 border-l-1 border-border-color flex items-center '>
+          <div className='h-full w-48 border-l-1 border-border-color flex items-center justify-center px-0'>
             <ButtonDun onClick={onCreateNewCard}>
               <span className='pr-0 text-xl font-thin'>+</span>Topic
             </ButtonDun>
           </div>
         </div>
       </section>
-      <section className=' h-full overflow-y-scroll hide-scrollbar'>
+      <section className='h-full overflow-y-scroll hide-scrollbar'>
         {!isEmpty(filteredCards) ? (
-          <div className='grid xl:grid-cols-3 lg:grid-cols-2 '>
+          <div className='grid xl:grid-cols-3 lg:grid-cols-2'>
             {filteredCards.map((card, index) => (
               <div key={'card-' + index} className='border-b-1 border-border-color padding-0'>
                 <CardPreview card={card} onClick={() => onChooseCard(card)} />
