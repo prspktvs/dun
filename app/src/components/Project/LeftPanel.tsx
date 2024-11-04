@@ -21,7 +21,7 @@ function LeftPanel() {
   const navigate = useNavigate()
 
   const { tasks, cards, project, topics } = useProject()
-  const topicCount = topics?.length || 0 // Подсчет количества тем
+  const topicCount = topics?.length || 0
 
   const cardsTitles = useMemo(
     () =>
@@ -44,6 +44,7 @@ function LeftPanel() {
   return (
     <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
       <section>
+        console.log(ffggh)
         <Menu
           shadow='md'
           width={280}
@@ -61,6 +62,7 @@ function LeftPanel() {
               )}
             </nav>
           </Menu.Target>
+
           <Menu.Dropdown>
             <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
             {projects.map((project, idx) => (
