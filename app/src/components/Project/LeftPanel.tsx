@@ -20,8 +20,8 @@ function LeftPanel() {
   const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
-  const { tasks, cards, project, topics } = useProject()
-  const topicCount = topics?.length || 0
+  const { tasks, cards, project } = useProject()
+  const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
     () =>
@@ -44,7 +44,6 @@ function LeftPanel() {
   return (
     <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
       <section>
-        console.log(ffggh)
         <Menu
           shadow='md'
           width={280}
@@ -125,13 +124,9 @@ function LeftPanel() {
           </span>
         </div>
 
-        {/* Отображение задач по категориям */}
         {Object.keys(groupedTasksById).map((cardId) => (
           <div key={'grouped-tasks-card-id-' + cardId} className='mb-7'>
-            {/* Заголовок категории задач */}
             <div className='text-[#46434e] text-sm font-bold mb-3'>{cardsTitles[cardId]}</div>
-
-            {/* Отображение задач */}
             {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
@@ -144,7 +139,6 @@ function LeftPanel() {
           </div>
         ))}
 
-        {/* Кнопка для отображения оставшихся задач */}
         <div className='text-[#8279bd] text-sm font-semibold font-monaspace pl-1'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />

@@ -17,8 +17,8 @@ export enum TaskPriority {
   Urgent = 'Urgent',
 }
 export interface ITask extends PartialBlock {
-  title: ReactNode
-  assignedTo: ReactNode
+  title: text
+  assignedTo: user
   id: string
   isDone: boolean
   text: string

@@ -9,10 +9,6 @@ export const getUserTasks = async (req, res) => {
       return res.status(400).send('userId and projectId are required')
     }
 
-    if (includeCards === 'true') {
-      return getTasksWithCards(req, res)
-    }
-
     const tasks = await allQuery(SELECT_USER_TASKS_QUERY, [projectId, `%${userId}%`])
     res.json({ tasks })
   } catch (error) {

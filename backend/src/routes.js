@@ -14,17 +14,6 @@ import {
 
 const router = express.Router()
 
-// tasks
-router.get('/tasks', (req, res) => {
-  const { includeCards } = req.query
-
-  if (includeCards === 'true') {
-    return getTasksWithCards(req, res)
-  }
-
-  return getUserTasks(req, res)
-})
-
 // cards
 router.get('/cards', getAllProjectCards)
 router.get('/cards/search', searchCards)
@@ -34,6 +23,5 @@ router.patch('/cards/:id', updateCard)
 router.delete('/cards/:id', deleteCard)
 router.post('/cards/:id/share', shareCard)
 router.delete('/cards/:id/share/:userId', unshareCard)
-router.get('/project/:projectId/tasks', getAllCardsWithTasks)
 
 export default router
