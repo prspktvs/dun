@@ -2,7 +2,7 @@ import { Avatar } from '@mantine/core'
 import React from 'react'
 import { IUser } from '../../types/User'
 
-export default function AvatarDun({ user, size = 28 }: { user: IUser; size?: number }) {
+export default function AvatarDun({ user, size = 36 }: { user: IUser; size?: number }) {
   const name = user.name.split(' ')
   const initials = name.length > 1 ? name[0].charAt(0) + name[1]?.charAt(0) : name[0].charAt(0)
   return (

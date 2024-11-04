@@ -3,13 +3,14 @@ import Logo from '../ui/Logo'
 import UserPanel from '../User/UserPanel'
 import { useAuth } from '../../context/AuthContext'
 import { useProject } from '../../context/ProjectContext'
-import { SearchIcon } from '../icons'
+import { SearchIcon, RingIcon } from '../icons'
 
 export function ProjectHeader() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
   const { search, setSearch } = useProject()
+  const badgeCount = 5
 
   return (
     <header className='flex justify-between items-center border-b bg-[#edebf3] h-14 border-border-color'>
@@ -26,11 +27,19 @@ export function ProjectHeader() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder='Find it all'
-          className="pl-8 pr-4 py-2 w-full bg-[#edebf3] text-[#969696] text-sm font-normal font-['MonaspaceArgon'] border-none focus:outline-none"
+          className='pl-8 pr-4 py-2 w-full bg-[#edebf3] text-[#969696] text-sm font-normal border-none focus:outline-none'
         />
       </div>
-      <div className='h-full flex items-center p-5'>
-        <UserPanel user={user} />
+      <div className='flex items-center h-full w-48 border-l border-border-color justify-center'>
+        <div className='flex items-center gap-2'>
+          <RingIcon className='w-5 h-5' />
+          <span className="text-[#46434e] text-xs font-normal font-['Monaspace Argon Var'] ml-1">
+            +{badgeCount}
+          </span>
+        </div>
+        <div className='h-full flex items-center p-5'>
+          <UserPanel user={user} />
+        </div>
       </div>
     </header>
   )
