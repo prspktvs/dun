@@ -24,9 +24,7 @@ function SortButton({
       onClick={onClick}
       className={clsx('px-4 py-2 rounded', isActive ? 'bg-grayBg' : 'text-[#969696]')}
     >
-      <span className='text-[#555555] text-xs font-normal font-["Monaspace Argon Var"]'>
-        {children}
-      </span>
+      <span className='text-[#555555] text-xs font-normal font-monaspace'>{children}</span>
     </button>
   )
 }
@@ -79,9 +77,11 @@ export function CardsPage() {
             >
               Date created
             </SortButton>
-            <SortButton onClick={() => setSortType('archived')} isActive={sortType === 'archived'}>
-              Archived
-            </SortButton>
+
+            {/* TODO: Add 'archived' sort option when functionality is available
+<SortButton onClick={() => setSortType('archived')} isActive={sortType === 'archived'}>
+  Archived
+</SortButton> */}
           </div>
 
           <div className='h-full w-48 border-l-1 border-border-color flex items-center justify-center '>

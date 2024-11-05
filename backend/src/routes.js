@@ -23,5 +23,5 @@ router.patch('/cards/:id', updateCard)
 router.delete('/cards/:id', deleteCard)
 router.post('/cards/:id/share', shareCard)
 router.delete('/cards/:id/share/:userId', unshareCard)
-
+router.get('/project/:projectId/tasks', getAllProjectCards)
 export default router

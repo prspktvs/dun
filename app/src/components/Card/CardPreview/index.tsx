@@ -44,7 +44,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
           </div>
         </div>
         <div className='text-lg font-semibold font-rubik not-italic mb-4'>{card.title}</div>
-
         {/* Tasks Preview */}
         <div className='flex-grow overflow-hidden'>
           {tasks.length > 0 ? (
@@ -64,7 +63,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
             </div>
           )}
         </div>
-
         {/* Images Preview */}
         {imageUrls.length > 0 && (
           <div className='mt-5 flex'>
@@ -78,7 +76,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
             )}
           </div>
         )}
-
         {/* User Avatars */}
         <div className='mt-2 flex justify-start items-center gap-2'>
           <AvatarGroup>
@@ -91,5 +88,6 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     </div>
   )
 }
+// TODO: Ask about this logic and confirm if it's correct for change it toAvatarDun component
 
 export default CardPreview
