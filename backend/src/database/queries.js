@@ -121,7 +121,7 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   ORDER BY ${orderBy} DESC
 `
 
-export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
+export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = ` 
   SELECT 
     c.*, 
     json_group_array(
@@ -143,7 +143,7 @@ export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
     c.project_id = ?
   GROUP BY 
     c.id
-`
+` // TODO: queries are separated again, SELECT_ALL_CARDS_BY_IDS for getting files and SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY specially for tasks
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
