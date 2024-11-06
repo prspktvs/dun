@@ -93,17 +93,6 @@ export const SELECT_USER_TASKS_QUERY = `
   WHERE cards.project_id = ? AND tasks.users LIKE ?
 `
 
-export const SELECT_ALL_CARDS_BY_IDS = `
-  SELECT cards.*, 
-    COALESCE((
-      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
-      FROM files WHERE cards.id = files.card_id), '[]') AS files
-  FROM cards 
-  LEFT JOIN files ON cards.id = files.card_id 
-  WHERE cards.project_id = ? AND cards.id in ($IDS) 
-  GROUP BY cards.id
-`
-
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   SELECT cards.*, 
     COALESCE((
@@ -134,16 +123,26 @@ export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
         'priority', t.priority,
         'status', t.status
       )
-    ) AS tasks
+    ) AS tasks,
+    json_group_array(
+      json_object(
+        'id', f.id,
+        'type', f.type,
+        'url', f.url
+      )
+    ) AS files
   FROM 
     cards c
   LEFT JOIN 
     tasks t ON c.id = t.card_id
+  LEFT JOIN 
+    files f ON c.id = f.card_id
   WHERE 
     c.project_id = ?
   GROUP BY 
     c.id
-` // TODO: queries are separated again, SELECT_ALL_CARDS_BY_IDS for getting files and SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY specially for tasks
+
+`
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
