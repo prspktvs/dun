@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+//The project did not start, so I replaced it with an export.
+export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
@@ -39,8 +40,8 @@ module.exports = {
         inactiveText: '#6F6D73',
         paper: '#FAF9F6',
         salad: '#DBF7CA',
-        'primary-text': '#47444F', 
-        'background': '#F9F9F9',    
+        'primary-text': '#47444F',
+        background: '#F9F9F9',
       },
     },
   },
