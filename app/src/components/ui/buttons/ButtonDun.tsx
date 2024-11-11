@@ -12,7 +12,7 @@ export default function ButtonDun({
   onClick: () => void
 }) {
   return (
-    <div className='flex items-center justify-center w-full h-full'>
+    <div className='flex  justify-center w-full h-full'>
       <Button
         className={clsx('font-monaspace bg-[#8279BD] hover:bg-[#8279BD] scale-button', className)}
         radius={0}

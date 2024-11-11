@@ -85,9 +85,9 @@ export function CardsPage() {
 </SortButton> */}
           </div>
 
-          <div className='h-full w-48 border-l-1 border-border-color flex items-center justify-center '>
-            <ButtonDun onClick={onCreateNewCard}>
-              <span className='pr-0 text-xl font-thin'>+</span>Topic
+          <div className='h-full w-48 border-l border-border-color '>
+            <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
+              <span className='pr-1 text-xl font-thin'>+</span>Topic
             </ButtonDun>
           </div>
         </div>
