@@ -37,7 +37,7 @@ export function CustomSlashMenu(props: SuggestionMenuProps<DefaultReactSuggestio
   }
 
   return (
-    <div className='relative overflow-auto border-1 border-black rounded-[8px] p-1 min-w-60 bg-white'>
+    <div className='relative overflow-auto border-1 border-black rounded-[8px] p-1 min-w-60 bg-cloudy'>
       {groups.map((group) => (
         <div className='mb-3'>
           <div className='text-14 font-rubik'>{group}</div>
