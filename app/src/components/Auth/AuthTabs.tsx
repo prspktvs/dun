@@ -23,8 +23,8 @@ function LeftTab({
 }) {
   const toggleTab = () => setTab(isSignUp ? 'login' : 'signup')
   return (
-    <div className='flex h-fit w-1/2'>
-      <div className='flex flex-col flex-1 font-monaspace text-lg'>
+    <div className='hidden sm:flex h-fit w-1/2'>
+      <div className='hidden sm:flex flex-col flex-1 font-monaspace text-lg'>
         <div className='ml-8 mt-5'>
           <div>Hey there!</div>
           <div className='w-[400px] mt-6 h-[30px]'>
@@ -141,36 +141,40 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
 
   return (
     <>
-      <div className='flex border-b-1 font-monaspace'>
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          className='ml-7 my-3 outline-none w-full pr-3'
-          placeholder='Email'
-          type='email'
-        />
-
+      <div className='flex flex-col sm:flex-row border-b-1 font-monaspace'>
         {tab === 'signup' && (
-          <span className='border-l-1 w-full'>
+          <div className='w-full sm:w-auto'>
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
-              className='ml-7 my-3 outline-none'
+              className='w-full ml-7 my-3 outline-none'
               placeholder='Name'
             />
-          </span>
+          </div>
         )}
+        <div className='w-full sm:w-auto'>
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className='w-full ml-7 my-3 outline-none'
+            placeholder='Email'
+            type='email'
+          />
+        </div>
       </div>
-      <div className='flex items-center'>
-        <input
-          className='ml-7 my-3 outline-none w-full font-monaspace'
-          placeholder='Password'
-          type={isPassHidden ? 'password' : 'text'}
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
+
+      <div className='flex flex-col sm:flex-row items-center'>
+        <div className='w-full sm:w-auto'>
+          <input
+            className='w-full ml-7 my-3 outline-none font-monaspace'
+            placeholder='Password'
+            type={isPassHidden ? 'password' : 'text'}
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+        </div>
         <div
-          className='mr-12 flex items-center cursor-pointer'
+          className='mt-3 sm:mt-0 sm:ml-2 flex items-center cursor-pointer'
           onClick={() => setPassHidden((p) => !p)}
         >
           {isPassHidden ? <HideIcon /> : <UnhideIcon />}
@@ -190,7 +194,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       <div className='flex w-full items-center justify-center font-monaspace'>or</div>
       <div className='flex justify-center gap-x-3 font-medium text-[#47444F]'>
         <button
-          className='flex px-4 py-2 border bg-cloudy justify-center items-center gap-x-2 hover:cursor-pointer z-50'
+          className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer z-50'
           onClick={signInWithGoogle}
         >
           <GoogleLogo />
