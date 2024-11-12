@@ -138,7 +138,7 @@ const Card = ({ card, users }: ICardProps) => {
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-14 lg:text-sm',
                   activeTab === 'discussions'
-                    ? 'bg-white text-black'
+                    ? 'bg-cloudy text-black'
                     : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('discussions')}
@@ -154,7 +154,7 @@ const Card = ({ card, users }: ICardProps) => {
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-14 lg:text-sm',
                   activeTab === 'attachments'
-                    ? 'bg-white text-black'
+                    ? 'bg-cloudy text-black'
                     : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('attachments')}
@@ -164,7 +164,7 @@ const Card = ({ card, users }: ICardProps) => {
               <div
                 className={clsx(
                   'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-                  activeTab === 'updates' ? 'bg-white text-black' : 'bg-grayBg text-inactiveText',
+                  activeTab === 'updates' ? 'bg-cloudy text-black' : 'bg-grayBg text-inactiveText',
                 )}
                 onClick={() => setActiveTab('updates')}
               >

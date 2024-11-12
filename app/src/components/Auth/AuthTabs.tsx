@@ -190,7 +190,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       <div className='flex w-full items-center justify-center font-monaspace'>or</div>
       <div className='flex justify-center gap-x-3 font-medium text-[#47444F]'>
         <button
-          className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer z-50'
+          className='flex px-4 py-2 border bg-cloudy justify-center items-center gap-x-2 hover:cursor-pointer z-50'
           onClick={signInWithGoogle}
         >
           <GoogleLogo />
@@ -220,10 +220,10 @@ export default function AuthTabs(props: IAuthTabsProps) {
             {isVerification
               ? 'Email verification'
               : isSignUp
-              ? 'Create an account'
-              : isForgot
-              ? 'Forgot password'
-              : 'Log in'}
+                ? 'Create an account'
+                : isForgot
+                  ? 'Forgot password'
+                  : 'Log in'}
           </div>
           <AuthForm tab={tab} setTab={setTab} />
         </div>

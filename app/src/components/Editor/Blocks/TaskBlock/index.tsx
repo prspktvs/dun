@@ -77,12 +77,12 @@ const PriorityDropdown = ({
             priority === TaskPriority.Low
               ? 'text-priority-low'
               : priority === TaskPriority.Medium
-              ? 'text-priority-medium'
-              : priority === TaskPriority.High
-              ? 'text-priority-high'
-              : priority === TaskPriority.Urgent
-              ? 'text-priority-urgent'
-              : 'text-[#969696]',
+                ? 'text-priority-medium'
+                : priority === TaskPriority.High
+                  ? 'text-priority-high'
+                  : priority === TaskPriority.Urgent
+                    ? 'text-priority-urgent'
+                    : 'text-[#969696]',
           )}
         >
           {priority}
@@ -234,12 +234,12 @@ const TaskBlock = createReactBlockSpec(
                           priority === TaskPriority.Low
                             ? 'text-priority-low'
                             : priority === TaskPriority.Medium
-                            ? 'text-priority-medium'
-                            : priority === TaskPriority.High
-                            ? 'text-priority-high'
-                            : priority === TaskPriority.Urgent
-                            ? 'text-priority-urgent'
-                            : '',
+                              ? 'text-priority-medium'
+                              : priority === TaskPriority.High
+                                ? 'text-priority-high'
+                                : priority === TaskPriority.Urgent
+                                  ? 'text-priority-urgent'
+                                  : '',
                         )}
                       >
                         {priority}
@@ -249,7 +249,7 @@ const TaskBlock = createReactBlockSpec(
                 )}
               </div>
             </Popover.Target>
-            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-white'>
+            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-cloudy'>
               <StatusDropdown
                 status={status}
                 updateStatus={(status) => editor.updateBlock(block, { props: { status } })}

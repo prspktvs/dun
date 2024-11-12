@@ -19,6 +19,7 @@ export default {
         monaspace: ['MonaspaceArgon', 'sans-serif'],
         rubik: ['Rubik', 'sans-serif'],
         commissioner: ['Commissioner', 'sans-serif'],
+        agron: ['Monaspace Argon Var'],
       },
       fontSize: {
         10: '10px',

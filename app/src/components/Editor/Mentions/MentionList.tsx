@@ -54,7 +54,7 @@ export default forwardRef((props, ref) => {
   }))
 
   return (
-    <div className='relative overflow-hidden border-1 border-black rounded-[8px] bg-white'>
+    <div className='relative overflow-hidden border-1 border-black rounded-[8px] bg-cloudy'>
       {suggestions && suggestions?.length > 0 ? (
         suggestions.map((item, index) => (
           <button
