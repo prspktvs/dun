@@ -221,11 +221,11 @@ export default function AuthTabs(props: IAuthTabsProps) {
       <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
         <div className='flex-1  border-l-1 h-full'>
-          <div className='w-full h-[54px] flex items-center text-xl pl-7 font-monospace border-b-1 divide-gray-border font-monaspace'>
+          <div className='w-full h-[54px] flex items-center justify-center text-xl px-7 font-monospace sm:border-b divide-gray-border font-monaspace my-[40px] sm:my-0'>
             {isVerification
               ? 'Email verification'
               : isSignUp
-                ? 'Create an account'
+                ? 'Create account'
                 : isForgot
                   ? 'Forgot password'
                   : 'Log in'}
