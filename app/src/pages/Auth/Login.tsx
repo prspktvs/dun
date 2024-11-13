@@ -20,15 +20,15 @@ export default function AuthPage() {
   }, [isAuthenticated, loading])
 
   return (
-    <div className='h-screen w-screen grid grid-cols-8 grid-rows-12 divide-x-[1px] divide-y-[2px]'>
+    <div className='h-screen w-screen sm:grid sm:grid-cols-8 sm:grid-rows-12 sm:divide-x-[1px] sm:divide-y-[2px] flex flex-col'>
       <div className='row-span-2 sm:row-span-3 hidden sm:block' />
       <div className='col-span-3 row-span-2 sm:row-span-3 hidden sm:block' />
       <div className='col-span-3 row-span-2 sm:row-span-3 hidden sm:block' />
       <div className='row-span-2 sm:row-span-3 hidden sm:block' />
 
       <div />
-      <div className='col-start-2 col-end-8 row-start-3 row-end-3 sm:row-start-4 sm:row-end-4 w-full bg-grayBg h-full flex items-center pl-7 border-b-1 divide-gray-border '>
-        <Logo />
+      <div className='col-start-2 col-end-8 row-start-3 row-end-3 sm:row-start-4 sm:row-end-4 w-full bg-[#EDEBF3] h-[60px] sm:h-auto flex items-center pl-7 border-b divide-gray-border'>
+        <Logo className='w-[80px] h-[32px]' />
       </div>
       <div />
 
