@@ -97,3 +97,12 @@ li {
 .scale-button:active {
   transform: scale(0.85);
 }
+textarea {
+  background-color: #F9F9F9; 
+}
+input {
+  background-color: #F9F9F9;
+}
+.bn-editor {
+  @apply bg-background
+}

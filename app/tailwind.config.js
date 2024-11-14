@@ -5,7 +5,6 @@ export default {
   theme: {
     extend: {
       screens: {
-        screens: {
         sm: '640px',
         md: '768px',
         lg: '1024px',
@@ -30,6 +29,7 @@ export default {
         18: '18px',
       },
       colors: {
+        'textarea-bg': '#F9F9F9',
         'gray-border': '#B0B0B0',
         'border-color': '#C1B9CF',
         priority: {

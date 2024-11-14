@@ -182,7 +182,7 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
       </div>
       <div className='h-14 border-t-1 divide-gray-border'>
         <ButtonDun onClick={tab === 'signup' ? signUp : login}>
-          {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
+          {isLoading ? <Loader /> : tab === 'signup' ? 'Create' : 'Log in'}
         </ButtonDun>
       </div>
       <button
