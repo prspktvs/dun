@@ -1,10 +1,7 @@
-import { ITask } from '../../types/Task'
 import { useState, useEffect, useMemo } from 'react'
 import { isEmpty } from 'lodash'
-
 import { useAuth } from '../../context/AuthContext'
-
-import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
 import { getAllUserProject } from '../../services'
 import { genId } from '../../utils'
@@ -17,7 +14,6 @@ import ProjectSettingsModal from './ProjectSettingsModal'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
-
   const location = useLocation()
   const [isMenuOpened, setMenuOpened] = useState(false)
   const [isSettingsOpened, setSettingsOpened] = useState(false)
@@ -25,6 +21,7 @@ function LeftPanel() {
   const navigate = useNavigate()
 
   const { tasks, cards, project } = useProject()
+  const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
     () =>
@@ -55,9 +52,8 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className=' border-border-color h-14 px-5 w-80 border-b-1 text-3xl  flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
               <span className='font-rubik text-lg '>{project?.title || 'Empty project'}</span>
-
               {isMenuOpened ? (
                 <i className='ri-arrow-down-s-line text-2xl' />
               ) : (
@@ -65,6 +61,7 @@ function LeftPanel() {
               )}
             </nav>
           </Menu.Target>
+
           <Menu.Dropdown>
             <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
             {projects.map((project, idx) => (
@@ -92,7 +89,7 @@ function LeftPanel() {
       </section>
       <nav className='w-full border-b-1 border-border-color px-5 pb-1'>
         <ul>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton
               isActive={location.pathname.endsWith('my-work') && !isSettingsOpened}
               onClick={() => navigate('my-work')}
@@ -100,47 +97,49 @@ function LeftPanel() {
               My work
             </LeftPanelButton>
           </li>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton
               isActive={location.pathname.endsWith(projectId) && !isSettingsOpened}
               onClick={() => navigate(`/${projectId}`)}
             >
-              Topics
+              Topics ・{topicCount}
             </LeftPanelButton>
           </li>
-          <li>
+          <li className='mb-2'>
             <LeftPanelButton isActive={isSettingsOpened} onClick={() => setSettingsOpened(true)}>
               Project settings
             </LeftPanelButton>
           </li>
         </ul>
       </nav>
-      <section className='flex-1 w-full px-5 py-3 overflow-y-scroll pb-12'>
+      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
         <div
           className={clsx(
-            ' border-black flex items-center justify-center w-40 h-6 border-1 mb-3',
-            !isEmpty(tasks) ? 'bg-salad' : 'bg-gray-50',
+            'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
+            !isEmpty(tasks) ? 'bg-[#DBF7CA]' : 'bg-gray-50',
           )}
         >
-          <span className='text-12 font-normal font-monaspace'>
+          <span className='text-[10px] text-[#46434e] font-normal font-monaspace'>
             {!isEmpty(tasks) ? 'New tasks for you' : 'No new tasks for you'}
           </span>
         </div>
+
         {Object.keys(groupedTasksById).map((cardId) => (
-          <div key={'grouped-tasks-card-id-' + cardId}>
-            <div className='text-14 font-bold'>{cardsTitles[cardId]}</div>
-            {groupedTasksById[cardId].map((task, idx) => (
+          <div key={'grouped-tasks-card-id-' + cardId} className='mb-7'>
+            <div className='text-[#46434e] text-sm font-bold mb-3'>{cardsTitles[cardId]}</div>
+            {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
                 onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
-                className='rounded-md p-1 hover:cursor-pointer hover:bg-gray-100'
+                className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
                 <TaskPreview task={task} />
               </div>
             ))}
-            <div className='mb-5' />
           </div>
         ))}
+
+        <div className='text-[#8279bd] text-sm font-semibold font-monaspace pl-1'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>

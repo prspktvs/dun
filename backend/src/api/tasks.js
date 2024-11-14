@@ -1,14 +1,12 @@
-import { allQuery } from '../database/index.js'
-import { SELECT_USER_TASKS_QUERY } from '../database/queries.js'
+import { runQuery, allQuery } from '../database/index.js'
+import { SELECT_USER_TASKS_QUERY, SELECT_TASKS_WITH_CARDS_QUERY } from '../database/queries.js'
 
 export const getUserTasks = async (req, res) => {
   try {
-    const userId = req.query.userId
-    const projectId = req.query.projectId
+    const { userId, projectId, includeCards } = req.query
 
     if (!userId || !projectId) {
-      res.status(400).send('userId and projectId are required')
-      return
+      return res.status(400).send('userId and projectId are required')
     }
 
     const tasks = await allQuery(SELECT_USER_TASKS_QUERY, [projectId, `%${userId}%`])

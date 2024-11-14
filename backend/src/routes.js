@@ -3,18 +3,16 @@ import { getUserTasks } from './api/tasks.js'
 import {
   searchCards,
   createCard,
-  deleteCard,
   getAllProjectCards,
   getCardById,
+  deleteCard,
   updateCard,
   shareCard,
   unshareCard,
+  getAllCardsWithTasks,
 } from './api/cards.js'
 
 const router = express.Router()
-
-// tasks
-router.get('/tasks', getUserTasks)
 
 // cards
 router.get('/cards', getAllProjectCards)

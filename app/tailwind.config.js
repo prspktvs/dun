@@ -39,6 +39,8 @@ module.exports = {
         inactiveText: '#6F6D73',
         paper: '#FAF9F6',
         salad: '#DBF7CA',
+        'primary-text': '#47444F', 
+        'background': '#F9F9F9',    
       },
     },
   },

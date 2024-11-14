@@ -1,4 +1,4 @@
-const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
+export const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   id TEXT PRIMARY KEY,
   title TEXT,
   description TEXT,
@@ -10,7 +10,7 @@ const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   project_id TEXT
 )`
 
-const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
+export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   id TEXT PRIMARY KEY,
   isDone INTEGER,
   text TEXT,
@@ -22,7 +22,7 @@ const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
 
-const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS files (
+export const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS files (
   id TEXT PRIMARY KEY,
   type TEXT,
   url TEXT,
@@ -30,13 +30,13 @@ const CREATE_FILES_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS files (
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
 
-const CREATE_PUSH_TOKENS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS push_tokens (
+export const CREATE_PUSH_TOKENS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS push_tokens (
   id TEXT PRIMARY KEY,
   user_id TEXT,
   subscription TEXT
 )`
 
-const CREATE_MENTIONS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS mentions (
+export const CREATE_MENTIONS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS mentions (
   id TEXT PRIMARY KEY,
   text TEXT,
   user_id TEXT
@@ -59,58 +59,155 @@ export const CREATE_TABLES_QUERIES = [
   CREATE_MENTIONS_TABLE_QUERY,
 ]
 
-export const INSERT_NEW_CARD_QUERY =
-  'INSERT INTO cards (id, title, description, createdAt, chatIds, users, author, project_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+export const INSERT_NEW_CARD_QUERY = `
+  INSERT INTO cards (id, title, description, createdAt, chatIds, users, author, project_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`
 
-export const INSERT_TASK_QUERY = `INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+export const INSERT_TASK_QUERY = `
+  INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`
 
-export const INSERT_FILES_QUERY = `INSERT OR REPLACE INTO files (id, type, url, card_id) VALUES (?, ?, ?, ?)`
+export const INSERT_FILES_QUERY = `
+  INSERT OR REPLACE INTO files (id, type, url, card_id)
+  VALUES (?, ?, ?, ?)
+`
 
-export const INSERT_MENTION_QUERY = `INSERT OR REPLACE INTO mentions (id, text, user_id) VALUES (?, ?, ?)`
+export const INSERT_MENTION_QUERY = `
+  INSERT OR REPLACE INTO mentions (id, text, user_id)
+  VALUES (?, ?, ?)
+`
 
-export const INSERT_NEW_USERS_TO_CARD_QUERY = 'UPDATE cards SET users = ? WHERE id = ?'
+export const INSERT_NEW_USERS_TO_CARD_QUERY = `
+  UPDATE cards SET users = ? WHERE id = ?
+`
 
-export const UPDATE_CARD_QUERY = 'UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?'
+export const UPDATE_CARD_QUERY = `
+  UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?
+`
 
-export const SELECT_USER_TASKS_QUERY = `SELECT tasks.* FROM tasks JOIN cards ON tasks.card_id = cards.id WHERE cards.project_id = ? AND tasks.users LIKE ?`
+export const SELECT_USER_TASKS_QUERY = `
+  SELECT tasks.* FROM tasks
+  JOIN cards ON tasks.card_id = cards.id
+  WHERE cards.project_id = ? AND tasks.users LIKE ?
+`
 
-export const SELECT_ALL_CARDS_BY_IDS = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM  cards LEFT JOIN files ON cards.id = files.card_id WHERE cards.project_id = ? AND cards.id in ($IDS) GROUP BY cards.id`
-export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) =>
-  `SELECT cards.*, 
-          COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) 
-                    FROM files 
-                    WHERE cards.id = files.card_id), '[]') AS files 
-   FROM cards 
-   LEFT JOIN files ON cards.id = files.card_id 
-   WHERE cards.project_id = ? 
-     AND (cards.author = ? OR EXISTS (
-       SELECT 1 
-       FROM json_each(cards.users) 
-       WHERE json_each.value = ?
-     ))
-   GROUP BY cards.id 
-   ORDER BY ${orderBy} DESC`
+export const SELECT_ALL_CARDS_BY_IDS = `
+  SELECT cards.*, 
+    COALESCE((
+      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
+      FROM files WHERE cards.id = files.card_id), '[]') AS files
+  FROM cards 
+  LEFT JOIN files ON cards.id = files.card_id 
+  WHERE cards.project_id = ? AND cards.id in ($IDS) 
+  GROUP BY cards.id
+`
+
+export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
+  SELECT cards.*, 
+    COALESCE((
+      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
+      FROM files WHERE cards.id = files.card_id), '[]') AS files 
+  FROM cards 
+  LEFT JOIN files ON cards.id = files.card_id 
+  WHERE cards.project_id = ? 
+    AND (cards.author = ? OR EXISTS (
+      SELECT 1 
+      FROM json_each(cards.users) 
+      WHERE json_each.value = ?
+    ))
+  GROUP BY cards.id 
+  ORDER BY ${orderBy} DESC
+`
+
+export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
+  SELECT 
+    c.*, 
+    json_group_array(
+      json_object(
+        'id', t.id,
+        'isDone', t.isDone,
+        'text', t.text,
+        'users', t.users,
+        'author', t.author,
+        'priority', t.priority,
+        'status', t.status
+      )
+    ) AS tasks
+  FROM 
+    cards c
+  LEFT JOIN 
+    tasks t ON c.id = t.card_id
+  WHERE 
+    c.project_id = ?
+  GROUP BY 
+    c.id
+`
+
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
 
 export const SELECT_CARD_BY_CHAT_ID = 'SELECT * FROM cards WHERE chatIds LIKE ?'
 
-export const SELECT_CARD_WITH_FILES_QUERY = `SELECT cards.*, COALESCE((SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url)) FROM files WHERE cards.id = files.card_id), '[]') AS files FROM cards WHERE cards.id = ?`
+export const SELECT_CARD_WITH_FILES_QUERY = `
+  SELECT cards.*, 
+    COALESCE((
+      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
+      FROM files WHERE cards.id = files.card_id), '[]') AS files 
+  FROM cards 
+  WHERE cards.id = ?
+`
 
-export const SELECT_ALL_CARD_TASKS_QUERY = `SELECT * FROM tasks WHERE card_id = ?`
+export const SELECT_ALL_CARD_TASKS_QUERY = 'SELECT * FROM tasks WHERE card_id = ?'
 
-export const SELECT_MENTIONS_QUERY = (placeholders) =>
-  `SELECT * FROM mentions WHERE id IN (${placeholders})`
+export const SELECT_TASKS_WITH_CARDS_QUERY = `
+  SELECT 
+    tasks.id AS task_id, 
+    tasks.isDone, 
+    tasks.text AS task_text, 
+    tasks.priority, 
+    tasks.status, 
+    tasks.author AS task_author, 
+    tasks.users AS task_users, 
+    cards.id AS card_id, 
+    cards.title AS card_title, 
+    cards.description AS card_description, 
+    cards.createdAt AS card_createdAt, 
+    cards.updatedAt AS card_updatedAt, 
+    cards.chatIds AS card_chatIds, 
+    cards.users AS card_users, 
+    cards.author AS card_author, 
+    cards.project_id AS card_project_id
+  FROM 
+    tasks 
+  JOIN 
+    cards ON tasks.card_id = cards.id 
+  WHERE 
+    cards.project_id = ?
+`
 
-export const DELETE_UNUSED_TASKS_QUERY = (placeholders) =>
-  `DELETE FROM tasks WHERE id IN (${placeholders})`
+export const SELECT_MENTIONS_QUERY = (placeholders) => `
+  SELECT * FROM mentions WHERE id IN (${placeholders})
+`
 
-export const DELETE_UNUSED_FILES_QUERY = (placeholders) =>
-  `DELETE FROM files WHERE id IN (${placeholders})`
+export const DELETE_UNUSED_TASKS_QUERY = (placeholders) => `
+  DELETE FROM tasks WHERE id IN (${placeholders})
+`
+
+export const DELETE_UNUSED_FILES_QUERY = (placeholders) => `
+  DELETE FROM files WHERE id IN (${placeholders})
+`
 
 export const DELETE_CARD_QUERY = 'DELETE FROM cards WHERE id = ?'
 
-export const SAVE_PUSH_TOKEN =
-  'INSERT OR REPLACE INTO push_tokens (id, user_id, subscription) VALUES (?, ?, ?)'
-export const DELETE_PUSH_TOKEN = 'DELETE FROM push_tokens WHERE user_id = ? AND id = ?'
+export const SAVE_PUSH_TOKEN = `
+  INSERT OR REPLACE INTO push_tokens (id, user_id, subscription)
+  VALUES (?, ?, ?)
+`
+
+export const DELETE_PUSH_TOKEN = `
+  DELETE FROM push_tokens WHERE user_id = ? AND id = ?
+`
+
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'
