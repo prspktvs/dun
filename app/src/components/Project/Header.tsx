@@ -33,7 +33,7 @@ export function ProjectHeader() {
       <div className='flex px-7 py-2 items-center h-full w-48 border-l border-border-color  justify-center '>
         {/* <div className='flex items-center gap-4'>
           <RingIcon className='w-5 h-5' />
-          <span className="text-[#46434e] text-xs font-normal font-['Monaspace Argon Var'] ml-1">
+          <span className="text-[#46434e] text-xs font-normal font-monaspace ml-1">
           </span>
         </div> */}
         <div className='h-full flex items-center p-5'>

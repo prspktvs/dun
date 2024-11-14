@@ -7,8 +7,6 @@ const headers = {
 
 export async function apiRequest<T>(url: string, options: RequestInit = {}): Promise<T> {
   try {
-
-
     const res = await fetch(API_HOST + '/api/' + url, { headers, ...options })
     
     if (!res.ok) {

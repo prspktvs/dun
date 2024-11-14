@@ -137,32 +137,6 @@ export const SELECT_CARD_WITH_FILES_QUERY = `
 
 export const SELECT_ALL_CARD_TASKS_QUERY = 'SELECT * FROM tasks WHERE card_id = ?'
 
-export const SELECT_TASKS_WITH_CARDS_QUERY = `
-  SELECT 
-    tasks.id AS task_id, 
-    tasks.isDone, 
-    tasks.text AS task_text, 
-    tasks.priority, 
-    tasks.status, 
-    tasks.author AS task_author, 
-    tasks.users AS task_users, 
-    cards.id AS card_id, 
-    cards.title AS card_title, 
-    cards.description AS card_description, 
-    cards.createdAt AS card_createdAt, 
-    cards.updatedAt AS card_updatedAt, 
-    cards.chatIds AS card_chatIds, 
-    cards.users AS card_users, 
-    cards.author AS card_author, 
-    cards.project_id AS card_project_id
-  FROM 
-    tasks 
-  JOIN 
-    cards ON tasks.card_id = cards.id 
-  WHERE 
-    cards.project_id = ?
-`
-
 export const SELECT_MENTIONS_QUERY = (placeholders) => `
   SELECT * FROM mentions WHERE id IN (${placeholders})
 `

@@ -1,12 +1,13 @@
 import { isEmpty } from 'lodash'
-import { Image, Avatar, AvatarGroup } from '@mantine/core'
+import { Image } from '@mantine/core'
 import { useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import AvatarDun from '../../ui/Avatar'
+import { useProject } from '../../../context/ProjectContext'
 
-import { ICard, IUser } from '../../../types/Card'
+import { ICard } from '../../../types/Card'
 import TaskPreview from '../../Task/TaskPreview'
 import { MessageIcon, UpdateIcon } from '../../icons'
-
 
 const MAX_IMAGES = 4
 const MAX_TASKS = 4
@@ -17,6 +18,7 @@ interface ICardPreviewProps {
 }
 
 function CardPreview({ card, onClick }: ICardPreviewProps) {
+  const { users: projectUsers } = useProject()
   const imageUrls = useMemo(
     () =>
       card?.files
@@ -24,6 +26,11 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         .slice(0, MAX_IMAGES)
         .map((file) => file.url) ?? [],
     [card?.files],
+  )
+
+  const users = useMemo(
+    () => projectUsers?.filter((user) => card.users?.includes(user.id)) ?? [],
+    [card?.users, projectUsers],
   )
 
   const tasks = useMemo(() => card?.tasks?.slice(0, MAX_TASKS) ?? [], [card?.tasks])
@@ -51,9 +58,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         <div className='flex-grow overflow-hidden'>
           {!isEmpty(tasks) ? (
             <div className='flex› flex-col gap-3'>
-              {tasks?.map((task) => (
-                <TaskPreview key={task.id} task={task} />
-              ))}
+              {tasks?.map((task) => <TaskPreview key={task.id} task={task} />)}
               {taskCountExcess > 0 && (
                 <span className='ml-3 flex items-center h-full underline text-sm'>
                   +{taskCountExcess}
@@ -61,7 +66,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
               )}
             </div>
           ) : (
-            <div className='text-[#46434e] text-sm font-normal font-["Rubik"] leading-tight overflow-hidden'>
+            <div className='text-[#46434e] text-sm font-normal font-rubik leading-tight overflow-hidden'>
               {card.description?.slice(0, 2).join(' ')}
             </div>
           )}
@@ -80,17 +85,17 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
           </div>
         )}
         {/* User Avatars */}
-        <div className='mt-2 flex justify-start items-center gap-2'>
-          <AvatarGroup>
-            {(card.users as IUser[])?.map((user) => (
-              <Avatar key={user.id} src={user.avatarUrl} alt={user.name} radius='xl' size='sm' />
-            ))}
-          </AvatarGroup>
+        {/* TODO: make the display of avatars as in the design */}
+        <div className='mt-2 flex justify-start items-center gap-1'>
+          {!isEmpty(users)
+            ? users?.map((user) => (
+                <AvatarDun key={'card-user-' + card.id + user.id} user={user} size={28} />
+              ))
+            : null}
         </div>
       </div>
     </div>
   )
 }
-// TODO: Ask about this logic and confirm if it's correct for change it toAvatarDun component
 
 export default CardPreview
