@@ -14,9 +14,7 @@ import {
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
-import suggestion from './Mentions/suggestion'
 import { Loader as MantineLoader } from '@mantine/core'
-import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
 import {
@@ -27,11 +25,14 @@ import {
   defaultStyleSpecs,
   filterSuggestionItems,
 } from '@blocknote/core'
-import { ICard } from '../../types/Card'
-import { IUser } from '../../types/User'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { Alert } from '@mantine/core'
+
+import { IUser } from '../../types/User'
+import { ICard } from '../../types/Card'
+import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
+import suggestion from './Mentions/suggestion'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
 import { useChats } from '../../context/ChatContext'

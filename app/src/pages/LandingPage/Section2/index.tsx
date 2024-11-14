@@ -1,8 +1,10 @@
 import React from 'react'
+
 import Rectangles from '/assets/landing/rectangles.svg'
 import Squares from '/assets/landing/squares.svg'
 import Plaid from '/assets/landing/plaid.svg'
 import Lines from '/assets/landing/lines.svg'
+
 import FeatureCard from './FeatureCard'
 
 interface IFeatureCard {

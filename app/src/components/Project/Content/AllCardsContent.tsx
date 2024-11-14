@@ -1,16 +1,17 @@
-import ProjectUsers from '../../User/ProjectUsers'
 import { Button } from '@mantine/core'
 import { isEmpty } from 'lodash'
+import { useNavigate, useParams } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
+
+import ProjectUsers from '../../User/ProjectUsers'
 import Card from '../../Card'
 import { IUser } from '../../../types/User'
 import { ICard } from '../../../types/Card'
 import CardPreview from '../../Card/CardPreview'
-import { useNavigate, useParams } from 'react-router'
-import { useEffect, useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiArrowRightSLine, UnreadMarker } from '../../icons'
 import ButtonDun from '../../ui/buttons/ButtonDun'
 import { ISearchResult } from '../../components/ui/Search'
-import clsx from 'clsx'
 import { useProject } from '../../../context/ProjectContext'
 
 function SortButton({

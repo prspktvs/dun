@@ -1,18 +1,18 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { db, realtimeDb } from '../../config/firebase'
 import { onValue, push, ref, set, get } from '@firebase/database'
 import { collection, doc, getDoc } from '@firebase/firestore'
-import { useAuth } from '../../context/AuthContext'
-import { IUser } from '../../types/User'
 import { Avatar } from '@mantine/core'
 import { isEmpty } from 'lodash'
-import { saveChatAndMessage } from '../../services'
 import { useParams } from 'react-router-dom'
+import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
+
+import { db, realtimeDb } from '../../config/firebase'
+import { useAuth } from '../../context/AuthContext'
+import { IUser } from '../../types/User'
+import { saveChatAndMessage } from '../../services'
 import { useChats } from '../../context/ChatContext'
 import { IMessage } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
-
-import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 import { useProject } from '../../context/ProjectContext'
 import suggestion from '../Editor/Mentions/suggestion'
 import AvatarDun from '../ui/Avatar'
@@ -94,7 +94,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const handleMessageSend = async () => {
     if (newMessage === '') return alert('Message cannot be empty')
 
-    let mentions: string[] = []
+    const mentions: string[] = []
     newMessage.split(mentionsPattern).forEach((part, index) => {
       if (index % 3 === 1) {
         const id = newMessage.split(mentionsPattern)[index + 1]

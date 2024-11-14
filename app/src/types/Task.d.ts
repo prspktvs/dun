@@ -1,4 +1,5 @@
 import { PartialBlock } from '@blocknote/core'
+
 import { IUser } from './User'
 
 export enum TaskStatus {

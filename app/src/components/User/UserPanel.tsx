@@ -1,4 +1,5 @@
 import { Avatar, Button, Menu } from '@mantine/core'
+
 import { IUser } from '../../types/User'
 import { useAuth } from '../../context/AuthContext'
 import AvatarDun from '../ui/Avatar'

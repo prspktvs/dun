@@ -1,12 +1,12 @@
 import { Avatar, Blockquote, Menu } from '@mantine/core'
+import { isEmpty } from 'lodash'
+import { useCallback, useEffect, useState } from 'react'
+import clsx from 'clsx'
+
 import { IChat, IMessage } from '../../types/Chat'
 import { IUser } from '../../types/User'
-import { isEmpty } from 'lodash'
 import { useChats } from '../../context/ChatContext'
-import { useCallback, useEffect, useState } from 'react'
 import { useEditor } from '../../context/EditorContext'
-
-import clsx from 'clsx'
 import { renderMessage } from './Chat'
 import AvatarDun from '../ui/Avatar'
 import UnreadIndicator from '../ui/UnreadIndicator'

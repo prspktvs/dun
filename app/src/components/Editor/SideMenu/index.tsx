@@ -1,10 +1,11 @@
 import { AddBlockButton, DragHandleButton, SideMenu, SideMenuProps } from '@blocknote/react'
 import { Button } from '@mantine/core'
-import { useChats } from '../../../context/ChatContext'
-import { createNewChat, saveChatAndMessage } from '../../../services'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import clsx from 'clsx'
+
+import { createNewChat, saveChatAndMessage } from '../../../services'
+import { useChats } from '../../../context/ChatContext'
 
 export default function CustomSideMenu(props: SideMenuProps) {
   const { id: projectId, cardId } = useParams()

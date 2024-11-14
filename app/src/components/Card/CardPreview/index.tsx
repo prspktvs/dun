@@ -1,10 +1,12 @@
 import { isEmpty } from 'lodash'
-import { ICard, IUser } from '../../../types/Card'
 import { Image, Avatar, AvatarGroup } from '@mantine/core'
-import TaskPreview from '../../Task/TaskPreview'
-import { MessageIcon, UpdateIcon } from '../../icons'
 import { useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
+import { ICard, IUser } from '../../../types/Card'
+import TaskPreview from '../../Task/TaskPreview'
+import { MessageIcon, UpdateIcon } from '../../icons'
+
 
 const MAX_IMAGES = 4
 const MAX_TASKS = 4

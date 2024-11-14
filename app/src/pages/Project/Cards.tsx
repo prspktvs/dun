@@ -1,10 +1,11 @@
 import clsx from 'clsx'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useProject } from '../../context/ProjectContext'
 import { useEffect, useState } from 'react'
+import { isEmpty } from 'lodash'
+
+import { useProject } from '../../context/ProjectContext'
 import { ICard } from '../../types/Card'
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
-import { isEmpty } from 'lodash'
 import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'

@@ -1,6 +1,5 @@
 import { BlockNoteEditor } from '@blocknote/core'
 import { createContext, useContext } from 'react'
-
 import { useState } from 'react'
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {

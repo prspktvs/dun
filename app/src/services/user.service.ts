@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import firebase from 'firebase/compat/app'
+
 import { db } from '../config/firebase'
 import { IUser } from '../types/User'
 

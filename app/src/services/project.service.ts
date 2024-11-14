@@ -1,4 +1,5 @@
 import { getFirestore, collection, doc, deleteDoc, setDoc, getDoc, getDocs } from 'firebase/firestore'
+
 import { IProject } from '../types/Project'
 import { IUser } from '../types/User'
 import { db } from '../config/firebase'

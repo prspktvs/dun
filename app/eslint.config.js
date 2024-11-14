@@ -11,6 +11,7 @@ const languageOptions = {
   globals: {
     ...globals.node,
     ...globals.jest,
+    ...globals.browser,
   },
   ecmaVersion: 'latest',
   sourceType: 'module',
@@ -51,6 +52,16 @@ export default [
         },
       ],
       semi: ['error', 'never'],
+      'no-useless-escape': 'off',
+      'no-empty': 'off',
+      'no-prototype-builtins': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ]

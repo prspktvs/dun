@@ -1,10 +1,11 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { isEmpty } from 'lodash'
+import { useNavigate } from 'react-router-dom'
+
 import { ICard } from '../../types/Card'
 import Card from '../../components/Card'
-import { isEmpty } from 'lodash'
 import CreateProject from '../../components/Project/CreateProject'
-import { useNavigate } from 'react-router-dom'
 import CreateUser from '../../components/User/CreateUser'
 import { addUserToProject, getProjectCards } from '../../services'
 import { useAuth } from '../../context/AuthContext'
@@ -16,9 +17,7 @@ import { ProjectProvider, useProject } from '../../context/ProjectContext'
 import { useSearch } from '../../components/ui/Search'
 import LeftPanel from '../../components/Project/LeftPanel'
 
-interface IProjectPageProps {}
-
-const Project = (props: IProjectPageProps) => {
+const Project = () => {
   const { id: projectId = '', cardId } = useParams()
   const { user } = useAuth()
   const [searchText, setSearchText] = useState('')

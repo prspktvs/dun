@@ -1,8 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom'
+import { useMemo, useState } from 'react'
+
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
 import { genId } from '../../utils'
 import { useProject } from '../../context/ProjectContext'
-import { useMemo, useState } from 'react'
 import TaskPreview from '../../components/Task/TaskPreview'
 import { ITask, TaskPriority } from '../../types/Task.d.ts'
 import { Minus, Plus } from '../../components/icons'

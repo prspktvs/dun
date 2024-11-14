@@ -1,4 +1,6 @@
 import React from 'react'
+import { Navigate } from 'react-router-dom'
+
 import Logo from '../../components/ui/Logo'
 import LineSection from './LineSection/LineSection'
 import Section2 from './Section2'
@@ -7,7 +9,6 @@ import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
 import { Hamburger } from '../../components/icons'
 import { useAuth } from '../../context/AuthContext'
-import { Navigate } from 'react-router-dom'
 
 function LandingPage() {
   const { user } = useAuth()

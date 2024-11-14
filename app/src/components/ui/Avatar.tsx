@@ -1,5 +1,6 @@
 import { Avatar } from '@mantine/core'
 import React from 'react'
+
 import { IUser } from '../../types/User'
 
 export default function AvatarDun({ user, size = 36 }: { user: IUser; size?: number }) {
