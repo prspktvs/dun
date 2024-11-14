@@ -1,14 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-//The project did not start, so I replaced it with an export.
-export default {
+module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       screens: {
-        screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
+        'h-sm': { raw: '(min-height: 400px)' },
+        'h-md': { raw: '(min-height: 750px)' },
+        'h-lg': { raw: '(min-height: 1000px)' },
       },
       borderWidth: {
         '1': '1px',
@@ -20,7 +18,6 @@ export default {
         monaspace: ['MonaspaceArgon', 'sans-serif'],
         rubik: ['Rubik', 'sans-serif'],
         commissioner: ['Commissioner', 'sans-serif'],
-        agron: ['Monaspace Argon Var'],
       },
       fontSize: {
         10: '10px',

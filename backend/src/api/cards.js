@@ -5,7 +5,6 @@ import {
   SELECT_ALL_CARDS_BY_PROJECTID_QUERY,
   SELECT_CARD_BY_ID_QUERY,
   INSERT_NEW_USERS_TO_CARD_QUERY,
-  SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY,
 } from '../database/queries.js'
 import { searchDocuments } from '../utils/typesense.js'
 
@@ -15,6 +14,7 @@ function deserializeCard(card) {
     description: JSON.parse(card?.description),
     chatIds: JSON.parse(card?.chatIds),
     files: JSON.parse(card?.files || '[]'),
+    tasks: JSON.parse(card?.tasks || '[]'),
     users: JSON.parse(card?.users || '[]'),
   }
 }
@@ -163,20 +163,5 @@ export const unshareCard = async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(500).send('Internal server error')
-  }
-}
-
-export const getAllCardsWithTasks = async (req, res) => {
-  try {
-    const projectId = req.params.projectId
-    const data = await allQuery(SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY, [projectId])
-    const cardsWithTasks = data.map((card) => ({
-      ...card,
-      tasks: JSON.parse(card.tasks || '[]'),
-    }))
-    res.json(cardsWithTasks)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Error retrieving cards', error })
   }
 }

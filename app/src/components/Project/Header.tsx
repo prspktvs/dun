@@ -11,7 +11,6 @@ export function ProjectHeader() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { search, setSearch } = useProject()
-  // const badgeCount = 5
 
   return (
     <header className='flex justify-between items-center border-b bg-[#edebf3] h-14 border-border-color'>
@@ -32,12 +31,11 @@ export function ProjectHeader() {
         />
       </div>
       <div className='flex px-7 py-2 items-center h-full w-48 border-l border-border-color  justify-center '>
-        <div className='flex items-center gap-4'>
+        {/* <div className='flex items-center gap-4'>
           <RingIcon className='w-5 h-5' />
           <span className="text-[#46434e] text-xs font-normal font-['Monaspace Argon Var'] ml-1">
-            {/* +{badgeCount} */}
           </span>
-        </div>
+        </div> */}
         <div className='h-full flex items-center p-5'>
           <UserPanel user={user} />
         </div>

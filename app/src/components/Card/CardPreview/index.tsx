@@ -27,6 +27,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
   )
 
   const tasks = useMemo(() => card?.tasks?.slice(0, MAX_TASKS) ?? [], [card?.tasks])
+
   const taskCountExcess = (card?.tasks?.length || 0) - MAX_TASKS
 
   const createdAt = new Date(card.createdAt)
@@ -48,9 +49,9 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         <div className='text-lg font-semibold font-rubik not-italic mb-4'>{card.title}</div>
         {/* Tasks Preview */}
         <div className='flex-grow overflow-hidden'>
-          {tasks.length > 0 ? (
-            <div className='flex flex-col gap-3'>
-              {tasks.map((task) => (
+          {!isEmpty(tasks) ? (
+            <div className='flex› flex-col gap-3'>
+              {tasks?.map((task) => (
                 <TaskPreview key={task.id} task={task} />
               ))}
               {taskCountExcess > 0 && (
