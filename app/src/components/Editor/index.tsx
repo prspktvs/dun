@@ -1,20 +1,13 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  BasicTextStyleButton,
-  BlockTypeSelect,
-  blockTypeSelectItems,
-  FileCaptionButton,
-  FormattingToolbar,
-  FormattingToolbarController,
   SideMenuController,
   SuggestionMenuController,
-  TextAlignButton,
   useCreateBlockNote,
 } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
-import { Loader as MantineLoader } from '@mantine/core'
+import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
 import { debounce } from 'lodash'
 import {
@@ -27,7 +20,6 @@ import {
 } from '@blocknote/core'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
-import { Alert } from '@mantine/core'
 
 import { IUser } from '../../types/User'
 import { ICard } from '../../types/Card'

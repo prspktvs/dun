@@ -1,7 +1,6 @@
-import { useParams } from 'react-router-dom'
+import { useParams , useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
-import { useNavigate } from 'react-router-dom'
 
 import { ICard } from '../../types/Card'
 import Card from '../../components/Card'
