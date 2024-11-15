@@ -53,7 +53,7 @@ app.ws('/updates', (ws, req) => {
   const projectId = req.query.projectId
 
   clients.push({ ws, userId, projectId })
-  presence[userId] = clients[client.length - 1]
+  presence[userId] = clients[clients.length - 1]
 
   ws.on('close', () => {
     clients.splice(clients.indexOf(ws), 1)
@@ -66,9 +66,9 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
-const sentPushToChat = getSendPushToChatFn(sendNotification)
+const sendPushToChat = getSendPushToChatFn(sendNotification)
 
-app.post('/internal/chat/:chatId', sentPushToChat)
+app.post('/internal/chat/:chatId', sendPushToChat)
 
 export function sendMessageToUser(userId, message) {
   // @TODO: add all other types of notifications
