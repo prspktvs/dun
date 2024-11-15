@@ -42,6 +42,9 @@ function LeftPanel() {
 
   const goToProject = (id) => navigate(`/${id}`, { replace: true })
 
+  const projectCount = projects.length
+  const otherProjectsCount = projectCount > 1 ? projectCount - 1 : 0
+
   return (
     <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
       <section>
@@ -53,13 +56,29 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex justify-between items-center hover:cursor-pointer hover:bg-gray-100'>
-              <span className='font-rubik text-lg '>{project?.title || 'Empty project'}</span>
-              {isMenuOpened ? (
-                <i className='ri-arrow-down-s-line text-2xl' />
-              ) : (
-                <i className='ri-arrow-right-s-line text-2xl' />
-              )}
+            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
+              {/* Overproject section */}
+              <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
+                <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
+                  and
+                  <span className='font-bold mr-1 ml-1' id='project-count'>
+                    {otherProjectsCount}
+                  </span>
+                  other projects
+                </span>
+              </div>
+
+              {/* Project title section */}
+              <div className='flex justify-between items-center w-full gap-4'>
+                <span className='text-[#46434e] text-lg font-medium font-argon'>
+                  {project?.title || 'Empty project'}
+                </span>
+                {isMenuOpened ? (
+                  <i className='ri-arrow-down-s-line text-2xl' />
+                ) : (
+                  <i className='ri-arrow-right-s-line text-2xl' />
+                )}
+              </div>
             </nav>
           </Menu.Target>
 

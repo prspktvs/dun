@@ -23,4 +23,6 @@ bun.lockb
 
 # local sqlite database
 sqlite.db
+sqlite.db-shm
+sqlite.db-wal
 *key.json

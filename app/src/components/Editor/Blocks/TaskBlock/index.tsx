@@ -252,7 +252,7 @@ const TaskBlock = createReactBlockSpec(
                 )}
               </div>
             </Popover.Target>
-            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-white'>
+            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-cloudy'>
               <StatusDropdown
                 status={status}
                 updateStatus={(status) => editor.updateBlock(block, { props: { status } })}

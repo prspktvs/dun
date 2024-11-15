@@ -201,7 +201,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           forceSuggestionsAboveCursor={true}
         >
           <Mention
-            className='relative mention z-10 bg-white top-[1px] text-[15.5px] px-[1px]'
+            className='relative mention z-10 bg-cloudy top-[1px] text-[15.5px] px-[1px]'
             style={{ fontWeight: 600 }}
             trigger='@'
             data={
