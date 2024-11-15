@@ -1,11 +1,12 @@
-import { db } from '../config/firebase'
-import { IUser } from '../types/User'
 import {
   getDocs,
   collectionGroup,
   where,
   query,
 } from 'firebase/firestore'
+
+import { db } from '../config/firebase'
+import { IUser } from '../types/User'
 import { extractCardPath } from '../utils'
 import { ITask } from '../types/Task'
 import { apiRequest } from '../utils/api'

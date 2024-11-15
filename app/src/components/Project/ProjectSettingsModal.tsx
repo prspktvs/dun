@@ -1,14 +1,14 @@
 import { Button, CopyButton } from '@mantine/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { debounce , isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
+import clsx from 'clsx'
+
 import ButtonDun from '../ui/buttons/ButtonDun'
-import { debounce } from 'lodash'
-import { isEmpty } from 'lodash'
 import { useProject } from '../../context/ProjectContext'
 import AvatarDun from '../ui/Avatar'
-import { useParams } from 'react-router-dom'
 import { DUN_URL } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
-import clsx from 'clsx'
 import { Modal } from '../ui/modals/Modal'
 
 export default function ProjectSettingsModal({

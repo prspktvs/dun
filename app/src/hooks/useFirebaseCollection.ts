@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCollection, useCollectionData } from 'react-firebase-hooks/firestore'
 import { collection, getDocs } from 'firebase/firestore'
+
 import { db } from '../config/firebase'
 import { ITask } from '../types/Task'
 

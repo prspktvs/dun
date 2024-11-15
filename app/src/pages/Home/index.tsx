@@ -1,7 +1,8 @@
 import { Button } from '@mantine/core'
 import React from 'react'
-import { genId } from '../../utils'
 import { useNavigate } from 'react-router-dom'
+
+import { genId } from '../../utils'
 import { useAuth } from '../../context/AuthContext'
 
 function HomePage() {

@@ -1,8 +1,11 @@
-module.exports = {
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+
+export default {
   plugins: {
     'tailwindcss/nesting': 'postcss-nesting',
-    tailwindcss: require('tailwindcss'),
-    autoprefixer: require('autoprefixer'),
+    tailwindcss: tailwindcss,
+    autoprefixer: autoprefixer,
     'postcss-preset-env': {
       features: { 'nesting-rules': false },
     },

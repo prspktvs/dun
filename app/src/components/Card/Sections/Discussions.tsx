@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
+import clsx from 'clsx'
+
 import { Chat } from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
 import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services'
-import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
 import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
-import clsx from 'clsx'
+
 
 function AddNewChat({ onClick }) {
   return (

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { set } from 'lodash'
+
 import { Tab } from '../../pages/Auth/Login'
 import Logo from '../ui/Logo'
 import { AppleLogo, GoogleLogo, HideIcon, UnhideIcon } from '../icons'
 import { useAuth } from '../../context/AuthContext'
-import { set } from 'lodash'
 import { notifyError } from '../../utils/notifications'
 import { FILL_ALL_FIELDS_MESSAGE } from '../../constants/messages'
 import ButtonDun from '../ui/buttons/ButtonDun'

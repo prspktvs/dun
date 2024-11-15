@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Navigate, Outlet, useParams } from 'react-router-dom'
+
 import { ProjectHeader } from './Header'
 import LeftPanel from './LeftPanel'
-import { Navigate, Outlet, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
 import CreateProject from './CreateProject'

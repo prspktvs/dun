@@ -1,5 +1,6 @@
 import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
 import { useState } from 'react'
+
 import { IProject } from '../../types/Project'
 import { createProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'

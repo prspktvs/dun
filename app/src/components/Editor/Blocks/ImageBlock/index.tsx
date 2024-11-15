@@ -2,6 +2,10 @@ import {
   BlockFromConfig,
   BlockNoteEditor,
   createAddFileButton,
+  InlineContentSchema,
+  StyleSchema,
+  BlockSchema,
+  BlockNoteSchema,
   createBlockSpec,
   imageBlockConfig,
   imageParse,
@@ -11,8 +15,9 @@ import {
 
 const ImageBlock = createBlockSpec(imageBlockConfig, {
   render: (
-    block: BlockFromConfig<typeof imageBlockConfig, any, any>,
-    editor: BlockNoteEditor<any, any, any>,
+    block: BlockFromConfig<typeof imageBlockConfig, InlineContentSchema, StyleSchema>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    editor: BlockNoteEditor<any, InlineContentSchema, StyleSchema>,
   ) => {
     const { dom, destroy } = imageRender(block, editor)
 

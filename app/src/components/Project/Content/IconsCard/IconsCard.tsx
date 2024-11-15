@@ -31,4 +31,4 @@ export const RiArrowDown = () => (
         />
       </g>
     </svg>
-  );
+  )

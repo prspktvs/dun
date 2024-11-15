@@ -10,10 +10,11 @@ import {
   getDefaultReactSlashMenuItems,
   SuggestionMenuProps,
 } from '@blocknote/react'
+import { useMemo } from 'react'
+
 import { insertOrUpdateBlock } from '../../../utils/editor'
 import ImageBlock from '../Blocks/ImageBlock'
 import TaskBlock from '../Blocks/TaskBlock'
-import { useMemo } from 'react'
 
 const EXCLUDED_KEYS = ['Check List', 'Image', 'Emoji']
 
