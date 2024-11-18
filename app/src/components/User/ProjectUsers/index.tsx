@@ -1,9 +1,10 @@
 import { Avatar, Tooltip } from '@mantine/core'
 import { isEmpty } from 'lodash'
+import { useMemo } from 'react'
+
 import { IUser } from '../../../types/User'
 import AvatarDun from '../../ui/Avatar'
 import { useProject } from '../../../context/ProjectContext'
-import { useMemo } from 'react'
 
 function ProjectUsers() {
   const { users } = useProject()

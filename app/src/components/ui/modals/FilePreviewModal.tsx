@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Image } from '@mantine/core'
-import { IFile } from '../../../types/File'
 import { isEmpty } from 'lodash'
+
+import { IFile } from '../../../types/File'
 import { RiArrowLeftSLine, RiArrowRightSLine, Minus, Plus, DownloadIcon } from '../../icons'
 
 interface IAttachmentsProps {

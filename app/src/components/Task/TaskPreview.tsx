@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+
 import { useProject } from '../../context/ProjectContext'
 import { ITask, TaskPriority } from '../../types/Task.d.ts'
 

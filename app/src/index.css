@@ -7,7 +7,6 @@
   font-style: normal;
 }
 
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 

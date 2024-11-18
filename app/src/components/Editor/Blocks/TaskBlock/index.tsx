@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { BlockSchema, defaultProps, PartialBlock, PropSchema } from '@blocknote/core'
 import { createReactBlockSpec } from '@blocknote/react'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { insertOrUpdateBlock } from '../../../../utils/editor'
 import { Group, Menu, Popover } from '@mantine/core'
-import { ITask, TaskPriority, TaskStatus } from '../../../../types/Task.d.ts'
 import clsx from 'clsx'
+
+import { insertOrUpdateBlock } from '../../../../utils/editor'
+import { ITask, TaskPriority, TaskStatus } from '../../../../types/Task.d.ts'
 import { useProject } from '../../../../context/ProjectContext'
 import { IUser } from '../../../../types/User'
 import { useAuth } from '../../../../context/AuthContext'
@@ -187,6 +189,7 @@ const TaskBlock = createReactBlockSpec(
                 } as PartialBlock<BlockSchema>)
                 return
               }
+              return
             case 'Backspace':
               isNextBlockTask.current = false
               return

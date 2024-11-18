@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../../context/AuthContext'
 import { Button } from '@mantine/core'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+
+import { useAuth } from '../../context/AuthContext'
 import { AuthTabs } from '../../components/Auth'
 import Logo from '../../components/ui/Logo'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+
 
 export type Tab = 'login' | 'signup' | 'verification' | 'forgot'
 

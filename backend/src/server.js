@@ -12,12 +12,12 @@ import { getSendPushToChatFn } from './api/chats.js'
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
 }
+
 // @TODO: move to redis
 const presence = {}
 
 const app = express()
 expressWs(app)
-
 const hocusPocusServer = HocusPocusServer.configure({
   onStoreDocument: async (data) =>
     onStoreDocument({ data, broadcast: { sendMessageToProject, sendMessageToUser } }),
@@ -25,14 +25,15 @@ const hocusPocusServer = HocusPocusServer.configure({
     const { token } = data
 
     // @TODO: verify token https://firebase.google.com/docs/auth/admin/verify-id-tokens#web
-    return { user: parseJwt(token) }
+    return {
+      user: parseJwt(token),
+    }
   },
   extensions: [sqliteExtension],
 })
 
 app.use(express.json())
 app.use(cors({ origin: '*' }))
-
 app.use((req, _, next) => {
   // parse token
   const token = req.headers.authorization?.split('Bearer ')[1] || req.query.token
@@ -52,7 +53,7 @@ app.ws('/updates', (ws, req) => {
   const projectId = req.query.projectId
 
   clients.push({ ws, userId, projectId })
-  presence[userId] = clients[clients.length - 1]
+  presence[userId] = clients[client.length - 1]
 
   ws.on('close', () => {
     clients.splice(clients.indexOf(ws), 1)
@@ -65,12 +66,12 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
-const sendPushToChat = getSendPushToChatFn(sendNotification)
+const sentPushToChat = getSendPushToChatFn(sendNotification)
 
-app.post('/internal/chat/:chatId', sendPushToChat)
+app.post('/internal/chat/:chatId', sentPushToChat)
 
-// @TODO: add all other types of notifications
 export function sendMessageToUser(userId, message) {
+  // @TODO: add all other types of notifications
   const { cardId, projectId } = message
   const updatedTasks = message.updatedTasks.map((task) => task.text)
   const mentions = message.mentions.map((m) => m.text)
@@ -115,5 +116,3 @@ export async function bootstrapExpress() {
     console.log(`  > HTTP: Express server is running on ${PORT}`)
   })
 }
-
-bootstrapExpress()

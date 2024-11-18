@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { auth } from '../config/firebase'
 import firebase from 'firebase/compat/app'
 import {
   GoogleAuthProvider,
@@ -9,9 +8,11 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+import { auth } from '../config/firebase'
 import { getOrCreateUser } from '../services'
 import { IUser } from '../types/User'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { notifyError, notifySuccess } from '../utils/notifications'
 import {
   EMAIL_EXISTS,

@@ -1,8 +1,11 @@
 import React from 'react'
+import clsx from 'clsx'
+
 import BoxInformatinSection3 from './BoxInformatinSection3'
 import DualSectionBox from '../DualSectionBox/DualSectionBox'
+
 import GridSvg from '/assets/landing/grid.svg'
-import clsx from 'clsx'
+
 import { DownArrow } from '../../../components/icons'
 
 interface IFeatureCard {

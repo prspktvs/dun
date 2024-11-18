@@ -1,10 +1,11 @@
 import clsx from 'clsx'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useProject } from '../../context/ProjectContext'
 import { useEffect, useState } from 'react'
+import { isEmpty } from 'lodash'
+
+import { useProject } from '../../context/ProjectContext'
 import { ICard } from '../../types/Card'
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
-import { isEmpty } from 'lodash'
 import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'
@@ -60,10 +61,10 @@ export function CardsPage() {
   }
 
   return (
-    <div className='w-full h-full overflow-hidden pb-32'>
-      <section className='border-border-color flex items-center justify-between h-14'>
-        <div className='h-full flex w-full border-b-1 border-border-color  justify-center'>
-          <div className='flex gap-x-4 md:w-full text-xs font-normal font-monaspace items-center ml-6'>
+    <div className='w-full h-full pb-32 overflow-hidden'>
+      <section className='flex items-center justify-between border-border-color h-14'>
+        <div className='flex justify-center w-full h-full border-b-1 border-border-color'>
+          <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
             <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
             <SortButton
               onClick={() => setSortType('updatedAt')}
@@ -84,7 +85,7 @@ export function CardsPage() {
 </SortButton> */}
           </div>
 
-          <div className='flex items-center h-full w-48 flex-shrink-0 border-l border-border-color justify-center'>
+          <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-border-color'>
             <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
               <span className='text-xl font-thin'>+</span>Topic
             </ButtonDun>
@@ -103,7 +104,7 @@ export function CardsPage() {
         ) : search.loading ? (
           <Loader />
         ) : (
-          <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
+          <div className='w-full mt-10 text-center text-gray-300'>No cards found</div>
         )}
       </section>
     </div>

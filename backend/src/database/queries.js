@@ -7,7 +7,8 @@ export const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   chatIds TEXT,
   users TEXT,
   author TEXT,
-  project_id TEXT
+  project_id TEXT,
+  public INTEGER DEFAULT 0
 )`
 
 export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
@@ -87,11 +88,28 @@ export const UPDATE_CARD_QUERY = `
   UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?
 `
 
+export const SELECT_USER_TASKS_QUERY = `
+  SELECT tasks.* FROM tasks 
+  JOIN cards ON tasks.card_id = cards.id 
+  WHERE cards.project_id = ? AND tasks.users LIKE ?
+`
+
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   SELECT cards.*, 
     COALESCE((
       SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
-      FROM files WHERE cards.id = files.card_id), '[]') AS files 
+      FROM files WHERE cards.id = files.card_id), '[]') AS files,
+    COALESCE((
+      SELECT json_group_array(json_object(
+        'id', tasks.id, 
+        'isDone', tasks.isDone, 
+        'text', tasks.text, 
+        'users', tasks.users, 
+        'author', tasks.author, 
+        'priority', tasks.priority, 
+        'status', tasks.status
+      ))
+      FROM tasks WHERE cards.id = tasks.card_id), '[]') AS tasks
   FROM cards 
   LEFT JOIN files ON cards.id = files.card_id 
   WHERE cards.project_id = ? 
@@ -102,39 +120,6 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
     ))
   GROUP BY cards.id 
   ORDER BY ${orderBy} DESC
-`
-
-export const SELECT_ALL_CARDS_WITH_TASKS_AND_FILES_QUERY = ` 
-  SELECT 
-    c.*, 
-    json_group_array(
-      json_object(
-        'id', t.id,
-        'isDone', t.isDone,
-        'text', t.text,
-        'users', t.users,
-        'author', t.author,
-        'priority', t.priority,
-        'status', t.status
-      )
-    ) AS tasks,
-    json_group_array(
-      json_object(
-        'id', f.id,
-        'type', f.type,
-        'url', f.url
-      )
-    ) AS files
-  FROM 
-    cards c
-  LEFT JOIN 
-    tasks t ON c.id = t.card_id
-  LEFT JOIN 
-    files f ON c.id = f.card_id
-  WHERE 
-    c.project_id = ?
-  GROUP BY 
-    c.id
 `
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
