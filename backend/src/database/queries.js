@@ -87,12 +87,6 @@ export const UPDATE_CARD_QUERY = `
   UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?
 `
 
-export const SELECT_USER_TASKS_QUERY = `
-  SELECT tasks.* FROM tasks
-  JOIN cards ON tasks.card_id = cards.id
-  WHERE cards.project_id = ? AND tasks.users LIKE ?
-`
-
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   SELECT cards.*, 
     COALESCE((
@@ -110,7 +104,7 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   ORDER BY ${orderBy} DESC
 `
 
-export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = ` 
+export const SELECT_ALL_CARDS_WITH_TASKS_AND_FILES_QUERY = ` 
   SELECT 
     c.*, 
     json_group_array(
@@ -141,7 +135,6 @@ export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
     c.project_id = ?
   GROUP BY 
     c.id
-
 `
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
@@ -158,32 +151,6 @@ export const SELECT_CARD_WITH_FILES_QUERY = `
 `
 
 export const SELECT_ALL_CARD_TASKS_QUERY = 'SELECT * FROM tasks WHERE card_id = ?'
-
-export const SELECT_TASKS_WITH_CARDS_QUERY = `
-  SELECT 
-    tasks.id AS task_id, 
-    tasks.isDone, 
-    tasks.text AS task_text, 
-    tasks.priority, 
-    tasks.status, 
-    tasks.author AS task_author, 
-    tasks.users AS task_users, 
-    cards.id AS card_id, 
-    cards.title AS card_title, 
-    cards.description AS card_description, 
-    cards.createdAt AS card_createdAt, 
-    cards.updatedAt AS card_updatedAt, 
-    cards.chatIds AS card_chatIds, 
-    cards.users AS card_users, 
-    cards.author AS card_author, 
-    cards.project_id AS card_project_id
-  FROM 
-    tasks 
-  JOIN 
-    cards ON tasks.card_id = cards.id 
-  WHERE 
-    cards.project_id = ?
-`
 
 export const SELECT_MENTIONS_QUERY = (placeholders) => `
   SELECT * FROM mentions WHERE id IN (${placeholders})
@@ -209,4 +176,5 @@ export const DELETE_PUSH_TOKEN = `
 `
 
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
+
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'

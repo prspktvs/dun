@@ -1,16 +1,16 @@
-import { runQuery, allQuery } from '../database/index.js'
-import { SELECT_USER_TASKS_QUERY, SELECT_TASKS_WITH_CARDS_QUERY } from '../database/queries.js'
+import { runQuery } from '../database/index.js'
+import { SELECT_ALL_CARDS_WITH_TASKS_AND_FILES_QUERY } from '../database/queries.js'
 
-export const getUserTasks = async (req, res) => {
+export const getTasksWithCards = async (req, res) => {
   try {
-    const { userId, projectId, includeCards } = req.query
+    const { projectId } = req.query
 
-    if (!userId || !projectId) {
-      return res.status(400).send('userId and projectId are required')
+    if (!projectId) {
+      return res.status(400).send('projectId is required')
     }
 
-    const tasks = await allQuery(SELECT_USER_TASKS_QUERY, [projectId, `%${userId}%`])
-    res.json({ tasks })
+    const tasksWithCards = await runQuery(SELECT_ALL_CARDS_WITH_TASKS_AND_FILES_QUERY, [projectId])
+    res.json({ tasksWithCards })
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')

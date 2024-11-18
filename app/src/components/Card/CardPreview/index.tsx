@@ -43,7 +43,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
             <UpdateIcon count={0} />
           </div>
         </div>
-        <div className='text-lg font-semibold font-rubik not-italic mb-4'>{card.title}</div>
+        <div className='mb-4 text-lg not-italic font-semibold font-rubik'>{card.title}</div>
         {/* Tasks Preview */}
         <div className='flex-grow overflow-hidden'>
           {tasks.length > 0 ? (
@@ -52,7 +52,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
                 <TaskPreview key={task.id} task={task} />
               ))}
               {taskCountExcess > 0 && (
-                <span className='ml-3 flex items-center h-full underline text-sm'>
+                <span className='flex items-center h-full ml-3 text-sm underline'>
                   +{taskCountExcess}
                 </span>
               )}
@@ -65,24 +65,24 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         </div>
         {/* Images Preview */}
         {imageUrls.length > 0 && (
-          <div className='mt-5 flex'>
+          <div className='flex mt-5'>
             {imageUrls.map((url, idx) => (
               <Image key={url + idx} className='w-12' src={url} alt='' />
             ))}
             {card.files?.length > MAX_IMAGES && (
-              <span className='ml-3 flex items-center h-full font underline text-sm'>
+              <span className='flex items-center h-full ml-3 text-sm underline font'>
                 +{card.files.length - MAX_IMAGES}
               </span>
             )}
           </div>
         )}
         {/* User Avatars */}
-        <div className='mt-2 flex justify-start items-center gap-2'>
-          <AvatarGroup>
-            {(card.users as IUser[])?.map((user) => (
-              <Avatar key={user.id} src={user.avatarUrl} alt={user.name} radius='xl' size='sm' />
+        <div className='flex items-center justify-start gap-2 mt-2'>
+          <div className='flex'>
+            {card.users.map((user) => (
+              <AvatarDun key={'preview-' + card.id + '-' + user.id} user={user} />
             ))}
-          </AvatarGroup>
+          </div>
         </div>
       </div>
     </div>

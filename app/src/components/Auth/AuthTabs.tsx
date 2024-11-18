@@ -141,53 +141,97 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
 
   return (
     <>
-      <div className='flex flex-col sm:flex-row border-b-1 font-monaspace'>
-        {tab === 'signup' && (
-          <div className='w-full sm:w-auto'>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              className='w-full ml-7 my-3 outline-none'
-              placeholder='Name'
-            />
-          </div>
-        )}
-        <div className='w-full sm:w-auto'>
+      <div className='hidden sm:block'>
+        <div className='flex border-b-1 font-monaspace'>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className='w-full ml-7 my-3 outline-none'
+            className='ml-7 my-3 outline-none w-full pr-3'
             placeholder='Email'
             type='email'
           />
-        </div>
-      </div>
 
-      <div className='flex flex-col sm:flex-row items-center'>
-        <div className='w-full sm:w-auto'>
+          {tab === 'signup' && (
+            <span className='border-l-1 w-full'>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                className='ml-7 my-3 outline-none'
+                placeholder='Name'
+              />
+            </span>
+          )}
+        </div>
+        <div className='flex items-center'>
           <input
-            className='w-full ml-7 my-3 outline-none font-monaspace'
+            className='ml-7 my-3 outline-none w-full font-monaspace'
             placeholder='Password'
             type={isPassHidden ? 'password' : 'text'}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
+          <div
+            className='mr-12 flex items-center cursor-pointer'
+            onClick={() => setPassHidden((p) => !p)}
+          >
+            {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+          </div>
         </div>
-        <div
-          className='mt-3 sm:mt-0 sm:ml-2 flex items-center cursor-pointer'
-          onClick={() => setPassHidden((p) => !p)}
-        >
-          {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+        <div className='h-12 border-t-1 divide-gray-border'>
+          <ButtonDun onClick={tab === 'signup' ? signUp : login}>
+            {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
+          </ButtonDun>
         </div>
       </div>
-      <div className='h-14 border-t-1 divide-gray-border'>
-        <ButtonDun onClick={tab === 'signup' ? signUp : login}>
-          {isLoading ? <Loader /> : tab === 'signup' ? 'Create' : 'Log in'}
-        </ButtonDun>
+
+      <div className='block sm:hidden font-monaspace w-full max-w-xs mx-auto border border-gray-300 rounded-lg overflow-hidden bg-body-color'>
+        <div className='w-full border-b border-gray-300'>
+          <input
+            type='email'
+            placeholder='Email'
+            className='w-full p-3 outline-none bg-body-color text-primary-text'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        {tab === 'signup' && (
+          <div className='w-full border-b border-gray-300'>
+            <input
+              type='text'
+              placeholder='Name'
+              className='w-full p-3 outline-none bg-body-color text-primary-text'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        )}
+        <div className='w-full border-b border-gray-300 flex items-center'>
+          <input
+            type={isPassHidden ? 'password' : 'text'}
+            placeholder='Password'
+            className='w-full p-3 outline-none bg-body-color text-primary-text'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div
+            className='mr-3 flex items-center cursor-pointer'
+            onClick={() => setPassHidden((p) => !p)}
+          >
+            {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+          </div>
+        </div>
+        <div className='w-full'>
+          <ButtonDun
+            onClick={tab === 'signup' ? signUp : login}
+            className='w-full p-3 text-white bg-purple-600 hover:bg-purple-700 font-semibold'
+          >
+            {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
+          </ButtonDun>
+        </div>
       </div>
       <button
         onClick={() => setTab('forgot')}
-        className='flex w-full items-center justify-end px-5 border-t-1 pt-1 divide-gray-border font-monaspace bg-transparent cursor-pointer text-[#8279BD]'
+        className='flex w-full items-center justify-end px-5 pt-1 font-monaspace bg-transparent cursor-pointer text-[#8279BD] sm:border-t sm:divide-gray-border'
       >
         Forgot password?
       </button>
