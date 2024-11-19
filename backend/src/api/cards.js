@@ -5,6 +5,7 @@ import {
   SELECT_ALL_CARDS_BY_PROJECTID_QUERY,
   SELECT_CARD_BY_ID_QUERY,
   INSERT_NEW_USERS_TO_CARD_QUERY,
+  SELECT_ALL_CARDS_BY_IDS_QUERY,
 } from '../database/queries.js'
 import { searchDocuments } from '../utils/typesense.js'
 
@@ -29,7 +30,7 @@ export const searchCards = async (req, res) => {
     })
     const cardIds = results.hits.map((hit) => `'${hit.document.id}'`).join(',')
     const cards = cardIds?.length
-      ? await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY.replace('$IDS', cardIds), [project_id])
+      ? await allQuery(SELECT_ALL_CARDS_BY_IDS_QUERY.replace('$IDS', cardIds), [project_id])
       : []
     res.json(cards.map(deserializeCard))
   } catch (error) {
@@ -43,7 +44,7 @@ export const getAllProjectCards = async (req, res) => {
     const id = req.query.projectId
     const userId = req.user.user_id
     const sortBy = req.query.sort || 'createdAt'
-    const cards = await allQuery(SELECT_ALL_CARDS_WITH_TASKS_AND_FILES_QUERY, [id, userId, userId])
+    const cards = await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY(sortBy), [id, userId, userId])
     res.status(200).json(cards.map(deserializeCard))
   } catch (error) {
     console.log(error)

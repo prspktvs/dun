@@ -94,10 +94,34 @@ export const SELECT_USER_TASKS_QUERY = `
   WHERE cards.project_id = ? AND tasks.users LIKE ?
 `
 
+export const SELECT_ALL_CARDS_BY_IDS_QUERY = `
+  SELECT 
+    cards.*, 
+    COALESCE((
+        SELECT 
+          json_group_array(
+            json_object('id', files.id, 'type', files.type, 'url', files.url)
+          ) 
+        FROM files
+        WHERE cards.id = files.card_id
+      ), '[]'
+    ) AS files 
+  FROM cards 
+  LEFT JOIN files ON cards.id = files.card_id 
+  WHERE cards.project_id = ? AND cards.id in ($IDS) 
+  GROUP BY cards.id
+`
+
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   SELECT cards.*, 
     COALESCE((
-      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
+      SELECT json_group_array(
+        json_object(
+          'id', files.id, 
+          'type', files.type, 
+          'url', files.url
+        )
+      )
       FROM files WHERE cards.id = files.card_id), '[]') AS files,
     COALESCE((
       SELECT json_group_array(json_object(

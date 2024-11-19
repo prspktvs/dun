@@ -40,10 +40,9 @@ function LeftPanel() {
     getAllUserProject(user.id).then((data) => setProjects(data))
   }, [])
 
-  const goToProject = (id) => navigate(`/${id}`, { replace: true })
+  const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
-  const projectCount = projects.length
-  const otherProjectsCount = projectCount > 1 ? projectCount - 1 : 0
+  const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
 
   return (
     <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
