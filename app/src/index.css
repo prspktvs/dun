@@ -85,10 +85,7 @@ li {
   display: none;
 }
 
-.scale-button {
-  @apply transition-transform duration-200 ease-in-out w-full h-full;
-  transform: scale(0.95);
-}
+
 
 .scale-button:hover {
   transform: scale(1);

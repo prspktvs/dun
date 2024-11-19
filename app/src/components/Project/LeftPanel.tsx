@@ -42,10 +42,11 @@ function LeftPanel() {
 
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
-  const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
+  const projectCount = projects.length
+  const otherProjectsCount = Math.max(0, projectCount - 1)
 
   return (
-    <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
+    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-border-color'>
       <section>
         <Menu
           shadow='md'
@@ -55,12 +56,12 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='flex flex-col justify-between px-5 text-3xl border-border-color h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
                   and
-                  <span className='font-bold mr-1 ml-1' id='project-count'>
+                  <span className='ml-1 mr-1 font-bold' id='project-count'>
                     {otherProjectsCount}
                   </span>
                   other projects
@@ -68,14 +69,14 @@ function LeftPanel() {
               </div>
 
               {/* Project title section */}
-              <div className='flex justify-between items-center w-full gap-4'>
+              <div className='flex items-center justify-between w-full gap-4'>
                 <span className='text-[#46434e] text-lg font-medium font-argon'>
                   {project?.title || 'Empty project'}
                 </span>
                 {isMenuOpened ? (
-                  <i className='ri-arrow-down-s-line text-2xl' />
+                  <i className='text-2xl ri-arrow-down-s-line' />
                 ) : (
-                  <i className='ri-arrow-right-s-line text-2xl' />
+                  <i className='text-2xl ri-arrow-right-s-line' />
                 )}
               </div>
             </nav>
@@ -94,7 +95,7 @@ function LeftPanel() {
             ))}
             <div className='border-t-[2px] pt-1 mt-1'>
               <Menu.Item
-                className='text-md font-rubik text-gray-500'
+                className='text-gray-500 text-md font-rubik'
                 onClick={() => (window.location.href = `/${genId()}`)}
               >
                 Create new project
@@ -103,10 +104,10 @@ function LeftPanel() {
           </Menu.Dropdown>
         </Menu>
       </section>
-      <section className='h-14 w-full flex items-center justify-center border-b-1 border-border-color'>
+      <section className='flex items-center justify-center w-full h-14 border-b-1 border-border-color'>
         <ProjectUsers />
       </section>
-      <nav className='w-full border-b-1 border-border-color px-5 pb-1'>
+      <nav className='w-full px-5 pb-1 border-b-1 border-border-color'>
         <ul>
           <li className='mb-2'>
             <LeftPanelButton
