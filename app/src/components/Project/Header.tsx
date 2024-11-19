@@ -27,7 +27,7 @@ export function ProjectHeader() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder='Find it all'
-          className='bg-[#edebf3] text-[#969696] text-sm font-normal font-agron'
+          className='bg-[#edebf3] text-[#969696] text-sm font-normal font-agron focus:outline-none'
         />
       </div>
       <div className='flex items-center justify-center w-48 h-full py-2 border-l px-7 border-border-color '>
