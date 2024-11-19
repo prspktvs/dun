@@ -7,7 +7,6 @@
   font-style: normal;
 }
 
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -35,12 +34,7 @@ li {
   @apply p-0 m-0;
 }
 
-/* Основные стили для границ */
-.border {
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-}
+
 
 .card-border {
   border-bottom-width: 2px;
@@ -52,7 +46,6 @@ li {
   @apply border-0 outline-none;
 }
 
-/* Настройки для tiptap редактора */
 .tiptap > * + * {
   margin-top: 0.75em;
 }
@@ -103,4 +96,13 @@ li {
 
 .scale-button:active {
   transform: scale(0.85);
+}
+textarea {
+  @apply bg-background;
+}
+input {
+  @apply bg-background;
+}
+.bn-editor {
+  @apply bg-background;
 }

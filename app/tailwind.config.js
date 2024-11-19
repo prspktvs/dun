@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
@@ -27,6 +28,7 @@ module.exports = {
         18: '18px',
       },
       colors: {
+        'textarea-bg': '#F9F9F9',
         'gray-border': '#B0B0B0',
         'border-color': '#C1B9CF',
         priority: {
@@ -39,8 +41,8 @@ module.exports = {
         inactiveText: '#6F6D73',
         paper: '#FAF9F6',
         salad: '#DBF7CA',
-        'primary-text': '#47444F', 
-        'background': '#F9F9F9',    
+        'primary-text': '#47444F',
+        background: '#F9F9F9',
       },
     },
   },

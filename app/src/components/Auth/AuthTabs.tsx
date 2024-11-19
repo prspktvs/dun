@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { set } from 'lodash'
 
 import { Tab } from '../../pages/Auth/Login'
-import Logo from '../ui/Logo'
-import { AppleLogo, GoogleLogo, HideIcon, UnhideIcon } from '../icons'
+import { GoogleLogo, HideIcon, UnhideIcon } from '../icons'
 import { useAuth } from '../../context/AuthContext'
 import { notifyError } from '../../utils/notifications'
 import { FILL_ALL_FIELDS_MESSAGE } from '../../constants/messages'
@@ -24,9 +22,9 @@ function LeftTab({
 }) {
   const toggleTab = () => setTab(isSignUp ? 'login' : 'signup')
   return (
-    <div className='flex h-fit w-1/2'>
-      <div className='flex flex-col flex-1 font-monaspace text-lg'>
-        <div className='ml-8 mt-5'>
+    <div className='hidden w-1/2 sm:flex h-fit'>
+      <div className='flex-col flex-1 hidden text-lg sm:flex font-monaspace'>
+        <div className='mt-5 ml-8'>
           <div>Hey there!</div>
           <div className='w-[400px] mt-6 h-[30px]'>
             {isSignUp
@@ -85,13 +83,13 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
   if (tab === 'verification') {
     return (
       <>
-        <div className='flex flex-col justify-center items-center p-6  font-monaspace text-xs'>
+        <div className='flex flex-col items-center justify-center p-6 text-xs font-monaspace'>
           <div className='w-full h-full'>
             We sent an email to <span className='text-[#8379BD]'>{email}</span> to verify.
           </div>
           <div className='w-full mt-1'>Please click on the "Verify email" button to continue.</div>
           <div className='mt-9'>
-            <p className='font-semibold mb-3'> Not seeing the email? </p>
+            <p className='mb-3 font-semibold'> Not seeing the email? </p>
             <p>Please check your spam folder, resend email or contact us at dun@gmail.co.</p>
           </div>
         </div>
@@ -110,14 +108,14 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
   if (tab === 'forgot') {
     return (
       <>
-        <div className='w-full px-5 py-3 border-b-1 font-monaspace text-sm'>
+        <div className='w-full px-5 py-3 text-sm border-b-1 font-monaspace'>
           Please enter your email address.
         </div>
         <div className='flex border-b-1 font-monaspace'>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className='ml-7 my-3 outline-none w-full pr-3'
+            className='w-full pr-3 my-3 outline-none ml-7'
             placeholder='Email'
             type='email'
           />
@@ -142,62 +140,110 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
 
   return (
     <>
-      <div className='flex border-b-1 font-monaspace'>
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          className='ml-7 my-3 outline-none w-full pr-3'
-          placeholder='Email'
-          type='email'
-        />
+      <div className='hidden sm:block'>
+        <div className='flex border-b-1 font-monaspace'>
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className='w-full pr-3 my-3 outline-none ml-7'
+            placeholder='Email'
+            type='email'
+          />
 
-        {tab === 'signup' && (
-          <span className='border-l-1 w-full'>
-            <input
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              className='ml-7 my-3 outline-none'
-              placeholder='Name'
-            />
-          </span>
-        )}
-      </div>
-      <div className='flex items-center'>
-        <input
-          className='ml-7 my-3 outline-none w-full font-monaspace'
-          placeholder='Password'
-          type={isPassHidden ? 'password' : 'text'}
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
-        <div
-          className='mr-12 flex items-center cursor-pointer'
-          onClick={() => setPassHidden((p) => !p)}
-        >
-          {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+          {tab === 'signup' && (
+            <span className='w-full border-l-1'>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                className='my-3 outline-none ml-7'
+                placeholder='Name'
+              />
+            </span>
+          )}
+        </div>
+        <div className='flex items-center'>
+          <input
+            className='w-full my-3 outline-none ml-7 font-monaspace'
+            placeholder='Password'
+            type={isPassHidden ? 'password' : 'text'}
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+          <div
+            className='flex items-center mr-12 cursor-pointer'
+            onClick={() => setPassHidden((p) => !p)}
+          >
+            {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+          </div>
+        </div>
+        <div className='h-12 border-t-1 divide-gray-border'>
+          <ButtonDun onClick={tab === 'signup' ? signUp : login}>
+            {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
+          </ButtonDun>
         </div>
       </div>
-      <div className='h-14 border-t-1 divide-gray-border'>
-        <ButtonDun onClick={tab === 'signup' ? signUp : login}>
-          {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
-        </ButtonDun>
+
+      <div className='block w-full max-w-xs mx-auto overflow-hidden border border-gray-300 rounded-lg sm:hidden font-monaspace bg-body-color'>
+        <div className='w-full border-b border-gray-300'>
+          <input
+            type='email'
+            placeholder='Email'
+            className='w-full p-3 outline-none bg-body-color text-primary-text'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        {tab === 'signup' && (
+          <div className='w-full border-b border-gray-300'>
+            <input
+              type='text'
+              placeholder='Name'
+              className='w-full p-3 outline-none bg-body-color text-primary-text'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        )}
+        <div className='flex items-center w-full border-b border-gray-300'>
+          <input
+            type={isPassHidden ? 'password' : 'text'}
+            placeholder='Password'
+            className='w-full p-3 outline-none bg-body-color text-primary-text'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div
+            className='flex items-center mr-3 cursor-pointer'
+            onClick={() => setPassHidden((p) => !p)}
+          >
+            {isPassHidden ? <HideIcon /> : <UnhideIcon />}
+          </div>
+        </div>
+        <div className='w-full'>
+          <ButtonDun
+            onClick={tab === 'signup' ? signUp : login}
+            className='w-full p-3 font-semibold text-white bg-purple-600 hover:bg-purple-700'
+          >
+            {isLoading ? <Loader /> : tab === 'signup' ? 'Continue' : 'Log in'}
+          </ButtonDun>
+        </div>
       </div>
       <button
         onClick={() => setTab('forgot')}
-        className='flex w-full items-center justify-end px-5 border-t-1 pt-1 divide-gray-border font-monaspace bg-transparent cursor-pointer text-[#8279BD]'
+        className='flex w-full items-center justify-end px-5 pt-1 font-monaspace bg-transparent cursor-pointer text-[#8279BD] sm:border-t sm:divide-gray-border'
       >
         Forgot password?
       </button>
-      <div className='flex w-full items-center justify-center font-monaspace'>or</div>
+      <div className='flex items-center justify-center w-full font-monaspace'>or</div>
       <div className='flex justify-center gap-x-3 font-medium text-[#47444F]'>
         <button
-          className='flex px-4 py-2 border bg-white justify-center items-center gap-x-2 hover:cursor-pointer z-50'
+          className='z-50 flex items-center justify-center px-4 py-2 bg-white border gap-x-2 hover:cursor-pointer'
           onClick={signInWithGoogle}
         >
           <GoogleLogo />
           Continue with Google
         </button>
-        {/* <button className='px-4 bg-white border flex justify-center items-center gap-x-2 hover:cursor-pointer'>
+        {/* <button className='flex items-center justify-center px-4 bg-white border gap-x-2 hover:cursor-pointer'>
           <AppleLogo />
           Continue with Apple
         </button> */}
@@ -216,15 +262,15 @@ export default function AuthTabs(props: IAuthTabsProps) {
     <div className='h-full'>
       <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
-        <div className='flex-1  border-l-1 h-full'>
-          <div className='w-full h-[54px] flex items-center text-xl pl-7 font-monospace border-b-1 divide-gray-border font-monaspace'>
+        <div className='flex-1 h-full border-l-1'>
+          <div className='w-full h-[54px] flex items-center justify-center text-xl px-7 font-monospace sm:border-b divide-gray-border font-monaspace my-[40px] sm:my-0'>
             {isVerification
               ? 'Email verification'
               : isSignUp
-              ? 'Create an account'
-              : isForgot
-              ? 'Forgot password'
-              : 'Log in'}
+                ? 'Create account'
+                : isForgot
+                  ? 'Forgot password'
+                  : 'Log in'}
           </div>
           <AuthForm tab={tab} setTab={setTab} />
         </div>

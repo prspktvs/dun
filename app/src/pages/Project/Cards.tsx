@@ -25,9 +25,7 @@ function SortButton({
       onClick={onClick}
       className={clsx('px-4 py-2 rounded', isActive ? 'bg-grayBg' : 'text-[#969696]')}
     >
-      <span className='text-[#555555] text-xs font-normal font-["Monaspace Argon Var"]'>
-        {children}
-      </span>
+      <span className='text-[#555555] text-xs font-normal font-monaspace'>{children}</span>
     </button>
   )
 }
@@ -63,10 +61,10 @@ export function CardsPage() {
   }
 
   return (
-    <div className='w-full h-full overflow-hidden pb-32'>
-      <section className='border-border-color flex items-center justify-between h-14'>
-        <div className='h-full flex w-full border-b-1 border-border-color sm:gap-x-1 justify-center'>
-          <div className='flex gap-x-4 md:w-10/12 text-xs font-normal font-monaspace items-center ml-6'>
+    <div className='w-full h-full pb-32 overflow-hidden'>
+      <section className='flex items-center justify-between border-border-color h-14'>
+        <div className='flex justify-center w-full h-full border-b-1 border-border-color'>
+          <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
             <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
             <SortButton
               onClick={() => setSortType('updatedAt')}
@@ -80,14 +78,16 @@ export function CardsPage() {
             >
               Date created
             </SortButton>
-            <SortButton onClick={() => setSortType('archived')} isActive={sortType === 'archived'}>
-              Archived
-            </SortButton>
+
+            {/* TODO: Add 'archived' sort option when functionality is available
+<SortButton onClick={() => setSortType('archived')} isActive={sortType === 'archived'}>
+  Archived
+</SortButton> */}
           </div>
 
-          <div className='h-full w-48 border-l-1 border-border-color flex items-center justify-center '>
-            <ButtonDun onClick={onCreateNewCard}>
-              <span className='pr-0 text-xl font-thin'>+</span>Topic
+          <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-border-color'>
+            <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
+              <span className='text-xl font-thin'>+</span>Topic
             </ButtonDun>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function CardsPage() {
         ) : search.loading ? (
           <Loader />
         ) : (
-          <div className='text-center mt-10 w-full text-gray-300'>No cards found</div>
+          <div className='w-full mt-10 text-center text-gray-300'>No cards found</div>
         )}
       </section>
     </div>

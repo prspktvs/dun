@@ -7,7 +7,8 @@ export const CREATE_CARDS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS cards (
   chatIds TEXT,
   users TEXT,
   author TEXT,
-  project_id TEXT
+  project_id TEXT,
+  public INTEGER DEFAULT 0
 )`
 
 export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
@@ -88,16 +89,23 @@ export const UPDATE_CARD_QUERY = `
 `
 
 export const SELECT_USER_TASKS_QUERY = `
-  SELECT tasks.* FROM tasks
-  JOIN cards ON tasks.card_id = cards.id
+  SELECT tasks.* FROM tasks 
+  JOIN cards ON tasks.card_id = cards.id 
   WHERE cards.project_id = ? AND tasks.users LIKE ?
 `
 
-export const SELECT_ALL_CARDS_BY_IDS = `
-  SELECT cards.*, 
+export const SELECT_ALL_CARDS_BY_IDS_QUERY = `
+  SELECT 
+    cards.*, 
     COALESCE((
-      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
-      FROM files WHERE cards.id = files.card_id), '[]') AS files
+        SELECT 
+          json_group_array(
+            json_object('id', files.id, 'type', files.type, 'url', files.url)
+          ) 
+        FROM files
+        WHERE cards.id = files.card_id
+      ), '[]'
+    ) AS files 
   FROM cards 
   LEFT JOIN files ON cards.id = files.card_id 
   WHERE cards.project_id = ? AND cards.id in ($IDS) 
@@ -107,8 +115,25 @@ export const SELECT_ALL_CARDS_BY_IDS = `
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   SELECT cards.*, 
     COALESCE((
-      SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
-      FROM files WHERE cards.id = files.card_id), '[]') AS files 
+      SELECT json_group_array(
+        json_object(
+          'id', files.id, 
+          'type', files.type, 
+          'url', files.url
+        )
+      )
+      FROM files WHERE cards.id = files.card_id), '[]') AS files,
+    COALESCE((
+      SELECT json_group_array(json_object(
+        'id', tasks.id, 
+        'isDone', tasks.isDone, 
+        'text', tasks.text, 
+        'users', tasks.users, 
+        'author', tasks.author, 
+        'priority', tasks.priority, 
+        'status', tasks.status
+      ))
+      FROM tasks WHERE cards.id = tasks.card_id), '[]') AS tasks
   FROM cards 
   LEFT JOIN files ON cards.id = files.card_id 
   WHERE cards.project_id = ? 
@@ -119,30 +144,6 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
     ))
   GROUP BY cards.id 
   ORDER BY ${orderBy} DESC
-`
-
-export const SELECT_ALL_CARDS_WITH_TASKS_BY_PROJECTID_QUERY = `
-  SELECT 
-    c.*, 
-    json_group_array(
-      json_object(
-        'id', t.id,
-        'isDone', t.isDone,
-        'text', t.text,
-        'users', t.users,
-        'author', t.author,
-        'priority', t.priority,
-        'status', t.status
-      )
-    ) AS tasks
-  FROM 
-    cards c
-  LEFT JOIN 
-    tasks t ON c.id = t.card_id
-  WHERE 
-    c.project_id = ?
-  GROUP BY 
-    c.id
 `
 
 export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
@@ -159,32 +160,6 @@ export const SELECT_CARD_WITH_FILES_QUERY = `
 `
 
 export const SELECT_ALL_CARD_TASKS_QUERY = 'SELECT * FROM tasks WHERE card_id = ?'
-
-export const SELECT_TASKS_WITH_CARDS_QUERY = `
-  SELECT 
-    tasks.id AS task_id, 
-    tasks.isDone, 
-    tasks.text AS task_text, 
-    tasks.priority, 
-    tasks.status, 
-    tasks.author AS task_author, 
-    tasks.users AS task_users, 
-    cards.id AS card_id, 
-    cards.title AS card_title, 
-    cards.description AS card_description, 
-    cards.createdAt AS card_createdAt, 
-    cards.updatedAt AS card_updatedAt, 
-    cards.chatIds AS card_chatIds, 
-    cards.users AS card_users, 
-    cards.author AS card_author, 
-    cards.project_id AS card_project_id
-  FROM 
-    tasks 
-  JOIN 
-    cards ON tasks.card_id = cards.id 
-  WHERE 
-    cards.project_id = ?
-`
 
 export const SELECT_MENTIONS_QUERY = (placeholders) => `
   SELECT * FROM mentions WHERE id IN (${placeholders})
@@ -210,4 +185,5 @@ export const DELETE_PUSH_TOKEN = `
 `
 
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
+
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'
