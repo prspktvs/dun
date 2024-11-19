@@ -18,5 +18,8 @@ export class ExtendedSQLite extends SQLite {
     this.db.run(this.configuration.schema, (err) => {
       if (err) console.log(`[x] Schema error: ${err}`)
     })
+    this.db.exec('PRAGMA journal_mode = WAL;', (err) => {
+      if (err) console.log(`[x] WAL mode error: ${err}`)
+    })
   }
 }
