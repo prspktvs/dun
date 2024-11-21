@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash'
 import { ICard } from '../../types/Card'
 import { IUser } from '../../types/User'
 import { useProject } from '../../context/ProjectContext'
-import { useChats } from '../../context/ChatContext'
+import { ChatProvider, useChats } from '../../context/ChatContext'
 import Editor from '../../components/Editor'
 import UnreadIndicator from '../../components/ui/UnreadIndicator'
 import Discussions from '../../components/Card/Sections/Discussions'
@@ -31,7 +31,7 @@ const Card = ({ card }: ICardProps) => {
   const [isShareModalOpened, setIsShareModalOpened] = useState(location.hash === '#share')
   const { optimisticDeleteCard, optimisticUpdateCard, users } = useProject()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
-  const { closeChat, unreadChats } = useChats()
+  const { closeChat, unreadChats, cardChats } = useChats()
 
   const { user } = useAuth()
 
@@ -165,7 +165,7 @@ const Card = ({ card }: ICardProps) => {
                 )}
                 onClick={() => setActiveTab('discussions')}
               >
-                Discussions• {card.chatIds?.length || 0}
+                Discussions• {cardChats.length}
                 <UnreadIndicator
                   size='sm'
                   count={unreadDiscussions}
@@ -219,8 +219,10 @@ export function CardPage() {
   const card = cards?.find((card) => card.id === cardId)
 
   return (
-    <FilePreviewProvider files={card?.files || []}>
-      {card ? <Card card={card} /> : <Loader />}
-    </FilePreviewProvider>
+    <ChatProvider>
+      <FilePreviewProvider files={card?.files || []}>
+        {card ? <Card card={card} /> : <Loader />}
+      </FilePreviewProvider>
+    </ChatProvider>
   )
 }

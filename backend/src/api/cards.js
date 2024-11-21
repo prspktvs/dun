@@ -6,6 +6,7 @@ import {
   SELECT_CARD_BY_ID_QUERY,
   INSERT_NEW_USERS_TO_CARD_QUERY,
   SELECT_ALL_CARDS_BY_IDS_QUERY,
+  UPDATE_CARD_CHAT_IDS_QUERY,
 } from '../database/queries.js'
 import { searchDocuments } from '../utils/typesense.js'
 
@@ -93,6 +94,8 @@ export const updateCard = async (req, res) => {
     delete updateFields.files
     const card = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
     const chatIds = JSON.parse(card.chatIds || '[]')
+    const users = JSON.parse(card.users || '[]')
+    const description = JSON.parse(card.description || '[]')
     if (updateFields?.chatIds?.length > 0) {
       updateFields.chatIds.forEach((chatId) => {
         if (!chatIds.includes(chatId)) {
@@ -102,9 +105,9 @@ export const updateCard = async (req, res) => {
     }
     const newFields = {
       ...updateFields,
-      description: JSON.stringify(updateFields.description || []),
+      description: JSON.stringify(updateFields.description || description),
       chatIds: JSON.stringify(chatIds),
-      users: JSON.stringify(updateFields?.users || []),
+      users: JSON.stringify(updateFields?.users || users),
     }
     const columnsToUpdate = Object.keys(newFields).join('=?, ') + '=?'
     const valuesToUpdate = Object.values(newFields)
@@ -155,6 +158,23 @@ export const unshareCard = async (req, res) => {
     const updatedUsers = currentUserIds.filter((u) => u !== userId)
     await runQuery(INSERT_NEW_USERS_TO_CARD_QUERY, [JSON.stringify(updatedUsers), id])
     res.status(200).send({ message: 'Card is unshared' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Internal server error')
+  }
+}
+
+export const deleteCardChat = async (req, res) => {
+  try {
+    const { id, chatId } = req.params
+    const card = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
+    if (!card) return res.status(404).json({ message: 'Card not found' })
+
+    const chatIds = JSON.parse(card.chatIds)
+    const updatedChats = chatIds.filter((chat) => chat !== chatId)
+    await runQuery(UPDATE_CARD_CHAT_IDS_QUERY, [JSON.stringify(updatedChats), id])
+
+    res.status(200).send({ message: 'Chat is deleted' })
   } catch (error) {
     console.log(error)
     res.status(500).send('Internal server error')

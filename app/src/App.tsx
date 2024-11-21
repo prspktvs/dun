@@ -22,20 +22,19 @@ export default function App() {
       <Notifications position='top-right' />
       <BrowserRouter>
         <AuthProvider>
-          <ChatProvider>
-            <EditorProvider>
-              <Routes>
-                <Route index path='/' element={<LandingPage />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/logout' element={<Logout />} />
-                <Route path=':id' element={<ProjectLayoutWithProtection />}>
-                  <Route index element={<CardsPage />} />
-                  <Route path='my-work' element={<MyWorkPage />} />
-                  <Route path='cards/:cardId' element={<CardPage />} />
-                </Route>
-              </Routes>
-            </EditorProvider>
-          </ChatProvider>
+          <EditorProvider>
+            <Routes>
+              <Route index path='/' element={<LandingPage />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/logout' element={<Logout />} />
+              <Route path=':id' element={<ProjectLayoutWithProtection />}>
+                <Route index element={<CardsPage />} />
+                <Route path='my-work' element={<MyWorkPage />} />
+                <Route path='cards/:cardId' element={<CardPage />} />
+                <Route path='cards/:cardId/chats/:chatId' element={<CardPage />} />
+              </Route>
+            </Routes>
+          </EditorProvider>
         </AuthProvider>
       </BrowserRouter>
     </MantineProvider>

@@ -3,7 +3,8 @@ import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore'
 
 import { db, realtimeDb } from '../config/firebase'
 import { IMessage } from '../types/Chat'
-import { getCardById, saveChatIdsToCard, updateCard } from './card.service'
+import { getCardById, updateCard } from './card.service'
+import { apiRequest } from '../utils/api'
 
 export const createNewChat = async ({
   chatId,
@@ -62,10 +63,14 @@ export const getAllCardChats = async (cardId: string) => {
   return snapshots.filter((snap) => snap.exists()).map((snap) => snap.val())
 }
 
-export const removeChatById = async (chatId: string) => {
+export const removeCardChat = async (cardId: string, chatId: string) => {
   try {
     if (!chatId) return null
     await remove(ref(realtimeDb, `chats/${chatId}`))
+
+    await apiRequest(`cards/${cardId}/chats/${chatId}`, {
+      method: 'DELETE',
+    })
   } catch (e) {
     console.error(e)
     return null
