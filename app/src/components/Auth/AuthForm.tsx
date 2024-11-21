@@ -20,7 +20,10 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
   })
   const [isLoading, setLoading] = useState(false)
   const [isPassHidden, setPassHidden] = useState(true)
-
+  const handleTermsClick = () => {
+    console.log('Terms clicked - functionality not implemented yet')
+    // TODO: Implement terms navigation when ready
+  }
   const { loginWithEmailAndPassword, registerWithEmailAndPassword, signInWithGoogle } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +60,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
               name='name'
               value={formData.name}
               onChange={handleInputChange}
-              className='w-full pr-3 my-3 outline-none'
+              className='w-full px-4 pr-3 my-3 outline-none sm:px-10'
               placeholder='Name'
               type='text'
             />
@@ -72,7 +75,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
             name='email'
             value={formData.email}
             onChange={handleInputChange}
-            className='w-full pr-3 my-3 outline-none'
+            className='w-full px-4 pr-3 my-3 outline-none sm:px-10'
             placeholder='Email'
             type='email'
           />
@@ -84,41 +87,63 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           name='password'
           value={formData.password}
           onChange={handleInputChange}
-          className='w-full pr-3 my-3 outline-none'
+          className='w-full px-4 pr-3 my-3 outline-none sm:px-10'
           placeholder='Password'
           type={isPassHidden ? 'password' : 'text'}
         />
-        <div className='cursor-pointer' onClick={() => setPassHidden(!isPassHidden)}>
+        <div
+          className='flex items-center justify-center px-4 cursor-pointer sm:px-10'
+          onClick={() => setPassHidden(!isPassHidden)}
+        >
           {isPassHidden ? <HideIcon /> : <UnhideIcon />}
         </div>
       </div>
 
-      {/* Forgot password link */}
-      {tab === 'login' && (
-        <div
-          onClick={() => setTab('forgot')}
-          className='mt-2 text-sm text-right cursor-pointer text-[#7b759b]'
-        >
-          Forgot password?
-        </div>
-      )}
-
       {/* Submit button */}
-      <button
-        type='submit'
-        disabled={isLoading}
-        className='w-full h-[35px] mt-5 bg-[#8279BD] text-white font-monaspace'
-      >
-        {isLoading ? <Loader /> : tab === 'login' ? 'Log in' : 'Sign up'}
-      </button>
+      <div className='h-[56px] w-full bg-[#f9f9f9] border p-1'>
+        <button
+          type='submit'
+          disabled={isLoading}
+          className='w-full h-full bg-[#8279BD] text-white font-monaspace text-base divide-gray-border'
+        >
+          {isLoading ? <Loader /> : tab === 'signup' ? 'Create' : 'Log in'}
+        </button>
+      </div>
+
+      {/* Container for Forgot password/Terms and 'or' */}
+      <div className='px-10 pb-7'>
+        {/* Forgot password for login */}
+        {tab === 'login' && (
+          <div
+            onClick={() => setTab('forgot')}
+            className='text-sm text-right py-2 cursor-pointer text-[#7b759b]'
+          >
+            Forgot password?
+          </div>
+        )}
+
+        {/* Mobile Terms for signup */}
+        {tab === 'signup' && (
+          <div className='mt-2 mb-2 text-xs text-center sm:hidden'>
+            <div className='text-[#47444F]'>By clicking 'Create' you agree to our</div>
+            <button onClick={handleTermsClick} className='text-[#8774FF]'>
+              Terms and Privacy Policy
+            </button>
+          </div>
+        )}
+
+        {/* 'or' divider */}
+        <div className='relative flex items-center justify-center w-full mt-5 text-center font-monaspace'>
+          <span>or</span>
+        </div>
+      </div>
 
       {/* Google auth */}
-      <div className='relative'>
-        <div className='absolute w-full text-center top-5'>or</div>
+      <div className='relative '>
         <button
           type='button'
           onClick={signInWithGoogle}
-          className='z-50 flex items-center justify-center w-full px-4 py-2 mt-10 bg-white border gap-x-2'
+          className='z-50 flex items-center justify-center w-full h-[56px] px-11 m-1 py-3 font-roboto text-base bg-white border gap-x-4'
         >
           <GoogleLogo />
           Continue with Google

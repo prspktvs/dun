@@ -24,7 +24,7 @@ export default function AuthTabs({ tab, setTab }: IAuthTabsProps) {
         {/* Правая панель с формами */}
         <div className='flex-1 h-full border-l-1'>
           {/* Заголовок */}
-          <div className='w-full h-[54px] flex items-center justify-center text-xl px-7 font-monospace sm:border-b divide-gray-border font-monaspace my-[40px] sm:my-0'>
+          <div className='w-full h-[54px] flex items-center justify-center text-xl  font-monospace sm:border-b divide-gray-border font-monaspace my-[40px] sm:my-0'>
             {tab === 'verification' && 'Email verification'}
             {tab === 'signup' && 'Create account'}
             {tab === 'forgot' && 'Forgot password'}
