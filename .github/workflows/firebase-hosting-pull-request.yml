@@ -31,7 +31,7 @@ jobs:
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          firebaseToolsVersion: v13.3.1
+          firebaseToolsVersion: v13.3.1 # https://github.com/firebase/firebase-tools/issues/6828#issuecomment-1976707086
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_DUN_IMBA }}"
           projectId: dun-imba
