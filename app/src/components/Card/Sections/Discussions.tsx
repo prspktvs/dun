@@ -6,12 +6,10 @@ import clsx from 'clsx'
 import { Chat } from '../../Chats/Chat'
 import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
-import { getAllCardChats, removeChatById, saveChatAndMessage } from '../../../services'
 import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
 
-
-function AddNewChat({ onClick }) {
+function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
     <>
       <div
@@ -49,18 +47,13 @@ function AddNewChat({ onClick }) {
 }
 
 export default function Discussions({ users }: { users: IUser[] }) {
-  const { id: projectId, cardId } = useParams()
-  const { chatId, openChatById } = useChats()
+  const { cardId } = useParams<{ cardId: string }>()
+  const { chatId, openChatById, createChat, deleteChat, cardChats } = useChats()
   const [search, setSearch] = useState('')
-  const [chats, setChats] = useState<IChat[]>([])
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
 
   useEffect(() => {
-    getAllCardChats(cardId).then((res) => setChats(res))
-  }, [chatId])
-
-  useEffect(() => {
-    const updatedChats = chats.filter((chat) => {
+    const updatedChats = cardChats.filter((chat) => {
       const chatMessages = chat?.messages ? Object.values(chat.messages).map((m) => m.text) : []
       return (
         chat?.content?.toLowerCase()?.includes(search.toLowerCase()) ||
@@ -68,7 +61,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
       )
     })
     setFilteredChats(updatedChats)
-  }, [search, chats])
+  }, [search, cardChats])
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
@@ -76,26 +69,9 @@ export default function Discussions({ users }: { users: IUser[] }) {
     return <Chat chatId={chatId} users={users} />
   }
 
-  const onDeleteChat = async (id: string) => {
-    try {
-      if (confirm('Are you sure?')) {
-        await removeChatById(id)
-        setChats((prev) => prev.filter((chat) => chat.id !== id))
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  const onDeleteChat = (chatId: string) => deleteChat(cardId, chatId)
 
-  const onCreateNewDiscussion = async () => {
-    await saveChatAndMessage({
-      chatId: cardId as string,
-      cardId: cardId as string,
-      content: 'Major topic discussion',
-      messageData: undefined,
-    })
-    openChatById(cardId as string)
-  }
+  const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
 
   return (
     <section className='h-screen'>

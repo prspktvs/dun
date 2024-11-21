@@ -84,6 +84,10 @@ export const INSERT_NEW_USERS_TO_CARD_QUERY = `
   UPDATE cards SET users = ? WHERE id = ?
 `
 
+export const UPDATE_CARD_CHAT_IDS_QUERY = `
+  UPDATE cards SET chatIds = ? WHERE id = ?
+`
+
 export const UPDATE_CARD_QUERY = `
   UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?
 `
