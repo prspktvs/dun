@@ -30,25 +30,25 @@ export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
   return (
     <form onSubmit={handleSubmit}>
       {/* Заголовок */}
-      <div className='w-full px-5 py-3 text-sm border-b-1 font-monaspace'>
-        Please enter your email address.
+      <div className='w-full px-5 pt-3 text-sm text-center pb-7 font-monaspace '>
+        STEP 1 Enter account email
       </div>
 
       {/* Email input */}
-      <div className='flex border-b-1 font-monaspace'>
+      <div className='flex mx-4 border h-14 font-monaspace'>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className='w-full pr-3 my-3 outline-none ml-7'
+          className='w-full pr-3 my-3 ml-4 outline-none'
           placeholder='Email'
           type='email'
         />
       </div>
 
       {/* Submit button */}
-      <div className='p-1 border-b-1'>
-        <button type='submit' className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace'>
-          {isLoading ? <Loader /> : 'Reset password'}
+      <div className='p-1 mx-4 border h-14'>
+        <button type='submit' className='w-full h-full p-1 bg-[#8279BD] text-white font-monaspace'>
+          {isLoading ? <Loader /> : 'Get a link'}
         </button>
       </div>
 

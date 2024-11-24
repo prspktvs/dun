@@ -23,18 +23,28 @@ export default function AuthTabs({ tab, setTab }: IAuthTabsProps) {
 
         {/* Правая панель с формами */}
         <div className='flex-1 h-full border-l-1'>
-          {/* Заголовок */}
-          <div className='w-full h-[54px] flex items-center justify-center text-xl  font-monospace sm:border-b divide-gray-border font-monaspace my-[40px] sm:my-0'>
-            {tab === 'verification' && 'Email verification'}
-            {tab === 'signup' && 'Create account'}
-            {tab === 'forgot' && 'Forgot password'}
-            {tab === 'login' && 'Log in'}
-          </div>
+          <div className='space-y-0'>
+            {/* Заголовок */}
+            <div
+              className={`
+              flex justify-center w-full px-10 text-[24px] sm:text-xl 
+              font-semibold text-center sm:justify-start sm:text-left 
+              sm:border-b divide-gray-border font-monaspace mt-12 
+              sm:py-7 sm:my-0 
+              ${tab === 'forgot' ? '' : 'mb-10 sm:mb-0'}
+            `}
+            >
+              {tab === 'verification' && 'Email verification'}
+              {tab === 'signup' && 'Create account'}
+              {tab === 'forgot' && 'Reset password'}
+              {tab === 'login' && 'Log in'}
+            </div>
 
-          {/* Отображение нужной формы в зависимости от tab */}
-          {tab === 'verification' && <VerificationView setTab={setTab} />}
-          {tab === 'forgot' && <ForgotPasswordView setTab={setTab} />}
-          {(tab === 'login' || tab === 'signup') && <AuthForm tab={tab} setTab={setTab} />}
+            {/* Формы */}
+            {tab === 'verification' && <VerificationView setTab={setTab} />}
+            {tab === 'forgot' && <ForgotPasswordView setTab={setTab} />}
+            {(tab === 'login' || tab === 'signup') && <AuthForm tab={tab} setTab={setTab} />}
+          </div>
         </div>
       </div>
     </div>

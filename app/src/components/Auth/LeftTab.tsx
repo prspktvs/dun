@@ -13,12 +13,12 @@ export function LeftTab({ isSignUp, setTab }: LeftTabProps) {
   return (
     <div className='hidden w-1/2 sm:flex h-fit'>
       <div className='flex-col flex-1 hidden text-lg sm:flex font-monaspace'>
-        <div className='mt-5 ml-8'>
+        <div className='m-10 '>
           {/* Приветствие */}
           <div>Hey there!</div>
 
           {/* Основной текст */}
-          <div className='w-[400px] mt-6 h-[30px]'>
+          <div className=' mt-4 '>
             {isSignUp
               ? "Awesome to have you here. Let's get you signed up so the fun can begin. Ready?"
               : "Welcome back, it's awesome to see you again."}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
-import { GoogleLogo, HideIcon, UnhideIcon } from '../icons'
+import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon } from '../icons'
 import { Loader } from '../ui/Loader'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
@@ -55,7 +55,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       <div className='grid grid-cols-1 sm:grid-cols-2'>
         {/* Name input */}
         {tab === 'signup' && (
-          <div className='flex border sm:border-0 sm:border-b-1 sm:border-r-1 font-monaspace'>
+          <div className='flex border sm:border-0 font-monaspace'>
             <input
               name='name'
               value={formData.name}
@@ -69,7 +69,9 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
 
         {/* Email input */}
         <div
-          className={`flex border sm:border-0 -mt-[1px] sm:border-b-1 font-monaspace ${tab !== 'signup' ? 'sm:col-span-2' : ''}`}
+          className={`flex border  -mt-[1px] sm:border-0 font-monaspace ${
+            tab === 'signup' ? 'sm:border-l' : 'sm:col-span-2'
+          }`}
         >
           <input
             name='email'
@@ -82,7 +84,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
         </div>
       </div>
       {/* Password input */}
-      <div className='flex border  font-monaspace -mt-[1px]'>
+      <div className='flex border  -mt-[1px] sm:border-0 sm:border-t font-monaspace'>
         <input
           name='password'
           value={formData.password}
@@ -92,15 +94,15 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           type={isPassHidden ? 'password' : 'text'}
         />
         <div
-          className='flex items-center justify-center px-4 cursor-pointer sm:px-10'
-          onClick={() => setPassHidden(!isPassHidden)}
+          className='flex items-center mr-4 cursor-pointer'
+          onClick={() => setPassHidden((p) => !p)}
         >
           {isPassHidden ? <HideIcon /> : <UnhideIcon />}
         </div>
       </div>
 
       {/* Submit button */}
-      <div className='h-[56px] w-full bg-[#f9f9f9] border p-1'>
+      <div className='h-[56px] w-full border p-1  -mt-[1px]'>
         <button
           type='submit'
           disabled={isLoading}
@@ -139,16 +141,33 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Google auth */}
-      <div className='relative '>
-        <button
-          type='button'
-          onClick={signInWithGoogle}
-          className='z-50 flex items-center justify-center w-full h-[56px] px-11 m-1 py-3 font-roboto text-base bg-white border gap-x-4'
-        >
-          <GoogleLogo />
-          Continue with Google
-        </button>
+      <div className='relative sm:row-start-5 h-[56px] '>
+        <div className='p-1 '>
+          <button
+            type='button'
+            onClick={signInWithGoogle}
+            className='flex items-center justify-center w-full h-[56px] text-16 font-roboto px-4 py-2 border gap-[15px]'
+          >
+            <GoogleLogo className='w-6 h-6' />
+            Continue with Google
+          </button>
+        </div>
       </div>
+
+      {tab === 'login' && (
+        <div className='relative sm:row-start-5 mt-1 h-[56px]'>
+          <div className='p-1'>
+            <button
+              type='button'
+              onClick={() => setTab('signup')}
+              className='flex items-center justify-center w-full h-[56px] text-16 font-roboto px-4 py-2 border gap-[15px]'
+            >
+              <NewUserIcon className='w-7 h-7' />
+              Create account
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   )
 }

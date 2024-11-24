@@ -37,7 +37,7 @@ export default function AuthPage() {
       <div className='col-start-2 col-end-8 row-start-4 row-end-11 sm:row-start-5 sm:row-end-10 '>
         <AuthTabs tab={tab} setTab={setTab} />
       </div>
-      <div className='hidden row-span-7 sm:row-span-6 sm:block' />
+      <div className='hidden row-span-7 sm:row-span-5 sm:block' />
 
       <div className='hidden row-span-2 sm:row-span-3 sm:block' />
       <div className='hidden col-span-3 row-span-2 sm:row-span-3 sm:block' />
