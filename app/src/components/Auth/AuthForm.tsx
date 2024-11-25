@@ -13,7 +13,6 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ tab, setTab }: AuthFormProps) {
-  // Состояния формы
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -54,7 +53,6 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
   return (
     <form onSubmit={handleSubmit} className='px-4 sm:px-0'>
       <div className='grid grid-cols-1 sm:grid-cols-2'>
-        {/* Name input */}
         {tab === 'signup' && (
           <div className='flex border sm:border-0 font-monaspace'>
             <input
