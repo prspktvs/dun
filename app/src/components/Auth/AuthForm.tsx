@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
-import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon } from '../icons'
+import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icons'
 import { Loader } from '../ui/Loader'
+import { AuthButton } from '../ui/buttons/AuthButton'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
 
@@ -140,33 +141,27 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
         </div>
       </div>
 
-      {/* Google auth */}
-      <div className='relative sm:row-start-5 h-[56px] '>
-        <div className='p-1 '>
-          <button
-            type='button'
-            onClick={signInWithGoogle}
-            className='flex items-center justify-center w-full h-[56px] text-16 font-roboto px-4 py-2 border gap-[15px]'
-          >
-            <GoogleLogo className='w-6 h-6' />
-            Continue with Google
-          </button>
-        </div>
-      </div>
+      <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
+        Continue with Google
+      </AuthButton>
 
+      {tab === 'signup' && (
+        <AuthButton
+          onClick={() => setTab('login')}
+          icon={<MailIcon className='w-7 h-7' />}
+          className='mt-1'
+        >
+          Log in with email
+        </AuthButton>
+      )}
       {tab === 'login' && (
-        <div className='relative sm:row-start-5 mt-1 h-[56px]'>
-          <div className='p-1'>
-            <button
-              type='button'
-              onClick={() => setTab('signup')}
-              className='flex items-center justify-center w-full h-[56px] text-16 font-roboto px-4 py-2 border gap-[15px]'
-            >
-              <NewUserIcon className='w-7 h-7' />
-              Create account
-            </button>
-          </div>
-        </div>
+        <AuthButton
+          onClick={() => setTab('signup')}
+          icon={<NewUserIcon className='w-7 h-7' />}
+          className='mt-1'
+        >
+          Create account
+        </AuthButton>
       )}
     </form>
   )

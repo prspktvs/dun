@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 
 import { useAuth } from '../../context/AuthContext'
 import { Loader } from '../ui/Loader'
+import { AuthButton } from '../ui/buttons/AuthButton'
+import { GoogleLogo, NewUserIcon, MailIcon } from '../icons'
 
 interface ForgotPasswordViewProps {
   setTab: (tab: 'login' | 'signup' | 'verification' | 'forgot') => void
@@ -10,7 +12,7 @@ interface ForgotPasswordViewProps {
 export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
   const [email, setEmail] = useState('')
   const [isLoading, setLoading] = useState(false)
-  const { resetPassword } = useAuth()
+  const { resetPassword, signInWithGoogle } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,7 +20,7 @@ export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
 
     try {
       await resetPassword(email)
-      // Можно добавить уведомление об успехе
+      // TODO: Add success notification
       setTab('login')
     } catch (error) {
       console.error(error)
@@ -28,14 +30,12 @@ export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Заголовок */}
-      <div className='w-full px-5 pt-3 text-sm text-center pb-7 font-monaspace '>
+    <form onSubmit={handleSubmit} className='px-4 sm:px-0'>
+      <div className='w-full px-5 pt-3 text-sm text-center pb-7 font-monaspace'>
         STEP 1 Enter account email
       </div>
 
-      {/* Email input */}
-      <div className='flex mx-4 border h-14 font-monaspace'>
+      <div className='flex border h-14 font-monaspace'>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -45,20 +45,31 @@ export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
         />
       </div>
 
-      {/* Submit button */}
-      <div className='p-1 mx-4 border h-14'>
+      <div className='p-1 mb-[180px] border h-14'>
         <button type='submit' className='w-full h-full p-1 bg-[#8279BD] text-white font-monaspace'>
           {isLoading ? <Loader /> : 'Get a link'}
         </button>
       </div>
 
-      {/* Back to login */}
-      <div
+      <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
+        Continue with Google
+      </AuthButton>
+
+      <AuthButton
         onClick={() => setTab('login')}
-        className='mt-5 w-full text-center font-monaspace text-[#8279BD] cursor-pointer'
+        icon={<MailIcon className='w-7 h-7' />}
+        className='mt-1'
       >
-        Back to login
-      </div>
+        Log in with email
+      </AuthButton>
+
+      <AuthButton
+        onClick={() => setTab('signup')}
+        icon={<NewUserIcon className='w-7 h-7' />}
+        className='mt-1'
+      >
+        Create account
+      </AuthButton>
     </form>
   )
 }
