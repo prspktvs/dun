@@ -2,9 +2,9 @@ import { isEmpty } from 'lodash'
 import { Image } from '@mantine/core'
 import { useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
 import AvatarDun from '../../ui/Avatar'
 import { useProject } from '../../../context/ProjectContext'
-
 import { ICard } from '../../../types/Card'
 import TaskPreview from '../../Task/TaskPreview'
 import { MessageIcon, UpdateIcon } from '../../icons'
@@ -42,7 +42,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-border-color hover:cursor-pointer'
+      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-borders-purple hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='flex flex-col h-full'>

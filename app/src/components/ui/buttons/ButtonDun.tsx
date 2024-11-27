@@ -14,7 +14,7 @@ export default function ButtonDun({
   return (
     <div className='flex items-center justify-center w-full h-full'>
       <Button
-        className={clsx('font-monaspace bg-[#8279BD] hover:bg-[#8279BD] scale-button', className)}
+        className={clsx('font-monaspace bg-btnBg hover:bg-btnBg scale-button', className)}
         radius={0}
         variant='outline'
         color='#FFFFFF'

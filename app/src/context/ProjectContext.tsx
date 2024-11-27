@@ -59,7 +59,6 @@ export const ProjectProvider = ({
 
     fetchData()
   }, [projectId, sortType])
-  console.log(cards)
 
   useEffect(() => {
     if (!projectId || !user) return

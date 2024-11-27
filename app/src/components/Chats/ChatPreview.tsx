@@ -151,7 +151,7 @@ export default function ChatPreview({
                     />
                   </div>
                   {repliesCount ? (
-                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-[#8279BD] text-sm'>
+                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-btnBg text-sm'>
                       {repliesCount}+ replies
                     </div>
                   ) : null}

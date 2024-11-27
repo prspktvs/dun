@@ -17,4 +17,5 @@ export interface ICard {
   files: IFile[] | null
   author: IUser['id']
   project_id: string
+  public: boolean
 }
