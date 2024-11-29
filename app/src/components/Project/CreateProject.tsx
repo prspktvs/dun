@@ -39,7 +39,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   }
 
   return (
-    <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-gray-border'>
+    <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-borders-gray'>
       <div />
       <div className='col-span-2' />
       <div />

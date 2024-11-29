@@ -33,7 +33,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               </div>
               <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
                 No messages yet,{' '}
-                <span className='text-[#8279BD] font-bold hover:underline'>start a discussion</span>
+                <span className='text-btnBg font-bold hover:underline'>start a discussion</span>
               </div>
             </div>
           </div>

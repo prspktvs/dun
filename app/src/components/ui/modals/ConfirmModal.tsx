@@ -31,7 +31,7 @@ export function ConfirmModal({
             <div className='font-bold font-monaspace text-[#E86D6D]'>{closeText}</div>
           </button>
           <button onClick={onConfirm} className='flex items-center justify-center w-1/2 h-14'>
-            <div className='font-bold font-monaspace text-[#8279BD]'>{confirmText}</div>
+            <div className='font-bold font-monaspace text-btnBg'>{confirmText}</div>
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { isEmpty } from 'lodash'
+import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
 import clsx from 'clsx'
@@ -32,7 +32,7 @@ function LeftPanel() {
       }, {}),
     [cards],
   )
-  const groupedTasksById = useMemo(() => Object.groupBy(tasks, (task) => task.card_id), [tasks])
+  const groupedTasksById = useMemo(() => groupBy(tasks, (task) => task.card_id), [tasks])
 
   const { user } = useAuth()
 
@@ -158,7 +158,7 @@ function LeftPanel() {
           </div>
         ))}
 
-        <div className='text-[#8279bd] text-sm font-semibold font-monaspace pl-1'>+12</div>
+        <div className='text-btnBg text-sm font-semibold font-monaspace pl-1'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>

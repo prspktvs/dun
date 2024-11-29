@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMemo, useState } from 'react'
+import { groupBy } from 'lodash'
 
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
 import { genId } from '../../utils'
@@ -95,14 +96,14 @@ export function MyWorkPage() {
       }, {}),
     [cards],
   )
-  const groupedTasksById = useMemo(() => Object.groupBy(tasks, (task) => task.card_id), [tasks])
+  const groupedTasksById = useMemo(() => groupBy(tasks, (task) => task.card_id), [tasks])
 
   const onCreateNewCard = async () => {
     const id = genId()
 
     await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
-    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
   return (
     <div className='w-full h-full overflow-hidden pb-32'>

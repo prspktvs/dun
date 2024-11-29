@@ -1,7 +1,7 @@
 import { CopyButton } from '@mantine/core'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Modal } from './Modal'
 import ButtonDun from '../buttons/ButtonDun'
@@ -12,6 +12,7 @@ import { IUser } from '../../../types/User'
 import { ICard } from '../../../types/Card'
 import { shareCard, unshareCard } from '../../../services/card.service'
 import { ConfirmModal } from './ConfirmModal'
+import { SharingOption } from '../../Card/Sharing/SharingOption'
 
 interface IShareProps {
   opened: boolean
@@ -19,9 +20,127 @@ interface IShareProps {
   card: ICard
 }
 
+const InviteLinkSection = ({ copyUrl }: { copyUrl: string }) => (
+  <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-border-color'>
+    <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
+    <div className='w-2/4 text-sm my-5 h-full border-x-1 border-border-color flex items-center px-3'>
+      {copyUrl}
+    </div>
+    <div className='w-1/4 h-14'>
+      <CopyButton value={copyUrl}>
+        {({ copied, copy }) => (
+          <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
+            {copied ? 'Copied' : 'Copy'}
+          </ButtonDun>
+        )}
+      </CopyButton>
+    </div>
+  </div>
+)
+
+const SharingOptions = ({
+  isPrivate,
+  togglePrivacy,
+  setConfirmOpened,
+  confirmOpened,
+}: {
+  isPrivate: boolean
+  togglePrivacy: (isPrivate: boolean) => void
+  setConfirmOpened: (opened: boolean) => void
+  confirmOpened: boolean
+}) => (
+  <div className='flex divide-x-1 divide-border-color border-b-1 border-border-color'>
+    <SharingOption
+      title='Private'
+      description='Only you and selected users can view and edit this topic'
+      onClick={() => togglePrivacy(true)}
+      isActive={isPrivate}
+    />
+    <SharingOption
+      title='Share with everyone in this project'
+      description='All new project members can view and edit this topic'
+      onClick={() => setConfirmOpened(true)}
+      isActive={!isPrivate}
+    />
+    <ConfirmModal
+      confirmText='Share'
+      message='Are you sure you want to share this topic with all your team members?'
+      onClose={() => setConfirmOpened(false)}
+      onConfirm={() => togglePrivacy(false)}
+      opened={confirmOpened}
+    />
+  </div>
+)
+
+const UserItem = ({
+  user,
+  onAction,
+  actionLabel,
+  isOwner,
+}: {
+  user: IUser
+  onAction: () => void
+  actionLabel: string
+  isOwner: boolean
+}) => (
+  <div className='my-2 ml-3 flex items-center justify-between'>
+    <div className='flex items-center gap-3'>
+      <AvatarDun user={user} size={40} />
+      <div className='flex flex-col'>
+        <span className='text-base font-medium '>{user.name}</span>
+        <span className='text-sm '>{user.email}</span>
+      </div>
+    </div>
+    <div>
+      {isOwner ? (
+        <span className='font-bold text-black font-monaspace'>Owner</span>
+      ) : (
+        <span
+          className={`font-bold ${actionLabel === 'Remove' ? 'text-red-400' : 'text-btnBg'} font-monaspace hover:cursor-pointer`}
+          onClick={onAction}
+        >
+          {actionLabel}
+        </span>
+      )}
+    </div>
+  </div>
+)
+
+const UserListSection = ({
+  title,
+  users,
+  onAction,
+  actionLabel,
+  isOwnerCheck,
+}: {
+  title: string
+  users: IUser[]
+  onAction: (userId: IUser['id']) => void
+  actionLabel: string
+  isOwnerCheck: (user: IUser) => boolean
+}) => (
+  <>
+    <div className='flex items-center justify-between h-14 border-y-1 border-border-color'>
+      <span className='px-5 ml-3 font-bold font-monaspace'>{title}</span>
+    </div>
+    <div className='px-5 py-3 max-h-[300px] flex flex-col overflow-y-scroll'>
+      {users.map((user) => (
+        <UserItem
+          key={user.id}
+          user={user}
+          onAction={() => onAction(user.id)}
+          actionLabel={actionLabel}
+          isOwner={isOwnerCheck(user)}
+        />
+      ))}
+    </div>
+  </>
+)
+
 export function ShareTopicModal({ opened, onClose, card }: IShareProps) {
   const { id: projectId, cardId } = useParams()
-  const { users, updateCard } = useProject()
+  const { users, updateCard, project, optimisticUpdateCard } = useProject()
+  const [isPrivate, setIsPrivate] = useState(!card.public)
   const [confirmOpened, setConfirmOpened] = useState(false)
 
   const [sharedUsers, unsharedUsers] = useMemo(() => {
@@ -42,116 +161,64 @@ export function ShareTopicModal({ opened, onClose, card }: IShareProps) {
     shareCard(cardId as string, [userId])
     updateCard({ ...card, users: [...card.users, userId] })
   }
-  const onShareAll = () => {
-    shareCard(
-      cardId as string,
-      unsharedUsers.map((user) => user.id),
-    )
-    updateCard({ ...card, users: [...card.users, ...unsharedUsers.map((user) => user.id)] })
-    setConfirmOpened(false)
-  }
+
   const onUnshare = (userId: IUser['id']) => {
     unshareCard(cardId as string, userId)
     updateCard({ ...card, users: card.users?.filter((id) => id !== userId) })
   }
 
+  const togglePrivacy = (_isPrivate: boolean) => {
+    setIsPrivate(_isPrivate)
+    optimisticUpdateCard({ ...card, public: !_isPrivate })
+    setConfirmOpened(false)
+  }
+
   const copyUrl = DUN_URL + `/${projectId}/cards/${cardId}`
   return (
     <Modal opened={opened} onClose={onClose} title='Share topic'>
-      <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-border-color'>
-        <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
-        <div className='w-2/4 text-sm my-5 h-full border-x-1 border-border-color flex items-center px-3'>
-          {copyUrl}
-        </div>
-        <div className='w-1/4 h-14'>
-          <CopyButton value={copyUrl}>
-            {({ copied, copy }) => (
-              <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
-                {copied ? 'Copied' : 'Copy'}
-              </ButtonDun>
-            )}
-          </CopyButton>
-        </div>
-      </div>
-      <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
-        <span className='px-5 ml-3 font-bold font-monaspace'>Members</span>
-      </div>
-      <div className='px-5 py-3 max-h-[300px] flex flex-col overflow-y-scroll'>
-        {!isEmpty(sharedUsers)
-          ? sharedUsers.map((user, index) => (
-              <div
-                key={'ps-user-' + user.id}
-                className='my-2 ml-3 flex items-center justify-between'
-              >
-                <div className='flex items-center gap-3'>
-                  <AvatarDun user={user} size={40} />
-                  <div className='flex flex-col'>
-                    <span className='text-base font-medium '>{user.name}</span>
-                    <span className='text-sm '>{user.email}</span>
-                  </div>
-                </div>
-                <div>
-                  {user.id === card.author ? (
-                    <span className='font-bold text-black font-monaspace'>Owner</span>
-                  ) : (
-                    <span
-                      className='font-bold text-red-400 font-monaspace hover:cursor-pointer'
-                      onClick={() => onUnshare(user.id)}
-                    >
-                      Remove
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))
-          : null}
-      </div>
-      {!isEmpty(unsharedUsers) ? (
+      <InviteLinkSection copyUrl={copyUrl} />
+      <SharingOptions
+        isPrivate={isPrivate}
+        togglePrivacy={togglePrivacy}
+        setConfirmOpened={setConfirmOpened}
+        confirmOpened={confirmOpened}
+      />
+      {isPrivate ? (
         <>
-          <div className='flex items-center justify-between h-14 border-y-1 border-border-color'>
-            <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
-            <span
-              className='px-5 ml-3 font-bold text-[#8279BD] font-monaspace hover:cursor-pointer'
-              onClick={() => setConfirmOpened(true)}
-            >
-              Share with all
-            </span>
-            <ConfirmModal
-              confirmText='Share'
-              message='Are you sure you want to share this topic with all your team members?'
-              onClose={() => setConfirmOpened(false)}
-              onConfirm={onShareAll}
-              opened={confirmOpened}
+          <UserListSection
+            title='Who has access'
+            users={sharedUsers}
+            onAction={onUnshare}
+            actionLabel='Remove'
+            isOwnerCheck={(user) => user.id === card.author}
+          />
+          {!isEmpty(unsharedUsers) ? (
+            <UserListSection
+              title={`${project.title} team`}
+              users={unsharedUsers}
+              onAction={onShare}
+              actionLabel='Share'
+              isOwnerCheck={() => false}
             />
-          </div>
-          <div className='px-5 py-3 max-h-[300px] flex flex-col overflow-y-scroll'>
-            {unsharedUsers.map((user, index) => (
-              <div
-                key={'ps-user-' + user.id}
-                className='my-2 ml-3 flex items-center justify-between'
-              >
-                <div className='flex items-center gap-3'>
-                  <AvatarDun user={user} size={40} />
-                  <div className='flex flex-col'>
-                    <span className='text-base font-medium '>{user.name}</span>
-                    <span className='text-sm '>{user.email}</span>
-                  </div>
-                </div>
-                <span
-                  className='font-bold text-[#8279BD] font-monaspace hover:cursor-pointer'
-                  onClick={() => onShare(user.id)}
-                >
-                  Share
-                </span>
-              </div>
-            ))}
-          </div>
+          ) : (
+            <div className='flex items-center justify-between h-14 border-t-1 border-border-color'>
+              <span className='px-5 ml-3 font-bold font-monaspace'>
+                All your team is following this topic
+              </span>
+            </div>
+          )}
         </>
       ) : (
-        <div className='flex items-center justify-between h-14 border-t-1 border-border-color'>
-          <span className='px-5 ml-3 font-bold font-monaspace'>
-            All your team is following this topic
-          </span>
+        <div className='overflow-y-scroll max-h-[400px] px-5'>
+          {users.map((user) => (
+            <UserItem
+              key={user.id}
+              user={user}
+              onAction={() => {}}
+              actionLabel=''
+              isOwner={user.id === card.author}
+            />
+          ))}
         </div>
       )}
     </Modal>

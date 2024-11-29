@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { off, onValue, ref } from 'firebase/database'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { realtimeDb } from '../config/firebase'
 import { IChat, IMessage } from '../types/Chat'
@@ -8,8 +8,8 @@ import { getAllCardChats, removeCardChat, saveChatAndMessage } from '../services
 
 export type ChatContext = {
   chatId: string
-  openChatById: (id: string) => void
   cardChats: IChat[]
+  openChatById: (id: string) => void
   unreadChats: { id: string; unreadCount: number }[]
   getUnreadMessagesCount: (id: string) => number
   closeChat: () => void
@@ -31,10 +31,13 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [chatId, setChatId] = useState<string>(currentChatId ?? '')
   const [cardChats, setCardChats] = useState<IChat[]>([])
   const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
+
+  const navigate = useNavigate()
+
   const openChatById = (id: string) => {
     setChatId(id)
     const newUrl = `/${projectId}/cards/${currentCardId}/chats/${id}`
-    window.history.pushState({ path: newUrl }, '', newUrl)
+    navigate(newUrl, { replace: true })
   }
 
   const getUnreadMessagesCount = (id: string) => {
@@ -45,7 +48,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const closeChat = () => {
     setChatId('')
     const newUrl = `/${projectId}/cards/${currentCardId}`
-    window.history.pushState({ path: newUrl }, '', newUrl)
+    navigate(newUrl, { replace: true })
   }
 
   const deleteChat = async (cardId: string, chatId: string) => {

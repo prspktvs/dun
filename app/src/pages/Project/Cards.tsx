@@ -57,7 +57,7 @@ export function CardsPage() {
       createdAt: new Date(),
     })
 
-    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
 
   return (

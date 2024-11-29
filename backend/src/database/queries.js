@@ -141,7 +141,7 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
   FROM cards 
   LEFT JOIN files ON cards.id = files.card_id 
   WHERE cards.project_id = ? 
-    AND (cards.author = ? OR EXISTS (
+    AND (cards.public = 1 OR cards.author = ? OR EXISTS (
       SELECT 1 
       FROM json_each(cards.users) 
       WHERE json_each.value = ?

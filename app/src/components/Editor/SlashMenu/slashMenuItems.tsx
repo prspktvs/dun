@@ -11,6 +11,7 @@ import {
   SuggestionMenuProps,
 } from '@blocknote/react'
 import { useMemo } from 'react'
+import { groupBy } from 'lodash'
 
 import { insertOrUpdateBlock } from '../../../utils/editor'
 import ImageBlock from '../Blocks/ImageBlock'
@@ -26,7 +27,7 @@ export const customSchema: unknown = {
 
 export function CustomSlashMenu(props: SuggestionMenuProps<DefaultReactSuggestionItem>) {
   const groupedTools = useMemo(
-    () => Object.groupBy(props.items, ({ group }) => group || 'Other'),
+    () => groupBy(props.items, ({ group }) => group || 'Other'),
     [props.items],
   )
   const groups = Object.keys(groupedTools)

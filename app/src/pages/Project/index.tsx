@@ -1,4 +1,4 @@
-import { useParams , useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
@@ -42,7 +42,7 @@ const Project = () => {
 
     await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
-    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
 
   if (isLoading) return null
