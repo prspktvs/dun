@@ -20,7 +20,7 @@ export function VerificationView({ setTab }: VerificationViewProps) {
       <div className='p-1 border-t-1'>
         <button
           onClick={() => setTab('login')}
-          className='h-[35px] w-full bg-[#8279BD] text-white font-monaspace'
+          className='h-[35px] w-full bg-btnBg text-white font-monaspace'
         >
           Back to login
         </button>

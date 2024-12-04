@@ -46,7 +46,7 @@ export function ForgotPasswordView({ setTab }: ForgotPasswordViewProps) {
       </div>
 
       <div className='p-1 mb-[180px] border h-14'>
-        <button type='submit' className='w-full h-full p-1 bg-[#8279BD] text-white font-monaspace'>
+        <button type='submit' className='w-full h-full p-1 bg-btnBg text-white font-monaspace'>
           {isLoading ? <Loader /> : 'Get a link'}
         </button>
       </div>

@@ -32,9 +32,10 @@ export default {
         18: '18px',
       },
       colors: {
-        'textarea-bg': '#F9F9F9',
-        'gray-border': '#B0B0B0',
-        'border-color': '#C1B9CF',
+        borders: {
+          gray: '#B0B0B0',
+          purple: '#C1B9CF',
+        },
         priority: {
           low: '#00A3FF',
           medium: '#F5CC63',
@@ -43,6 +44,7 @@ export default {
         },
         grayBg: '#EFEFEF',
         inactiveText: '#6F6D73',
+        btnBg: '#8279BD',
         paper: '#FAF9F6',
         salad: '#DBF7CA',
         'primary-text': '#47444F',

@@ -10,11 +10,12 @@ export interface ICard {
   tags: string[] | null
   createdAt: Date
   content: PartialBlock[]
-  description: string[] | null
+  description: string[]
   chatIds: string[] | null
   tasks: ITask[] | null
   users: IUser['id'][] | null
   files: IFile[] | null
   author: IUser['id']
   project_id: string
+  public: boolean
 }

@@ -105,7 +105,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
         <button
           type='submit'
           disabled={isLoading}
-          className='w-full h-full bg-[#8279BD] text-white font-monaspace text-base divide-gray-border'
+          className='w-full h-full text-base text-white bg-btnBg font-monaspace divide-borders-gray'
         >
           {isLoading ? <Loader /> : tab === 'signup' ? 'Create' : 'Log in'}
         </button>

@@ -1,4 +1,4 @@
-import { useParams , useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
@@ -42,7 +42,7 @@ const Project = () => {
 
     await optimisticCreateCard({ id, title: '', chatIds: [], createdAt: new Date() })
 
-    navigate(`/${projectId}/cards/${id}#share`, { replace: true })
+    navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
 
   if (isLoading) return null
@@ -53,10 +53,10 @@ const Project = () => {
 
   return (
     <div className='h-screen overflow-y-hidden'>
-      <header className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-border-color'>
+      <header className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-borders-purple'>
         <div
           onClick={() => navigate(`/${projectId}`)}
-          className='w-80 border-r-1 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
+          className='w-80 border-r-1 border-borders-purple p-2 text-4xl text-center  text-black hover:cursor-pointer'
         >
           <Logo />
         </div>

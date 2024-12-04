@@ -93,13 +93,13 @@ export default function ChatPreview({
     <div className='flex w-full'>
       <div
         className={clsx(
-          'w-2 h-full border-r-1 border-border-color',
+          'w-2 h-full border-r-1 border-borders-purple',
           isChatRead ? 'bg-[#EFEFEF]' : 'bg-salad',
         )}
       ></div>
       <div
         className={clsx(
-          'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+          'w-full flex border-borders-purple hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
           isChatRead ? 'opacity-70' : '',
         )}
         onClick={onClick}
@@ -151,7 +151,7 @@ export default function ChatPreview({
                     />
                   </div>
                   {repliesCount ? (
-                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-[#8279BD] text-sm'>
+                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-btnBg text-sm'>
                       {repliesCount}+ replies
                     </div>
                   ) : null}

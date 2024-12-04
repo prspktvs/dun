@@ -22,7 +22,7 @@ export default function AuthTabs({ tab, setTab }: IAuthTabsProps) {
               className={`
               flex justify-center w-full px-10 text-[24px] sm:text-xl 
               font-semibold text-center sm:justify-start sm:text-left 
-              sm:border-b divide-gray-border font-monaspace mt-12 
+              sm:border-b divide-borders-gray font-monaspace mt-12 
               sm:py-7 sm:my-0 
               ${tab === 'forgot' ? '' : 'mb-10 sm:mb-0'}
             `}

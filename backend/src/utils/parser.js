@@ -1,6 +1,6 @@
 const isPropertyExist = (marks, prop) => Boolean(marks?.find((mark) => mark.type === prop))
 
-function parseContent(content, styles = {}) {
+function parseContent(content) {
   switch (content.type) {
     case 'mention':
       const id = content.attrs.id
@@ -8,6 +8,7 @@ function parseContent(content, styles = {}) {
       return { type: 'mention', text: '@' + name, id, styles: {} }
     case 'text':
       const marks = content.marks
+      const links = marks?.filter((mark) => mark.type === 'link')
       const textColor = marks?.find((mark) => mark.type === 'textColor')?.attrs?.color || 'default'
       const bold = isPropertyExist(marks, 'bold')
       const italic = isPropertyExist(marks, 'italic')
@@ -15,8 +16,9 @@ function parseContent(content, styles = {}) {
       const strike = isPropertyExist(marks, 'strike')
 
       return {
-        type: 'text',
-        text: content.text,
+        type: links ? 'link' : 'text',
+        ...(links && { href: links[0].attrs.href }),
+        text: content?.text,
         styles: {
           textColor,
           bold,
@@ -25,15 +27,8 @@ function parseContent(content, styles = {}) {
           strike,
         },
       }
-    case 'link':
-      const href = content.attrs.href
-      return {
-        type: 'link',
-        href,
-        content: [parseContent(content.content[0], styles)],
-      }
     default:
-      return
+      return {}
   }
 }
 
@@ -49,10 +44,6 @@ function parseContainer(container, addContent) {
   const blockId = container.attrs.id
   const blockBackground = container.attrs.backgroundColor
   const blockTextColor = container.attrs.textColor
-  const children =
-    container.content
-      ?.filter((block) => block.type === 'blockGroup')[0]
-      ?.content?.map((con) => parseContainer(con, addContent)) ?? []
   const block = container.content
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
@@ -90,6 +81,13 @@ function parseContainer(container, addContent) {
             url: parsedBlock.props.src || parsedBlock.props.url,
           })
           break
+        case 'video':
+          addContent('files', {
+            id: blockId,
+            type: 'video',
+            url: parsedBlock.props.url,
+          })
+          break
         default:
           parsedBlock?.content?.forEach((content) => {
             if (content?.type === 'mention') {
@@ -109,6 +107,12 @@ function parseContainer(container, addContent) {
                   })
                   ?.join(''),
                 user: content.id,
+              })
+            } else if (content?.type === 'link') {
+              addContent('files', {
+                id: blockId,
+                type: 'link',
+                url: content.href,
               })
             }
           })
@@ -164,9 +168,8 @@ function parseBNXmlToBlocks(data) {
           switch (content.type) {
             case 'text':
             case 'mention':
-              return content.text
             case 'link':
-              return content.content.text
+              return content.text
             default:
               return ''
           }

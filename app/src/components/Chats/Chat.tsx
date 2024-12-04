@@ -1,12 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { onValue, push, ref, set, get } from '@firebase/database'
-import { collection, doc, getDoc } from '@firebase/firestore'
-import { Avatar } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 
-import { db, realtimeDb } from '../../config/firebase'
+import { realtimeDb } from '../../config/firebase'
 import { useAuth } from '../../context/AuthContext'
 import { IUser } from '../../types/User'
 import { saveChatAndMessage } from '../../services'
@@ -14,7 +12,6 @@ import { useChats } from '../../context/ChatContext'
 import { IMessage } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
 import { useProject } from '../../context/ProjectContext'
-import suggestion from '../Editor/Mentions/suggestion'
 import AvatarDun from '../ui/Avatar'
 
 export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
@@ -120,12 +117,12 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   return (
     <div className='h-[calc(100%-_56px)] flex flex-col'>
       <div
-        className='flex gap-3 items-center font-monaspace px-3 hover:cursor-pointer border-b-1 border-border-color'
+        className='flex gap-3 items-center font-monaspace px-3 hover:cursor-pointer border-b-1 border-borders-purple'
         onClick={closeChat}
       >
         <div className='text-2xl font-bold'>{'<'}</div>
         <div>
-          <div className='h-full border-l-1 border-border-color px-2 py-1 gap-3 font-monaspace'>
+          <div className='h-full border-l-1 border-borders-purple px-2 py-1 gap-3 font-monaspace'>
             <div className='text-sm text-[#A3A1A7]'>
               {author ? `${author.name} started a discussion about:` : 'New discussion:'}
             </div>
@@ -178,7 +175,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
-      <div className='h-14 border-t-1 border-border-color px-1 flex w-full items-center'>
+      <div className='h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
           className='ml-1 flex-1 font-commissioner'
@@ -198,10 +195,10 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Your comment'
-          forceSuggestionsAboveCursor={true}
+          forceSuggestionsAboveCursor={false}
         >
           <Mention
-            className='relative mention z-10 bg-cloudy top-[1px] text-[15.5px] px-[1px]'
+            className='relative mention z-10 font-bold top-[1px] text-[15.95px] bg-background py-1'
             style={{ fontWeight: 600 }}
             trigger='@'
             data={

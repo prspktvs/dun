@@ -28,7 +28,7 @@ export default function AuthPage() {
       <div className='hidden row-span-2 sm:row-span-3 sm:block' />
 
       <div />
-      <div className='col-start-2 col-end-8 row-start-3 row-end-3 sm:row-start-4 sm:row-end-4 w-full bg-[#EDEBF3] h-[60px] sm:h-auto flex items-center pl-7 border-b divide-gray-border'>
+      <div className='col-start-2 col-end-8 row-start-3 row-end-3 sm:row-start-4 sm:row-end-4 w-full bg-[#EDEBF3] h-[60px] sm:h-auto flex items-center pl-7 border-b divide-borders-gray'>
         <Logo className='w-[80px] h-[32px]' />
       </div>
       <div />

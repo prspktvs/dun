@@ -20,7 +20,7 @@ function LandingPage() {
       {/* Header */}
       <div className='border-2 m-6 border-black'>
         <div className='flex justify-between items-center border-b-1 bg-[#C5D4D2] h-14 border-black '>
-          <div className='border-border-color pl-5 text-4xl text-center  text-black'>
+          <div className='border-borders-purple pl-5 text-4xl text-center  text-black'>
             <Logo />
           </div>
           <button className='h-full flex items-center p-5 border-l-1 border-black bg-[#C5D4D2] hover:cursor-pointer hover:bg-[#d8e6e4]'>

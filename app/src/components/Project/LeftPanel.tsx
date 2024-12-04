@@ -57,7 +57,7 @@ function LeftPanel() {
   }
 
   return (
-    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-border-color'>
+    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
       <section>
         <Menu
           shadow='md'
@@ -67,7 +67,7 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='flex flex-col justify-between px-5 text-3xl border-border-color h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='flex flex-col justify-between px-5 text-3xl border-borders-purple h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -124,17 +124,17 @@ function LeftPanel() {
           placeholder='Find it all'
           className='text-sm font-normal font-agron'
         />
-        <div className='items-center justify-center flex-shrink-0 h-full border-l border-border-color'>
+        <div className='items-center justify-center flex-shrink-0 h-full border-l border-borders-purple'>
           <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
             <span className='text-xl font-thin'>+</span>Topic
           </ButtonDun>
         </div>
       </div>
 
-      <section className='items-center justify-center hidden w-full md:flex h-14 border-b-1 border-border-color'>
+      <section className='items-center justify-center hidden w-full md:flex h-14 border-b-1 border-borders-purple'>
         <ProjectUsers />
       </section>
-      <nav className='w-full px-5 pb-1 border-b-1 border-border-color'>
+      <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
         <ul>
           <li className='mb-2'>
             <LeftPanelButton

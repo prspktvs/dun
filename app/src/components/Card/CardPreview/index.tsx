@@ -2,9 +2,9 @@ import { isEmpty } from 'lodash'
 import { Image } from '@mantine/core'
 import { useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
 import AvatarDun from '../../ui/Avatar'
 import { useProject } from '../../../context/ProjectContext'
-
 import { ICard } from '../../../types/Card'
 import TaskPreview from '../../Task/TaskPreview'
 import { MessageIcon, UpdateIcon } from '../../icons'
@@ -42,14 +42,14 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-border-color hover:cursor-pointer hidden md:flex'
+      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-borders-purple hover:cursor-pointer hidden md:flex'
       onClick={onClick}
     >
       <div className='flex flex-col h-full'>
         <div className='flex items-center justify-between mb-2'>
           <div className='text-xs text-gray-500 font-monaspace'>{relativeTime}</div>
           <div className='flex gap-x-2'>
-            <MessageIcon count={card?.chatIds?.length || 0} />
+            <MessageIcon count={card.chatIds.length} />
             <UpdateIcon count={0} />
           </div>
         </div>

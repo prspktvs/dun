@@ -40,7 +40,7 @@ const CreateProject = (props: ICreateProjectProps) => {
   }
 
   return (
-    <div className='h-screen w-screen flex flex-col md:grid md:grid-cols-4 md:grid-rows-4 md:divide-x-[1px] md:divide-y-[1px] md:divide-gray-border '>
+    <div className='h-screen w-screen flex flex-col md:grid md:grid-cols-4 md:grid-rows-4 md:divide-x-[1px] md:divide-y-[1px] md:divide-borders-gray '>
       <div className='h-[60px] pl-4 pr-[15px] bg-[#edebf3] w-full text-black  border-b flex justify-start items-center '>
         <Logo />
       </div>
