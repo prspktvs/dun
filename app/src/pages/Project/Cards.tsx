@@ -64,8 +64,8 @@ export function CardsPage() {
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section className='flex items-center justify-between border-border-color h-14'>
         <div className='flex justify-center w-full h-full border-b-1 border-border-color'>
-          <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
-            <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
+          <div className='items-center hidden ml-6 text-xs font-normal md:flex gap-x-4 md:w-full font-monaspace'>
+            <div className=' text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
             <SortButton
               onClick={() => setSortType('updatedAt')}
               isActive={sortType === 'updatedAt'}
@@ -85,7 +85,7 @@ export function CardsPage() {
 </SortButton> */}
           </div>
 
-          <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-border-color'>
+          <div className='items-center justify-center flex-shrink-0 hidden w-48 h-full border-l md:flex border-border-color'>
             <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
               <span className='text-xl font-thin'>+</span>Topic
             </ButtonDun>

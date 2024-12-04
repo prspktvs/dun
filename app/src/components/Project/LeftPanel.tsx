@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, ReactNode } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
@@ -13,6 +13,13 @@ import ProjectUsers from '../User/ProjectUsers'
 import LeftPanelButton from '../ui/buttons/LeftPanelButton'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import { SearchIcon, RingIcon } from '../icons'
+import ButtonDun from '../ui/buttons/ButtonDun'
+
+interface ButtonDunProps {
+  children?: ReactNode
+  onClick?: () => void
+  className?: string
+}
 
 function LeftPanel() {
   const { id: projectId } = useParams()
@@ -44,6 +51,10 @@ function LeftPanel() {
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
   const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
+
+  const onCreateNewCard = () => {
+    console.log('Creating new card')
+  }
 
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-border-color'>
@@ -104,18 +115,23 @@ function LeftPanel() {
           </Menu.Dropdown>
         </Menu>
       </section>
-      <div className=' md:hidden flex-1 flex items-center px-6 gap-3 relative bg-[#edebf3]'>
-        <SearchIcon className='absolute left-0  w-5 h-5 text-[#969696]' />
+      <div className='relative flex items-center gap-3 px-6 py-3 md:hidden'>
+        <SearchIcon className='absolute left-0 w-5 h-5 ' />
         <input
           type='text'
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder='Find it all'
-          className='bg-[#edebf3] text-[#969696] text-sm font-normal font-agron'
+          className='text-sm font-normal font-agron'
         />
+        <div className='items-center justify-center flex-shrink-0 h-full border-l border-border-color'>
+          <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
+            <span className='text-xl font-thin'>+</span>Topic
+          </ButtonDun>
+        </div>
       </div>
 
-      <section className='items-center justify-center hidden w-full  md:flex h-14 border-b-1 border-border-color'>
+      <section className='items-center justify-center hidden w-full md:flex h-14 border-b-1 border-border-color'>
         <ProjectUsers />
       </section>
       <nav className='w-full px-5 pb-1 border-b-1 border-border-color'>
