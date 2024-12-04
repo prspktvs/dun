@@ -53,10 +53,10 @@ const Project = () => {
 
   return (
     <div className='h-screen overflow-y-hidden'>
-      <header className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-border-color'>
+      <header className='flex justify-between items-center border-b-1 bg-grayBg h-14 border-borders-purple'>
         <div
           onClick={() => navigate(`/${projectId}`)}
-          className='w-80 border-r-1 border-border-color p-2 text-4xl text-center  text-black hover:cursor-pointer'
+          className='w-80 border-r-1 border-borders-purple p-2 text-4xl text-center  text-black hover:cursor-pointer'
         >
           <Logo />
         </div>

@@ -15,7 +15,7 @@ export default function LeftPanelButton({
       onClick={onClick}
       className={clsx(
         'block h-9 w-full text-left font-monaspace text-14 pl-1',
-        isActive ? 'bg-[#EDEBF3] font-semibold' : 'bg-cloudy font-normal',
+        isActive ? 'bg-[#EDEBF3] font-semibold' : 'bg-background font-normal',
         'hover:bg-[#EDEBF3] hover:font-semibold hover:cursor-pointer',
       )}
     >

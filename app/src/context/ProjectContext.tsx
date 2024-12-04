@@ -53,7 +53,6 @@ export const ProjectProvider = ({
     if (!projectId) return
     async function fetchData() {
       const allCards = await getProjectCards(projectId, sortType)
-
       setCards(allCards)
     }
 
@@ -131,10 +130,10 @@ export const ProjectProvider = ({
 
   const optimisticCreateCard = async (card: Partial<ICard>) => {
     try {
-      const data = { ...card, author: user.id, users: [] }
+      const data = { ...card, author: user.id, users: [], public: false }
       const newCard = await createCard(projectId, data)
       if (!newCard) return
-      setCards((prev) => [...prev, newCard])
+      setCards((prev) => [newCard, ...prev])
     } catch (error) {}
   }
 

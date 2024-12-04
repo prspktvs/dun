@@ -131,6 +131,7 @@ const onStoreDocument = async ({
     description,
     text,
   } = parser(json)
+  console.log('files', allFiles)
 
   // without await to not block the response
   // @TODO: optimize card title
@@ -191,7 +192,7 @@ const onStoreDocument = async ({
     created_at: Date.now(),
     author_id: user.user_id,
     author: user.name,
-    public: false, // @TODO
+    public: false,
     user_ids: JSON.parse(currentCard.users || '[]'),
   })
     .then((res) => console.log('Document added to typesense', res))

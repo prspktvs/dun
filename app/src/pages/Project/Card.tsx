@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import _debounce from 'lodash/debounce'
 import { Menu } from '@mantine/core'
@@ -24,6 +24,8 @@ interface ICardProps {
   card: ICard
 }
 
+type RightPanelTab = 'discussions' | 'attachments'
+
 const CardHeader = ({
   goBack,
   isAuthor,
@@ -43,7 +45,7 @@ const CardHeader = ({
   showConfirmModal: boolean
   onRemoveCard: () => void
 }) => (
-  <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
+  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
     <div className='flex items-center mx-3 justify-between grow h-full'>
       <div className='underline font-monaspace text-sm hover:cursor-pointer' onClick={goBack}>
         {'<'} Back to topics
@@ -99,18 +101,18 @@ const CardTabs = ({
   unreadDiscussions,
   filesLength,
 }: {
-  activeTab: 'discussions' | 'attachments' | 'updates'
-  setActiveTab: (tab: 'discussions' | 'attachments' | 'updates') => void
+  activeTab: RightPanelTab
+  setActiveTab: (tab: RightPanelTab) => void
   cardChatsLength: number
   unreadDiscussions: number
   filesLength: number
 }) => (
-  <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
-    <div className='w-full grid grid-cols-3 h-full divide-x-[1px] divide-borders-gray border-border-color '>
+  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+    <div className='w-full grid grid-cols-2 h-full divide-x-[1px] divide-borders-gray border-borders-purple '>
       <div
         className={clsx(
           'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'discussions' ? 'bg-cloudy text-black' : 'bg-grayBg text-inactiveText',
+          activeTab === 'discussions' ? 'bg-background text-black' : 'bg-grayBg text-inactiveText',
         )}
         onClick={() => setActiveTab('discussions')}
       >
@@ -120,20 +122,11 @@ const CardTabs = ({
       <div
         className={clsx(
           'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'attachments' ? 'bg-cloudy text-black' : 'bg-grayBg text-inactiveText',
+          activeTab === 'attachments' ? 'bg-background text-black' : 'bg-grayBg text-inactiveText',
         )}
         onClick={() => setActiveTab('attachments')}
       >
         Attachments• {filesLength}
-      </div>
-      <div
-        className={clsx(
-          'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'updates' ? 'bg-cloudy text-black' : 'bg-grayBg text-inactiveText',
-        )}
-        onClick={() => setActiveTab('updates')}
-      >
-        Updates
       </div>
     </div>
   </div>
@@ -151,9 +144,7 @@ const Card = ({ card }: ICardProps) => {
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [title, setTitle] = useState(card.title)
-  const [activeTab, setActiveTab] = useState<'discussions' | 'attachments' | 'updates'>(
-    'discussions',
-  )
+  const [activeTab, setActiveTab] = useState<RightPanelTab>('discussions')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const files = card?.files?.filter((file) => file.url) || []
@@ -241,7 +232,7 @@ const Card = ({ card }: ICardProps) => {
           />
           <Editor key={card.id} projectId={projectId} card={card} users={users} />
         </section>
-        <aside className='border-l-1 border-border-color w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+        <aside className='border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -253,7 +244,7 @@ const Card = ({ card }: ICardProps) => {
             {
               discussions: <Discussions users={users} />,
               attachments: <Attachments files={files} />,
-              updates: <Updates />,
+              // updates: <Updates />,
             }[activeTab]
           }
         </aside>
@@ -268,7 +259,7 @@ const Card = ({ card }: ICardProps) => {
 }
 
 export function CardPage() {
-  const { cardId } = useParams()
+  const { cardId, id: projectId } = useParams()
   const { cards } = useProject()
 
   const card = cards?.find((card) => card.id === cardId)
@@ -276,7 +267,7 @@ export function CardPage() {
   return (
     <ChatProvider>
       <FilePreviewProvider files={card?.files || []}>
-        {card ? <Card card={card} /> : <Loader />}
+        {card ? <Card card={card} /> : <Navigate to={`/${projectId}`} />}
       </FilePreviewProvider>
     </ChatProvider>
   )
