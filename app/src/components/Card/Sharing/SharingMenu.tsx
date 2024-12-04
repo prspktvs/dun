@@ -30,7 +30,7 @@ export function SharingMenu({
   const [isPrivate, setPrivate] = useState(true)
 
   return (
-    <div className='absolute top-14 right-1 w-[480px] bg-background border-1 border-border-color z-50'>
+    <div className='absolute top-14 right-1 w-[480px] bg-background border-1 border-borders-purple z-50'>
       <h1 className='text-xl px-3 py-1'>Set Up Sharing</h1>
       <SharingOption
         isActive={isPrivate}
@@ -44,7 +44,7 @@ export function SharingMenu({
         description='All new project members can view and edit this topic'
         onClick={() => setPrivate(false)}
       />
-      <div className='flex border-t-1 border-border-color divide-x-1 divide-border-color'>
+      <div className='flex border-t-1 border-borders-purple divide-x-1 divide-border-color'>
         <SharingButton onClick={openFullSharingModal}>Manage</SharingButton>
         <SharingButton onClick={() => updateSharingMode(isPrivate)}>OK</SharingButton>
       </div>

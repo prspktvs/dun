@@ -78,7 +78,7 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
           </div>
         )}
       </div>
-      <div className='mb-2 pt-2 border-border-color border-b-1' />
+      <div className='mb-2 pt-2 border-borders-purple border-b-1' />
     </>
   )
 }
@@ -107,9 +107,9 @@ export function MyWorkPage() {
   }
   return (
     <div className='w-full h-full overflow-hidden pb-32'>
-      <section className='border-border-color flex items-center h-14 '>
-        <div className='h-full flex w-full justify-end border-b-1 border-border-color sm:gap-x-1 '>
-          <div className='h-full w-48 border-l-1 border-border-color'>
+      <section className='border-borders-purple flex items-center h-14 '>
+        <div className='h-full flex w-full justify-end border-b-1 border-borders-purple sm:gap-x-1 '>
+          <div className='h-full w-48 border-l-1 border-borders-purple'>
             <ButtonDun onClick={onCreateNewCard}>
               <span className='pr-1 text-xl font-thin'>+</span>Topic
             </ButtonDun>
@@ -118,7 +118,7 @@ export function MyWorkPage() {
       </section>
 
       <div className='px-10 py-5 overflow-y-scroll h-full w-2/3 overflow-hidden'>
-        <div className='text-16 font-monaspace mb-2 border-b-1 border-border-color pb-2'>
+        <div className='text-16 font-monaspace mb-2 border-b-1 border-borders-purple pb-2'>
           Tasks assigned to you
         </div>
         {Object.keys(groupedTasksById).map((cardId) => (

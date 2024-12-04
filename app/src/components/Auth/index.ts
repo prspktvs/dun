@@ -1,3 +1,5 @@
-import AuthTabs from './AuthTabs'
-
-export { AuthTabs }
+export { default as AuthTabs } from './AuthTabs'
+export { AuthForm } from './AuthForm'
+export { VerificationView } from './VerificationView'
+export { ForgotPasswordView } from './ForgotPasswordView'
+export { LeftTab } from './LeftTab'

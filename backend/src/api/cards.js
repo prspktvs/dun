@@ -52,7 +52,7 @@ export const searchCards = async (req, res) => {
     })
     const cardIds = results.hits.map((hit) => `'${hit.document.id}'`).join(',')
     const cards = cardIds?.length
-      ? await allQuery(SELECT_ALL_CARDS_BY_IDS_QUERY.replace('$IDS', cardIds), [project_id])
+      ? await allQuery(SELECT_ALL_CARDS_BY_IDS_QUERY.replace('$IDS', cardIds), [project_id]) // :derp; https://github.com/TryGhost/node-sqlite3/issues/762
       : []
     res.json(cards.map(deserializeCard))
   } catch (error) {
