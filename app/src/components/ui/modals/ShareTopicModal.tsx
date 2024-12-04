@@ -1,7 +1,7 @@
 import { CopyButton } from '@mantine/core'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Modal } from './Modal'
 import ButtonDun from '../buttons/ButtonDun'
@@ -21,9 +21,9 @@ interface IShareProps {
 }
 
 const InviteLinkSection = ({ copyUrl }: { copyUrl: string }) => (
-  <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-border-color'>
+  <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-borders-purple'>
     <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
-    <div className='w-2/4 text-sm my-5 h-full border-x-1 border-border-color flex items-center px-3'>
+    <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
       {copyUrl}
     </div>
     <div className='w-1/4 h-14'>
@@ -49,7 +49,7 @@ const SharingOptions = ({
   setConfirmOpened: (opened: boolean) => void
   confirmOpened: boolean
 }) => (
-  <div className='flex divide-x-1 divide-border-color border-b-1 border-border-color'>
+  <div className='flex divide-x-1 divide-borders-purple border-b-1 border-borders-purple'>
     <SharingOption
       title='Private'
       description='Only you and selected users can view and edit this topic'
@@ -120,7 +120,7 @@ const UserListSection = ({
   isOwnerCheck: (user: IUser) => boolean
 }) => (
   <>
-    <div className='flex items-center justify-between h-14 border-y-1 border-border-color'>
+    <div className='flex items-center justify-between h-14 border-y-1 border-borders-purple'>
       <span className='px-5 ml-3 font-bold font-monaspace'>{title}</span>
     </div>
     <div className='px-5 py-3 max-h-[300px] flex flex-col overflow-y-scroll'>
@@ -142,6 +142,10 @@ export function ShareTopicModal({ opened, onClose, card }: IShareProps) {
   const { users, updateCard, project, optimisticUpdateCard } = useProject()
   const [isPrivate, setIsPrivate] = useState(!card.public)
   const [confirmOpened, setConfirmOpened] = useState(false)
+
+  useEffect(() => {
+    setIsPrivate(!card.public)
+  }, [card.public])
 
   const [sharedUsers, unsharedUsers] = useMemo(() => {
     return users.reduce(
@@ -201,7 +205,7 @@ export function ShareTopicModal({ opened, onClose, card }: IShareProps) {
               isOwnerCheck={() => false}
             />
           ) : (
-            <div className='flex items-center justify-between h-14 border-t-1 border-border-color'>
+            <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
               <span className='px-5 ml-3 font-bold font-monaspace'>
                 All your team is following this topic
               </span>

@@ -52,7 +52,7 @@ const StatusDropdown = ({
           <RiArrowDown />
         </span>
       </Menu.Target>
-      <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+      <Menu.Dropdown className='rounded-xl border-1 border-borders-purple'>
         <Menu.Item onClick={() => updateStatus(TaskStatus.NoStatus)}>no status</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.Planned)}>Planned</Menu.Item>
         <Menu.Item onClick={() => updateStatus(TaskStatus.InProgress)}>In progress</Menu.Item>
@@ -91,7 +91,7 @@ const PriorityDropdown = ({
           <RiArrowDown />
         </span>
       </Menu.Target>
-      <Menu.Dropdown className='rounded-xl border-1 border-border-color'>
+      <Menu.Dropdown className='rounded-xl border-1 border-borders-purple'>
         <Menu.Item
           className='text-[#969696]'
           onClick={() => updatePriority(TaskPriority.NoPriority)}
@@ -252,12 +252,12 @@ const TaskBlock = createReactBlockSpec(
                 )}
               </div>
             </Popover.Target>
-            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-border-color bg-cloudy'>
+            <Popover.Dropdown className='rounded-lg h-9 flex items-center gap-3 border-1 border-borders-purple bg-background'>
               <StatusDropdown
                 status={status}
                 updateStatus={(status) => editor.updateBlock(block, { props: { status } })}
               />
-              <div className='border-l-1 w-[1px] h-8 border-border-color' />
+              <div className='border-l-1 w-[1px] h-8 border-borders-purple' />
               <PriorityDropdown
                 priority={priority}
                 updatePriority={(priority) => editor.updateBlock(block, { props: { priority } })}

@@ -146,6 +146,13 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
       FROM json_each(cards.users) 
       WHERE json_each.value = ?
     ))
+    AND (
+      cards.title <> '' OR cards.description <> '[]' OR EXISTS (
+        SELECT 1 
+        FROM tasks 
+        WHERE tasks.card_id = cards.id
+      )
+    )
   GROUP BY cards.id 
   ORDER BY ${orderBy} DESC
 `
