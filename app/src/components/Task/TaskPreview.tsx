@@ -26,10 +26,12 @@ const TaskPreview = ({ task }: { task: ITask }) => {
             priority === TaskPriority.Low
               ? 'text-priority-low'
               : priority === TaskPriority.Medium
-              ? 'text-priority-medium'
-              : priority === TaskPriority.High
-              ? 'text-priority-high'
-              : 'text-priority-urgent',
+                ? 'text-priority-medium'
+                : priority === TaskPriority.High
+                  ? 'text-priority-high'
+                  : priority === TaskPriority.Urgent
+                    ? 'text-priority-urgent'
+                    : '',
           )}
         >
           {priority}
