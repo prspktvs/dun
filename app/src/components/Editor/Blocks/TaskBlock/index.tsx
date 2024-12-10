@@ -84,7 +84,7 @@ const PriorityDropdown = ({
                   ? 'text-priority-high'
                   : priority === TaskPriority.Urgent
                     ? 'text-priority-urgent'
-                    : 'text-[#969696]',
+                    : '',
           )}
         >
           {priority}

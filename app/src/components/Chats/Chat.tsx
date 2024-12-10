@@ -155,7 +155,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                   </div>
                 ) : null}
                 <div className='flex gap-1 items-center font-semibold'>
-                  <AvatarDun user={messageUser} />
+                  <AvatarDun user={messageUser} size={24} />
                   <span className='font-rubik text-14 font-medium ml-1'>
                     {messageUser?.name}
                     <span className='ml-2 text-sm text-gray-400 font-monaspace font-thin'>
@@ -195,7 +195,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Your comment'
-          forceSuggestionsAboveCursor={false}
+          forceSuggestionsAboveCursor
         >
           <Mention
             className='relative mention z-10 font-bold top-[1px] text-[15.95px] bg-background py-1'

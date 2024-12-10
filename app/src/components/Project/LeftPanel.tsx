@@ -9,9 +9,9 @@ import { getAllUserProject } from '../../services'
 import { genId } from '../../utils'
 import { useProject } from '../../context/ProjectContext'
 import TaskPreview from '../Task/TaskPreview'
-import ProjectUsers from '../User/ProjectUsers'
 import LeftPanelButton from '../ui/buttons/LeftPanelButton'
 import ProjectSettingsModal from './ProjectSettingsModal'
+import UserList from '../User/UserList'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
@@ -21,7 +21,7 @@ function LeftPanel() {
   const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
-  const { tasks, cards, project } = useProject()
+  const { tasks, cards, project, users } = useProject()
   const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
@@ -45,7 +45,7 @@ function LeftPanel() {
   const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
 
   return (
-    <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-border-color h-screen'>
+    <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-borders-purple h-screen'>
       <section>
         <Menu
           shadow='md'
@@ -55,7 +55,7 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='border-border-color h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='border-borders-purple h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -103,10 +103,10 @@ function LeftPanel() {
           </Menu.Dropdown>
         </Menu>
       </section>
-      <section className='h-14 w-full flex items-center justify-center border-b-1 border-border-color'>
-        <ProjectUsers />
+      <section className='h-14 w-full flex items-center justify-center border-b-1 border-borders-purple'>
+        <UserList users={users} />
       </section>
-      <nav className='w-full border-b-1 border-border-color px-5 pb-1'>
+      <nav className='w-full border-b-1 border-borders-purple px-5 pb-1'>
         <ul>
           <li className='mb-2'>
             <LeftPanelButton

@@ -13,7 +13,7 @@ export function SharingOption({ isActive, onClick, title, description }: Sharing
   return (
     <div
       className={clsx(
-        'border-border-color border-t-1 p-5 cursor-pointer',
+        'flex-1 border-borders-purple border-t-1 p-5 cursor-pointer',
         isActive && 'bg-[#EDEBF3]',
       )}
       onClick={isActive ? undefined : onClick}

@@ -82,6 +82,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [currentCardId])
 
   useEffect(() => {
+    // @TODO: split chats by project ids (/chats/projectId) to get a batch of project chats
+    // @TODO: add read status to messages
     const messagesRef = ref(realtimeDb, `chats`)
     onValue(messagesRef, (snapshot) => {
       const messageData: { id: string; content: string; messages: IMessage[] } = snapshot.val()

@@ -131,7 +131,6 @@ const onStoreDocument = async ({
     description,
     text,
   } = parser(json)
-  console.log('files', allFiles)
 
   // without await to not block the response
   // @TODO: optimize card title

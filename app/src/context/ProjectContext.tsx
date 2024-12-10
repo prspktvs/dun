@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { get, off, onValue, ref } from 'firebase/database'
 
 import { ITask } from '../types/Task'
 import { useAuth } from './AuthContext'
@@ -16,6 +17,8 @@ import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
 import { IUser } from '../types/User'
+import { realtimeDb } from '../config/firebase'
+import { IMessage } from '../types/Chat'
 
 export type ProjectContext = {
   project: IProject
@@ -32,6 +35,7 @@ export type ProjectContext = {
   optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
   optimisticUpdateCard: (card: Partial<ICard>) => Promise<void>
   optimisticDeleteCard: (cardId: string) => Promise<void>
+  getUnreadCardMessagesCount: (id: string) => number
 }
 
 export const ProjectProvider = ({
@@ -46,8 +50,31 @@ export const ProjectProvider = ({
   const [tasks, setTasks] = useState<ITask[]>([])
   const [search, setSearch] = useState('')
   const [sortType, setSortType] = useState<ProjectContext['sortType']>('createdAt')
+  const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
 
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
+
+  useEffect(() => {
+    const messagesRef = ref(realtimeDb, `chats`)
+    get(messagesRef).then((snapshot) => {
+      const messageData: { id: string; content: string; messages: IMessage[] } = snapshot.val()
+      const lastReadMessages = JSON.parse(localStorage.getItem('lastReadMessages'))
+      const allChats = Object.values(messageData)
+      const data: { id: string; unreadCount: number }[] = allChats.map((chat) => {
+        if (!chat || !chat?.id || !chat?.messages) return { id: '', unreadCount: 0 }
+        const messagesIds = Object.keys(chat.messages)
+        const unreadCount =
+          lastReadMessages && lastReadMessages.hasOwnProperty(chat.id)
+            ? messagesIds.length - 1 - messagesIds.indexOf(lastReadMessages[chat.id])
+            : messagesIds.length
+        return { id: chat.id, unreadCount }
+      })
+
+      setUnreadChats(data)
+    })
+
+    return () => off(messagesRef)
+  }, [])
 
   useEffect(() => {
     if (!projectId) return
@@ -128,6 +155,11 @@ export const ProjectProvider = ({
     return () => ws.close()
   }, [projectId, user])
 
+  const getUnreadCardMessagesCount = (id: string) => {
+    const message = unreadChats.find((chat) => chat.id === id)
+    return message && message?.unreadCount ? message?.unreadCount : 0
+  }
+
   const optimisticCreateCard = async (card: Partial<ICard>) => {
     try {
       const data = { ...card, author: user.id, users: [], public: false }
@@ -178,6 +210,7 @@ export const ProjectProvider = ({
     optimisticCreateCard,
     optimisticUpdateCard,
     optimisticDeleteCard,
+    getUnreadCardMessagesCount,
   }
   return <ProjectContext.Provider value={contextValue}>{children}</ProjectContext.Provider>
 }
