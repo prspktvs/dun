@@ -34,7 +34,9 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     () =>
       (card.public
         ? projectUsers
-        : projectUsers?.filter((user) => card.users?.includes(user.id))) ?? [],
+        : projectUsers?.filter(
+            (user) => card.users?.includes(user.id) || card.author === user.id,
+          )) ?? [],
     [card.users, projectUsers, card.public],
   )
 
