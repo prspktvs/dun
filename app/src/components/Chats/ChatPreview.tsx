@@ -30,7 +30,7 @@ function MessagePreview({
       <div className='max-w-7xl'>
         {user ? (
           <div className='flex gap-1 items-center font-semibold mb-1'>
-            <AvatarDun user={user} />
+            <AvatarDun user={user} size={24} />
             <span className='text-sm text-zinc-700 font-rubik font-medium ml-1'>
               {user?.name}
               <span className='ml-2 text-10  text-gray-400 font-normal'>{time}</span>
@@ -93,13 +93,13 @@ export default function ChatPreview({
     <div className='flex w-full'>
       <div
         className={clsx(
-          'w-2 h-full border-r-1 border-border-color',
+          'w-2 h-full border-r-1 border-borders-purple',
           isChatRead ? 'bg-[#EFEFEF]' : 'bg-salad',
         )}
       ></div>
       <div
         className={clsx(
-          'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+          'w-full flex border-borders-purple hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
           isChatRead ? 'opacity-70' : '',
         )}
         onClick={onClick}

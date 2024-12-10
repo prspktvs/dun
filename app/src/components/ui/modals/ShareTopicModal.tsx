@@ -49,7 +49,7 @@ const SharingOptions = ({
   setConfirmOpened: (opened: boolean) => void
   confirmOpened: boolean
 }) => (
-  <div className='flex divide-x-1 divide-borders-purple border-b-1 border-borders-purple'>
+  <div className='flex w-full divide-x-1 divide-borders-purple border-b-1 border-borders-purple'>
     <SharingOption
       title='Private'
       description='Only you and selected users can view and edit this topic'

@@ -2,13 +2,14 @@ import { Avatar, Tooltip } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import { useMemo } from 'react'
 
-import { IUser } from '../../../types/User'
 import AvatarDun from '../../ui/Avatar'
-import { useProject } from '../../../context/ProjectContext'
+import { IUser } from '../../../types/User'
 
-function ProjectUsers() {
-  const { users } = useProject()
+interface IUserListProps {
+  users: IUser[]
+}
 
+function UserList({ users }: IUserListProps) {
   const usersList = useMemo(() => users.slice(0, 6), [users])
   const usersCount = users.length - 6
 
@@ -32,4 +33,4 @@ function ProjectUsers() {
   )
 }
 
-export default ProjectUsers
+export default UserList
