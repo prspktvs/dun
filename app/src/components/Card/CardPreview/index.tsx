@@ -91,7 +91,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         </div>
         {/* Images Preview */}
         {imageUrls.length > 0 && (
-          <div className='flex mt-5'>
+          <div className='flex mb-2'>
             {imageUrls.map((url, idx) => (
               <Image key={url + idx} className='w-12' src={url} alt='' />
             ))}
