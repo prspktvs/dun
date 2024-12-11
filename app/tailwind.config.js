@@ -8,6 +8,9 @@ export default {
         'h-sm': { raw: '(min-height: 400px)' },
         'h-md': { raw: '(min-height: 750px)' },
         'h-lg': { raw: '(min-height: 1000px)' },
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
       },
       borderWidth: {
         '1': '1px',
@@ -16,6 +19,7 @@ export default {
         '10': 'repeat(10, minmax(0, 1fr))',
       },
       fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
         monaspace: ['MonaspaceArgon', 'sans-serif'],
         rubik: ['Rubik', 'sans-serif'],
         commissioner: ['Commissioner', 'sans-serif'],

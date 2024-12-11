@@ -5,6 +5,7 @@ import { IProject } from '../../types/Project'
 import { createProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import { IUser } from '../../types/User.d.ts'
+import Logo from '../ui/Logo'
 
 interface ICreateProjectProps {
   projectId: string
@@ -39,24 +40,26 @@ const CreateProject = (props: ICreateProjectProps) => {
   }
 
   return (
-    <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-borders-gray'>
-      <div />
-      <div className='col-span-2' />
-      <div />
-      <div className='row-span-2' />
-      <div className='row-span-2' />
-      <div />
-      <div className='col-span-2' />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
+    <div className='h-screen w-screen flex flex-col md:grid md:grid-cols-4 md:grid-rows-4 md:divide-x-[1px] md:divide-y-[1px] md:divide-borders-gray '>
+      <div className='h-[60px] pl-4 pr-[15px] bg-[#edebf3] w-full text-black  border-b flex justify-start items-center '>
+        <Logo />
+      </div>
+      <div className='hidden md:block' />
+      <div className='hidden md:col-span-2 md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:row-span-2 md:block' />
+      <div className='hidden md:row-span-2 md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:col-span-2 md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
+      <div className='hidden md:block' />
       <Tabs
-        className='col-start-2 row-start-2 col-end-4 row-end-4 p-7'
+        className='col-start-2 col-end-4 row-start-2 row-end-4 md:p-7'
         color='gray'
         defaultValue='first'
         value={activeTab}
@@ -64,7 +67,7 @@ const CreateProject = (props: ICreateProjectProps) => {
       >
         <Tabs.Panel value='first'>
           <textarea
-            className='block resize-none align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
+            className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]pl-4 pr-[15px] pt-8 pb-6 '
             placeholder='Type new project title'
             value={title}
             name='title'

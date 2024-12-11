@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, ReactNode } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
@@ -44,8 +44,12 @@ function LeftPanel() {
 
   const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
 
+  const onCreateNewCard = () => {
+    console.log('Creating new card')
+  }
+
   return (
-    <aside className='flex flex-col items-center gap-1 w-80 border-r-1 border-borders-purple h-screen'>
+    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
       <section>
         <Menu
           shadow='md'
@@ -55,27 +59,26 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='border-borders-purple h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='flex flex-col justify-between px-5 text-3xl border-borders-purple h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
                   and
-                  <span className='font-bold mr-1 ml-1' id='project-count'>
+                  <span className='ml-1 mr-1 font-bold' id='project-count'>
                     {otherProjectsCount}
                   </span>
                   other projects
                 </span>
               </div>
-
               {/* Project title section */}
-              <div className='flex justify-between items-center w-full gap-4'>
+              <div className='flex items-center w-full gap-2 md:gap-4 md:justify-between'>
                 <span className='text-[#46434e] text-lg font-medium font-argon'>
                   {project?.title || 'Empty project'}
                 </span>
                 {isMenuOpened ? (
-                  <i className='ri-arrow-down-s-line text-2xl' />
+                  <i className='text-2xl ri-arrow-down-s-line' />
                 ) : (
-                  <i className='ri-arrow-right-s-line text-2xl' />
+                  <i className='text-2xl ri-arrow-right-s-line' />
                 )}
               </div>
             </nav>
@@ -92,9 +95,9 @@ function LeftPanel() {
                 {project?.title || 'Empty project'}
               </Menu.Item>
             ))}
-            <div className='border-t-[2px] pt-1 mt-1'>
+            <div className='border-t-[2px] pt-1  md:mt-1'>
               <Menu.Item
-                className='text-md font-rubik text-gray-500'
+                className='text-gray-500 text-md font-rubik'
                 onClick={() => (window.location.href = `/${genId()}`)}
               >
                 Create new project
@@ -103,10 +106,10 @@ function LeftPanel() {
           </Menu.Dropdown>
         </Menu>
       </section>
-      <section className='h-14 w-full flex items-center justify-center border-b-1 border-borders-purple'>
+      <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
         <UserList users={users} />
       </section>
-      <nav className='w-full border-b-1 border-borders-purple px-5 pb-1'>
+      <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
         <ul>
           <li className='mb-2'>
             <LeftPanelButton
@@ -131,7 +134,7 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
-      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
+      <section className='hidden w-full px-6 py-5 overflow-y-scroll fhidden md:flex lex-1 '>
         <div
           className={clsx(
             'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
@@ -158,7 +161,7 @@ function LeftPanel() {
           </div>
         ))}
 
-        <div className='text-btnBg text-sm font-semibold font-monaspace pl-1'>+12</div>
+        <div className='pl-1 text-sm font-semibold text-btnBg font-monaspace'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>
