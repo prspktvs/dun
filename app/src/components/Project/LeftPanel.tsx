@@ -57,7 +57,7 @@ function LeftPanel() {
   }
 
   return (
-    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
+    <aside className='flex flex-col md:gap-1 hd:-screen mitems-center md:w-80 md:border-r-1 border-borders-purple'>
       <section>
         <Menu
           shadow='md'
@@ -67,7 +67,8 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='flex flex-col justify-between px-5 text-3xl border-borders-purple h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='flex flex-col justify-between pl-4 pr-[15px] text-3xl h-14 w-full md:w-80 border-b-1 border-borders-purple hover:cursor-pointer hover:bg-gray-100 bg-[#edebf3] md:bg-transparent'>
+              {' '}
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -78,9 +79,8 @@ function LeftPanel() {
                   other projects
                 </span>
               </div>
-
               {/* Project title section */}
-              <div className='flex items-center justify-between w-full gap-4'>
+              <div className='flex items-center w-full gap-2 md:gap-4 md:justify-between'>
                 <span className='text-[#46434e] text-lg font-medium font-argon'>
                   {project?.title || 'Empty project'}
                 </span>
@@ -104,7 +104,7 @@ function LeftPanel() {
                 {project?.title || 'Empty project'}
               </Menu.Item>
             ))}
-            <div className='border-t-[2px] pt-1 mt-1'>
+            <div className='border-t-[2px] pt-1  md:mt-1'>
               <Menu.Item
                 className='text-gray-500 text-md font-rubik'
                 onClick={() => (window.location.href = `/${genId()}`)}
@@ -115,16 +115,18 @@ function LeftPanel() {
           </Menu.Dropdown>
         </Menu>
       </section>
-      <div className='relative flex items-center gap-3 px-6 py-3 md:hidden'>
-        <SearchIcon className='absolute left-0 w-5 h-5 ' />
-        <input
-          type='text'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder='Find it all'
-          className='text-sm font-normal font-agron'
-        />
-        <div className='items-center justify-center flex-shrink-0 h-full border-l border-borders-purple'>
+      <div className='relative flex items-center gap-2 md:gap-3 md:py-3 md:px-6 border-b-1 md:hidden'>
+        <div class='h-10 px-4 py-3 bg-[#f9f9f9] justify-start items-center gap-2 inline-flex'>
+          <SearchIcon className='absolute left-0 w-5 h-5 ' />
+          <input
+            type='text'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder='Find it all'
+            className='text-sm font-normal font-agron'
+          />
+        </div>
+        <div className='inline-flex items-center justify-center flex-shrink-0 h-full border-l border-borders-purple'>
           <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
             <span className='text-xl font-thin'>+</span>Topic
           </ButtonDun>
@@ -132,9 +134,9 @@ function LeftPanel() {
       </div>
 
       <section className='items-center justify-center hidden w-full md:flex h-14 border-b-1 border-borders-purple'>
-        <ProjectUsers />
+        {' '}
       </section>
-      <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
+      <nav className='hidden w-full px-5 pb-1 border-b-1 border-borders-purple md:flex '>
         <ul>
           <li className='mb-2'>
             <LeftPanelButton
@@ -159,7 +161,7 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
-      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
+      <section className='hidden w-full px-6 py-5 overflow-y-scroll fhidden md:flex lex-1 '>
         <div
           className={clsx(
             'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
