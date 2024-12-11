@@ -16,7 +16,7 @@ export default function AuthTabs({ tab, setTab }: IAuthTabsProps) {
       <div className='flex h-full'>
         <LeftTab isSignUp={tab === 'signup' || tab === 'verification'} setTab={setTab} />
 
-        <div className='flex-1 h-full border-l-1'>
+        <div className='flex-1 h-full md:border-l-1'>
           <div className='space-y-0'>
             <div
               className={`

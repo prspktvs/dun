@@ -101,7 +101,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Submit button */}
-      <div className='h-[56px] w-full border p-1  -mt-[1px]'>
+      <div className='h-[56px] w-full border p-1 -mt-[1px] md:border-l-0 md:border-r-0'>
         <button
           type='submit'
           disabled={isLoading}
