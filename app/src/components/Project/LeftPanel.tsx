@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, ReactNode } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Menu } from '@mantine/core'
@@ -44,10 +44,6 @@ function LeftPanel() {
 
   const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
 
-  const onCreateNewCard = () => {
-    console.log('Creating new card')
-  }
-
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
       <section>
@@ -70,8 +66,9 @@ function LeftPanel() {
                   other projects
                 </span>
               </div>
+
               {/* Project title section */}
-              <div className='flex items-center w-full gap-2 md:gap-4 md:justify-between'>
+              <div className='flex items-center justify-between w-full gap-4'>
                 <span className='text-[#46434e] text-lg font-medium font-argon'>
                   {project?.title || 'Empty project'}
                 </span>
@@ -95,7 +92,7 @@ function LeftPanel() {
                 {project?.title || 'Empty project'}
               </Menu.Item>
             ))}
-            <div className='border-t-[2px] pt-1  md:mt-1'>
+            <div className='border-t-[2px] pt-1 mt-1'>
               <Menu.Item
                 className='text-gray-500 text-md font-rubik'
                 onClick={() => (window.location.href = `/${genId()}`)}
@@ -134,7 +131,7 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
-      <section className='hidden w-full px-6 py-5 overflow-y-scroll fhidden md:flex lex-1 '>
+      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
         <div
           className={clsx(
             'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
