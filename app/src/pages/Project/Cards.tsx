@@ -10,7 +10,7 @@ import CardPreview from '../../components/Card/CardPreview'
 import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
-import { ChatProvider } from '../../context/ChatContext'
+import ProjectSelector from '../../components/Project/ProjectSelector'
 
 function SortButton({
   children,
@@ -71,6 +71,11 @@ export function CardsPage() {
 
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
+      <section>
+        <ProjectSelector />
+        {/* @TODO: Search component here */}
+        {/* <ProgressiveSearch /> */}
+      </section>
       <section className='flex items-center justify-between border-borders-purple h-14'>
         <div className='flex justify-center w-full h-full border-b-1 border-borders-purple'>
           <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
@@ -98,7 +103,7 @@ export function CardsPage() {
       </section>
       <section className='h-full overflow-y-scroll hide-scrollbar'>
         {!isEmpty(filteredCards) ? (
-          <div className='grid xl:grid-cols-3 lg:grid-cols-2'>
+          <div className='grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'>
             {filteredCards.map((card, index) => (
               <div key={'card-' + index} className='border-b-1 border-borders-purple padding-0'>
                 <CardPreview

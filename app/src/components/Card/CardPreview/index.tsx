@@ -51,7 +51,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-borders-purple hover:cursor-pointer hidden md:flex'
+      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-borders-purple hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='flex flex-col h-full'>
@@ -64,7 +64,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         </div>
         <div className='text-lg not-italic font-semibold font-rubik'>{card.title}</div>
         {/* Tasks Preview */}
-        <div className='flex-grow overflow-hidden my-2'>
+        <div className='flex-grow my-2 overflow-hidden'>
           {!isEmpty(tasks) ? (
             <div className='flex› flex-col gap-3'>
               {tasks?.map((task) => <TaskPreview key={task.id} task={task} />)}
@@ -83,7 +83,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
               ))}
             </div>
           ) : (
-            <div className='flex h-full flex-col justify-center items-center'>
+            <div className='flex flex-col items-center justify-center h-full'>
               <span className='font-monaspace text-[#969696] text-sm'>Empty topic</span>
               <span className='font-monaspace text-[#969696] text-sm'>
                 Be the first, make your mark.

@@ -18,7 +18,10 @@ export function ProjectLayout() {
     <div className='h-screen overflow-y-hidden'>
       <ProjectHeader />
       <div className='flex w-full h-full overflow-y-hidden'>
-        <LeftPanel />
+        {/* @TODO: Render only in desktop */}
+        <div className='hidden md:block'>
+          <LeftPanel />
+        </div>
         <Outlet />
       </div>
     </div>

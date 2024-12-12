@@ -1,27 +1,22 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Menu } from '@mantine/core'
 import clsx from 'clsx'
 
-import { useAuth } from '../../context/AuthContext'
-import { getAllUserProject } from '../../services'
-import { genId } from '../../utils'
 import { useProject } from '../../context/ProjectContext'
 import TaskPreview from '../Task/TaskPreview'
 import LeftPanelButton from '../ui/buttons/LeftPanelButton'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import UserList from '../User/UserList'
+import ProjectSelector from '../Project/ProjectSelector'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
   const location = useLocation()
-  const [isMenuOpened, setMenuOpened] = useState(false)
   const [isSettingsOpened, setSettingsOpened] = useState(false)
-  const [projects, setProjects] = useState([])
   const navigate = useNavigate()
 
-  const { tasks, cards, project, users } = useProject()
+  const { tasks, cards, users } = useProject()
   const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
@@ -34,74 +29,10 @@ function LeftPanel() {
   )
   const groupedTasksById = useMemo(() => groupBy(tasks, (task) => task.card_id), [tasks])
 
-  const { user } = useAuth()
-
-  useEffect(() => {
-    getAllUserProject(user.id).then((data) => setProjects(data))
-  }, [])
-
-  const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
-
-  const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
-
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
       <section>
-        <Menu
-          shadow='md'
-          width={280}
-          offset={0}
-          radius='md'
-          onChange={(opened) => setMenuOpened(opened)}
-        >
-          <Menu.Target>
-            <nav className='flex flex-col justify-between px-5 text-3xl border-borders-purple h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
-              {/* Overproject section */}
-              <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
-                <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
-                  and
-                  <span className='ml-1 mr-1 font-bold' id='project-count'>
-                    {otherProjectsCount}
-                  </span>
-                  other projects
-                </span>
-              </div>
-
-              {/* Project title section */}
-              <div className='flex items-center justify-between w-full gap-4'>
-                <span className='text-[#46434e] text-lg font-medium font-argon'>
-                  {project?.title || 'Empty project'}
-                </span>
-                {isMenuOpened ? (
-                  <i className='text-2xl ri-arrow-down-s-line' />
-                ) : (
-                  <i className='text-2xl ri-arrow-right-s-line' />
-                )}
-              </div>
-            </nav>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
-            {projects.map((project, idx) => (
-              <Menu.Item
-                key={'prjx-' + idx}
-                className='text-md font-rubik'
-                onClick={() => goToProject(project.id)}
-              >
-                {project?.title || 'Empty project'}
-              </Menu.Item>
-            ))}
-            <div className='border-t-[2px] pt-1 mt-1'>
-              <Menu.Item
-                className='text-gray-500 text-md font-rubik'
-                onClick={() => (window.location.href = `/${genId()}`)}
-              >
-                Create new project
-              </Menu.Item>
-            </div>
-          </Menu.Dropdown>
-        </Menu>
+        <ProjectSelector />
       </section>
       <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
         <UserList users={users} />

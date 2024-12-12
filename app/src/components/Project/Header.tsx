@@ -4,7 +4,8 @@ import Logo from '../ui/Logo'
 import UserPanel from '../User/UserPanel'
 import { useAuth } from '../../context/AuthContext'
 import { useProject } from '../../context/ProjectContext'
-import { SearchIcon, RingIcon } from '../icons'
+import { RingIcon } from '../icons'
+import SearchBar from './SearchBar'
 
 export function ProjectHeader() {
   const { id: projectId = '' } = useParams()
@@ -20,16 +21,7 @@ export function ProjectHeader() {
       >
         <Logo />
       </div>
-      <div className='flex-1 flex items-center px-6 gap-3 relative bg-[#edebf3]'>
-        <SearchIcon className='absolute left-0  w-5 h-5 text-[#969696]' />
-        <input
-          type='text'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder='Find it all'
-          className='bg-[#edebf3] text-[#969696] text-sm font-normal font-agron'
-        />
-      </div>
+      <SearchBar search={search} setSearch={setSearch} />
       <div className='flex items-center justify-center w-48 h-full py-2 border-l px-7 border-border-color '>
         {/* <div className='flex items-center gap-4'>
           <RingIcon className='w-5 h-5' />
