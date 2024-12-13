@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Navigate, Outlet, useParams } from 'react-router-dom'
 
 import { ProjectHeader } from './Header'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 import LeftPanel from './LeftPanel'
 import { useAuth } from '../../context/AuthContext'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
@@ -11,17 +12,15 @@ import { Loader } from '../ui/Loader'
 export function ProjectLayout() {
   const { id: projectId = '' } = useParams()
   const { project } = useProject()
+  const { isMobile } = useBreakpoint()
 
   if (!project) return <CreateProject projectId={projectId} />
 
   return (
     <div className='h-screen overflow-y-hidden'>
-      <ProjectHeader />
+      {!isMobile && <ProjectHeader />}
       <div className='flex w-full h-full overflow-y-hidden'>
-        {/* @TODO: Render only in desktop */}
-        <div className='hidden md:block'>
-          <LeftPanel />
-        </div>
+        {!isMobile && <LeftPanel />}
         <Outlet />
       </div>
     </div>
