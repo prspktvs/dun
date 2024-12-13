@@ -11,6 +11,8 @@ import { genId } from '../../utils'
 import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
 import ProjectSelector from '../../components/Project/ProjectSelector'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import SearchBar from '../../components/Project/SearchBar'
 
 function SortButton({
   children,
@@ -34,6 +36,7 @@ function SortButton({
 export function CardsPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
+  const { isMobile } = useBreakpoint()
 
   const {
     setSortType,
@@ -72,32 +75,33 @@ export function CardsPage() {
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section>
-        <ProjectSelector />
-        {/* @TODO: Search component here */}
-        {/* <ProgressiveSearch /> */}
-      </section>
-      <section className='flex items-center justify-between border-borders-purple h-14'>
-        <div className='flex justify-center w-full h-full border-b-1 border-borders-purple'>
-          <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
-            <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
-            <SortButton
-              onClick={() => setSortType('updatedAt')}
-              isActive={sortType === 'updatedAt'}
-            >
-              Last modified
-            </SortButton>
-            <SortButton
-              onClick={() => setSortType('createdAt')}
-              isActive={sortType === 'createdAt'}
-            >
-              Date created
-            </SortButton>
-          </div>
-
-          <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-borders-purple'>
-            <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-              <span className='text-xl font-thin'>+</span>Topic
-            </ButtonDun>
+        {isMobile && <ProjectSelector />}
+        <div className='flex items-center justify-between border-borders-purple h-14'>
+          <div className='flex justify-between w-full h-full border-b-1 border-borders-purple'>
+            {isMobile ? (
+              <SearchBar search={searchText} setSearch={setSearch} />
+            ) : (
+              <div className='flex items-center ml-6 text-xs font-normal gap-x-4 md:w-full font-monaspace'>
+                <div className='text-xs text-[#47444F] font-normal font-monaspace'>Sort by:</div>
+                <SortButton
+                  onClick={() => setSortType('updatedAt')}
+                  isActive={sortType === 'updatedAt'}
+                >
+                  Last modified
+                </SortButton>
+                <SortButton
+                  onClick={() => setSortType('createdAt')}
+                  isActive={sortType === 'createdAt'}
+                >
+                  Date created
+                </SortButton>
+              </div>
+            )}
+            <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-borders-purple'>
+              <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
+                <span className='text-xl font-thin'>+</span>Topic
+              </ButtonDun>
+            </div>
           </div>
         </div>
       </section>
