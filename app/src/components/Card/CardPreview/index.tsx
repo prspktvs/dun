@@ -51,12 +51,14 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-7 overflow-hidden border-r-1 border-borders-purple hover:cursor-pointer'
+      className='h-[23.125rem] p-7 overflow-hidden md:border-r-1 border-borders-purple hover:cursor-pointer'
       onClick={onClick}
     >
       <div className='flex flex-col h-full'>
         <div className='flex items-center justify-between mb-2'>
-          <div className='text-xs text-gray-500 font-monaspace'>{relativeTime}</div>
+          <div className='text-sm font-normal text-gray-500 md:text-xs font-monaspace'>
+            {relativeTime}
+          </div>
           <div className='flex gap-x-2'>
             {unreadMessagesCount > 0 && <MessageIcon count={unreadMessagesCount} />}
             {/* <UpdateIcon count={0} /> */}

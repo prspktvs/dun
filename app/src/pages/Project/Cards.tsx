@@ -76,7 +76,7 @@ export function CardsPage() {
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section>
         {isMobile && <ProjectSelector />}
-        <div className='flex items-center justify-between border-borders-purple h-14'>
+        <div className='flex items-center justify-between h-10 border-borders-purple md:h-14'>
           <div className='flex justify-between w-full h-full border-b-1 border-borders-purple'>
             {isMobile ? (
               <SearchBar search={searchText} setSearch={setSearch} />
@@ -97,9 +97,12 @@ export function CardsPage() {
                 </SortButton>
               </div>
             )}
-            <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-borders-purple'>
+            <div className='flex items-center justify-center   flex-shrink-0 h-full border-l md:w-48 w-[111px] border-borders-purple'>
               <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-                <span className='text-xl font-thin'>+</span>Topic
+                <span className='justify-center text-sm font-normal font-monaspace md:font-thin md:text-xl'>
+                  +
+                </span>
+                Topic
               </ButtonDun>
             </div>
           </div>

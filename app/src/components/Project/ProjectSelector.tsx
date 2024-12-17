@@ -7,9 +7,11 @@ import { useProject } from '../../context/ProjectContext'
 import { genId } from '../../utils'
 import { getAllUserProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 
 const ProjectSelector = () => {
   const navigate = useNavigate()
+  const { isMobile } = useBreakpoint()
 
   const { project } = useProject()
   const { user } = useAuth()
@@ -27,13 +29,13 @@ const ProjectSelector = () => {
   return (
     <Menu
       shadow='md'
-      width={280}
-      offset={0}
-      radius='md'
+      width={isMobile ? '100%' : 280}
+      offset={isMobile ? 0 : undefined}
+      radius={isMobile ? 0 : 'md'}
       onChange={(opened) => setMenuOpened(opened)}
     >
       <Menu.Target>
-        <nav className='flex flex-col justify-between px-5 text-3xl border-borders-purple h-14 w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
+        <nav className='flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
           {/* Overproject section */}
           <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
             <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -46,20 +48,23 @@ const ProjectSelector = () => {
           </div>
 
           {/* Project title section */}
-          <div className='flex items-center justify-between w-full gap-4'>
+          <div className='flex items-center w-full gap-2 md:gap-4 md:justify-between'>
             <span className='text-[#46434e] text-lg font-medium font-argon'>
               {project?.title || 'Empty project'}
             </span>
             {isMenuOpened ? (
               <i className='text-2xl ri-arrow-down-s-line' />
             ) : (
-              <i className='text-2xl ri-arrow-right-s-line' />
+              <i className='text-2xl ri-arrow-down-s-line' />
             )}
           </div>
         </nav>
       </Menu.Target>
 
-      <Menu.Dropdown>
+      <Menu.Dropdown
+        className={`w-screen max-w-full p-0 m-0 ${isMobile ? 'fixed left-0' : ''}`}
+        style={isMobile ? { position: 'fixed', left: 0 } : {}}
+      >
         <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
         {projects.map((project, idx) => (
           <Menu.Item
