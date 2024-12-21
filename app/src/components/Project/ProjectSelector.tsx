@@ -1,6 +1,6 @@
 import { Menu } from '@mantine/core'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { IProject } from '../../types/Project'
 import { useProject } from '../../context/ProjectContext'
@@ -8,10 +8,12 @@ import { genId } from '../../utils'
 import { getAllUserProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
+import { SettingsIcon } from '../icons'
 
 const ProjectSelector = () => {
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
+  const { id: currentProjectId } = useParams()
 
   const { project } = useProject()
   const { user } = useAuth()
@@ -20,7 +22,7 @@ const ProjectSelector = () => {
 
   useEffect(() => {
     getAllUserProject(user.id).then((data) => setProjects(data))
-  }, [])
+  }, [user.id])
 
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
@@ -69,18 +71,25 @@ const ProjectSelector = () => {
         {projects.map((project, idx) => (
           <Menu.Item
             key={'prjx-' + idx}
-            className='text-md font-rubik'
+            className={`flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md ${
+              isMobile ? 'font-monaspace' : ''
+            } ${isMobile && project.id === currentProjectId ? 'text-[#8279bd]' : ''}`}
             onClick={() => goToProject(project.id)}
           >
-            {project?.title || 'Empty project'}
+            <span className='flex-1'>{project?.title || 'Empty project'}</span>
+            {isMobile && project.id === currentProjectId && (
+              <button className=''>
+                <SettingsIcon />
+              </button>
+            )}
           </Menu.Item>
         ))}
-        <div className='border-t-[2px] pt-1 mt-1'>
+        <div className='border-t-[2px] h-12 p-2 m-1  w-full  bg-[#8279bd] justify-center items-center '>
           <Menu.Item
-            className='text-gray-500 text-md font-rubik'
+            className='text-sm text-center text-white text font-monaspace'
             onClick={() => (window.location.href = `/${genId()}`)}
           >
-            Create new project
+            + Create new project
           </Menu.Item>
         </div>
       </Menu.Dropdown>

@@ -13,7 +13,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
     <>
       <div
-        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex flex-none'
+        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex  flex-none hidden md:block'
         onClick={onClick}
       >
         <div className='flex w-full'>
@@ -24,8 +24,8 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               'opacity-70',
             )}
           >
-            <div className='flex flex-col items-center justify-between'>
-              <div className='h-8 flex gap-2 items-center font-monaspace w-11/12 '>
+            <div className='flex flex-col items-center justify-between '>
+              <div className='flex items-center w-11/12 h-8 gap-2 font-monaspace '>
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-12'>
                   <div className='text-[#969696]'>Major topic discussion</div>
@@ -33,13 +33,13 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               </div>
               <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
                 No messages yet,{' '}
-                <span className='text-btnBg font-bold hover:underline'>start a discussion</span>
+                <span className='font-bold text-btnBg hover:underline'>start a discussion</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className='font-monaspace text-16 text-center w-full px-16 mt-3 text-[#969696]'>
+      <div className='font-monaspace text-16 text-center w-full px-16 mt-3 text-[#969696] hidden md:block'>
         Hover over the content and click the comment icon on the left to start a new discussion
       </div>
     </>
@@ -74,17 +74,17 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
 
   return (
-    <section className='h-screen'>
+    <section className='hidden h-screen sm:block'>
       <div className='relative p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
-          className='block pl-7 h-4 align-middle text-sm w-full overflow-hidden border-none font-monaspace'
+          className='block w-full h-4 overflow-hidden text-sm align-middle border-none pl-7 font-monaspace '
           value={search}
           onChange={onSearch}
           placeholder='Find it'
         />
       </div>
-      <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full'>
+      <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full sm:block hidden '>
         {!isEmpty(filteredChats) ? (
           filteredChats.map((chat) => (
             <article
