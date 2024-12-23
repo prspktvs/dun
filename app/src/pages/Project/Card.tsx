@@ -47,7 +47,7 @@ const CardHeader = ({
 }) => (
   <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
     <div className='flex items-center justify-between h-full mx-3 grow'>
-      <div className='text-sm underline font-monaspace hover:cursor-pointer' onClick={goBack}>
+      <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
         {'<'} Back to topics
       </div>
       {isAuthor && (
@@ -220,7 +220,7 @@ const Card = ({ card }: ICardProps) => {
         showConfirmModal={showConfirmModal}
         onRemoveCard={onRemoveCard}
       />
-      <div className=''>
+      <div className='md:flex'>
         <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
             className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
@@ -232,7 +232,7 @@ const Card = ({ card }: ICardProps) => {
           />
           <Editor key={card.id} projectId={projectId} card={card} users={users} />
         </section>
-        <aside className='md:flex md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+        <aside className=' md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}

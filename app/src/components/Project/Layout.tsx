@@ -19,7 +19,7 @@ export function ProjectLayout() {
   return (
     <div className='h-screen overflow-y-hidden'>
       {!isMobile && <ProjectHeader />}
-      <div className='flex w-full h-full overflow-y-hidden'>
+      <div className='w-full h-full overflow-y-hidden md:flex'>
         {!isMobile && <LeftPanel />}
         <Outlet />
       </div>
