@@ -19,12 +19,13 @@ import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
 import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
 import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
+import CardTabs from './CardTabs' // Импортируем компонент CardTabs
 
 interface ICardProps {
   card: ICard
 }
 
-type RightPanelTab = 'discussions' | 'attachments'
+type RightPanelTab = 'discussions' | 'attachments' | 'editor'
 
 const CardHeader = ({
   goBack,
@@ -45,7 +46,7 @@ const CardHeader = ({
   showConfirmModal: boolean
   onRemoveCard: () => void
 }) => (
-  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+  <div className='flex items-center justify-between h-14 border-b-1 bg-[#edebf3] border-borders-purple'>
     <div className='flex items-center justify-between h-full mx-3 grow'>
       <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
         {'<'} Back to topics
@@ -90,44 +91,6 @@ const CardHeader = ({
           />
         </div>
       )}
-    </div>
-  </div>
-)
-
-const CardTabs = ({
-  activeTab,
-  setActiveTab,
-  cardChatsLength,
-  unreadDiscussions,
-  filesLength,
-}: {
-  activeTab: RightPanelTab
-  setActiveTab: (tab: RightPanelTab) => void
-  cardChatsLength: number
-  unreadDiscussions: number
-  filesLength: number
-}) => (
-  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
-    <div className='w-full grid grid-cols-2 h-full divide-x-[1px] divide-borders-gray border-borders-purple '>
-      <div
-        className={clsx(
-          'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'discussions' ? 'bg-background text-black' : 'bg-grayBg text-inactiveText',
-        )}
-        onClick={() => setActiveTab('discussions')}
-      >
-        Discussions• {cardChatsLength}
-        <UnreadIndicator size='sm' count={unreadDiscussions} className='relative -top-2 left-1' />
-      </div>
-      <div
-        className={clsx(
-          'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'attachments' ? 'bg-background text-black' : 'bg-grayBg text-inactiveText',
-        )}
-        onClick={() => setActiveTab('attachments')}
-      >
-        Attachments• {filesLength}
-      </div>
     </div>
   </div>
 )
@@ -231,15 +194,19 @@ const Card = ({ card }: ICardProps) => {
       </div>
       <div className='md:flex'>
         <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
-          <textarea
-            className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
-            rows={1}
-            placeholder='Type title'
-            ref={inputRef}
-            value={title}
-            onChange={onTitleChange}
-          />
-          <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          {activeTab === 'editor' && (
+            <textarea
+              className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
+              rows={1}
+              placeholder='Type title'
+              ref={inputRef}
+              value={title}
+              onChange={onTitleChange}
+            />
+          )}
+          {activeTab === 'editor' && (
+            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          )}
         </section>
         <aside className='hidden md:block md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs
@@ -251,9 +218,9 @@ const Card = ({ card }: ICardProps) => {
           />
           {
             {
+              editor: <Editor key={card.id} projectId={projectId} card={card} users={users} />,
               discussions: <Discussions users={users} />,
               attachments: <Attachments files={files} />,
-              // updates: <Updates />,
             }[activeTab]
           }
         </aside>
