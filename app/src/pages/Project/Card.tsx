@@ -220,6 +220,15 @@ const Card = ({ card }: ICardProps) => {
         showConfirmModal={showConfirmModal}
         onRemoveCard={onRemoveCard}
       />
+      <div className='md:hidden'>
+        <CardTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          cardChatsLength={cardChats.length}
+          unreadDiscussions={unreadDiscussions}
+          filesLength={files.length}
+        />
+      </div>
       <div className='md:flex'>
         <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
@@ -232,7 +241,7 @@ const Card = ({ card }: ICardProps) => {
           />
           <Editor key={card.id} projectId={projectId} card={card} users={users} />
         </section>
-        <aside className=' md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+        <aside className='hidden md:block md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
