@@ -32,6 +32,17 @@ const CardTabs = ({
       </div>
       <div
         className={clsx(
+          'flex items-center justify-center font-monaspace text-14 lg:text-sm',
+          activeTab === 'attachments'
+            ? 'bg-background text-black'
+            : 'bg-[#edebf3] text-inactiveText',
+        )}
+        onClick={() => setActiveTab('attachments')}
+      >
+        Attachments• {filesLength}
+      </div>
+      <div
+        className={clsx(
           'flex items-center justify-center font-monaspace text-14  lg:text-sm',
           activeTab === 'discussions'
             ? 'bg-background text-black'
@@ -42,17 +53,7 @@ const CardTabs = ({
         Discussions• {cardChatsLength}
         <UnreadIndicator size='sm' count={unreadDiscussions} className='relative -top-2 left-1' />
       </div>
-      <div
-        className={clsx(
-          'flex items-center justify-center font-monaspace text-14 lg:text-sm',
-          activeTab === 'attachments'
-            ? 'bg-background text-black'
-            : 'bg-[#edebf3] text-inactiveText',
-        )}
-        onClick={() => setActiveTab('attachments')}
-      >
-        Attachments• {filesLength}
-      </div>
+      
     </div>
   </div>
 )

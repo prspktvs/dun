@@ -19,7 +19,8 @@ import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
 import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
 import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
-import CardTabs from './CardTabs' // Импортируем компонент CardTabs
+import CardTabs from './CardTabs' 
+
 
 interface ICardProps {
   card: ICard
@@ -204,9 +205,7 @@ const Card = ({ card }: ICardProps) => {
               onChange={onTitleChange}
             />
           )}
-          {activeTab === 'editor' && (
-            <Editor key={card.id} projectId={projectId} card={card} users={users} />
-          )}
+          {activeTab === 'editor' && <Editor key={card.id} projectId={projectId} card={card} users={users} />}
         </section>
         <aside className='hidden md:block md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs

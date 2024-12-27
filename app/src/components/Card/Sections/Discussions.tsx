@@ -74,7 +74,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
 
   return (
-    <section className='hidden h-screen sm:block'>
+    <section className='h-screen '>
       <div className='relative p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
@@ -84,7 +84,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
           placeholder='Find it'
         />
       </div>
-      <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full sm:block hidden '>
+      <div className='overflow-y-scroll h-[calc(100vh_-_164px)] pb-10 w-full  '>
         {!isEmpty(filteredChats) ? (
           filteredChats.map((chat) => (
             <article
