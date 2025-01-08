@@ -19,8 +19,8 @@ import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
 import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
 import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
-import CardTabs from './CardTabs' 
-
+import CardTabs from './CardTabs'
+import useDiscussions from '../../hooks/useDiscussions'
 
 interface ICardProps {
   card: ICard
@@ -50,7 +50,7 @@ const CardHeader = ({
   <div className='flex items-center justify-between h-14 border-b-1 bg-[#edebf3] border-borders-purple'>
     <div className='flex items-center justify-between h-full mx-3 grow'>
       <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
-        {'<'} Back to topics
+        {'<'} back to topics
       </div>
       {isAuthor && (
         <div className='flex items-center h-full gap-1'>
@@ -194,7 +194,7 @@ const Card = ({ card }: ICardProps) => {
         />
       </div>
       <div className='md:flex'>
-        <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
+        <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 md:pt-[20px] md:pl-[30px] '>
           {activeTab === 'editor' && (
             <textarea
               className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
@@ -205,7 +205,12 @@ const Card = ({ card }: ICardProps) => {
               onChange={onTitleChange}
             />
           )}
-          {activeTab === 'editor' && <Editor key={card.id} projectId={projectId} card={card} users={users} />}
+          
+          {activeTab === 'editor' && (
+            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          )}
+          {activeTab === 'attachments' && <Attachments files={files} />}
+          {activeTab === 'discussions' && <Discussions users={users} />}
         </section>
         <aside className='hidden md:block md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
           <CardTabs

@@ -29,11 +29,11 @@ function MessagePreview({
     <>
       <div className='max-w-7xl'>
         {user ? (
-          <div className='flex gap-1 items-center font-semibold mb-1'>
+          <div className='flex items-center gap-1 mb-1 font-semibold'>
             <AvatarDun user={user} size={24} />
-            <span className='text-sm text-zinc-700 font-rubik font-medium ml-1'>
+            <span className='ml-1 text-sm font-medium text-zinc-700 font-rubik'>
               {user?.name}
-              <span className='ml-2 text-10  text-gray-400 font-normal'>{time}</span>
+              <span className='ml-2 font-normal text-gray-400 text-10'>{time}</span>
             </span>
           </div>
         ) : null}
@@ -105,13 +105,13 @@ export default function ChatPreview({
         onClick={onClick}
       >
         <div className='w-full ml-4'>
-          <div className='relative flex items-center h-10  gap-2 mb-3'>
+          <div className='relative flex items-center h-10 gap-2 mb-3'>
             {unreadMessages ? <UnreadIndicator count={unreadMessages} /> : null}
             {chat.content ? (
-              <div className='h-full flex gap-2 items-center font-monaspace w-11/12 '>
-                <div className='h-full w-[3px] bg-gray-500' />
+              <div className='flex items-center w-11/12 h-full gap-2 font-monaspace '>
+                <div className='h-full w-[3px] bg-[#969696]' />
                 <div className='flex flex-col text-[11px]'>
-                  <div className='text-[#A3A1A7]'>
+                  <div className='text-[#969696]'>
                     {author ? `${author.name} started a discussion about:` : 'New discussion:'}
                   </div>
                   <div className='line-clamp-2'>{editorContent || chat.content}</div>
@@ -122,7 +122,7 @@ export default function ChatPreview({
               <Menu.Target>
                 <i
                   onClick={(e) => e.stopPropagation()}
-                  className='z-40 ri-more-2-fill text-2xl absolute top-1 right-0 '
+                  className='absolute right-0 z-40 hidden text-2xl ri-more-2-fill top-1 md:block'
                 />
               </Menu.Target>
 
@@ -151,7 +151,7 @@ export default function ChatPreview({
                     />
                   </div>
                   {repliesCount ? (
-                    <div className='w-full font-monaspace text-left font-semibold pr-5 text-btnBg text-sm'>
+                    <div className='w-full pr-5 text-sm font-semibold text-left font-monaspace text-btnBg'>
                       {repliesCount}+ replies
                     </div>
                   ) : null}

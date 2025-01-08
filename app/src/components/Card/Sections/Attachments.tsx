@@ -15,7 +15,7 @@ export default function Attachments({ files }: IAttachmentsProps) {
     <section className='flex flex-col gap-2 p-3 h-[calc(100vh_-_164px)] overflow-y-scroll w-full'>
       {!isEmpty(files) && files ? (
         files.map((file) => (
-          <div key={'f-' + file.id} className='h-40 border-1 rounded-md'>
+          <div key={'f-' + file.id} className='h-40 rounded-md md:border-1'>
             <FilePreview file={file} onClick={() => setFileUrl(file.url)} isFullScreen={false} />
           </div>
         ))

@@ -75,7 +75,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   return (
     <section className='h-screen '>
-      <div className='relative p-3 border-b-1 border-borders-purple'>
+      <div className='relative px-6 py-3 md:p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
           className='block w-full h-4 overflow-hidden text-sm align-middle border-none pl-7 font-monaspace '

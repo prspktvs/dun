@@ -14,9 +14,9 @@ export default function AvatarDun({ user, size = 36 }: { user: IUser; size?: num
       alt={user?.name}
       color={user?.color}
       radius={3}
-      style={{ border: '1.5px solid black' }}
+      style={{ border: '1px solid black' }}
     >
-      <span className='pt-1 font-monaspace text-black'>{initials}</span>
+      <span className='pt-1 text-black font-monaspace'>{initials}</span>
     </Avatar>
   )
 }
