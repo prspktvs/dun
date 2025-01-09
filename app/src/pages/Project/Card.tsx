@@ -21,6 +21,7 @@ import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
 import CardTabs from './CardTabs'
 import useDiscussions from '../../hooks/useDiscussions'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 
 interface ICardProps {
   card: ICard
@@ -103,6 +104,7 @@ const Card = ({ card }: ICardProps) => {
   const navigate = useNavigate()
   const { closeChat, unreadChats, cardChats } = useChats()
   const { optimisticDeleteCard, optimisticUpdateCard, users } = useProject()
+  const { isMobile } = useBreakpoint()
 
   const [isFirstTimeViewed, setFirstTimeViewed] = useState(location.hash === '#new')
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
@@ -173,7 +175,7 @@ const Card = ({ card }: ICardProps) => {
   }
 
   return (
-    <div className='md:w-[calc(100%_-_320px)]'>
+    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100%_-_320px)]')}>
       <CardHeader
         goBack={goBack}
         isAuthor={isAuthor}
@@ -184,18 +186,9 @@ const Card = ({ card }: ICardProps) => {
         showConfirmModal={showConfirmModal}
         onRemoveCard={onRemoveCard}
       />
-      <div className='md:hidden'>
-        <CardTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          cardChatsLength={cardChats.length}
-          unreadDiscussions={unreadDiscussions}
-          filesLength={files.length}
-        />
-      </div>
-      <div className='md:flex'>
-        <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 md:pt-[20px] md:pl-[30px] '>
-          {activeTab === 'editor' && (
+      <div className='flex'>
+        {!isMobile && (
+          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px]'>
             <textarea
               className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
               rows={1}
@@ -204,15 +197,16 @@ const Card = ({ card }: ICardProps) => {
               value={title}
               onChange={onTitleChange}
             />
-          )}
-          
-          {activeTab === 'editor' && (
             <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          </section>
+        )}
+
+        <aside
+          className={clsx(
+            'border-l-1 border-borders-purple',
+            isMobile ? 'w-full' : 'w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]',
           )}
-          {activeTab === 'attachments' && <Attachments files={files} />}
-          {activeTab === 'discussions' && <Discussions users={users} />}
-        </section>
-        <aside className='hidden md:block md:border-l-1 border-borders-purple w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]'>
+        >
           <CardTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -220,13 +214,25 @@ const Card = ({ card }: ICardProps) => {
             unreadDiscussions={unreadDiscussions}
             filesLength={files.length}
           />
-          {
+          {isMobile && activeTab === 'editor' ? (
+            <div className='h-[calc(100vh_-_112px)] overflow-y-auto'>
+              <textarea
+                className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px]'
+                rows={1}
+                placeholder='Type title'
+                ref={inputRef}
+                value={title}
+                onChange={onTitleChange}
+              />
+              <Editor key={card.id} projectId={projectId} card={card} users={users} />
+            </div>
+          ) : (
             {
-              editor: <Editor key={card.id} projectId={projectId} card={card} users={users} />,
               discussions: <Discussions users={users} />,
               attachments: <Attachments files={files} />,
+              editor: null,
             }[activeTab]
-          }
+          )}
         </aside>
       </div>
       <ShareTopicModal
