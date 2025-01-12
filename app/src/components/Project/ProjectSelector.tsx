@@ -37,7 +37,7 @@ const ProjectSelector = () => {
       onChange={(opened) => setMenuOpened(opened)}
     >
       <Menu.Target>
-        <nav className='flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 hover:cursor-pointer hover:bg-gray-100'>
+        <nav className='relative z-50 flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 hover:cursor-pointer mb-1'>
           {/* Overproject section */}
           <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
             <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -64,10 +64,20 @@ const ProjectSelector = () => {
       </Menu.Target>
 
       <Menu.Dropdown
-        className={`w-screen max-w-full p-0 m-0 ${isMobile ? 'fixed left-0' : ''}`}
-        style={isMobile ? { position: 'fixed', left: 0 } : {}}
+        className={`w-screen max-w-full p-0 m-0 ${isMobile ? 'fixed left-0' : ''} bg-[#f9f9f9]`}
+        style={
+          isMobile
+            ? {
+                position: 'fixed',
+                left: 0,
+                maxHeight: '63vh',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }
+            : {}
+        }
       >
-        <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
+        <Menu.Label className={`text-md font-monospace ${isMobile ? 'hidden' : ''}`}>Your projects</Menu.Label>
         {projects.map((project, idx) => (
           <Menu.Item
             key={'prjx-' + idx}
@@ -84,9 +94,9 @@ const ProjectSelector = () => {
             )}
           </Menu.Item>
         ))}
-        <div className='border-t-[2px] h-12 p-2 m-1  w-full  bg-[#8279bd] justify-center items-center '>
+        <div className=' h-12 p-2 w-full m-1 bg-[#8279bd] flex justify-center items-center'>
           <Menu.Item
-            className='text-sm text-center text-white text font-monaspace'
+            className='text-sm font-normal text-center text-white'
             onClick={() => (window.location.href = `/${genId()}`)}
           >
             + Create new project
