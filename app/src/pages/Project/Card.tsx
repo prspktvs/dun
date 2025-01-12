@@ -203,7 +203,7 @@ const Card = ({ card }: ICardProps) => {
 
         <aside
           className={clsx(
-            'border-l-1 border-borders-purple',
+            'md:border-l-1 border-borders-purple',
             isMobile ? 'w-full' : 'w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]',
           )}
         >
