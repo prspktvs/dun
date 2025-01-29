@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import UnreadIndicator from '../../components/ui/UnreadIndicator'
 
-type RightPanelTab = 'editor' | 'discussions' | 'attachments' | 'sharing' | 'updates'
+type RightPanelTab = 'discussions' | 'attachments' | 'editor' | 'sharing'
 
 interface CardTabsProps {
   activeTab: RightPanelTab
@@ -12,8 +12,8 @@ interface CardTabsProps {
   unreadDiscussions: number
   filesLength: number
   isAuthor: boolean
+  openShareModal: () => void
 }
-
 const CardTabs = ({
   activeTab,
   setActiveTab,
@@ -21,6 +21,7 @@ const CardTabs = ({
   unreadDiscussions,
   filesLength,
   isAuthor,
+  openShareModal,
 }: CardTabsProps) => {
   const { isMobile } = useBreakpoint()
 
@@ -31,7 +32,7 @@ const CardTabs = ({
           <div className='inline-flex h-full divide-x-[1px] divide-borders-gray border-borders-purple'>
             <div
               className={clsx(
-                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-6',
+                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap w-[120px]',
                 activeTab === 'discussions'
                   ? 'bg-background text-black'
                   : 'bg-grayBg text-inactiveText',
@@ -47,7 +48,7 @@ const CardTabs = ({
             </div>
             <div
               className={clsx(
-                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-6',
+                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap w-[120px]',
                 activeTab === 'attachments'
                   ? 'bg-background text-black'
                   : 'bg-grayBg text-inactiveText',
@@ -56,28 +57,20 @@ const CardTabs = ({
             >
               Attachments• {filesLength}
             </div>
-            <div
-              className={clsx(
-                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-6',
-                activeTab === 'updates'
-                  ? 'bg-background text-black'
-                  : 'bg-grayBg text-inactiveText',
-              )}
-              onClick={() => setActiveTab('updates')}
-            >
-              Updates
-            </div>
             {isAuthor && (
               <div
                 className={clsx(
-                  'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-6',
+                  'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap w-[120px]',
                   activeTab === 'sharing'
                     ? 'bg-background text-black'
-                    : 'bg-grayBg text-inactiveText',
+                    : 'bg-[#edebf3] text-inactiveText',
                 )}
-                onClick={() => setActiveTab('sharing')}
+                onClick={() => {
+                  setActiveTab('sharing')
+                  openShareModal()
+                }}
               >
-                Sharing Settings
+                Sharing
               </div>
             )}
           </div>
@@ -128,26 +121,18 @@ const CardTabs = ({
           >
             Attachments• {filesLength}
           </div>
-          <div
-            className={clsx(
-              'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-3',
-              activeTab === 'updates'
-                ? 'bg-background text-black'
-                : 'bg-[#edebf3] text-inactiveText',
-            )}
-            onClick={() => setActiveTab('updates')}
-          >
-            Updates
-          </div>
           {isAuthor && (
             <div
               className={clsx(
-                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap px-3',
+                'flex items-center justify-center font-monaspace text-14 lg:text-sm whitespace-nowrap w-[120px]',
                 activeTab === 'sharing'
                   ? 'bg-background text-black'
                   : 'bg-[#edebf3] text-inactiveText',
               )}
-              onClick={() => setActiveTab('sharing')}
+              onClick={() => {
+                setActiveTab('sharing')
+                openShareModal()
+              }}
             >
               Sharing
             </div>

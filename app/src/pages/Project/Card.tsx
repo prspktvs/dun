@@ -26,7 +26,7 @@ interface ICardProps {
   card: ICard
 }
 
-type RightPanelTab = 'discussions' | 'attachments' | 'editor'
+type RightPanelTab = 'discussions' | 'attachments' | 'editor' | 'sharing'
 
 const CardHeader = ({
   goBack,
@@ -201,7 +201,6 @@ const Card = ({ card }: ICardProps) => {
                 paddingLeft: '1rem',
                 paddingRight: '1rem',
                 maxWidth: '100%',
-               
               }}
             />
             <Editor key={card.id} projectId={projectId} card={card} users={users} />
@@ -220,6 +219,8 @@ const Card = ({ card }: ICardProps) => {
             cardChatsLength={cardChats.length}
             unreadDiscussions={unreadDiscussions}
             filesLength={files.length}
+            isAuthor={isAuthor}
+            openShareModal={openShareModal}
           />
           {activeTab === 'editor' && isMobile && (
             <textarea
