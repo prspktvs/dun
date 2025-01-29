@@ -212,6 +212,24 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
           </span>
         </div>
       )}
+
+      <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
+        <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
+      </div>
+
+      <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
+        {!isEmpty(users) &&
+          users.map((user) => (
+            <div key={user.id} className='flex items-center gap-3 my-2 ml-3'>
+              <AvatarDun user={user} size={40} />
+              <div className='flex flex-col'>
+                <span className='text-base font-medium'>{user.name}</span>
+                <span className='text-sm'>{user.email}</span>
+              </div>
+            </div>
+          ))}
+      </div>
+
       <ConfirmModal
         opened={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
