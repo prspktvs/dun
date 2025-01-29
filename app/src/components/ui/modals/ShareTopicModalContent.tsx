@@ -138,6 +138,8 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
   const { users, updateCard, project, optimisticUpdateCard } = useProject()
   const [isPrivate, setIsPrivate] = useState(!card.public)
   const [confirmOpened, setConfirmOpened] = useState(false)
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
 
   const [sharedUsers, unsharedUsers] = users.reduce(
     (acc: [IUser[], IUser[]], user: IUser) => {
@@ -167,55 +169,56 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
     setConfirmOpened(false)
   }
 
-  const copyUrl = DUN_URL + `/cards/${card.id}`
+  const copyUrl = DUN_URL + `/${card.projectId}/${card.id}`
+
+  const handleShare = async () => {
+    await shareCard(card.id, selectedUsers)
+    onClose()
+  }
+
+  const handleUnshare = async () => {
+    await unshareCard(card.id)
+    setShowConfirmModal(false)
+    onClose()
+  }
 
   return (
     <>
       <InviteLinkSection copyUrl={copyUrl} />
-      <SharingOptions
-        isPrivate={isPrivate}
-        togglePrivacy={togglePrivacy}
-        setConfirmOpened={setConfirmOpened}
-        confirmOpened={confirmOpened}
-      />
-      {isPrivate ? (
+      <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+        <span className='px-5 ml-3 font-bold font-monaspace'>Share with</span>
+      </div>
+      {!card.public ? (
         <>
-          <UserListSection
-            title='Who has access'
-            users={sharedUsers}
-            onAction={onUnshare}
-            actionLabel='Remove'
-            isOwnerCheck={(user) => user.id === card.author}
+          <SharingOption
+            title='Private'
+            description='Only you and selected users can view and edit this topic'
+            isActive={!card.public}
+            onClick={() => setShowConfirmModal(true)}
+            isOwnerCheck={() => true}
           />
-          {!isEmpty(unsharedUsers) ? (
-            <UserListSection
-              title={`${project.title} team`}
-              users={unsharedUsers}
-              onAction={onShare}
-              actionLabel='Share'
-              isOwnerCheck={() => false}
-            />
-          ) : (
-            <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
-              <span className='px-5 ml-3 font-bold font-monaspace'>
-                All your team is following this topic
-              </span>
-            </div>
-          )}
+          <SharingOption
+            title='Share with everyone in this project'
+            description='All new project members can view and edit this topic'
+            isActive={card.public}
+            onClick={() => setShowConfirmModal(true)}
+            isOwnerCheck={() => false}
+          />
         </>
       ) : (
-        <div className='overflow-y-scroll max-h-[400px] px-5'>
-          {users.map((user) => (
-            <UserItem
-              key={user.id}
-              user={user}
-              onAction={() => {}}
-              actionLabel=''
-              isOwner={user.id === card.author}
-            />
-          ))}
+        <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
+          <span className='px-5 ml-3 font-bold font-monaspace'>
+            All your team is following this topic
+          </span>
         </div>
       )}
+      <ConfirmModal
+        opened={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleUnshare}
+        message='Are you sure you want to make this topic private?'
+        confirmText='Make private'
+      />
     </>
   )
 }

@@ -21,6 +21,7 @@ import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
 import CardTabs from './CardTabs'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
+import { ShareTopicModalContent } from '../../components/ui/modals/ShareTopicModalContent'
 
 interface ICardProps {
   card: ICard
@@ -187,7 +188,7 @@ const Card = ({ card }: ICardProps) => {
       />
       <div className='flex'>
         {!isMobile && (
-          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden '>
+          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden'>
             <textarea
               className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none resize-none overflow-hidden w-full'
               rows={1}
@@ -222,37 +223,48 @@ const Card = ({ card }: ICardProps) => {
             isAuthor={isAuthor}
             openShareModal={openShareModal}
           />
-          {activeTab === 'editor' && isMobile && (
-            <textarea
-              ref={inputRef}
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value)
-                onTitleChange(e)
-              }}
-              placeholder='Type title'
-              rows={1}
-              className="max-w-full resize-none focus:outline-none text-[#46434e] text-[28px] font-medium font-['Rubik']"
-              style={{
-                height: `${inputRef.current?.scrollHeight}px`,
-                border: 'none',
-                boxShadow: 'none',
-              }}
-            />
-          )}
 
-          {activeTab === 'editor' && isMobile && (
-            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          {isMobile && activeTab === 'sharing' ? (
+            <div className='h-[calc(100vh-112px)] bg-white'>
+              <ShareTopicModalContent card={card} onClose={() => setActiveTab('discussions')} />
+            </div>
+          ) : (
+            <>
+              {activeTab === 'editor' && isMobile && (
+                <>
+                  <textarea
+                    ref={inputRef}
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value)
+                      onTitleChange(e)
+                    }}
+                    placeholder='Type title'
+                    rows={1}
+                    className="max-w-full resize-none focus:outline-none text-[#46434e] text-[28px] font-medium font-['Rubik']"
+                    style={{
+                      height: `${inputRef.current?.scrollHeight}px`,
+                      border: 'none',
+                      boxShadow: 'none',
+                    }}
+                  />
+                  <Editor key={card.id} projectId={projectId} card={card} users={users} />
+                </>
+              )}
+              {activeTab === 'attachments' && <Attachments files={files} />}
+              {activeTab === 'discussions' && <Discussions users={users} />}
+            </>
           )}
-          {activeTab === 'attachments' && <Attachments files={files} />}
-          {activeTab === 'discussions' && <Discussions users={users} />}
         </aside>
       </div>
-      <ShareTopicModal
-        opened={isShareModalOpened}
-        onClose={() => setIsShareModalOpened(false)}
-        card={card}
-      />
+
+      {!isMobile && (
+        <ShareTopicModal
+          opened={isShareModalOpened}
+          onClose={() => setIsShareModalOpened(false)}
+          card={card}
+        />
+      )}
     </div>
   )
 }
