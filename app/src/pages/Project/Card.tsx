@@ -20,7 +20,6 @@ import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
 import { useAuth } from '../../context/AuthContext'
 import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
 import CardTabs from './CardTabs'
-import useDiscussions from '../../hooks/useDiscussions'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 
 interface ICardProps {
@@ -110,7 +109,7 @@ const Card = ({ card }: ICardProps) => {
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [title, setTitle] = useState(card.title)
-  const [activeTab, setActiveTab] = useState<RightPanelTab>('discussions')
+  const [activeTab, setActiveTab] = useState<RightPanelTab>('editor') // Изменено здесь
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const files = card?.files?.filter((file) => file.url) || []
@@ -188,14 +187,22 @@ const Card = ({ card }: ICardProps) => {
       />
       <div className='flex'>
         {!isMobile && (
-          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px]'>
+          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden '>
             <textarea
-              className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
+              className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none resize-none overflow-hidden w-full'
               rows={1}
               placeholder='Type title'
               ref={inputRef}
               value={title}
               onChange={onTitleChange}
+              style={{
+                border: 'none',
+                boxShadow: 'none',
+                paddingLeft: '1rem',
+                paddingRight: '1rem',
+                maxWidth: '100%',
+               
+              }}
             />
             <Editor key={card.id} projectId={projectId} card={card} users={users} />
           </section>
@@ -214,25 +221,30 @@ const Card = ({ card }: ICardProps) => {
             unreadDiscussions={unreadDiscussions}
             filesLength={files.length}
           />
-          {isMobile && activeTab === 'editor' ? (
-            <div className='h-[calc(100vh_-_112px)] overflow-y-auto'>
-              <textarea
-                className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px]'
-                rows={1}
-                placeholder='Type title'
-                ref={inputRef}
-                value={title}
-                onChange={onTitleChange}
-              />
-              <Editor key={card.id} projectId={projectId} card={card} users={users} />
-            </div>
-          ) : (
-            {
-              discussions: <Discussions users={users} />,
-              attachments: <Attachments files={files} />,
-              editor: null,
-            }[activeTab]
+          {activeTab === 'editor' && isMobile && (
+            <textarea
+              ref={inputRef}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value)
+                onTitleChange(e)
+              }}
+              placeholder='Type title'
+              rows={1}
+              className="max-w-full resize-none focus:outline-none text-[#46434e] text-[28px] font-medium font-['Rubik']"
+              style={{
+                height: `${inputRef.current?.scrollHeight}px`,
+                border: 'none',
+                boxShadow: 'none',
+              }}
+            />
           )}
+
+          {activeTab === 'editor' && isMobile && (
+            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+          )}
+          {activeTab === 'attachments' && <Attachments files={files} />}
+          {activeTab === 'discussions' && <Discussions users={users} />}
         </aside>
       </div>
       <ShareTopicModal

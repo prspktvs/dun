@@ -90,6 +90,7 @@ li {
 }
 textarea {
   @apply bg-background;
+  
 }
 input {
   @apply bg-background;
