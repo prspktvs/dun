@@ -11,6 +11,7 @@ import { ICard } from '../../../types/Card'
 import { shareCard, unshareCard } from '../../../services/card.service'
 import { ConfirmModal } from './ConfirmModal'
 import { SharingOption } from '../../Card/Sharing/SharingOption'
+import { useBreakpoint } from '../../../hooks/useBreakpoint'
 
 interface IShareTopicModalContentProps {
   card: ICard
@@ -19,11 +20,13 @@ interface IShareTopicModalContentProps {
 
 const InviteLinkSection = ({ copyUrl }: { copyUrl: string }) => (
   <div className='flex items-center justify-between mt-4 h-14 border-y-1 border-borders-purple'>
-    <div className='w-1/4 px-5 ml-3 font-bold font-monaspace'>Invite link</div>
-    <div className='flex items-center w-2/4 h-full px-3 my-5 text-sm border-x-1 border-borders-purple'>
+    <div
+      style={{ width: 'calc(100% - 120px)' }}
+      className='flex items-center h-full px-3 my-5 overflow-hidden text-sm truncate border-x-1 border-borders-purple'
+    >
       {copyUrl}
     </div>
-    <div className='w-1/4 h-14'>
+    <div style={{ width: '120px' }} className='h-14'>
       <CopyButton value={copyUrl}>
         {({ copied, copy }) => (
           <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
@@ -140,6 +143,7 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
   const [confirmOpened, setConfirmOpened] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const { isMobile } = useBreakpoint()
 
   const [sharedUsers, unsharedUsers] = users.reduce(
     (acc: [IUser[], IUser[]], user: IUser) => {
@@ -184,7 +188,41 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
 
   return (
     <>
-      <InviteLinkSection copyUrl={copyUrl} />
+      {!isMobile ? (
+        <div className='flex items-center justify-between mt-4 h-14 border-y-1 border-borders-purple'>
+          <div className='w-1/4 px-5 ml-3 font-bold font-monaspace'>Invite link</div>
+          <div className='flex items-center w-2/4 h-full px-3 my-5 text-sm border-x-1 border-borders-purple'>
+            {copyUrl}
+          </div>
+          <div className='w-1/4 h-14'>
+            <CopyButton value={copyUrl}>
+              {({ copied, copy }) => (
+                <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
+                  {copied ? 'Copied' : 'Copy'}
+                </ButtonDun>
+              )}
+            </CopyButton>
+          </div>
+        </div>
+      ) : (
+        <div className='flex items-center justify-between mt-4 h-14 border-y-1 border-borders-purple'>
+          <div
+            style={{ width: 'calc(100% - 120px)' }}
+            className='flex items-center h-full px-3 my-5 overflow-hidden text-sm truncate border-x-1 border-borders-purple'
+          >
+            {copyUrl}
+          </div>
+          <div style={{ width: '120px' }} className='h-14'>
+            <CopyButton value={copyUrl} className='w-full h-full'>
+              {({ copied, copy }) => (
+                <ButtonDun className={`w-full h-full ${copied ? 'opacity-80' : ''}`} onClick={copy}>
+                  {copied ? 'Copied' : 'Copy'}
+                </ButtonDun>
+              )}
+            </CopyButton>
+          </div>
+        </div>
+      )}
       <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
         <span className='px-5 ml-3 font-bold font-monaspace'>Share with</span>
       </div>

@@ -2,7 +2,7 @@ import React from 'react'
 
 function LineSection() {
   return (
-    <div className='h-[120px] w-full border-t-1 bg-[#F5F0EB] border-b-1 border-t-1 border-[#25222C]'>
+    <div className='h-[120px] w-full border-t-1 bg-[#f8f3ee] border-b-1  border-black '>
       <div>
         <svg width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'>
           <defs>

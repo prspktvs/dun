@@ -7,8 +7,9 @@ import Section2 from './Section2'
 import Section3 from './Section3'
 import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
-import { Hamburger } from '../../components/icons'
+import { Frame } from './Frame'
 import { useAuth } from '../../context/AuthContext'
+import { IUser, User } from '../../types/user'
 
 function LandingPage() {
   const { user } = useAuth()
@@ -16,46 +17,51 @@ function LandingPage() {
   if (user && user?.lastProjectId) return <Navigate to={`/${user.lastProjectId}`} />
 
   return (
-    <div className='h-screen w-full overflow-x-hidden bg-[#F5F0EB]'>
+    <div className='h-screen w-full overflow-x-hidden bg-[#faf9f6]'>
       {/* Header */}
-      <div className='border-2 m-6 border-black'>
-        <div className='flex justify-between items-center border-b-1 bg-[#C5D4D2] h-14 border-black '>
-          <div className='border-borders-purple pl-5 text-4xl text-center  text-black'>
+      <div className='m-2 border border-black'>
+        <div className='w-full h-[60px] justify-center items-start gap-px inline-flex overflow-hidden border-b border-black  bg-[#c5d4d2]'>
+          <div className='inline-flex flex-col items-center self-stretch justify-center gap-1 px-10'>
             <Logo />
           </div>
-          <button className='h-full flex items-center p-5 border-l-1 border-black bg-[#C5D4D2] hover:cursor-pointer hover:bg-[#d8e6e4]'>
-            <Hamburger />
-          </button>
+          <div className='flex items-center self-stretch justify-center flex-1 gap-10 px-10 py-0 border-black grow bg-variable-collection-landing-green-main border-x'>
+            <button className='all-[unset] box-border inline-flex items-center flex-[0_0_auto] gap-1 pt-3 pb-2 px-0 h-[50px] justify-center relative'>
+              <div className='font-monaspace w-fit tracking-[0] text-base text-[#343434] font-medium leading-[normal] whitespace-nowrap relative'>
+                About
+              </div>
+            </button>
+            <button className='all-[unset] box-border inline-flex items-center flex-[0_0_auto] gap-1 pt-3 pb-2 px-0 h-[50px] justify-center relative'>
+              <div className='font-monaspace w-fit tracking-[0] text-base text-[#343434] font-medium leading-[normal] whitespace-nowrap relative'>
+                Features
+              </div>
+            </button>
+            <button className='all-[unset] box-border inline-flex items-center flex-[0_0_auto] gap-1 pt-3 pb-2 px-0 h-[50px] justify-center relative'>
+              <div className='font-monaspace w-fit tracking-[0] text-base text-[#343434] font-medium leading-[normal] whitespace-nowrap relative'>
+                Made for You
+              </div>
+            </button>
+            <button className='all-[unset] box-border inline-flex items-center flex-[0_0_auto] gap-1 pt-3 pb-2 px-0 h-[50px] justify-center relative'>
+              <div className='font-monaspace w-fit tracking-[0] text-base text-[#343434] font-medium leading-[normal] whitespace-nowrap relative'>
+                Contacts
+              </div>
+            </button>
+          </div>
+          <div className='inline-flex flex-col items-center self-stretch justify-center gap-1 px-10'>
+            <div className='h-[50px] py-2 justify-center items-center gap-1 inline-flex'>
+              <div className='font-semibold text-primary-text text-16 font-monaspace'>
+                Try for free
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* section-1 */}
-        <div className='w-full flex flex-col bg-paper '>
-          <div className='w-full mx-auto md:my-[79px]   sm:flex sm:justify-center sm:items-center sm:border-b-1 md:border-b-0 border-black'>
-            <img
-              className='sm:w-[500px] lg:w-[922.5px] sm:mb-7 lg:h-[420.5px] w-full mt-4'
-              src='./assets/landing/dun-hero.jpg'
-            />
-          </div>
-          <DualSectionBox
-            title='Zero in on the important stuff '
-            desc="Hey buddy, count on DUN to make your life easier! We've smoothed out work processes and made team and customer communication a walk in the park for you."
-            btnTitle="Let's Dive In for free"
-          />
-        </div>
+        {/* Main Content */}
+        <Frame />
+
         <div>
           <LineSection />
         </div>
         {/* section-2 */}
-        <div className='grid lg:grid-cols-2 bg-paper sm:grid-cols-1'>
-          <div className='uppercase text-[40px] lg:h-[108px] m-5 sm:w-full'>
-            Let's ramp up that productivity
-          </div>
-          <div className='text-md lg:w-[550px] md:justify-self-end lg:m-6 font-monaspace sm:mx-5 sm:mb-5 ml-3 '>
-            DUN's the go-to service for sorting out your work processes and keeping those projects
-            in check. Plus, it lets you chat it up with your team and customers all in one place.
-            Think of DUN as your go-to app for getting down to some serious "focused work".
-          </div>
-        </div>
         <Section2 />
         <LineSection />
         {/* section-3 */}

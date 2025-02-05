@@ -17,7 +17,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
   return (
     <div
       className={clsx(
-        'w-full flex justify-around items-center lg:h-[433px] sm:h-[800px] h-[800px] border-black border-t-1 bg-paper',
+        'w-full flex justify-around items-center lg:h-[433px] sm:h-[800px] h-[800px]  bg-paper',
         isEven
           ? 'lg:flex-row sm:flex-col flex-col'
           : 'lg:flex-row-reverse sm:flex-col-reverse flex-col-reverse',
@@ -25,7 +25,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
     >
       <div
         style={{ backgroundImage }}
-        className='w-full h-full justify-center items-center flex  bg-no-repeat bg-cover bg-center '
+        className='flex items-center justify-center w-full h-full bg-center bg-no-repeat bg-cover '
       >
         <div className='text-lg flex sm:w-[391px] ml-6 h-min font-monaspace text-center sm:text-left'>
           {title}
