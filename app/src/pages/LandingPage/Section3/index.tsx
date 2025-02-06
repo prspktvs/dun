@@ -8,63 +8,62 @@ import GridSvg from '/assets/landing/grid.svg'
 
 import { DownArrow } from '../../../components/icons'
 
-interface IFeatureCard {
-  firstMessage: string
-  secondMessage: string
-}
-
-const FEATURES: IFeatureCard[] = [
-  {
-    firstMessage: 'Hey buddy, ever find yourself lost in the chaos of 50 open tabs?',
-    secondMessage: 'Let DUN set you free from the focus-switching tab dance',
-  },
-  {
-    firstMessage: 'Exhausted from monthly bills?',
-    secondMessage: "DUN's got an all-in-one solution at a great price!",
-  },
-  {
-    firstMessage: 'Missing key info?',
-    secondMessage: "With DUN, you won't miss the important ones!",
-  },
-  {
-    firstMessage: 'Drowning in notifications from various sources?',
-    secondMessage: "With DUN, you won't miss the important ones!",
-  },
-  {
-    firstMessage: 'Tired of a broken phone and copy-paste headaches?',
-    secondMessage: 'Just send one link with all the goods!',
-  },
-]
-
 function Section3() {
   return (
     <>
+      <div className='w-full h-[98px] p-5 bg-[#faf9f6] justify-between items-center inline-flex'>
+        <div className="text-[#343434] text-5xl font-normal font-['National Park '] leading-[57.60px]">
+          Get things DONE with DUN
+        </div>
+        <div className='text-[#343434] text-lg font-normal font-monaspace leading-[27px]'>
+          Use internally and with your clients
+        </div>
+      </div>
       <div
-        style={{ backgroundImage: `url(${GridSvg})` }}
-        className={clsx('w-full flex  flex-col bg-no-repeat bg-cover bg-paper border-t-1')}
+        style={{ backgroundImage: `` }}
+        className={clsx('w-full flex flex-col bg-no-repeat bg-cover bg-paper border-t-1')}
       >
-        <div className='flex flex-col justify-around items-center'>
-          <div className='flex gap-x-72 sm:flex-col md:flex-row md:mt-10 flex-col'>
-            <img src='./assets/landing/leftMouse.svg' />
-            <div className='flex justify-center content-center my-4 md:hidden'>
-              <DownArrow />
+        <div className='flex flex-col items-center justify-around'>
+          <div className='flex justify-between w-full border-t-1'>
+            <div className='relative flex items-center w-1/2'>
+              <img
+                src='./assets/landing/Cloud.svg'
+                className='w-full translate-y-2 sm:mb-8 md:mb-0' // Добавлен класс translate-y-2 для смещения вниз на 2 пикселя и w-full для растяжения на всю ширину
+              />
+              <div className='absolute flex items-center justify-center w-full h-full'>
+                <div className='text-[#555555] text-lg font-normal font-monaspace leading-[28.80px] text-left'>
+                  <ul className='list-disc list-inside'>
+                    <li>Software & design agencies</li>
+                    <li>Freelancers & independent creators</li>
+                    <li>Content creators</li>
+                    <li>Social media managers & Digital marketing</li>
+                  </ul>
+                  <p className='my-2'>&nbsp;</p>
+                  <ul className='list-disc list-inside'>
+                    <li>Architects and interior designers</li>
+                    <li>Fashion designers and apparel brands</li>
+                    <li>Tutors & Students</li>
+                    <li>Nonprofits and volunteer organizations</li>
+                  </ul>
+                  <p className='my-2'>&nbsp;</p>
+                  <ul className='list-disc list-inside'>
+                    <li>Startup teams</li>
+                    <li>E-commerce businesses</li>
+                    <li>Legal and financial advisory teams</li>
+                    <li>Consultants & Specialists</li>
+                    <li>Event & Project Planners</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <img src='./assets/landing/rightMouse.svg' className='sm:mb-8 md:mb-0' />
-          </div>
-
-          <div className='w-full border-t-1  md:border-l-1 md:border-r-1 border-black flex md:mb-9  flex-col sm:w-full md:w-[720px] lg:w-[900px]'>
-            {FEATURES.map((item, index) => (
-              <BoxInformatinSection3 key={'feature-' + index} index={index} {...item} />
-            ))}
+            <div className='flex items-center justify-center w-1/2 border-l border-black'>
+              <img
+                src='./assets/landing/relax.svg'
+                className='w-full translate-y-2 sm:mb-8 md:mb-0'
+              />
+            </div>
           </div>
         </div>
-        <DualSectionBox
-          title={'Hey pal, consider it solved!'}
-          desc={
-            'During our research, the team pinpointed a list of challenges tied to existing services. We made these hurdles the foundation of our design principles and crafted a revamped product.'
-          }
-          btnTitle={'check it!'}
-        />
       </div>
     </>
   )

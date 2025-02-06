@@ -16,59 +16,87 @@ interface IFeatureCard {
 
 const FEATURES: IFeatureCard[] = [
   {
-    title: 'DUN gives each project its own space. Easy and efficient!',
-    backgroundColor: '#C5D4D2',
+    title: '',
+    backgroundColor: '#cbb9cf',
     image: (
       <img
-        className='sm:w-[499px] w-10/12 '
-        src='./assets/landing/landing-image-1.jpg'
+        className='sm:w-[499px] w-10/12'
+        src='./assets/landing/image 177.svg'
         alt='description-image'
       />
     ),
-    backgroundImage: `url(${Rectangles})`,
+    backgroundImage: `url('./assets/landing/feature description2.svg')`,
   },
   {
     title:
-      'One topic equals one neat spot for all files and info related to that case.P.S. Courtesy of DUN.',
-    backgroundColor: '#CBB9CF',
+      'Organize discussions around specific content to avoid getting lost in endless spammy chats',
+    backgroundColor: '#f5cbbc',
     image: (
       <img
-        className='sm:w-[499px] w-10/12 '
-        src='./assets/landing/landing-image-2.jpg'
+        className='sm:w-[499px] w-10/12'
+        src='./assets/landing/image 178.svg'
         alt='description-image'
       />
     ),
-    backgroundImage: `url(${Squares})`,
+    backgroundImage: `url('./assets/landing/Group 15.svg')`,
   },
   {
-    title: 'Every task is tied to a card, making it a breeze to dive into the details',
-    backgroundColor: '#F5CBBC',
+    title: 'Sharing option is always available, as well as making it private again',
+    backgroundColor: '#fff5d2',
     image: (
       <img
-        className='sm:w-[499px] w-10/12 '
-        src='./assets/landing/landing-image-3.jpg'
-        alt='description-image'
-      />
-    ),
-    backgroundImage: `url(${Lines})`,
-  },
-  {
-    title: 'Enjoy a clear and simple interface with DUN. No fuss, just straightforward ease!',
-    backgroundColor: '#FFF5D2',
-    image: (
-      <img
-        className='sm:w-[499px] w-10/12  '
-        src='./assets/landing/landing-image-4.jpg'
+        className='sm:w-[499px] w-10/12'
+        src='./assets/landing/image 179).svg'
         alt='description-image'
       />
     ),
     backgroundImage: `url(${Plaid})`,
+  },
+  {
+    title:
+      'Tap a task in your left bar to quickly access its full context and details. Stop worrying about',
+    backgroundColor: '#afb5d4',
+    image: (
+      <img
+        className='sm:w-[499px] w-10/12'
+        src='./assets/landing/Frame 1056.svg'
+        alt='description-image'
+      />
+    ),
+    backgroundImage: `url('./assets/landing/Group 19.svg')`,
   },
 ]
 
 function Section2() {
   return (
     <>
+      <div className='w-full h-[98px] p-5 bg-[#faf9f6] justify-start items-center gap-[195px] inline-flex'>
+        <div className="text-[#343434] text-[58px] font-normal font-['National Park '] leading-[57.60px]">
+          Features
+        </div>
+      </div>
+      <div className='flex items-start justify-around overflow-hidden border-t border-b border-black'>
+        <div className='w-1/2 h-full p-5 bg-[#faf9f6] flex-col justify-start items-start inline-flex overflow-hidden'>
+          <div className='self-stretch text-[#343434] text-xl font-normal font-monaspace leading-normal'>
+            You can organize your topics into different workspaces by projects or any way you like.
+          </div>
+        </div>
+        <div className='w-1/2 h-full p-5 bg-[#faf9f6] flex-col justify-start items-start inline-flex overflow-hidden border-l border-black'>
+          <div className='self-stretch text-[#343434] text-xl font-normal font-monaspace leading-normal'>
+            Each Topic is a note for sharing, discussion, brainstorming. Customize Topic’s
+            accessability to fit your purpose.
+          </div>
+        </div>
+      </div>
+      <div className='relative w-full bg-[#c5d4d2] p-10 overflow-hidden border-b border-black'>
+        <div className='relative w-full h-full' style={{ paddingBottom: '56.25%' }}>
+          <img
+            className='absolute top-0 left-0 object-cover w-full h-full'
+            alt='Frame'
+            src='/assets/landing/Frame 1051 1.png'
+          />
+        </div>
+      </div>
       <div>
         <div className='sm:grid sm:w-full'>
           {FEATURES.map((item, index) => (

@@ -17,17 +17,17 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
   return (
     <div
       className={clsx(
-        'w-full flex justify-around items-center lg:h-[433px] sm:h-[800px] h-[800px]  bg-paper',
+        'w-full flex justify-around items-center lg:h-[433px] sm:h-[800px] h-[800px] bg-paper',
         isEven
-          ? 'lg:flex-row sm:flex-col flex-col'
-          : 'lg:flex-row-reverse sm:flex-col-reverse flex-col-reverse',
+          ? 'lg:flex-row-reverse sm:flex-col-reverse flex-col-reverse'
+          : 'lg:flex-row sm:flex-col flex-col',
       )}
     >
       <div
         style={{ backgroundImage }}
-        className='flex items-center justify-center w-full h-full bg-center bg-no-repeat bg-cover '
+        className='flex items-center justify-center w-full h-full bg-center bg-no-repeat bg-cover'
       >
-        <div className='text-lg flex sm:w-[391px] ml-6 h-min font-monaspace text-center sm:text-left'>
+        <div className='text-base flex sm:w-[391px] ml-6 h-min font-monaspace text-center sm:text-left'>
           {title}
         </div>
       </div>
@@ -35,7 +35,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
       <div
         style={{ backgroundColor }}
         className={clsx(
-          'w-full  h-full flex justify-center items-center ',
+          'w-full h-full flex flex-col justify-center items-center',
           isEven
             ? 'border-black lg:border-l-1 lg:border-t-0 sm:border-t-1 border-t-1'
             : 'border-black lg:border-r-1 lg:border-b-0 sm:border-b-1 border-b-1',

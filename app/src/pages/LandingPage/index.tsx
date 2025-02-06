@@ -17,7 +17,7 @@ function LandingPage() {
   if (user && user?.lastProjectId) return <Navigate to={`/${user.lastProjectId}`} />
 
   return (
-    <div className='h-screen w-full overflow-x-hidden bg-[#faf9f6]'>
+    <div className='h-screen w-full overflow-x-hidden bg-[#faf9f6'>
       {/* Header */}
       <div className='m-2 border border-black'>
         <div className='w-full h-[60px] justify-center items-start gap-px inline-flex overflow-hidden border-b border-black  bg-[#c5d4d2]'>
