@@ -8,6 +8,7 @@ import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
 import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
+import { useProject } from '../../../context/ProjectContext'
 
 function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
@@ -51,6 +52,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const { chatId, openChatById, createChat, deleteChat, cardChats } = useChats()
   const [search, setSearch] = useState('')
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
+  const { updateCard } = useProject()
 
   useEffect(() => {
     const updatedChats = cardChats.filter((chat) => {
