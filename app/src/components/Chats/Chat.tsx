@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { onValue, push, ref, set, get } from '@firebase/database'
-import { isEmpty } from 'lodash'
+import { onValue, push, ref, set, get, off } from '@firebase/database'
+import { first, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 
@@ -13,6 +13,8 @@ import { IMessage } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
 import { useProject } from '../../context/ProjectContext'
 import AvatarDun from '../ui/Avatar'
+import { getChatPath } from '../../utils/chat'
+import { updateReadBy } from '../../services/chat.service'
 
 export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
 
@@ -43,26 +45,26 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const [messages, setMessages] = useState<IMessage[]>([])
   const { editor } = useEditor()
   const { project } = useProject()
-  const [content, setContent] = useState('Card discussion')
+  const [content, setContent] = useState('Main discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
   const { user } = useAuth()
   const chatUsers = users.reduce((acc, user) => ({ ...acc, [user.id]: user }), {})
   const chatRef = React.useRef<HTMLDivElement>(null)
   const firstMessage = messages[0]
-  const author = chatUsers[firstMessage?.author]
+  const author = firstMessage?.author
 
   useLayoutEffect(() => {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
   }, [messages])
 
   useEffect(() => {
-    const messagesRef = ref(realtimeDb, `chats/${chatId}`)
+    const messagesRef = ref(realtimeDb, getChatPath(projectId, cardId, chatId))
     onValue(messagesRef, (snapshot) => {
       const chat = snapshot.val()
 
       if (editor && !isEmpty(editor.topLevelBlocks)) {
-        const block = editor.topLevelBlocks.find((block) => block.id === chat.id)
+        const block = editor.topLevelBlocks.find((block) => block.id === chatId)
 
         setContent(block?.content?.[0]?.text)
       } else {
@@ -75,7 +77,11 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       if (!m || !mIds) return
       setMessages(m)
       if (editor) saveLastMessageId(mIds[mIds.length - 1])
+
+      updateReadBy(getChatPath(projectId, cardId, chatId), user.id)
     })
+
+    return () => off(messagesRef)
   }, [chatId])
 
   const saveLastMessageId = (messageId: string) => {
@@ -100,16 +106,16 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
     })
 
     await saveChatAndMessage({
-      chatId,
+      path: getChatPath(projectId, cardId, chatId),
       messageData: {
         text: newMessage,
-        author: user?.name || '',
-        authorId: user?.id || '',
+        author: user.name || '',
+        authorId: user.id || '',
         timestamp: Date.now(),
         mentions,
+        readBy: [user.id],
       },
-      content: 'Discussion',
-      cardId,
+      content: 'Main discussion',
     })
     setNewMessage('')
   }
@@ -124,9 +130,9 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         <div>
           <div className='h-full border-l-1 border-borders-purple px-2 py-1 gap-3 font-monaspace'>
             <div className='text-sm text-[#A3A1A7]'>
-              {author ? `${author.name} started a discussion about:` : 'New discussion:'}
+              {author ? `${author} started a discussion about:` : 'New discussion:'}
             </div>
-            <div className='text-sm'>{content || 'Major topic discussion'}</div>
+            <div className='text-sm'>{content || 'Main discussion'}</div>
           </div>
         </div>
       </div>

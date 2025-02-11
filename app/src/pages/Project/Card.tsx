@@ -224,7 +224,6 @@ const Card = ({ card }: ICardProps) => {
         <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
             className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
-            rows={1}
             placeholder='Type title'
             ref={inputRef}
             value={title}
@@ -261,13 +260,24 @@ const Card = ({ card }: ICardProps) => {
 export function CardPage() {
   const { cardId, id: projectId } = useParams()
   const { cards } = useProject()
+  const [isLoading, setLoading] = useState(true)
+  const [card, setCard] = useState<ICard | undefined>()
 
-  const card = cards?.find((card) => card.id === cardId)
+  useEffect(() => {
+    if (!cards.length || !cardId) return
+    const foundCard = cards?.find((card) => card.id === cardId)
+    setCard(foundCard)
+    setLoading(false)
+  }, [cards, cardId])
+
+  if (isLoading) return <Loader />
+
+  if (!card) return <Navigate to={`/${projectId}`} />
 
   return (
     <ChatProvider>
       <FilePreviewProvider files={card?.files || []}>
-        {card ? <Card card={card} /> : <Navigate to={`/${projectId}`} />}
+        <Card card={card} />
       </FilePreviewProvider>
     </ChatProvider>
   )

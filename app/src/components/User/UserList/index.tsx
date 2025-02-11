@@ -18,7 +18,7 @@ function UserList({ users }: IUserListProps) {
       <Avatar.Group spacing={5}>
         {!isEmpty(usersList)
           ? usersList.map((user, index) => (
-              <Tooltip key={'project-' + user.id} label={user.name} withArrow>
+              <Tooltip key={'project-avatar-u-' + user.id} label={user.name} withArrow>
                 <AvatarDun size={32} user={user} />
               </Tooltip>
             ))

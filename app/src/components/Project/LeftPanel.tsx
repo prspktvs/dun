@@ -157,8 +157,6 @@ function LeftPanel() {
             ))}
           </div>
         ))}
-
-        <div className='text-btnBg text-sm font-semibold font-monaspace pl-1'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>

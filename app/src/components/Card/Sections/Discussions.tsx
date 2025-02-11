@@ -29,7 +29,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               <div className='h-8 flex gap-2 items-center font-monaspace w-11/12 '>
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-12'>
-                  <div className='text-[#969696]'>Major topic discussion</div>
+                  <div className='text-[#969696]'>Main discussion</div>
                 </div>
               </div>
               <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
@@ -73,7 +73,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   const onDeleteChat = (chatId: string) => deleteChat(cardId, chatId)
 
-  const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
+  const onCreateNewDiscussion = async () => createChat('initialBlockId', 'Topic discussion')
 
   return (
     <section className='h-screen'>

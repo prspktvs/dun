@@ -26,7 +26,7 @@ const stopPropagationWrapper =
     handler(event)
   }
 
-export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview) {
+export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview) { 
   switch (file.type) {
     case 'image':
       return (
