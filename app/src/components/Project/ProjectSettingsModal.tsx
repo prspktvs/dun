@@ -1,6 +1,6 @@
 import { Button, CopyButton } from '@mantine/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { debounce , isEmpty } from 'lodash'
+import { debounce, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
@@ -27,13 +27,11 @@ export default function ProjectSettingsModal({
   const [removeTitle, setRemoveTitle] = useState('')
 
   useEffect(() => {
-    if (isLoading || !project || isTitleEditing || title || description || isDescriptionEditing)
-      return
+    if (isLoading) return
 
     setTitle(project.title)
-
     setDescription(project.description)
-  }, [project, isLoading])
+  }, [project?.title, project?.description, isLoading])
 
   const saveTitle = (title: string) => updateProject({ id: projectId, title })
 
@@ -134,11 +132,13 @@ export default function ProjectSettingsModal({
 
         <div className='border-border-color border-t-1 flex items-center font-monaspace px-5'>
           <div className='flex-1 border-r-1 border-border-color'>
-            <span className='text-12'>Type project title to delete it</span>
+            <span className='text-12'>
+              Type project title (<span className='font-bold'>{title}</span>) to delete it:
+            </span>
             <input
               value={removeTitle}
               onChange={(e) => setRemoveTitle(e.target.value)}
-              className='w-full text-sm my-2 outline-none'
+              className='w-full text-sm my-2 bg-white outline-none'
               placeholder={title}
             />
           </div>

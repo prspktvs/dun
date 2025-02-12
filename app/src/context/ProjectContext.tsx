@@ -55,14 +55,13 @@ export const ProjectProvider = ({
   const [isCardsLoading, setIsCardsLoading] = useState(true)
 
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
-
   useEffect(() => {
     const fetchChats = async () => {
       try {
         const projectChatsRef = ref(realtimeDb, `projects/${projectId}/cards`)
         const snapshot = await get(projectChatsRef)
         const cards = snapshot.val()
-        const allChats: { cardId: string; chatId: string; chat: IChat }[] = []
+        const allChats = []
 
         Object.entries(cards).forEach(([cardId, card]) => {
           if (card.chats) {
