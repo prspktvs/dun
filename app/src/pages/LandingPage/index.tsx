@@ -9,11 +9,14 @@ import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
 import { Hamburger } from '../../components/icons'
 import { useAuth } from '../../context/AuthContext'
+import { genId } from '../../utils'
+import { IUser } from '../../types/User'
 
 function LandingPage() {
   const { user } = useAuth()
 
-  if (user && user?.lastProjectId) return <Navigate to={`/${user.lastProjectId}`} />
+  const redirectProjectId = (user as IUser)?.lastProjectId || genId()
+  if (user) return <Navigate to={`/${redirectProjectId}`} />
 
   return (
     <div className='h-screen w-full overflow-x-hidden bg-[#F5F0EB]'>
