@@ -20,7 +20,7 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
         'w-full flex justify-around items-center lg:h-[433px] sm:h-[800px] h-[800px] bg-paper',
         isEven
           ? 'lg:flex-row-reverse sm:flex-col-reverse flex-col-reverse'
-          : 'lg:flex-row sm:flex-col flex-col',
+          : 'lg:flex-row sm:flex-col-reverse flex-col-reverse',
       )}
     >
       <div
@@ -35,10 +35,10 @@ function FeatureCard({ title, backgroundColor, image, index, backgroundImage }: 
       <div
         style={{ backgroundColor }}
         className={clsx(
-          'w-full h-full flex flex-col justify-center items-center',
+          'w-full h-full flex flex-col justify-center items-center border-black',
           isEven
-            ? 'border-black lg:border-l-1 lg:border-t-0 sm:border-t-1 border-t-1'
-            : 'border-black lg:border-r-1 lg:border-b-0 sm:border-b-1 border-b-1',
+            ? clsx('lg:border-r', index > 0 && 'border-t', index < 3 && 'border-b')
+            : clsx('lg:border-l', index > 0 && 'border-t', index < 3 && 'border-b'),
         )}
       >
         {image}
