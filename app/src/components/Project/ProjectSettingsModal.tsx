@@ -95,9 +95,9 @@ export default function ProjectSettingsModal({
             )}
           </div>
 
-          <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-border-color'>
+          <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-borders-purple'>
             <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
-            <div className='w-2/4 text-sm my-5 h-full border-x-1 border-border-color flex items-center px-3'>
+            <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
               {projectUrl}
             </div>
             <div className='w-1/4 h-14'>
@@ -112,7 +112,7 @@ export default function ProjectSettingsModal({
           </div>
         </div>
 
-        <div className='flex items-center justify-between h-14 border-b-1 border-border-color'>
+        <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
           <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
         </div>
 
@@ -130,8 +130,8 @@ export default function ProjectSettingsModal({
             : null}
         </div>
 
-        <div className='border-border-color border-t-1 flex items-center font-monaspace px-5'>
-          <div className='flex-1 border-r-1 border-border-color'>
+        <div className='border-borders-purple border-t-1 flex items-center font-monaspace px-5'>
+          <div className='flex-1 border-r-1 border-borders-purple'>
             <span className='text-12'>
               Type project title (<span className='font-bold'>{title}</span>) to delete it:
             </span>

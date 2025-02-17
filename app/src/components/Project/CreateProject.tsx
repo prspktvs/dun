@@ -1,8 +1,10 @@
 import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { useNavigate } from 'react-router-dom'
 
 import { IProject } from '../../types/Project'
-import { createProject } from '../../services'
+import { createProject, getAllUserProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import { IUser } from '../../types/User.d.ts'
 
@@ -15,11 +17,17 @@ const CreateProject = (props: ICreateProjectProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
+  const [projects, setProjects] = useState<IProject[]>([])
   const isTitleEmpty = title.length === 0
 
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const isNewUser = !user?.lastProjectId
 
-  const onContinue = () => setActiveTab('second')
+  useEffect(() => {
+    if (!user) return
+    getAllUserProject(user.id).then((data) => setProjects(data as IProject[]))
+  }, [user?.id])
 
   const onCreate = async () => {
     const project: Partial<IProject> = {
@@ -37,6 +45,8 @@ const CreateProject = (props: ICreateProjectProps) => {
     if (name === 'title') return setTitle(value)
     setDescription(value)
   }
+
+  const goToDashboard = () => navigate('/dashboard')
 
   return (
     <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-borders-gray'>
@@ -78,17 +88,33 @@ const CreateProject = (props: ICreateProjectProps) => {
             name='description'
             onChange={handleInputChange}
           ></textarea>
-          <Button
-            className='mt-6 font-monaspace font-thin text-[#A3A1A7] h-12'
-            fullWidth
-            radius={0}
-            variant='filled'
-            color='#343434'
-            onClick={onCreate}
-            disabled={isTitleEmpty}
-          >
-            Create
-          </Button>
+          <div className='flex gap-3'>
+            {!isNewUser && (
+              <Button
+                className='mt-6 font-monaspace font-thin text-[#47444F] h-12 border-[#47444F] hover:text-[#47444F]'
+                fullWidth
+                radius={0}
+                variant='outline'
+                onClick={goToDashboard}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              className={clsx(
+                'mt-6 font-monaspace font-thin h-12',
+                isTitleEmpty ? 'text-[#A3A1A7]' : 'text-white',
+              )}
+              fullWidth
+              radius={0}
+              variant='filled'
+              color='#8379BD'
+              onClick={onCreate}
+              disabled={isTitleEmpty}
+            >
+              Dun
+            </Button>
+          </div>
         </Tabs.Panel>
       </Tabs>
     </div>

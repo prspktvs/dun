@@ -14,14 +14,14 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
     <>
       <div
-        className='h-[120px] border-b-1 border-border-color overflow-hidden flex flex-none'
+        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex flex-none'
         onClick={onClick}
       >
         <div className='flex w-full'>
-          <div className={clsx('w-2 h-full border-r-1 border-border-color', 'bg-[#EFEFEF]')} />
+          <div className={clsx('w-2 h-full border-r-1 border-borders-purple', 'bg-[#EFEFEF]')} />
           <div
             className={clsx(
-              'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+              'w-full flex border-borders-purple hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
               'opacity-70',
             )}
           >
@@ -77,7 +77,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   return (
     <section className='h-screen'>
-      <div className='relative p-3 border-b-1 border-border-color'>
+      <div className='relative p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
           className='block pl-7 h-4 align-middle text-sm w-full overflow-hidden border-none font-monaspace'
@@ -91,7 +91,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
           filteredChats.map((chat) => (
             <article
               key={'filtered-chat-' + chat.id}
-              className='h-[160px] border-b-1 border-border-color overflow-hidden flex flex-none'
+              className='h-[160px] border-b-1 border-borders-purple overflow-hidden flex flex-none'
             >
               <ChatPreview
                 key={'chat-' + chat.id}
