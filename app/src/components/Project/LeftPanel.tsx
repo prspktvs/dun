@@ -55,7 +55,7 @@ function LeftPanel() {
           onChange={(opened) => setMenuOpened(opened)}
         >
           <Menu.Target>
-            <nav className='border-borders-purple h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
+            <nav className='border-borders-purple border-r-1 h-14 px-5 w-80 border-b-1 text-3xl flex flex-col justify-between hover:cursor-pointer hover:bg-gray-100'>
               {/* Overproject section */}
               <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
                 <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -83,15 +83,17 @@ function LeftPanel() {
 
           <Menu.Dropdown>
             <Menu.Label className='text-md font-monaspace'>Your projects</Menu.Label>
-            {projects.map((project, idx) => (
-              <Menu.Item
-                key={'prjx-' + idx}
-                className='text-md font-rubik'
-                onClick={() => goToProject(project.id)}
-              >
-                {project?.title || 'Empty project'}
-              </Menu.Item>
-            ))}
+            <div className='overflow-y-scroll h-[50vh]'>
+              {projects.map((project, idx) => (
+                <Menu.Item
+                  key={'prjx-' + idx}
+                  className='text-md font-rubik'
+                  onClick={() => goToProject(project.id)}
+                >
+                  {project?.title || 'Empty project'}
+                </Menu.Item>
+              ))}
+            </div>
             <div className='border-t-[2px] pt-1 mt-1'>
               <Menu.Item
                 className='text-md font-rubik text-gray-500'

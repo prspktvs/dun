@@ -61,8 +61,9 @@ export const ProjectProvider = ({
         const projectChatsRef = ref(realtimeDb, `projects/${projectId}/cards`)
         const snapshot = await get(projectChatsRef)
         const cards = snapshot.val()
-        const allChats = []
+        if (!cards) return []
 
+        const allChats = []
         Object.entries(cards).forEach(([cardId, card]) => {
           if (card.chats) {
             Object.entries(card.chats).forEach(([chatId, chat]) => {

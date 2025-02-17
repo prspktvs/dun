@@ -37,8 +37,8 @@ export default function ProjectSettingsModal({
 
   const saveDescription = (description: string) => updateProject({ id: projectId, description })
 
-  const debouncedSaveTitle = useCallback(debounce(saveTitle, 2000), [])
-  const debouncedSaveDescription = useCallback(debounce(saveDescription, 2000), [])
+  const debouncedSaveTitle = useCallback(debounce(saveTitle, 2000), [projectId])
+  const debouncedSaveDescription = useCallback(debounce(saveDescription, 2000), [projectId])
 
   const handleDelete = () => deleteProject(projectId)
 
