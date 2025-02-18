@@ -109,7 +109,18 @@ export const SELECT_ALL_CARDS_BY_IDS_QUERY = `
         FROM files
         WHERE cards.id = files.card_id
       ), '[]'
-    ) AS files 
+    ) AS files,
+    COALESCE((
+      SELECT json_group_array(json_object(
+        'id', tasks.id, 
+        'isDone', tasks.isDone, 
+        'text', tasks.text, 
+        'users', tasks.users, 
+        'author', tasks.author, 
+        'priority', tasks.priority, 
+        'status', tasks.status
+      ))
+      FROM tasks WHERE cards.id = tasks.card_id), '[]') AS tasks
   FROM cards 
   LEFT JOIN files ON cards.id = files.card_id 
   WHERE cards.project_id = ? AND cards.id in ($IDS) 

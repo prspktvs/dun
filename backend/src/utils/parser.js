@@ -158,39 +158,56 @@ function parseBlockGroup(block, addContent) {
   return block.content?.map((container) => parseContainer(container, addContent))
 }
 
-function getDescription(blocks) {
-  return blocks
-    ?.flatMap(({ block, innerContent }) => [
-      ...(block || []),
-      ...innerContent.flatMap(({ block }) => block),
-    ])
-    ?.filter((block) => (Array.isArray(block) ? block[0]?.type !== 'task' : block.type !== 'task'))
-    ?.map((block) => {
-      const contentText = (Array.isArray(block) ? block[0]?.content : block.content)
-        ?.map((content) => {
-          if (!content) return ''
-          switch (content.type) {
-            case 'text':
-            case 'mention':
-            case 'link':
-              return content.text
-            default:
-              return ''
-          }
-        })
-        ?.join('')
-
-      switch (block?.type) {
-        case 'bulletListItem':
-          return `• ${contentText}`
-        case 'numberedListItem':
-          return `${block.props.index}. ${contentText}`
+function extractContentText(block) {
+  const content = Array.isArray(block) ? block[0]?.content : block.content
+  return content
+    ?.map((contentItem) => {
+      if (!contentItem) return ''
+      switch (contentItem.type) {
+        case 'text':
+        case 'mention':
+        case 'link':
+          return contentItem.text
         default:
-          return contentText
+          return ''
       }
     })
+    ?.join('')
+}
+
+function formatBlockText(block) {
+  const contentText = extractContentText(block)
+  switch (block?.type) {
+    case 'bulletListItem':
+      return `• ${contentText}`
+    case 'numberedListItem':
+      return `${block.props.index}. ${contentText}`
+    default:
+      return contentText
+  }
+}
+
+function extractDescriptionAndSearchText(blocks) {
+  const flattedBlocks = blocks?.flatMap(({ block, innerContent }) => [
+    ...(block || []),
+    ...innerContent.flatMap(({ block }) => block),
+  ])
+
+  const descriptionBlocks = flattedBlocks?.filter((block) =>
+    Array.isArray(block) ? block[0]?.type !== 'task' : block.type !== 'task',
+  )
+
+  const description = descriptionBlocks
+    ?.map(formatBlockText)
     ?.filter((line) => line !== '')
     ?.slice(0, 5)
+
+  const searchText = flattedBlocks?.map(formatBlockText)
+
+  return {
+    description,
+    searchText,
+  }
 }
 
 function parseBNXmlToBlocks(data) {
@@ -202,9 +219,8 @@ function parseBNXmlToBlocks(data) {
   const addContent = (type, data) => content[type].push(data)
 
   const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
-
-  const description = getDescription(blocks[0])
-  const text = description?.join('\n') || ''
+  const { description, searchText } = extractDescriptionAndSearchText(blocks[0])
+  const text = searchText.filter((line) => Boolean(line)).join('\n') || ''
 
   return { ...content, description, text }
 }
