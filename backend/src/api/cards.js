@@ -86,7 +86,17 @@ export const getCardById = async (req, res) => {
 
 export const createCard = async (req, res) => {
   try {
-    const { id, title, description, createdAt, chatIds, projectId, author, users } = req.body
+    const {
+      id,
+      title,
+      description,
+      createdAt,
+      chatIds,
+      projectId,
+      author,
+      users,
+      public: isPublic,
+    } = req.body
     await runQuery(INSERT_NEW_CARD_QUERY, [
       id,
       title,
@@ -96,8 +106,21 @@ export const createCard = async (req, res) => {
       JSON.stringify(users || []),
       author,
       projectId,
+      +isPublic,
     ])
-    res.status(201).send({ id, title, description, createdAt, chatIds, projectId, author, users })
+    res
+      .status(201)
+      .send({
+        id,
+        title,
+        description,
+        createdAt,
+        chatIds,
+        projectId,
+        author,
+        users,
+        public: isPublic,
+      })
   } catch (error) {
     handleError(res, error)
   }

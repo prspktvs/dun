@@ -157,11 +157,14 @@ const Card = ({ card }: ICardProps) => {
   )
 
   useEffect(() => {
+    setTitle(card.title)
+  }, [card.title])
+
+  useEffect(() => {
     const textarea = inputRef.current
     if (!textarea) return
     textarea.style.height = 'auto'
-    const maxHeight = 144
-    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
+    textarea.style.height = `${textarea.scrollHeight}px`
   }, [title])
 
   useEffect(() => {
@@ -172,7 +175,7 @@ const Card = ({ card }: ICardProps) => {
     _debounce(async (title) => {
       await onSaveTitle(title)
     }, 1500),
-    [],
+    [card.id, card.public],
   )
 
   const clearUrlHash = () => navigate(location.pathname + location.search, { replace: true })
@@ -203,7 +206,8 @@ const Card = ({ card }: ICardProps) => {
     goBack()
   }
 
-  const goBack = () => {
+  const goBack = async () => {
+    await onSaveTitle(title)
     closeChat()
     navigate(`/${projectId}`)
   }
@@ -223,8 +227,9 @@ const Card = ({ card }: ICardProps) => {
       <div className='flex'>
         <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
           <textarea
-            className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
+            className='font-rubik align-middle min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
             placeholder='Type title'
+            rows={1}
             ref={inputRef}
             value={title}
             onChange={onTitleChange}
