@@ -28,6 +28,7 @@ export const getCardById = async (cardId: string): Promise<ICard | null> => {
 export const createCard = async (projectId: string, card: Partial<ICard>): Promise<ICard | null> => {
   if (!projectId) return null
 
+
   const res = await apiRequest<ICard>(`cards`, { 
     method: 'POST',
     body: JSON.stringify({ ...card, projectId })

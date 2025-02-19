@@ -25,12 +25,6 @@ export default function CustomSideMenu(props: SideMenuProps) {
               : 'ri-message-3-line text-[#CFCFCF] hover:bg',
           )}
           onClick={async (e) => {
-            await saveChatAndMessage({
-              chatId: blockId,
-              cardId,
-              content: props?.block?.content?.[0]?.text || 'Discussion',
-              messageData: undefined,
-            })
             openChatById(blockId)
           }}
         />

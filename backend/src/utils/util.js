@@ -131,6 +131,7 @@ const onStoreDocument = async ({
     description,
     text,
   } = parser(json)
+  console.log('ALL FILES', allFiles)
 
   // without await to not block the response
   // @TODO: optimize card title
@@ -157,7 +158,6 @@ const onStoreDocument = async ({
   const newMentions = allMentions.filter(
     (mention) => !currentMentions.map((m) => m.id).includes(mention.id),
   )
-
   await Promise.all([
     saveAllContent({
       cardId,
@@ -181,7 +181,18 @@ const onStoreDocument = async ({
       })
     })
   }
-  console.log(currentCard)
+  console.log('Current card', {
+    id: cardId,
+    title: currentCard?.title,
+    project_id: projectId,
+    content: text,
+    updated_at: Date.now(),
+    created_at: Date.now(),
+    author_id: user.user_id,
+    author: user.name,
+    public: false,
+    user_ids: JSON.parse(currentCard.users || '[]'),
+  })
   addDocument({
     id: cardId,
     title: currentCard?.title,

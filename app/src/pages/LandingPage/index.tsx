@@ -9,18 +9,21 @@ import DualSectionBox from './DualSectionBox/DualSectionBox'
 import Footer from './Footer'
 import { Hamburger } from '../../components/icons'
 import { useAuth } from '../../context/AuthContext'
+import { genId } from '../../utils'
+import { IUser } from '../../types/User'
 
 function LandingPage() {
   const { user } = useAuth()
 
-  if (user && user?.lastProjectId) return <Navigate to={`/${user.lastProjectId}`} />
+  const redirectProjectId = (user as IUser)?.lastProjectId ? 'dashboard' : genId()
+  if (user) return <Navigate to={`/${redirectProjectId}`} />
 
   return (
     <div className='h-screen w-full overflow-x-hidden bg-[#F5F0EB]'>
       {/* Header */}
       <div className='border-2 m-6 border-black'>
         <div className='flex justify-between items-center border-b-1 bg-[#C5D4D2] h-14 border-black '>
-          <div className='border-border-color pl-5 text-4xl text-center  text-black'>
+          <div className='border-borders-purple pl-5 text-4xl text-center  text-black'>
             <Logo />
           </div>
           <button className='h-full flex items-center p-5 border-l-1 border-black bg-[#C5D4D2] hover:cursor-pointer hover:bg-[#d8e6e4]'>

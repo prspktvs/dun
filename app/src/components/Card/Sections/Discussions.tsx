@@ -8,19 +8,20 @@ import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
 import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
+import { useProject } from '../../../context/ProjectContext'
 
 function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
     <>
       <div
-        className='h-[120px] border-b-1 border-border-color overflow-hidden flex flex-none'
+        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex flex-none'
         onClick={onClick}
       >
         <div className='flex w-full'>
-          <div className={clsx('w-2 h-full border-r-1 border-border-color', 'bg-[#EFEFEF]')} />
+          <div className={clsx('w-2 h-full border-r-1 border-borders-purple', 'bg-[#EFEFEF]')} />
           <div
             className={clsx(
-              'w-full flex border-border-color hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
+              'w-full flex border-borders-purple hover:cursor-pointer hover:bg-gray-100 pr-7 py-3',
               'opacity-70',
             )}
           >
@@ -28,7 +29,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               <div className='h-8 flex gap-2 items-center font-monaspace w-11/12 '>
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-12'>
-                  <div className='text-[#969696]'>Major topic discussion</div>
+                  <div className='text-[#969696]'>Main discussion</div>
                 </div>
               </div>
               <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
@@ -51,6 +52,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const { chatId, openChatById, createChat, deleteChat, cardChats } = useChats()
   const [search, setSearch] = useState('')
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
+  const { updateCard } = useProject()
 
   useEffect(() => {
     const updatedChats = cardChats.filter((chat) => {
@@ -71,11 +73,11 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   const onDeleteChat = (chatId: string) => deleteChat(cardId, chatId)
 
-  const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
+  const onCreateNewDiscussion = async () => createChat('initialBlockId', 'Topic discussion')
 
   return (
     <section className='h-screen'>
-      <div className='relative p-3 border-b-1 border-border-color'>
+      <div className='relative p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input
           className='block pl-7 h-4 align-middle text-sm w-full overflow-hidden border-none font-monaspace'
@@ -89,7 +91,7 @@ export default function Discussions({ users }: { users: IUser[] }) {
           filteredChats.map((chat) => (
             <article
               key={'filtered-chat-' + chat.id}
-              className='h-[160px] border-b-1 border-border-color overflow-hidden flex flex-none'
+              className='h-[160px] border-b-1 border-borders-purple overflow-hidden flex flex-none'
             >
               <ChatPreview
                 key={'chat-' + chat.id}

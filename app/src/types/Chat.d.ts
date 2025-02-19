@@ -4,6 +4,7 @@ export interface IMessage {
   text: string
   timestamp: number
   mentions: string[]
+  readBy: string[]
 }
 
 export interface IChat {

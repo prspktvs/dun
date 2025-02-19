@@ -3,11 +3,10 @@ import { Image } from '@mantine/core'
 import { useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 
-import AvatarDun from '../../ui/Avatar'
 import { useProject } from '../../../context/ProjectContext'
 import { ICard } from '../../../types/Card'
 import TaskPreview from '../../Task/TaskPreview'
-import { MessageIcon, UpdateIcon } from '../../icons'
+import { MessageIcon } from '../../icons'
 import UserList from '../../User/UserList'
 
 const MAX_IMAGES = 4

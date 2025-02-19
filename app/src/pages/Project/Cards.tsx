@@ -48,7 +48,13 @@ export function CardsPage() {
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
-    const nonEmptyCards = cards.filter((card) => card.title || card?.description?.length > 0)
+    const nonEmptyCards = cards.filter(
+      (card) =>
+        card.title ||
+        card?.description?.length > 0 ||
+        card?.tasks?.length > 0 ||
+        card?.files?.length > 0,
+    )
     setFilteredCards(search.q ? search.results : nonEmptyCards)
   }, [search.q, cards])
 
@@ -91,7 +97,7 @@ export function CardsPage() {
 
           <div className='flex items-center justify-center flex-shrink-0 w-48 h-full border-l border-borders-purple'>
             <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-              <span className='text-xl font-thin'>+</span>Topic
+              <span className='text-xl font-thin pr-1'>+</span>Topic
             </ButtonDun>
           </div>
         </div>

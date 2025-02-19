@@ -7,6 +7,7 @@ import { notifyError } from '../../utils/notifications'
 import { FILL_ALL_FIELDS_MESSAGE } from '../../constants/messages'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { Loader } from '../ui/Loader'
+import { genId } from '../../utils'
 
 interface IAuthTabsProps {
   tab: string
@@ -72,7 +73,12 @@ function AuthForm({ tab, setTab }: IAuthTabsProps) {
     if (!email || !password || !name) return notifyError(FILL_ALL_FIELDS_MESSAGE)
     setLoading(true)
 
-    await registerWithEmailAndPassword({ email, password, name, cb: () => setTab('verification') })
+    await registerWithEmailAndPassword({
+      email,
+      password,
+      name,
+      cb: () => (window.location.href = `/${genId()}`),
+    })
 
     setEmail('')
     setName('')
