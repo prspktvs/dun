@@ -26,7 +26,12 @@ const stopPropagationWrapper =
     handler(event)
   }
 
-export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview) { 
+const getFileName = (url: string) => {
+  const parts = decodeURIComponent(url).split('/o/files/')
+  return parts.length > 1 ? parts[1].split('?')[0] : null
+}
+
+export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview) {
   switch (file.type) {
     case 'image':
       return (
@@ -52,9 +57,24 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
           onClick={onClick}
         />
       )
+    case 'file':
+      return isFullScreen ? (
+        <object data={file.url} className='w-full h-full'>
+          <p>
+            <a href={file.url} target='_blank' rel='noopener noreferrer'>
+              Download file
+            </a>
+          </p>
+        </object>
+      ) : (
+        <div className='h-full w-full flex items-center justify-center' onClick={onClick}>
+          <p>{getFileName(file.url)}</p>
+        </div>
+      )
+    case 'audio':
     case 'link':
       return (
-        <div className='h-full w-full flex items-center justify-center'>
+        <div className='h-full w-full flex items-center justify-center' onClick={onClick}>
           <a
             href={file.url}
             target='_blank'

@@ -115,7 +115,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
         mentions,
         readBy: [user.id],
       },
-      content: 'Main discussion',
+      content: 'Discussion',
     })
     setNewMessage('')
   }
@@ -132,7 +132,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
             <div className='text-sm text-[#A3A1A7]'>
               {author ? `${author} started a discussion about:` : 'New discussion:'}
             </div>
-            <div className='text-sm'>{content || 'Main discussion'}</div>
+            <div className='text-sm'>{content || 'Discussion'}</div>
           </div>
         </div>
       </div>
@@ -181,7 +181,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
-      <div className='h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
+      <div className='min-h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
           className='ml-1 flex-1 font-commissioner'

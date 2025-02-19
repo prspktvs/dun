@@ -125,15 +125,16 @@ function parseContainer(container, addContent) {
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
       const parsedBlock = parseBlock(block)
+      console.log(parsedBlock)
       switch (parsedBlock.type) {
         case 'task':
           handleTaskBlock(parsedBlock, blockId, addContent)
           break
-        case 'image':
-          handleFileBlock(parsedBlock, blockId, addContent, 'image')
-          break
+        case 'file':
+        case 'audio':
         case 'video':
-          handleFileBlock(parsedBlock, blockId, addContent, 'video')
+        case 'image':
+          handleFileBlock(parsedBlock, blockId, addContent, parsedBlock.type)
           break
         default:
           handleDefaultBlock(parsedBlock, blockId, addContent)

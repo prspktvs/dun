@@ -185,7 +185,6 @@ export const ProjectProvider = ({
       const data = { ...card, author: user.id, users: [], public: false }
       const newCard = await createCard(projectId, data)
 
-      console.log('New card created', newCard)
       if (!newCard) return
       setCards((prev) => [newCard, ...prev])
     } catch (error) {}
