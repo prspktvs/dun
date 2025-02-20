@@ -18,8 +18,8 @@ export function SharingOption({ isActive, onClick, title, description }: Sharing
       )}
       onClick={isActive ? undefined : onClick}
     >
-      <div className='flex justify-between items-center'>
-        <span className='text-14 font-monaspace font-semibold'>{title}</span>
+      <div className='flex items-center justify-between'>
+        <span className='font-semibold text-14 font-monaspace'>{title}</span>
         <SharingRadioIcon checked={isActive} />
       </div>
       <span className='text-12 font-monaspace'>{description}</span>

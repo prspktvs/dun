@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
 import { IFile } from '../../../types/File'

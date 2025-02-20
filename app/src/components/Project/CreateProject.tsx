@@ -1,33 +1,97 @@
-import { Tabs, Button, Textarea, TagsInput } from '@mantine/core'
-import { useEffect, useState } from 'react'
-import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import clsx from 'clsx'
+import React from 'react'
+import { Button } from '@mantine/core'
 
-import { IProject } from '../../types/Project'
-import { createProject, getAllUserProject } from '../../services'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { useAuth } from '../../context/AuthContext'
-import { IUser } from '../../types/User.d.ts'
+import { IProject, IUser } from '../../types'
+import { createProject } from '../../services'
+import Logo from '../ui/Logo'
 
 interface ICreateProjectProps {
   projectId: string
 }
 
-const CreateProject = (props: ICreateProjectProps) => {
-  const [activeTab, setActiveTab] = useState<string>('first')
+interface ProjectFormProps {
+  title: string
+  description: string
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onCreate: () => void
+  goToDashboard?: () => void
+  isNewUser?: boolean
+  isTitleEmpty: boolean
+}
+
+const ProjectForm: React.FC<ProjectFormProps> = ({
+  title,
+  description,
+  handleInputChange,
+  onCreate,
+  goToDashboard,
+  isNewUser,
+  isTitleEmpty,
+}) => {
+  return (
+    <div className='flex flex-col'>
+      <div className='flex-1'>
+        <textarea
+          className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 md:pb-6 '
+          placeholder='Type new project title'
+          value={title}
+          name='title'
+          onChange={handleInputChange}
+        ></textarea>
+
+        <textarea
+          className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[188px] pl-4 placeholder-slate-400 text-[#47444F] leading-tight'
+          placeholder='Description'
+          value={description}
+          name='description'
+          onChange={handleInputChange}
+        ></textarea>
+      </div>
+      <div className='flex flex-col gap-3 md:flex-row'>
+        {!isNewUser && goToDashboard && (
+          <Button
+            className='mt-6 font-monaspace font-thin text-[#47444F] h-12 border-[#47444F] hover:text-[#47444F]'
+            fullWidth
+            radius={0}
+            variant='outline'
+            onClick={goToDashboard}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button
+          className={clsx(
+            'mt-6 font-monaspace font-thin h-12',
+            isTitleEmpty ? 'text-[#A3A1A7]' : 'text-white',
+          )}
+          fullWidth
+          radius={0}
+          variant='filled'
+          color='#8379BD'
+          onClick={onCreate}
+          disabled={isTitleEmpty}
+        >
+          Dun
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export const CreateProject = (props: ICreateProjectProps) => {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [tags, setTags] = useState<string[]>([])
-  const [projects, setProjects] = useState<IProject[]>([])
-  const isTitleEmpty = title.length === 0
-
-  const navigate = useNavigate()
+  const { isMobile } = useBreakpoint()
   const { user } = useAuth()
   const isNewUser = !user?.lastProjectId
 
-  useEffect(() => {
-    if (!user) return
-    getAllUserProject(user.id).then((data) => setProjects(data as IProject[]))
-  }, [user?.id])
+  const goToDashboard = () => navigate('/dashboard')
 
   const onCreate = async () => {
     const project: Partial<IProject> = {
@@ -35,9 +99,9 @@ const CreateProject = (props: ICreateProjectProps) => {
       title,
       description,
       users: [user as IUser],
-      tags: tags.map((tag) => tag.toLowerCase()),
+      tags: [],
     }
-    const res = await createProject(project)
+    await createProject(project)
   }
 
   const handleInputChange = ({ target }) => {
@@ -46,79 +110,61 @@ const CreateProject = (props: ICreateProjectProps) => {
     setDescription(value)
   }
 
-  const goToDashboard = () => navigate('/dashboard')
-
   return (
-    <div className='h-screen w-screen grid grid-cols-4 grid-rows-4 divide-x-[1px] divide-y-[1px] divide-borders-gray'>
-      <div />
-      <div className='col-span-2' />
-      <div />
-      <div className='row-span-2' />
-      <div className='row-span-2' />
-      <div />
-      <div className='col-span-2' />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <Tabs
-        className='col-start-2 row-start-2 col-end-4 row-end-4 p-7'
-        color='gray'
-        defaultValue='first'
-        value={activeTab}
-        onChange={setActiveTab}
-      >
-        <Tabs.Panel value='first'>
-          <textarea
-            className='block resize-none align-middle text-xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F]'
-            placeholder='Type new project title'
-            value={title}
-            name='title'
-            onChange={handleInputChange}
-          ></textarea>
-
-          <textarea
-            className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[188px] placeholder-slate-400 text-[#47444F] leading-tight'
-            placeholder='Description'
-            value={description}
-            name='description'
-            onChange={handleInputChange}
-          ></textarea>
-          <div className='flex gap-3'>
-            {!isNewUser && (
-              <Button
-                className='mt-6 font-monaspace font-thin text-[#47444F] h-12 border-[#47444F] hover:text-[#47444F]'
-                fullWidth
-                radius={0}
-                variant='outline'
-                onClick={goToDashboard}
-              >
-                Cancel
-              </Button>
-            )}
-            <Button
-              className={clsx(
-                'mt-6 font-monaspace font-thin h-12',
-                isTitleEmpty ? 'text-[#A3A1A7]' : 'text-white',
-              )}
-              fullWidth
-              radius={0}
-              variant='filled'
-              color='#8379BD'
-              onClick={onCreate}
-              disabled={isTitleEmpty}
-            >
-              Dun
-            </Button>
+    <div
+      className={clsx(
+        isMobile
+          ? 'flex flex-col justify-between h-screen'
+          : 'md:h-screen md:w-screen flex flex-col md:grid md:grid-cols-4 md:grid-rows-4 md:divide-x-[1px] md:divide-y-[1px] md:divide-borders-gray',
+      )}
+    >
+      {isMobile ? (
+        <>
+          <div>
+            <div className='py-[14px] bg-[#edebf3] text-black border-b flex pl-4 items-center'>
+              <Logo />
+            </div>
+            <div className='pl-4 pr-[15px] mt-8'>
+              <ProjectForm
+                title={title}
+                description={description}
+                handleInputChange={handleInputChange}
+                onCreate={onCreate}
+                goToDashboard={goToDashboard}
+                isTitleEmpty={title.length === 0}
+              />
+            </div>
           </div>
-        </Tabs.Panel>
-      </Tabs>
+        </>
+      ) : (
+        <>
+          <div className='hidden md:block' />
+          <div className='hidden md:col-span-2 md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:row-span-2 md:block' />
+          <div className='hidden md:row-span-2 md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:col-span-2 md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='hidden md:block' />
+          <div className='col-start-2 col-end-4 row-start-2 row-end-4 md:p-7'>
+            <ProjectForm
+              title={title}
+              description={description}
+              handleInputChange={handleInputChange}
+              onCreate={onCreate}
+              goToDashboard={goToDashboard}
+              isNewUser={isNewUser}
+              isTitleEmpty={title.length === 0}
+            />
+          </div>
+        </>
+      )}
     </div>
   )
 }
-
-export default CreateProject

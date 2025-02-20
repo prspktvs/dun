@@ -1,6 +1,7 @@
 import { Avatar, Tooltip } from '@mantine/core'
 import { isEmpty } from 'lodash'
 import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 
 import AvatarDun from '../../ui/Avatar'
 import { IUser } from '../../../types/User'
@@ -10,6 +11,7 @@ interface IUserListProps {
 }
 
 function UserList({ users }: IUserListProps) {
+  const { cardId } = useParams<{ cardId: string }>()
   const usersList = useMemo(() => users.slice(0, 6), [users])
 
   if (isEmpty(usersList)) return null
@@ -20,7 +22,7 @@ function UserList({ users }: IUserListProps) {
     <Tooltip.Group openDelay={200} closeDelay={100}>
       <Avatar.Group spacing={5}>
         {usersList.map((user, index) => (
-          <Tooltip key={'project-avatar-u-' + user.id} label={user.name} withArrow>
+          <Tooltip key={`avatar-${cardId}-${user.id}`} label={user.name} withArrow>
             <AvatarDun size={32} user={user} />
           </Tooltip>
         ))}

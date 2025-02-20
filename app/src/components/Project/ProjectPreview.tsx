@@ -26,18 +26,26 @@ export default function ProjectPreview({ project }: { project: IProject }) {
   )
 }
 
-export function ProjectsList() {
+export function ProjectsList({ search }: { search?: string }) {
   const { user } = useAuth()
   const [projects, setProjects] = useState<IProject[]>([])
+  const [filteredProjects, setFilteredProjects] = useState<IProject[]>([])
 
   useEffect(() => {
     if (!user) return
     getAllUserProject(user.id).then((data) => setProjects(data as IProject[]))
   }, [user?.id])
 
+  useEffect(() => {
+    const foundProject = projects.filter((project) =>
+      project.title.toLowerCase().includes(search.toLowerCase()),
+    )
+    setFilteredProjects(foundProject)
+  }, [search, projects])
+
   return (
     <ul className='divide-y-[1px] divide-borders-purple'>
-      {projects.map((project) => (
+      {filteredProjects.map((project) => (
         <li key={'dashboard-project-' + project.id}>
           <ProjectPreview project={project} />
         </li>

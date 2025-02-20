@@ -16,6 +16,7 @@ export default {
         '10': 'repeat(10, minmax(0, 1fr))',
       },
       fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
         monaspace: ['MonaspaceArgon', 'sans-serif'],
         rubik: ['Rubik', 'sans-serif'],
         commissioner: ['Commissioner', 'sans-serif'],
