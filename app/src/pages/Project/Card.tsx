@@ -1,27 +1,20 @@
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import _debounce from 'lodash/debounce'
-import { Menu } from '@mantine/core'
 import clsx from 'clsx'
 
 import { ICard } from '../../types/Card'
 import { useProject } from '../../context/ProjectContext'
 import { ChatProvider, useChats } from '../../context/ChatContext'
-import Editor from '../../components/Editor'
-import UnreadIndicator from '../../components/ui/UnreadIndicator'
-import Discussions from '../../components/Card/Sections/Discussions'
-import Attachments from '../../components/Card/Sections/Attachments'
-import Updates from '../../components/Card/Sections/Updates'
 import { FilePreviewProvider } from '../../context/FilePreviewContext'
 import { Loader } from '../../components/ui/Loader'
-import ButtonDun from '../../components/ui/buttons/ButtonDun'
-import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
-import { ConfirmModal } from '../../components/ui/modals/ConfirmModal'
 import { useAuth } from '../../context/AuthContext'
-import { SharingMenu } from '../../components/Card/Sharing/SharingMenu'
 import CardTabs from './CardTabs'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
-import { ShareTopicModalContent } from '../../components/ui/modals/ShareTopicModalContent'
+import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
+import CardHeader from '../../components/Card/CardHeader'
+import Editor from '../../components/Editor'
+import CardContent from '../../components/Card/CardContent'
 
 interface ICardProps {
   card: ICard
@@ -29,76 +22,8 @@ interface ICardProps {
 
 type RightPanelTab = 'discussions' | 'attachments' | 'editor' | 'sharing'
 
-const CardHeader = ({
-  goBack,
-  isAuthor,
-  openShareModal,
-  isFirstTimeViewed,
-  updateSharingMode,
-  setShowConfirmModal,
-  showConfirmModal,
-  onRemoveCard,
-}: {
-  goBack: () => void
-  isAuthor: boolean
-  openShareModal: () => void
-  isFirstTimeViewed: boolean
-  updateSharingMode: (isPrivate: boolean) => void
-  setShowConfirmModal: (value: boolean) => void
-  showConfirmModal: boolean
-  onRemoveCard: () => void
-}) => (
-  <div className='flex items-center justify-between h-14 border-b-1 bg-[#edebf3] border-borders-purple'>
-    <div className='flex items-center justify-between h-full mx-3 grow'>
-      <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
-        {'<'} back to topics
-      </div>
-      {isAuthor && (
-        <div className='flex items-center h-full gap-1'>
-          <div className='relative hidden w-full h-full sm:block'>
-            <ButtonDun onClick={openShareModal}>Share topic</ButtonDun>
-            {isFirstTimeViewed && (
-              <SharingMenu
-                openFullSharingModal={openShareModal}
-                updateSharingMode={updateSharingMode}
-              />
-            )}
-          </div>
-          <Menu shadow='md' radius={0} width={200}>
-            <Menu.Target>
-              <i
-                onClick={(e) => e.stopPropagation()}
-                className='text-2xl cursor-pointer ri-more-2-fill'
-              />
-            </Menu.Target>
-
-            <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
-              <Menu.Item
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowConfirmModal(true)
-                }}
-                className='text-red-600'
-              >
-                Remove topic
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-          <ConfirmModal
-            message='Are you sure you want to remove this topic?'
-            confirmText='Remove'
-            onClose={() => setShowConfirmModal(false)}
-            onConfirm={onRemoveCard}
-            opened={showConfirmModal}
-          />
-        </div>
-      )}
-    </div>
-  </div>
-)
-
 const Card = ({ card }: ICardProps) => {
-  const { id: projectId = '' } = useParams()
+  const { id: projectId = '', chatId } = useParams()
   const location = useLocation()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -110,7 +35,7 @@ const Card = ({ card }: ICardProps) => {
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [title, setTitle] = useState(card.title)
-  const [activeTab, setActiveTab] = useState<RightPanelTab>('editor') // Изменено здесь
+  const [activeTab, setActiveTab] = useState<RightPanelTab>(isMobile ? 'editor' : 'discussions')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const files = card?.files?.filter((file) => file.url) || []
@@ -121,6 +46,11 @@ const Card = ({ card }: ICardProps) => {
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
     0,
   )
+
+  useEffect(() => {
+    if (!chatId) return
+    setActiveTab('discussions')
+  }, [chatId])
 
   useEffect(() => {
     setTitle(card.title)
@@ -220,37 +150,19 @@ const Card = ({ card }: ICardProps) => {
             openShareModal={openShareModal}
           />
 
-          {isMobile && activeTab === 'sharing' ? (
-            <div className='h-[calc(100vh-112px)] bg-white'>
-              <ShareTopicModalContent card={card} onClose={() => setActiveTab('discussions')} />
-            </div>
-          ) : (
-            <>
-              {activeTab === 'editor' && isMobile && (
-                <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pl-[20px]'>
-                  <textarea
-                    ref={inputRef}
-                    value={title}
-                    onChange={(e) => {
-                      setTitle(e.target.value)
-                      onTitleChange(e)
-                    }}
-                    placeholder='Type title'
-                    rows={1}
-                    className="max-w-full resize-none focus:outline-none text-[#46434e] text-[28px] font-medium font-['Rubik']"
-                    style={{
-                      height: `${inputRef.current?.scrollHeight}px`,
-                      border: 'none',
-                      boxShadow: 'none',
-                    }}
-                  />
-                  <Editor key={card.id} projectId={projectId} card={card} users={users} />
-                </div>
-              )}
-              {activeTab === 'attachments' && <Attachments files={files} />}
-              {activeTab === 'discussions' && <Discussions users={users} />}
-            </>
-          )}
+          <CardContent
+            card={card}
+            projectId={projectId}
+            title={title}
+            setTitle={setTitle}
+            onTitleChange={onTitleChange}
+            users={users}
+            inputRef={inputRef}
+            isMobile={isMobile}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            files={files}
+          />
         </aside>
       </div>
 

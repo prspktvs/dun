@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
-import { Navigate, Outlet, useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 
 import { ProjectHeader } from './Header'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import LeftPanel from './LeftPanel'
 import { ProjectProvider, useProject } from '../../context/ProjectContext'
-import CreateProject from './CreateProject'
+import { CreateProject } from './CreateProject'
 
 function ProjectContent() {
   const { id: projectId = '' } = useParams()

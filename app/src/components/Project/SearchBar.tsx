@@ -16,7 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ search, setSearch }) => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder='Find it all'
-        className='md:bg-[#edebf3] text-[#969696] text-sm font-normal font-agron'
+        className='md:bg-[#edebf3] text-[#969696] text-sm font-normal font-agron outline-none w-full'
       />
     </div>
   )

@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CopyButton } from '@mantine/core'
 import { isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import ButtonDun from '../buttons/ButtonDun'
 import { DUN_URL } from '../../../constants'
@@ -12,7 +13,7 @@ import { shareCard, unshareCard } from '../../../services/card.service'
 import { ConfirmModal } from './ConfirmModal'
 import { SharingOption } from '../../Card/Sharing/SharingOption'
 
-interface IShareTopicModalContentProps {
+interface IShareTopicContentProps {
   card: ICard
   onClose: () => void
 }
@@ -20,7 +21,7 @@ interface IShareTopicModalContentProps {
 const InviteLinkSection = ({ copyUrl }: { copyUrl: string }) => (
   <div className='flex items-center justify-between mt-4 h-14 border-y-1 border-borders-purple'>
     <div className='w-1/4 px-5 ml-3 font-bold font-monaspace'>Invite link</div>
-    <div className='flex items-center w-2/4 h-full px-3 my-5 text-sm border-x-1 border-borders-purple'>
+    <div className='flex items-center w-2/4 h-full px-3 my-5 text-sm border-x-1 border-borders-purple overflow-hidden'>
       {copyUrl}
     </div>
     <div className='w-1/4 h-14'>
@@ -134,32 +135,37 @@ const UserListSection = ({
   </>
 )
 
-export function ShareTopicModalContent({ card, onClose }: IShareTopicModalContentProps) {
+export function ShareTopicContent({ card, onClose }: IShareTopicContentProps) {
+  const { id: projectId, cardId } = useParams()
   const { users, updateCard, project, optimisticUpdateCard } = useProject()
   const [isPrivate, setIsPrivate] = useState(!card.public)
   const [confirmOpened, setConfirmOpened] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
 
-  const [sharedUsers, unsharedUsers] = users.reduce(
-    (acc: [IUser[], IUser[]], user: IUser) => {
-      if (card.users?.includes(user.id) || card.author === user.id) {
-        acc[0].push(user)
-      } else {
-        acc[1].push(user)
-      }
-      return acc
-    },
-    [[], []] as [IUser[], IUser[]],
-  )
+  useEffect(() => {
+    setIsPrivate(!card.public)
+  }, [card.public])
+
+  const [sharedUsers, unsharedUsers] = useMemo(() => {
+    return users.reduce(
+      (acc: [IUser[], IUser[]], user: IUser) => {
+        if (card.users?.includes(user.id) || card.author === user.id) {
+          acc[0].push(user)
+        } else {
+          acc[1].push(user)
+        }
+        return acc
+      },
+      [[], []] as [IUser[], IUser[]],
+    )
+  }, [users, card.users, card.author])
 
   const onShare = (userId: IUser['id']) => {
-    shareCard(card.id as string, [userId])
+    shareCard(cardId as string, [userId])
     updateCard({ ...card, users: [...card.users, userId] })
   }
 
   const onUnshare = (userId: IUser['id']) => {
-    unshareCard(card.id as string, userId)
+    unshareCard(cardId as string, userId)
     updateCard({ ...card, users: card.users?.filter((id) => id !== userId) })
   }
 
@@ -169,74 +175,54 @@ export function ShareTopicModalContent({ card, onClose }: IShareTopicModalConten
     setConfirmOpened(false)
   }
 
-  const copyUrl = DUN_URL + `/${card.projectId}/${card.id}`
-
-  const handleShare = async () => {
-    await shareCard(card.id, selectedUsers)
-    onClose()
-  }
-
-  const handleUnshare = async () => {
-    await unshareCard(card.id)
-    setShowConfirmModal(false)
-    onClose()
-  }
-
+  const copyUrl = DUN_URL + `/${projectId}/cards/${cardId}`
   return (
     <>
       <InviteLinkSection copyUrl={copyUrl} />
-      <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
-        <span className='px-5 ml-3 font-bold font-monaspace'>Share with</span>
-      </div>
-      {!card.public ? (
+      <SharingOptions
+        isPrivate={isPrivate}
+        togglePrivacy={togglePrivacy}
+        setConfirmOpened={setConfirmOpened}
+        confirmOpened={confirmOpened}
+      />
+      {isPrivate ? (
         <>
-          <SharingOption
-            title='Private'
-            description='Only you and selected users can view and edit this topic'
-            isActive={!card.public}
-            onClick={() => setShowConfirmModal(true)}
-            isOwnerCheck={() => true}
+          <UserListSection
+            title='Who has access'
+            users={sharedUsers}
+            onAction={onUnshare}
+            actionLabel='Remove'
+            isOwnerCheck={(user) => user.id === card.author}
           />
-          <SharingOption
-            title='Share with everyone in this project'
-            description='All new project members can view and edit this topic'
-            isActive={card.public}
-            onClick={() => setShowConfirmModal(true)}
-            isOwnerCheck={() => false}
-          />
+          {!isEmpty(unsharedUsers) ? (
+            <UserListSection
+              title={`${project.title} team`}
+              users={unsharedUsers}
+              onAction={onShare}
+              actionLabel='Share'
+              isOwnerCheck={() => false}
+            />
+          ) : (
+            <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
+              <span className='px-5 ml-3 font-bold font-monaspace'>
+                All your team is following this topic
+              </span>
+            </div>
+          )}
         </>
       ) : (
-        <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
-          <span className='px-5 ml-3 font-bold font-monaspace'>
-            All your team is following this topic
-          </span>
+        <div className='overflow-y-scroll max-h-[400px] px-5'>
+          {users.map((user) => (
+            <UserItem
+              key={user.id}
+              user={user}
+              onAction={() => {}}
+              actionLabel=''
+              isOwner={user.id === card.author}
+            />
+          ))}
         </div>
       )}
-
-      <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
-        <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
-      </div>
-
-      <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
-        {!isEmpty(users) &&
-          users.map((user) => (
-            <div key={user.id} className='flex items-center gap-3 my-2 ml-3'>
-              <AvatarDun user={user} size={40} />
-              <div className='flex flex-col'>
-                <span className='text-base font-medium'>{user.name}</span>
-                <span className='text-sm'>{user.email}</span>
-              </div>
-            </div>
-          ))}
-      </div>
-
-      <ConfirmModal
-        opened={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={handleUnshare}
-        message='Are you sure you want to make this topic private?'
-        confirmText='Make private'
-      />
     </>
   )
 }

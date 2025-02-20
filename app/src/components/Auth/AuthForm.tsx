@@ -101,7 +101,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Submit button */}
-      <div className='h-[56px] w-full border p-1 -mt-[1px] md:border-l-0 md:border-r-0'>
+      <div className='h-[56px] w-full border p-1 md:border-l-0 md:border-r-0'>
         <button
           type='submit'
           disabled={isLoading}
@@ -112,7 +112,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Container for Forgot password/Terms and 'or' */}
-      <div className='px-10 pb-7'>
+      <div className='px-10'>
         {/* Forgot password for login */}
         {tab === 'login' && (
           <div
@@ -125,18 +125,13 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
 
         {/* Mobile Terms for signup */}
         {tab === 'signup' && (
-          <div className='mt-2 mb-2 text-xs text-center sm:hidden'>
+          <div className='mt-2 text-xs text-center sm:hidden'>
             <div className='text-[#47444F]'>By clicking 'Create' you agree to our</div>
             <button onClick={handleTermsClick} className='text-[#8774FF]'>
               Terms and Privacy Policy
             </button>
           </div>
         )}
-
-        {/* 'or' divider */}
-        <div className='relative flex items-center justify-center w-full mt-5 text-center font-monaspace'>
-          <span>or</span>
-        </div>
       </div>
 
       <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>

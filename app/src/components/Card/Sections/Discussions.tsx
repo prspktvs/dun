@@ -52,7 +52,6 @@ export default function Discussions({ users }: { users: IUser[] }) {
   const { chatId, openChatById, createChat, deleteChat, cardChats } = useChats()
   const [search, setSearch] = useState('')
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
-  const { updateCard } = useProject()
 
   useEffect(() => {
     const updatedChats = cardChats.filter((chat) => {

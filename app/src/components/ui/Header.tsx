@@ -2,6 +2,7 @@ import Logo from '../ui/Logo'
 import UserPanel from '../User/UserPanel'
 import { useAuth } from '../../context/AuthContext'
 import { SearchIcon } from '../icons'
+import SearchBar from '../Project/SearchBar'
 
 export function Header({
   onLogoClick,
@@ -22,16 +23,7 @@ export function Header({
       >
         <Logo />
       </div>
-      <div className='flex-1 flex items-center px-6 gap-3 relative bg-[#edebf3]'>
-        <SearchIcon className='absolute left-0  w-5 h-5 text-[#969696]' />
-        <input
-          type='text'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder='Find it all'
-          className='bg-[#edebf3] text-[#969696] text-sm font-normal font-agron w-full focus:outline-none h-full'
-        />
-      </div>
+      <SearchBar search={search} setSearch={setSearch} />
       <div className='flex items-center justify-center w-48 h-full py-2 border-l px-7 border-borders-purple '>
         <div className='flex items-center h-full p-5'>
           <UserPanel user={user} />

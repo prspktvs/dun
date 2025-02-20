@@ -24,6 +24,7 @@ export interface IProject {
   id: string
   title: string
   description?: string
+  tags?: string[]
   author: IUser
   users: IUser[]
   public: boolean
