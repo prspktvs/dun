@@ -1,8 +1,10 @@
 import React from 'react'
+
 import Rectangles from '/assets/landing/rectangles.svg'
 import Squares from '/assets/landing/squares.svg'
 import Plaid from '/assets/landing/plaid.svg'
 import Lines from '/assets/landing/lines.svg'
+
 import FeatureCard from './FeatureCard'
 
 interface IFeatureCard {
@@ -18,7 +20,7 @@ const FEATURES: IFeatureCard[] = [
     backgroundColor: '#cbb9cf',
     image: (
       <img
-        className='w-10/12 md:w-[499px]'
+        className='w-10/12 md:w-[795px]'
         src='./assets/landing/image 177.svg'
         alt='description-image'
       />
