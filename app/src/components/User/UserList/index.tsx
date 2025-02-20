@@ -21,7 +21,7 @@ function UserList({ users }: IUserListProps) {
   return (
     <Tooltip.Group openDelay={200} closeDelay={100}>
       <Avatar.Group spacing={5}>
-        {usersList.map((user, index) => (
+        {usersList.map((user) => (
           <Tooltip key={`avatar-${cardId}-${user.id}`} label={user.name} withArrow>
             <AvatarDun size={32} user={user} />
           </Tooltip>
