@@ -44,7 +44,7 @@ export function SharingMenu({
         description='All new project members can view and edit this topic'
         onClick={() => setPrivate(false)}
       />
-      <div className='flex border-t-1 border-borders-purple divide-x-1 divide-border-color'>
+      <div className='flex border-t-1 border-borders-purple divide-x-1 divide-borders-purple'>
         <SharingButton onClick={openFullSharingModal}>Manage</SharingButton>
         <SharingButton onClick={() => updateSharingMode(isPrivate)}>OK</SharingButton>
       </div>

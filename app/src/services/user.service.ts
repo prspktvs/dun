@@ -20,6 +20,7 @@ export const getOrCreateUser = async (user: firebase.User): Promise<IUser | null
     color: '#' + Math.floor(Math.random() * 16777215).toString(16),
     email: user.email || '',
     name: user.displayName || 'User',
+    lastProjectId: '',
   }
   try {
     await setDoc(userRef, newUser)

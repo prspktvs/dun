@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
 import { IFile } from '../../../types/File'
@@ -15,7 +14,7 @@ export default function Attachments({ files }: IAttachmentsProps) {
     <section className='flex flex-col gap-2 p-3 h-[calc(100vh_-_164px)] overflow-y-scroll w-full'>
       {!isEmpty(files) && files ? (
         files.map((file) => (
-          <div key={'f-' + file.id} className='h-40 rounded-md md:border-1'>
+          <div key={'f-' + file.id} className='h-40 border-1 rounded-md overflow-hidden'>
             <FilePreview file={file} onClick={() => setFileUrl(file.url)} isFullScreen={false} />
           </div>
         ))

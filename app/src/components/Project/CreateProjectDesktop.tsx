@@ -1,8 +1,10 @@
 import { Tabs, Button, Textarea } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import clsx from 'clsx'
 
 import { IProject } from '../../types/Project'
-import { createProject } from '../../services'
+import { createProject, getAllUserProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import { IUser } from '../../types/User.d.ts'
 import Logo from '../ui/Logo'
@@ -12,15 +14,22 @@ interface ICreateProjectProps {
 }
 
 const CreateProjectDesktop = (props: ICreateProjectProps) => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<string>('first')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tags, setTags] = useState<string[]>([])
+  const [projects, setProjects] = useState<IProject[]>([])
   const isTitleEmpty = title.length === 0
-
   const { user } = useAuth()
+  const isNewUser = !user?.lastProjectId
 
-  const onContinue = () => setActiveTab('second')
+  useEffect(() => {
+    if (!user) return
+    getAllUserProject(user.id).then((data) => setProjects(data as IProject[]))
+  }, [user?.id])
+
+  const goToDashboard = () => navigate('/dashboard')
 
   const onCreate = async () => {
     const project: Partial<IProject> = {
@@ -85,17 +94,33 @@ const CreateProjectDesktop = (props: ICreateProjectProps) => {
               onChange={handleInputChange}
             ></textarea>
           </div>
-          <Button
-            className='flex h-12 mt-6 font-thin text-white font-monaspace'
-            fullWidth
-            radius={0}
-            variant='filled'
-            color='#8279bd'
-            onClick={onCreate}
-            disabled={isTitleEmpty}
-          >
-            Dun
-          </Button>
+          <div className='flex gap-3'>
+            {!isNewUser && (
+              <Button
+                className='mt-6 font-monaspace font-thin text-[#47444F] h-12 border-[#47444F] hover:text-[#47444F]'
+                fullWidth
+                radius={0}
+                variant='outline'
+                onClick={goToDashboard}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              className={clsx(
+                'mt-6 font-monaspace font-thin h-12',
+                isTitleEmpty ? 'text-[#A3A1A7]' : 'text-white',
+              )}
+              fullWidth
+              radius={0}
+              variant='filled'
+              color='#8379BD'
+              onClick={onCreate}
+              disabled={isTitleEmpty}
+            >
+              Dun
+            </Button>
+          </div>
         </Tabs.Panel>
       </Tabs>
     </div>

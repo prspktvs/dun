@@ -37,7 +37,7 @@ const ProjectSelector = () => {
       onChange={(opened) => setMenuOpened(opened)}
     >
       <Menu.Target>
-        <nav className='relative z-50 flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 hover:cursor-pointer '>
+        <nav className='relative z-50 flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 border-r-1 hover:cursor-pointer '>
           {/* Overproject section */}
           <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
             <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>
@@ -80,22 +80,24 @@ const ProjectSelector = () => {
         <Menu.Label className={`text-md font-monospace ${isMobile ? 'hidden' : ''}`}>
           Your projects
         </Menu.Label>
-        {projects.map((project, idx) => (
-          <Menu.Item
-            key={'prjx-' + idx}
-            className={`flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md ${
-              isMobile ? 'font-monaspace' : ''
-            } ${isMobile && project.id === currentProjectId ? 'text-[#8279bd]' : ''}`}
-            onClick={() => goToProject(project.id)}
-          >
-            <span className='flex-1'>{project?.title || 'Empty project'}</span>
-            {isMobile && project.id === currentProjectId && (
-              <button className=''>
-                <SettingsIcon />
-              </button>
-            )}
-          </Menu.Item>
-        ))}
+        <div className='overflow-y-scroll h-[50vh]'>
+          {projects.map((project, idx) => (
+            <Menu.Item
+              key={'prjx-' + idx}
+              className={`flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md ${
+                isMobile ? 'font-monaspace' : ''
+              } ${isMobile && project.id === currentProjectId ? 'text-[#8279bd]' : ''}`}
+              onClick={() => goToProject(project.id)}
+            >
+              <span className='flex-1'>{project?.title || 'Empty project'}</span>
+              {isMobile && project.id === currentProjectId && (
+                <button className=''>
+                  <SettingsIcon />
+                </button>
+              )}
+            </Menu.Item>
+          ))}
+        </div>
         <div className=' h-12 p-2 w-full m-1 bg-[#8279bd] flex justify-center items-center'>
           <Menu.Item
             className='text-sm font-normal text-center text-white'

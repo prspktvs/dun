@@ -123,11 +123,14 @@ const Card = ({ card }: ICardProps) => {
   )
 
   useEffect(() => {
+    setTitle(card.title)
+  }, [card.title])
+
+  useEffect(() => {
     const textarea = inputRef.current
     if (!textarea) return
     textarea.style.height = 'auto'
-    const maxHeight = 144
-    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`
+    textarea.style.height = `${textarea.scrollHeight}px`
   }, [title])
 
   useEffect(() => {
@@ -138,7 +141,7 @@ const Card = ({ card }: ICardProps) => {
     _debounce(async (title) => {
       await onSaveTitle(title)
     }, 1500),
-    [],
+    [card.id, card.public],
   )
 
   const clearUrlHash = () => navigate(location.pathname + location.search, { replace: true })
@@ -169,7 +172,8 @@ const Card = ({ card }: ICardProps) => {
     goBack()
   }
 
-  const goBack = () => {
+  const goBack = async () => {
+    await onSaveTitle(title)
     closeChat()
     navigate(`/${projectId}`)
   }
@@ -188,26 +192,18 @@ const Card = ({ card }: ICardProps) => {
       />
       <div className='flex'>
         {!isMobile && (
-          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden'>
+          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
             <textarea
-              className='font-rubik align-middle h-auto min-h-[40px] text-[32px] border-none resize-none overflow-hidden w-full'
-              rows={1}
+              className='font-rubik align-middle min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
               placeholder='Type title'
+              rows={1}
               ref={inputRef}
               value={title}
               onChange={onTitleChange}
-              style={{
-                border: 'none',
-                boxShadow: 'none',
-                paddingLeft: '1rem',
-                paddingRight: '1rem',
-                maxWidth: '100%',
-              }}
             />
             <Editor key={card.id} projectId={projectId} card={card} users={users} />
           </section>
         )}
-
         <aside
           className={clsx(
             'md:border-l-1 border-borders-purple',
@@ -231,7 +227,7 @@ const Card = ({ card }: ICardProps) => {
           ) : (
             <>
               {activeTab === 'editor' && isMobile && (
-                <>
+                <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pl-[20px]'>
                   <textarea
                     ref={inputRef}
                     value={title}
@@ -249,7 +245,7 @@ const Card = ({ card }: ICardProps) => {
                     }}
                   />
                   <Editor key={card.id} projectId={projectId} card={card} users={users} />
-                </>
+                </div>
               )}
               {activeTab === 'attachments' && <Attachments files={files} />}
               {activeTab === 'discussions' && <Discussions users={users} />}
@@ -272,13 +268,24 @@ const Card = ({ card }: ICardProps) => {
 export function CardPage() {
   const { cardId, id: projectId } = useParams()
   const { cards } = useProject()
+  const [isLoading, setLoading] = useState(true)
+  const [card, setCard] = useState<ICard | undefined>()
 
-  const card = cards?.find((card) => card.id === cardId)
+  useEffect(() => {
+    if (!cards.length || !cardId) return
+    const foundCard = cards?.find((card) => card.id === cardId)
+    setCard(foundCard)
+    setLoading(false)
+  }, [cards, cardId])
+
+  if (isLoading) return <Loader />
+
+  if (!card) return <Navigate to={`/${projectId}`} />
 
   return (
     <ChatProvider>
       <FilePreviewProvider files={card?.files || []}>
-        {card ? <Card card={card} /> : <Navigate to={`/${projectId}`} />}
+        <Card card={card} />
       </FilePreviewProvider>
     </ChatProvider>
   )

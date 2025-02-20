@@ -51,7 +51,13 @@ export function CardsPage() {
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
-    const nonEmptyCards = cards.filter((card) => card.title || card?.description?.length > 0)
+    const nonEmptyCards = cards.filter(
+      (card) =>
+        card.title ||
+        card?.description?.length > 0 ||
+        card?.tasks?.length > 0 ||
+        card?.files?.length > 0,
+    )
     setFilteredCards(search.q ? search.results : nonEmptyCards)
   }, [search.q, cards])
 
@@ -97,9 +103,9 @@ export function CardsPage() {
                 </SortButton>
               </div>
             )}
-            <div className='flex items-center justify-center   flex-shrink-0 h-full border-l md:w-48 w-[111px] border-borders-purple'>
+            <div className='flex items-center justify-center flex-shrink-0 md:w-48 w-[111px] h-full border-l border-borders-purple'>
               <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-                <span className='justify-center text-sm font-normal font-monaspace md:font-thin md:text-xl'>
+                <span className='justify-center text-sm font-normal font-monaspace pr-1 md:font-thin md:text-xl'>
                   +
                 </span>
                 Topic
