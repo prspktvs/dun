@@ -45,7 +45,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const [messages, setMessages] = useState<IMessage[]>([])
   const { editor } = useEditor()
   const { project } = useProject()
-  const [content, setContent] = useState('Main discussion')
+  const [content, setContent] = useState('Discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
   const { user } = useAuth()

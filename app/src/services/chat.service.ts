@@ -48,6 +48,8 @@ export const saveChatAndMessage = async ({
 export const getAllCardChats = async (path: string) => {
   const cardRef = ref(realtimeDb, path)
   const cardSnapshot = await get(cardRef)
+  const value = cardSnapshot.val()
+  if (!value || !value.chats) return []
   return Object.values(cardSnapshot.val().chats)
 }
 

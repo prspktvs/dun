@@ -162,13 +162,44 @@ export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
         SELECT 1 
         FROM tasks 
         WHERE tasks.card_id = cards.id
+      ) <> '[]' OR EXISTS (
+        SELECT 1 
+        FROM files 
+        WHERE files.card_id = cards.id
       )
     )
   GROUP BY cards.id 
   ORDER BY ${orderBy} DESC
 `
 
-export const SELECT_CARD_BY_ID_QUERY = 'SELECT * FROM cards WHERE id = ?'
+export const SELECT_CARD_BY_ID_QUERY = `
+  SELECT 
+    cards.*, 
+    COALESCE((
+      SELECT json_group_array(
+        json_object('id', files.id, 'type', files.type, 'url', files.url)
+      ) 
+      FROM files
+      WHERE cards.id = files.card_id
+    ), '[]') AS files,
+    COALESCE((
+      SELECT json_group_array(
+        json_object(
+          'id', tasks.id, 
+          'isDone', tasks.isDone, 
+          'text', tasks.text, 
+          'users', tasks.users, 
+          'author', tasks.author, 
+          'priority', tasks.priority, 
+          'status', tasks.status
+        )
+      )
+      FROM tasks 
+      WHERE cards.id = tasks.card_id
+    ), '[]') AS tasks
+  FROM cards 
+  WHERE cards.id = ?
+`
 
 export const SELECT_CARD_BY_CHAT_ID = 'SELECT * FROM cards WHERE chatIds LIKE ?'
 

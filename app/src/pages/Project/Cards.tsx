@@ -51,6 +51,7 @@ export function CardsPage() {
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
+    console.log('cards', cards)
     const nonEmptyCards = cards.filter(
       (card) =>
         card.title ||
@@ -58,6 +59,7 @@ export function CardsPage() {
         card?.tasks?.length > 0 ||
         card?.files?.length > 0,
     )
+    console.log('nonEmptyCards', nonEmptyCards)
     setFilteredCards(search.q ? search.results : nonEmptyCards)
   }, [search.q, cards])
 
