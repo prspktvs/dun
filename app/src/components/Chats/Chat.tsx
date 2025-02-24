@@ -121,7 +121,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   }
 
   return (
-    <div className='h-[calc(100vh-_90px)] flex flex-col'>
+    <div className='h-[calc(100vh-_90px)] md:h-[calc(100vh-_168px)] flex flex-col'>
       <div
         className='flex gap-3 items-center font-monaspace px-3 hover:cursor-pointer border-b-1 border-borders-purple'
         onClick={closeChat}
