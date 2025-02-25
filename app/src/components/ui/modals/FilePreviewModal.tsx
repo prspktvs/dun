@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash'
 import clsx from 'clsx'
 
 import { IFile } from '../../../types/File'
-import { RiArrowLeftSLine, RiArrowRightSLine, Minus, Plus, DownloadIcon } from '../../icons'
+import { RiArrowLeftSLine, RiArrowRightSLine, Minus, Plus, DownloadIcon, Cross } from '../../icons'
 
 interface IAttachmentsProps {
   files: IFile[] | null
@@ -140,7 +140,10 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
       m={0}
       onClick={onClose}
     >
-      <div className='h-screen flex-1'>
+      <div className='relative h-screen flex-1'>
+        <div className='absolute top-2 right-2 p-4 cursor-pointer' onClick={onClose}>
+          <Cross />
+        </div>
         <div className='flex h-12 justify-center items-center gap-x-1 font-monaspace text-lg'>
           <Minus onClick={stopPropagationWrapper(handleZoomOut)} />
           <div className='text-white'>{scale}%</div>

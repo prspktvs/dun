@@ -158,7 +158,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     try {
       await auth.signOut()
       setUser(null)
-      window.location.href = '/login'
+      navigate('/login', { replace: true, state: {} })
     } catch (error) {
       console.error('Error log out:', error)
     }

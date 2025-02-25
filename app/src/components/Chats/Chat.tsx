@@ -184,7 +184,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       <div className='min-h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
-          className='ml-1 flex-1 font-commissioner'
+          className='ml-1 flex-1 font-commissioner max-h-[200px] overflow-hidden'
           style={{
             '&multiLine': {
               input: {
@@ -192,12 +192,13 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                 border: 0,
                 resize: 'none',
                 whiteSpace: 'pre-wrap',
+                overflowY: 'scroll',
               },
             },
             '&singleLine': { input: { outline: 0, border: 0 } },
             suggestions: { borderRadius: 8, border: '1px solid #000' },
           }}
-          onKeyDown={(e) => e.key === 'Enter' && handleMessageSend()}
+          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleMessageSend()}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Your comment'
