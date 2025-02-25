@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
 import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icons'
 import { Loader } from '../ui/Loader'
 import { AuthButton } from '../ui/buttons/AuthButton'
+import { genId } from '../../utils'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
 
@@ -20,6 +23,8 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
   })
   const [isLoading, setLoading] = useState(false)
   const [isPassHidden, setPassHidden] = useState(true)
+  const navigate = useNavigate()
+  const location = useLocation()
   const handleTermsClick = () => {
     console.log('Terms clicked - functionality not implemented yet')
     // TODO: Implement terms navigation when ready
@@ -33,10 +38,14 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
     try {
       const { email, password, name } = formData
       if (tab === 'login') {
-        await loginWithEmailAndPassword(email, password)
+        await loginWithEmailAndPassword({ email, password })
       } else {
-        await registerWithEmailAndPassword(email, password, name)
-        setTab('verification')
+        await registerWithEmailAndPassword({
+          email,
+          password,
+          name,
+          cb: () => navigate(location.state?.from?.pathname ?? `/${genId()}`),
+        })
       }
     } catch (error) {
       console.error(error)
@@ -101,7 +110,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Submit button */}
-      <div className='h-[56px] w-full border p-1 -mt-[1px] md:border-l-0 md:border-r-0'>
+      <div className='h-[56px] w-full border p-1 md:border-l-0 md:border-r-0'>
         <button
           type='submit'
           disabled={isLoading}
@@ -112,7 +121,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
       </div>
 
       {/* Container for Forgot password/Terms and 'or' */}
-      <div className='px-10 pb-7'>
+      <div className='px-10'>
         {/* Forgot password for login */}
         {tab === 'login' && (
           <div
@@ -125,42 +134,31 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
 
         {/* Mobile Terms for signup */}
         {tab === 'signup' && (
-          <div className='mt-2 mb-2 text-xs text-center sm:hidden'>
+          <div className='mt-2 text-xs text-center sm:hidden'>
             <div className='text-[#47444F]'>By clicking 'Create' you agree to our</div>
             <button onClick={handleTermsClick} className='text-[#8774FF]'>
               Terms and Privacy Policy
             </button>
           </div>
         )}
-
-        {/* 'or' divider */}
-        <div className='relative flex items-center justify-center w-full mt-5 text-center font-monaspace'>
-          <span>or</span>
-        </div>
       </div>
 
-      <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
-        Continue with Google
-      </AuthButton>
+      <div className='flex flex-row h-md:flex-col gap-3 justify-center items-center'>
+        <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
+          Continue with Google
+        </AuthButton>
 
-      {tab === 'signup' && (
-        <AuthButton
-          onClick={() => setTab('login')}
-          icon={<MailIcon className='w-7 h-7' />}
-          className='mt-1'
-        >
-          Log in with email
-        </AuthButton>
-      )}
-      {tab === 'login' && (
-        <AuthButton
-          onClick={() => setTab('signup')}
-          icon={<NewUserIcon className='w-7 h-7' />}
-          className='mt-1'
-        >
-          Create account
-        </AuthButton>
-      )}
+        {tab === 'signup' && (
+          <AuthButton onClick={() => setTab('login')} icon={<MailIcon className='w-7 h-7' />}>
+            Log in with email
+          </AuthButton>
+        )}
+        {tab === 'login' && (
+          <AuthButton onClick={() => setTab('signup')} icon={<NewUserIcon className='w-7 h-7' />}>
+            Create account
+          </AuthButton>
+        )}
+      </div>
     </form>
   )
 }

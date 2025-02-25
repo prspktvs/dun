@@ -1,72 +1,63 @@
-import { get, push, ref, remove, set } from 'firebase/database'
-import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore'
+import { get, push, ref, remove, set, update } from 'firebase/database'
 
-import { db, realtimeDb } from '../config/firebase'
+import { realtimeDb } from '../config/firebase'
 import { IMessage } from '../types/Chat'
-import { getCardById, updateCard } from './card.service'
+import { updateCard } from './card.service'
 import { apiRequest } from '../utils/api'
+import { extractIdsFromPath } from '../utils/chat'
 
 export const createNewChat = async ({
-  chatId,
-  cardId,
+  path,
   content,
 }: {
-  chatId: string
-  cardId: string | undefined
+  path: string
   content: string
 }) => {
-  const chatRef = ref(realtimeDb, `chats/${chatId}`)
+  const chatRef = ref(realtimeDb, path)
+  const parts = path.split('/')
+  const cardId = parts[3]
+  const chatId = parts[5]
   await set(chatRef, { id: chatId, content, messages: [] })
   if (cardId) await updateCard({ id: cardId, chatIds: [chatId] })
 }
 
-const saveMessage = async (chatId: string, messageData: IMessage) => {
-  const messageRef = ref(realtimeDb, `chats/${chatId}/messages/`)
+const saveMessage = async ({ path, messageData} : { path: string; messageData: IMessage}) => {
+  const messageRef = ref(realtimeDb, `${path}/messages/`)
   await push(messageRef, messageData)
 }
 
 export const saveChatAndMessage = async ({
-  chatId,
-  cardId,
+  path,
   content,
   messageData,
 }: {
-  chatId: string
-  cardId: string
+  path: string
   content: string
   messageData: IMessage | undefined
 }) => {
-  const chatRef = ref(realtimeDb, `chats/${chatId}`)
+  const chatRef = ref(realtimeDb, path)
   const chatSnapshot = await get(chatRef)
 
   if (!chatSnapshot.exists()) {
-    await createNewChat({ chatId, cardId, content })
+    await createNewChat({ path, content })
   }
 
-  if (messageData) await saveMessage(chatId, messageData)
+  if (messageData) await saveMessage({ path, messageData})
 }
 
-export const getAllCardChats = async (cardId: string) => {
-  const card = await getCardById(cardId)
-
-  if (!card) return []
-
-  if(!card?.chatIds) return []
-
-  const snapshots = await Promise.all(
-    card?.chatIds.map((chatId: string) => {
-      const messagesRef = ref(realtimeDb, `chats/${chatId}`)
-      return get(messagesRef)
-    }),
-  )
-
-  return snapshots.filter((snap) => snap.exists()).map((snap) => snap.val())
+export const getAllCardChats = async (path: string) => {
+  const cardRef = ref(realtimeDb, path)
+  const cardSnapshot = await get(cardRef)
+  const value = cardSnapshot.val()
+  if (!value || !value.chats) return []
+  return Object.values(cardSnapshot.val().chats)
 }
 
-export const removeCardChat = async (cardId: string, chatId: string) => {
+export const removeCardChat = async (path: string) => {
   try {
-    if (!chatId) return null
-    await remove(ref(realtimeDb, `chats/${chatId}`))
+    if (!path) return null
+    await remove(ref(realtimeDb, path))
+    const { cardId, chatId } = extractIdsFromPath(path)
 
     await apiRequest(`cards/${cardId}/chats/${chatId}`, {
       method: 'DELETE',
@@ -74,5 +65,23 @@ export const removeCardChat = async (cardId: string, chatId: string) => {
   } catch (e) {
     console.error(e)
     return null
+  }
+}
+
+export const updateReadBy = async (path: string, userId: string) => {
+  const messagesRef = ref(realtimeDb, `${path}/messages`)
+  const messagesSnapshot = await get(messagesRef)
+  const messages: IMessage[] = messagesSnapshot.val()
+
+  if (messages) {
+    const updates = {}
+    Object.entries(messages).forEach(([messageId, message]) => {
+      const readBy = message.readBy || []
+      if (!readBy.includes(userId)) {
+        readBy.push(userId)
+        updates[`${path}/messages/${messageId}/readBy`] = readBy
+      }
+    })
+    await update(ref(realtimeDb), updates)
   }
 }

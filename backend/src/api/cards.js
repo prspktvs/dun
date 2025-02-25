@@ -65,6 +65,7 @@ export const getAllProjectCards = async (req, res) => {
     const { projectId: id, sort = 'createdAt' } = req.query
     const userId = req.user.user_id
     const cards = await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY(sort), [id, userId, userId])
+
     res.status(200).json(cards.map(deserializeCard))
   } catch (error) {
     handleError(res, error)
@@ -86,7 +87,17 @@ export const getCardById = async (req, res) => {
 
 export const createCard = async (req, res) => {
   try {
-    const { id, title, description, createdAt, chatIds, projectId, author, users } = req.body
+    const {
+      id,
+      title,
+      description,
+      createdAt,
+      chatIds,
+      projectId,
+      author,
+      users,
+      public: isPublic,
+    } = req.body
     await runQuery(INSERT_NEW_CARD_QUERY, [
       id,
       title,
@@ -96,8 +107,19 @@ export const createCard = async (req, res) => {
       JSON.stringify(users || []),
       author,
       projectId,
+      +isPublic,
     ])
-    res.status(201).send({ id, title, description, createdAt, chatIds, projectId, author, users })
+    res.status(201).send({
+      id,
+      title,
+      description,
+      createdAt,
+      chatIds,
+      projectId,
+      author,
+      users,
+      public: isPublic,
+    })
   } catch (error) {
     handleError(res, error)
   }

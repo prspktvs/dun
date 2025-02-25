@@ -18,7 +18,7 @@ import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
 import { IUser } from '../types/User'
 import { realtimeDb } from '../config/firebase'
-import { IMessage } from '../types/Chat'
+import { IChat, IMessage } from '../types/Chat'
 
 export type ProjectContext = {
   project: IProject
@@ -27,6 +27,7 @@ export type ProjectContext = {
   users: IUser[]
   author: IUser['id']
   isLoading: boolean
+  isCardsLoading: boolean
   search: string
   sortType: 'createdAt' | 'updatedAt'
   setSearch: (search: string) => void
@@ -51,36 +52,56 @@ export const ProjectProvider = ({
   const [search, setSearch] = useState('')
   const [sortType, setSortType] = useState<ProjectContext['sortType']>('createdAt')
   const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
+  const [isCardsLoading, setIsCardsLoading] = useState(true)
 
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
-
   useEffect(() => {
-    const messagesRef = ref(realtimeDb, `chats`)
-    get(messagesRef).then((snapshot) => {
-      const messageData: { id: string; content: string; messages: IMessage[] } = snapshot.val()
-      const lastReadMessages = JSON.parse(localStorage.getItem('lastReadMessages'))
-      const allChats = Object.values(messageData)
-      const data: { id: string; unreadCount: number }[] = allChats.map((chat) => {
-        if (!chat || !chat?.id || !chat?.messages) return { id: '', unreadCount: 0 }
-        const messagesIds = Object.keys(chat.messages)
-        const unreadCount =
-          lastReadMessages && lastReadMessages.hasOwnProperty(chat.id)
-            ? messagesIds.length - 1 - messagesIds.indexOf(lastReadMessages[chat.id])
-            : messagesIds.length
-        return { id: chat.id, unreadCount }
-      })
+    const fetchChats = async () => {
+      try {
+        const projectChatsRef = ref(realtimeDb, `projects/${projectId}/cards`)
+        const snapshot = await get(projectChatsRef)
+        const cards = snapshot.val()
+        if (!cards) return []
 
-      setUnreadChats(data)
-    })
+        const allChats = []
+        Object.entries(cards).forEach(([cardId, card]) => {
+          if (card.chats) {
+            Object.entries(card.chats).forEach(([chatId, chat]) => {
+              allChats.push({ cardId, chatId, chat })
+            })
+          }
+        })
 
-    return () => off(messagesRef)
-  }, [])
+        const data = allChats.map(({ cardId, chat }) => {
+          if (!chat || !chat.id || !chat.messages) return { cardId, chatId: '', unreadCount: 0 }
+          const messages = Object.values(chat.messages)
+          const unreadCount = messages.filter(
+            (message) => !message.readBy || !message.readBy.includes(user.id),
+          ).length
+          return { cardId, chatId: chat.id, unreadCount }
+        })
+
+        setUnreadChats(data)
+      } catch (error) {
+        console.error('Error fetching chats:', error)
+      }
+    }
+
+    fetchChats()
+
+    return () => {
+      const projectChatsRef = ref(realtimeDb, `projects/${projectId}/cards`)
+      off(projectChatsRef)
+    }
+  }, [projectId, user?.id])
 
   useEffect(() => {
     if (!projectId) return
     async function fetchData() {
       const allCards = await getProjectCards(projectId, sortType)
+
       setCards(allCards)
+      setIsCardsLoading(false)
     }
 
     fetchData()
@@ -155,15 +176,16 @@ export const ProjectProvider = ({
     return () => ws.close()
   }, [projectId, user])
 
-  const getUnreadCardMessagesCount = (id: string) => {
-    const message = unreadChats.find((chat) => chat.id === id)
-    return message && message?.unreadCount ? message?.unreadCount : 0
+  const getUnreadCardMessagesCount = (cardId: string) => {
+    const chatsInCard = unreadChats.filter((chat) => chat.cardId === cardId)
+    return chatsInCard.reduce((acc, chat) => acc + chat.unreadCount, 0)
   }
 
   const optimisticCreateCard = async (card: Partial<ICard>) => {
     try {
       const data = { ...card, author: user.id, users: [], public: false }
       const newCard = await createCard(projectId, data)
+
       if (!newCard) return
       setCards((prev) => [newCard, ...prev])
     } catch (error) {}
@@ -171,8 +193,10 @@ export const ProjectProvider = ({
 
   const optimisticUpdateCard = async (card: Partial<ICard>) => {
     try {
-      await updateCard(card)
-      _updateCard(card)
+      const updatedCard = await updateCard(card)
+
+      if (!updatedCard) return
+      _updateCard(updatedCard)
     } catch (error) {}
   }
 
@@ -203,6 +227,7 @@ export const ProjectProvider = ({
     cards,
     tasks,
     isLoading,
+    isCardsLoading,
     sortType,
     setSortType,
     setSearch,

@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { realtimeDb } from '../config/firebase'
 import { IChat, IMessage } from '../types/Chat'
 import { getAllCardChats, removeCardChat, saveChatAndMessage } from '../services'
+import { useAuth } from './AuthContext'
+import { getChatPath } from '../utils/chat'
 
 export type ChatContext = {
   chatId: string
@@ -32,6 +34,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [cardChats, setCardChats] = useState<IChat[]>([])
   const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
 
+  const { user } = useAuth()
+
   const navigate = useNavigate()
 
   const openChatById = (id: string) => {
@@ -40,9 +44,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     navigate(newUrl, { replace: true })
   }
 
-  const getUnreadMessagesCount = (id: string) => {
-    const message = unreadChats.find((chat) => chat.id === id)
-    return message && message?.unreadCount ? message?.unreadCount : 0
+  const getUnreadMessagesCount = (chatId: string) => {
+    const chat = unreadChats.find((chat) => chat.chatId === chatId)
+    return chat ? chat.unreadCount : 0
   }
 
   const closeChat = () => {
@@ -55,21 +59,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       if (!confirm('Are you sure?')) return
 
-      await removeCardChat(cardId, chatId)
+      const path = getChatPath(projectId, cardId, chatId)
+      await removeCardChat(path)
       setCardChats((prev) => prev.filter((c) => c.id !== chatId))
     } catch (e) {
       console.error('Error deleting chat:', e)
     }
   }
 
-  const createChat = async (cardId: string, title: string = 'Major topic discussion') => {
+  const createChat = async (cardId: string) => {
     try {
-      await saveChatAndMessage({
-        chatId: cardId as string,
-        cardId: cardId as string,
-        content: title,
-        messageData: undefined,
-      })
       openChatById(cardId as string)
     } catch (e) {
       console.error('Error creating chat:', e)
@@ -78,32 +77,38 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!currentCardId) return
-    getAllCardChats(currentCardId).then((data) => setCardChats(data))
-  }, [currentCardId])
+    getAllCardChats(`projects/${projectId}/cards/${currentCardId}`).then((data) =>
+      setCardChats(data),
+    )
+  }, [projectId, currentCardId])
 
   useEffect(() => {
-    // @TODO: split chats by project ids (/chats/projectId) to get a batch of project chats
-    // @TODO: add read status to messages
-    const messagesRef = ref(realtimeDb, `chats`)
+    if (!currentCardId) return
+
+    const messagesRef = ref(realtimeDb, `projects/${projectId}/cards/${currentCardId}/chats`)
     onValue(messagesRef, (snapshot) => {
-      const messageData: { id: string; content: string; messages: IMessage[] } = snapshot.val()
-      const lastReadMessages = JSON.parse(localStorage.getItem('lastReadMessages'))
-      const allChats = Object.values(messageData)
-      const data: { id: string; unreadCount: number }[] = allChats.map((chat) => {
-        if (!chat || !chat?.id || !chat?.messages) return { id: '', unreadCount: 0 }
-        const messagesIds = Object.keys(chat.messages)
-        const unreadCount =
-          lastReadMessages && lastReadMessages.hasOwnProperty(chat.id)
-            ? messagesIds.length - 1 - messagesIds.indexOf(lastReadMessages[chat.id])
-            : messagesIds.length
-        return { id: chat.id, unreadCount }
+      const chats = snapshot.val()
+      if (!chats) return
+
+      const allChats = []
+      Object.entries(chats).forEach(([chatId, chat]) => {
+        allChats.push({ cardId: currentCardId, chatId, chat })
+      })
+
+      const data = allChats.map(({ cardId, chatId, chat }) => {
+        if (!chat || !chat.id || !chat.messages) return { cardId, chatId: '', unreadCount: 0 }
+        const messages = Object.values(chat.messages)
+        const unreadCount = messages.filter(
+          (message) => !message.readBy || !message.readBy.includes(user.id),
+        ).length
+        return { cardId, chatId: chat.id, unreadCount }
       })
 
       setUnreadChats(data)
     })
 
     return () => off(messagesRef)
-  }, [chatId])
+  }, [projectId, currentCardId])
 
   const contextValue: ChatContext = {
     chatId,

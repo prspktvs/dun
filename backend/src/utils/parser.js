@@ -61,9 +61,8 @@ function handleTaskBlock(parsedBlock, blockId, addContent) {
         switch (content.type) {
           case 'text':
           case 'mention':
-            return content.text
           case 'link':
-            return content.content.text
+            return content.text
           default:
             return ''
         }
@@ -125,15 +124,16 @@ function parseContainer(container, addContent) {
     ?.filter((block) => block.type !== 'blockGroup')
     ?.map((block) => {
       const parsedBlock = parseBlock(block)
+      console.log(parsedBlock)
       switch (parsedBlock.type) {
         case 'task':
           handleTaskBlock(parsedBlock, blockId, addContent)
           break
-        case 'image':
-          handleFileBlock(parsedBlock, blockId, addContent, 'image')
-          break
+        case 'file':
+        case 'audio':
         case 'video':
-          handleFileBlock(parsedBlock, blockId, addContent, 'video')
+        case 'image':
+          handleFileBlock(parsedBlock, blockId, addContent, parsedBlock.type)
           break
         default:
           handleDefaultBlock(parsedBlock, blockId, addContent)
@@ -158,53 +158,73 @@ function parseBlockGroup(block, addContent) {
   return block.content?.map((container) => parseContainer(container, addContent))
 }
 
-function getDescription(blocks) {
-  return blocks
-    ?.flatMap(({ block, innerContent }) => [
-      ...(block || []),
-      ...innerContent.flatMap(({ block }) => block),
-    ])
-    ?.filter((block) => (Array.isArray(block) ? block[0]?.type !== 'task' : block.type !== 'task'))
-    ?.map((block) => {
-      const contentText = (Array.isArray(block) ? block[0]?.content : block.content)
-        ?.map((content) => {
-          if (!content) return ''
-          switch (content.type) {
-            case 'text':
-            case 'mention':
-            case 'link':
-              return content.text
-            default:
-              return ''
-          }
-        })
-        ?.join('')
-
-      switch (block?.type) {
-        case 'bulletListItem':
-          return `• ${contentText}`
-        case 'numberedListItem':
-          return `${block.props.index}. ${contentText}`
+function extractContentText(block) {
+  const content = Array.isArray(block) ? block[0]?.content : block.content
+  return content
+    ?.map((contentItem) => {
+      if (!contentItem) return ''
+      switch (contentItem.type) {
+        case 'text':
+        case 'mention':
+        case 'link':
+          return contentItem.text
         default:
-          return contentText
+          return ''
       }
     })
-    ?.filter((line) => line !== '')
-    ?.slice(0, 5)
+    ?.join('')
 }
 
-function parseBNXmlToBlocks(data) {
+function formatBlockText(block) {
+  const contentText = extractContentText(block)
+  switch (block?.type) {
+    case 'bulletListItem':
+      return `• ${contentText}`
+    case 'numberedListItem':
+      return `${block.props.index}. ${contentText}`
+    default:
+      return contentText
+  }
+}
+
+function extractDescriptionAndSearchText(blocks) {
+  const flattedBlocks = blocks?.flatMap(({ block, innerContent }) => [
+    ...(block || []),
+    ...innerContent.flatMap(({ block }) => block),
+  ])
+
+  const descriptionBlocks = flattedBlocks?.filter((block) =>
+    Array.isArray(block) ? block[0]?.type !== 'task' : block.type !== 'task',
+  )
+
+  const description = descriptionBlocks
+    ?.map(formatBlockText)
+    ?.filter((line) => line !== '')
+    ?.slice(0, 5)
+
+  const searchText = flattedBlocks?.map(formatBlockText)
+
+  return {
+    description,
+    searchText,
+  }
+}
+
+function parseBNXmlToBlocks(data, cardId) {
   const content = {
     tasks: [],
     files: [],
     mentions: [],
   }
-  const addContent = (type, data) => content[type].push(data)
+  const addContent = (type, data) => {
+    const blockId = data.id
+    data.id = `${cardId}_${blockId}`
+    content[type].push(data)
+  }
 
   const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
-
-  const description = getDescription(blocks[0])
-  const text = description?.join('\n') || ''
+  const { description, searchText } = extractDescriptionAndSearchText(blocks[0])
+  const text = searchText.filter((line) => Boolean(line)).join('\n') || ''
 
   return { ...content, description, text }
 }

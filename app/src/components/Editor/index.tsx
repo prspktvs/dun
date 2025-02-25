@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  SideMenuController,
-  SuggestionMenuController,
-  useCreateBlockNote,
-} from '@blocknote/react'
+import { SideMenuController, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
@@ -17,6 +13,7 @@ import {
   defaultInlineContentSpecs,
   defaultStyleSpecs,
   filterSuggestionItems,
+  UniqueID,
 } from '@blocknote/core'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'

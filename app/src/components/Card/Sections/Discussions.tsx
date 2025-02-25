@@ -8,12 +8,13 @@ import { IUser } from '../../../types/User'
 import { useChats } from '../../../context/ChatContext'
 import ChatPreview from '../../Chats/ChatPreview'
 import { IChat } from '../../../types/Chat'
+import { useProject } from '../../../context/ProjectContext'
 
 function AddNewChat({ onClick }: { onClick: () => void }) {
   return (
     <>
       <div
-        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex  flex-none hidden md:block'
+        className='h-[120px] border-b-1 border-borders-purple overflow-hidden flex-none hidden md:block'
         onClick={onClick}
       >
         <div className='flex w-full'>
@@ -28,7 +29,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
               <div className='flex items-center w-11/12 h-8 gap-2 font-monaspace '>
                 <div className='h-full w-[3px] bg-gray-500' />
                 <div className='flex flex-col text-12'>
-                  <div className='text-[#969696]'>Major topic discussion</div>
+                  <div className='text-[#969696]'>Main discussion</div>
                 </div>
               </div>
               <div className='font-monaspace mb-5 ml-3 text-12 text-[#969696] hover:cursor-pointer'>
@@ -71,10 +72,10 @@ export default function Discussions({ users }: { users: IUser[] }) {
 
   const onDeleteChat = (chatId: string) => deleteChat(cardId, chatId)
 
-  const onCreateNewDiscussion = async () => createChat(cardId, 'Topic discussion')
+  const onCreateNewDiscussion = async () => createChat('initialBlockId', 'Topic discussion')
 
   return (
-    <section className='h-screen '>
+    <section className='h-screen'>
       <div className='relative px-6 py-3 md:p-3 border-b-1 border-borders-purple'>
         <i className='absolute top-[5px] ri-search-line text-lg text-gray-400' />
         <input

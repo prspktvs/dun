@@ -12,6 +12,7 @@ import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
 import ProjectSelector from '../../components/Project/ProjectSelector'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
+import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
 
 function SortButton({
@@ -51,7 +52,13 @@ export function CardsPage() {
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
-    const nonEmptyCards = cards.filter((card) => card.title || card?.description?.length > 0)
+    const nonEmptyCards = cards.filter(
+      (card) =>
+        card.title ||
+        card?.description?.length > 0 ||
+        card?.tasks?.length > 0 ||
+        card?.files?.length > 0,
+    )
     setFilteredCards(search.q ? search.results : nonEmptyCards)
   }, [search.q, cards])
 
@@ -75,7 +82,12 @@ export function CardsPage() {
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section>
-        {isMobile && <ProjectSelector />}
+        {isMobile && (
+          <div className='flex w-full items-center justify-between border-b-1 border-borders-purple px-5'>
+            <ProjectSelector />
+            <UserPanel />
+          </div>
+        )}
         <div className='flex items-center justify-between h-10 border-borders-purple md:h-14'>
           <div className='flex justify-between w-full h-full border-b-1 border-borders-purple'>
             {isMobile ? (
@@ -97,9 +109,9 @@ export function CardsPage() {
                 </SortButton>
               </div>
             )}
-            <div className='flex items-center justify-center   flex-shrink-0 h-full border-l md:w-48 w-[111px] border-borders-purple'>
+            <div className='flex items-center justify-center flex-shrink-0 md:w-48 w-[111px] h-full border-l border-borders-purple'>
               <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-                <span className='justify-center text-sm font-normal font-monaspace md:font-thin md:text-xl'>
+                <span className='justify-center text-sm font-normal font-monaspace pr-1 md:font-thin md:text-xl'>
                   +
                 </span>
                 Topic

@@ -115,7 +115,6 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       await sendEmailVerification(userCredential.user)
 
       notifySuccess(EMAIL_VERIFIED_MESSAGE)
-
       if (cb) cb()
     } catch (error) {
       console.error('Error signing up with email and password:', error)
@@ -158,6 +157,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       await auth.signOut()
+      setUser(null)
       window.location.href = '/login'
     } catch (error) {
       console.error('Error log out:', error)

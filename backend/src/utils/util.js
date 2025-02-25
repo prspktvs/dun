@@ -7,7 +7,7 @@ import {
   INSERT_MENTION_QUERY,
   INSERT_TASK_QUERY,
   SELECT_ALL_CARD_TASKS_QUERY,
-  SELECT_CARD_WITH_FILES_QUERY,
+  SELECT_CARD_BY_ID_QUERY,
   SELECT_MENTIONS_QUERY,
   UPDATE_CARD_QUERY,
 } from '../database/queries.js'
@@ -130,7 +130,7 @@ const onStoreDocument = async ({
     mentions: allMentions,
     description,
     text,
-  } = parser(json)
+  } = parser(json, cardId)
 
   // without await to not block the response
   // @TODO: optimize card title
@@ -141,7 +141,7 @@ const onStoreDocument = async ({
   const mentionsIds = allMentions.map((mention) => mention.id)
   const mentionsPlaceholders = mentionsIds.map(() => '?').join(',')
   const [currentCard, currentMentions, allCardTasks] = await Promise.all([
-    getQuery(SELECT_CARD_WITH_FILES_QUERY, cardId),
+    getQuery(SELECT_CARD_BY_ID_QUERY, cardId),
     allQuery(SELECT_MENTIONS_QUERY(mentionsPlaceholders), mentionsIds),
     allQuery(SELECT_ALL_CARD_TASKS_QUERY, cardId),
   ])
@@ -157,7 +157,6 @@ const onStoreDocument = async ({
   const newMentions = allMentions.filter(
     (mention) => !currentMentions.map((m) => m.id).includes(mention.id),
   )
-
   await Promise.all([
     saveAllContent({
       cardId,
@@ -181,7 +180,6 @@ const onStoreDocument = async ({
       })
     })
   }
-  console.log(currentCard)
   addDocument({
     id: cardId,
     title: currentCard?.title,
@@ -204,9 +202,17 @@ const onStoreDocument = async ({
 
   const isCardUpdated =
     currentCard.description !== JSON.stringify(description) ||
-    currentCard.files !== JSON.stringify(allFiles)
+    currentCard.files !== JSON.stringify(allFiles) ||
+    currentCard.tasks !== JSON.stringify(allTasks)
+
   if (isCardUpdated)
-    sendMessageToProject(projectId, { id: cardId, description, files: allFiles, type: 'card' })
+    sendMessageToProject(projectId, {
+      id: cardId,
+      description,
+      files: allFiles,
+      tasks: allTasks,
+      type: 'card',
+    })
 
   Object.keys(notifications).forEach((userId) => {
     sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId })

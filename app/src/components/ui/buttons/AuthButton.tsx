@@ -14,7 +14,7 @@ export const AuthButton = ({
   className = '',
 }: AuthButtonProps) => {
   return (
-    <div className='relative sm:row-start-5 h-14'>
+    <div className='relative sm:row-start-5 h-14 w-full'>
       <div className='p-1'>
         <button
           type={type}

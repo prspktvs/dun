@@ -8,6 +8,8 @@ import Section3 from './Section3'
 import Footer from './Footer'
 import { Frame } from './Frame'
 import { useAuth } from '../../context/AuthContext'
+import { genId } from '../../utils'
+import { IUser } from '../../types/User'
 
 // Компонент Header
 const Header = () => {
@@ -49,13 +51,11 @@ const Header = () => {
   )
 }
 
-// Основной компонент LandingPage
 function LandingPage() {
   const { user } = useAuth()
 
-  if (user?.lastProjectId) {
-    return <Navigate to={`/${user.lastProjectId}`} />
-  }
+  const redirectProjectId = (user as IUser)?.lastProjectId ? 'dashboard' : genId()
+  if (user) return <Navigate to={`/${redirectProjectId}`} />
 
   return (
     <div className='h-screen w-full overflow-x-hidden bg-[#faf9f6]'>

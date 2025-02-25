@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { BlockSchema, defaultProps, PartialBlock, PropSchema } from '@blocknote/core'
 import { createReactBlockSpec } from '@blocknote/react'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Group, Menu, Popover } from '@mantine/core'
+import { useEffect, useRef, useState } from 'react'
+import { Menu, Popover } from '@mantine/core'
 import clsx from 'clsx'
 
 import { insertOrUpdateBlock } from '../../../../utils/editor'
 import { ITask, TaskPriority, TaskStatus } from '../../../../types/Task.d.ts'
 import { useProject } from '../../../../context/ProjectContext'
-import { IUser } from '../../../../types/User'
 import { useAuth } from '../../../../context/AuthContext'
 import { RiArrowDown } from '../../../Project/Content/IconsCard/IconsCard'
 
@@ -154,19 +153,10 @@ const TaskBlock = createReactBlockSpec(
   {
     render: ({ block, editor, contentRef }) => {
       const { status, priority, author } = block.props
-      const [opened, setOpened] = useState(false)
+
       const { user } = useAuth()
-      const { users } = useProject()
-      const inputRef = useRef<HTMLDivElement>(null)
+
       const isNextBlockTask = useRef(true)
-
-      const onClose = () => setOpened(false)
-
-      useEffect(() => {
-        if (!block?.props?.author && user) {
-          editor.updateBlock(block, { props: { author: user.id } })
-        }
-      }, [user])
 
       useEffect(() => {
         isNextBlockTask.current = true
@@ -175,7 +165,6 @@ const TaskBlock = createReactBlockSpec(
       useEffect(() => {
         const handler = (e: KeyboardEvent) => {
           const prevBlock = editor.getTextCursorPosition().prevBlock
-          const nextBlock = editor.getTextCursorPosition().nextBlock
 
           switch (e.key) {
             case 'Enter':
@@ -201,6 +190,15 @@ const TaskBlock = createReactBlockSpec(
 
         return () => document.removeEventListener('keydown', handler)
       }, [])
+
+      useEffect(() => {
+        if (!block?.props?.author && user) {
+          // microtask to avoid react lifecycle warning
+          Promise.resolve().then(() => {
+            editor.updateBlock(block, { props: { author: user.id } })
+          })
+        }
+      }, [user])
 
       const isBlockActive = block === editor?.getTextCursorPosition()?.block
 

@@ -31,7 +31,7 @@ function LeftPanel() {
 
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
-      <section>
+      <section className='border-b-1 border-borders-purple h-14'>
         <ProjectSelector />
       </section>
       <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
@@ -88,8 +88,6 @@ function LeftPanel() {
             ))}
           </div>
         ))}
-
-        <div className='pl-1 text-sm font-semibold text-btnBg font-monaspace'>+12</div>
       </section>
       <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>

@@ -16,7 +16,7 @@ export default function ButtonDun({
       <Button
         className={clsx('font-monaspace bg-btnBg hover:bg-btnBg scale-button', className)}
         radius={0}
-        variant='md:outline'
+        variant='outline'
         color='#FFFFFF'
         onClick={onClick}
       >
