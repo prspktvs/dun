@@ -50,7 +50,7 @@ export const Frame = (): JSX.Element => {
               <img
                 className='w-[247px] h-[196px]  select-none'
                 alt='Problem 50 tabs cat'
-                src='/assets/landing/cat-50tabs.svg'
+                src='./assets/landing/cat-50tabs.svg'
               />
 
               <div className='flex flex-col items-start gap-2.5 relative flex-[0_0_auto]'>
@@ -73,7 +73,7 @@ export const Frame = (): JSX.Element => {
               <img
                 className='w-[228px] h-[196px] select-none'
                 alt='Happy cat without problems'
-                src='/assets/landing/cat-dun.svg'
+                src='./assets/landing/cat-dun.svg'
               />
 
               <div className='flex flex-col items-center justify-center gap-[30px] relative flex-[0_0_auto]'>
