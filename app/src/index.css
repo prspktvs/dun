@@ -11,10 +11,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
 body {
   @apply bg-background text-primary-text font-rubik;
 }
-
 
 /* @TODO: check if we actually need that */
 *,

@@ -12,7 +12,7 @@ interface IFeatureCardProps extends IFeatureCard {
   index: number
 }
 
-function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureCardProps) {
+function BoxInformationAudience({ firstMessage, secondMessage, index }: IFeatureCardProps) {
   const isEven = index % 2 === 0
   return (
     <>
@@ -42,4 +42,4 @@ function BoxInformatinSection3({ firstMessage, secondMessage, index }: IFeatureC
   )
 }
 
-export default BoxInformatinSection3
+export default BoxInformationAudience

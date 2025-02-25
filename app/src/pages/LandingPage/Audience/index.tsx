@@ -1,59 +1,61 @@
 import React from 'react'
 import clsx from 'clsx'
 
-// Добавляем хук для отслеживания ширины экрана
-const useWindowWidth = () => {
-  const [width, setWidth] = React.useState(window.innerWidth)
+import { AuthButton } from '../../../components/ui/buttons/AuthButton'
+import { GoogleLogo } from '../../../components/icons'
+import { useAuth } from '../../../context/AuthContext'
+import { useBreakpoint } from '../../../hooks/useBreakpoint'
 
-  React.useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+const TextContent = () => {
+  const { signInWithGoogle } = useAuth()
 
-  return width
+  return (
+    <div className='text-[#555555] text-sm md:text-[1.5vw] lg:text-[1.2vw] xl:text-xl font-normal font-monaspace leading-snug w-[85%] mx-auto'>
+      <div className='text-[#343434] text-sm md:text-[1.5vw] lg:text-[1.2vw] xl:text-xl font-semibold leading-[30px] pb-[15px] font-monaspace'>
+        Dun is a good choice for:
+      </div>
+      <div className='flex flex-col gap-4'>
+        <ul className='list-disc list-inside'>
+          <li>Software & design agencies</li>
+          <li>Freelancers & independent creators</li>
+          <li>Content creators</li>
+          <li>Social media managers & Digital marketing</li>
+        </ul>
+        <ul className='list-disc list-inside'>
+          <li>Architects and interior designers</li>
+          <li>Fashion designers and apparel brands</li>
+          <li>Tutors & Students</li>
+          <li>Nonprofits and volunteer organizations</li>
+        </ul>
+        <ul className='list-disc list-inside'>
+          <li>Startup teams</li>
+          <li>E-commerce businesses</li>
+          <li>Legal and financial advisory teams</li>
+          <li>Consultants & Specialists</li>
+          <li>Event & Project Planners</li>
+        </ul>
+      </div>
+      <div className='w-[300px] mt-5'>
+        <AuthButton
+          className='bg-white border-black text-black'
+          onClick={signInWithGoogle}
+          icon={<GoogleLogo className='w-6 h-6' />}
+        >
+          Sign up with Google
+        </AuthButton>
+      </div>
+    </div>
+  )
 }
 
-const TextContent = () => (
-  <div className='text-[#555555] text-sm md:text-[1.5vw] lg:text-[1.2vw] xl:text-xl font-normal font-monaspace leading-snug w-[85%] mx-auto'>
-    <div className='text-[#343434] text-sm md:text-[1.5vw] lg:text-[1.2vw] xl:text-xl font-semibold leading-[30px] pb-[15px] font-monaspace'>
-      Dun is a good choice for:
-    </div>
-    <div className='flex flex-col gap-4'>
-      <ul className='list-disc list-inside'>
-        <li>Software & design agencies</li>
-        <li>Freelancers & independent creators</li>
-        <li>Content creators</li>
-        <li>Social media managers & Digital marketing</li>
-      </ul>
-      <ul className='list-disc list-inside'>
-        <li>Architects and interior designers</li>
-        <li>Fashion designers and apparel brands</li>
-        <li>Tutors & Students</li>
-        <li>Nonprofits and volunteer organizations</li>
-      </ul>
-      <ul className='list-disc list-inside'>
-        <li>Startup teams</li>
-        <li>E-commerce businesses</li>
-        <li>Legal and financial advisory teams</li>
-        <li>Consultants & Specialists</li>
-        <li>Event & Project Planners</li>
-      </ul>
-    </div>
-    <button className='w-[300px] h-[58px] bg-white justify-center inline-flex hover:bg-gray-50 transition-colors mt-4'>
-      <img src='/assets/landing/state=default, device=web.svg' alt='Button Lading' />
-    </button>
-  </div>
-)
-
-function Section3() {
-  const windowWidth = useWindowWidth()
+function Audience() {
+  const { isMobile } = useBreakpoint()
 
   return (
     <>
       {/* Unified Header */}
       <div className='w-full bg-[#faf9f6]'>
-        {windowWidth >= 1280 ? (
+        {!isMobile ? (
           // Desktop Header
           <div className='w-full h-[98px] p-5 flex justify-between items-center'>
             <div className="text-[#343434] text-5xl font-normal font-['National Park '] leading-[57.60px]">
@@ -90,9 +92,9 @@ function Section3() {
             {/* Left side with cloud image */}
             <div className='relative flex items-center w-1/2 md:h-[600px] lg:h-[697px] xl:h-[760px]'>
               <img
-                src='./assets/landing/Cloud.svg'
-                className='object-cover w-full h-full translate-y-2'
-                alt='Cloud'
+                src='./assets/landing/cloud.svg'
+                className='object-cover w-full h-full translate-y-2 select-none'
+                alt='Cloud dun cat'
               />
               <div className='absolute inset-0 flex items-center justify-center'>
                 <TextContent />
@@ -102,15 +104,19 @@ function Section3() {
             <div className='flex items-center justify-center w-1/2 border-l border-black h-[390px] md:h-[600px] lg:h-[697px] xl:h-[760px]'>
               <img
                 src='./assets/landing/relax.svg'
-                className='object-cover w-full h-full translate-y-2'
-                alt='Relax'
+                className='object-cover w-full h-full translate-y-2 select-none'
+                alt='Relax dun cat'
               />
             </div>
           </div>
 
           {/* Mobile image */}
           <div className='flex w-full border-b md:hidden'>
-            <img src='./assets/landing/Frame 1040.svg' className='w-full' alt='Mobile Frame' />
+            <img
+              src='./assets/landing/relax.svg'
+              className='w-full aspect-[4/3] object-cover select-none'
+              alt='Relax dun cat'
+            />
           </div>
         </div>
 
@@ -123,4 +129,4 @@ function Section3() {
   )
 }
 
-export default Section3
+export default Audience

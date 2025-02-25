@@ -1,69 +1,41 @@
 import React from 'react'
 
-import Rectangles from '/assets/landing/rectangles.svg'
-import Squares from '/assets/landing/squares.svg'
-import Plaid from '/assets/landing/plaid.svg'
-import Lines from '/assets/landing/lines.svg'
-
 import FeatureCard from './FeatureCard'
 
 interface IFeatureCard {
   title: string
   backgroundColor: string
-  image: React.ReactNode
+  imageSrc: string
   backgroundImage: string
 }
 
 const FEATURES: IFeatureCard[] = [
   {
-    title: '',
+    title:
+      'Everything related to a certain topic is always located in the same place - all chats, tasks, notes, docs, files and links',
     backgroundColor: '#cbb9cf',
-    image: (
-      <img
-        className='w-10/12 md:w-[795px]'
-        src='./assets/landing/image 177.svg'
-        alt='description-image'
-      />
-    ),
-    backgroundImage: `url('./assets/landing/feature description2.svg')`,
+    imageSrc: './assets/landing/features-video-1.mp4',
+    backgroundImage: `url('./assets/landing/features-rects.svg')`,
   },
   {
     title:
       'Organize discussions around specific content to avoid getting lost in endless spammy chats',
     backgroundColor: '#f5cbbc',
-    image: (
-      <img
-        className='w-10/12 md:w-[499px]'
-        src='./assets/landing/image 178.svg'
-        alt='description-image'
-      />
-    ),
-    backgroundImage: `url('./assets/landing/Group 15.svg')`,
+    imageSrc: './assets/landing/features-video-2.mp4',
+    backgroundImage: `url('./assets/landing/features-lines.svg')`,
   },
   {
     title: 'Sharing option is always available, as well as making it private again',
     backgroundColor: '#fff5d2',
-    image: (
-      <img
-        className='w-10/12 md:w-[499px]'
-        src='./assets/landing/image 179).svg'
-        alt='description-image'
-      />
-    ),
-    backgroundImage: `url(${Plaid})`,
+    imageSrc: './assets/landing/features-video-3.mp4',
+    backgroundImage: `url('./assets/landing/features-plaid.svg')`,
   },
   {
     title:
       'Tap a task in your left bar to quickly access its full context and details. Stop worrying about',
     backgroundColor: '#afb5d4',
-    image: (
-      <img
-        className='w-10/12 md:w-[499px]'
-        src='./assets/landing/Frame 1056.svg'
-        alt='description-image'
-      />
-    ),
-    backgroundImage: `url('./assets/landing/Group 19.svg')`,
+    imageSrc: './assets/landing/features-video-4.mp4',
+    backgroundImage: `url('./assets/landing/features-lines-back.svg')`,
   },
 ]
 
@@ -90,11 +62,13 @@ function Section2() {
         </div>
       </div>
 
-      <div className='relative w-full bg-[#c5d4d2] p-10 overflow-hidden border-b  border-black'>        <div className='relative w-full h-full' style={{ paddingBottom: '56.25%' }}>
+      <div className='relative w-full bg-[#c5d4d2] p-10 overflow-hidden border-b  border-black'>
+        {' '}
+        <div className='relative w-full h-full pb-[45%]'>
           <img
-            className='absolute top-0 left-0 object-cover w-full h-full'
+            className='absolute top-0 left-0 object-contain w-full h-full select-none'
             alt='Frame'
-            src='/assets/landing/Frame 1051 1.png'
+            src='/assets/landing/dun-layout.png'
           />
         </div>
       </div>

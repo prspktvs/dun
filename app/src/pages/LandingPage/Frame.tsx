@@ -1,6 +1,11 @@
 import React from 'react'
 
+import { GoogleLogo } from '../../components/icons'
+import { AuthButton } from '../../components/ui/buttons/AuthButton'
+import { useAuth } from '../../context/AuthContext'
+
 export const Frame = (): JSX.Element => {
+  const { signInWithGoogle } = useAuth()
   return (
     <div className='flex flex-col items-center gap-[30px] mt-10 md:mt-[60px]'>
       <div className='inline-flex flex-col items-center gap-5 md:gap-[30px] relative flex-[0_0_auto]'>
@@ -14,29 +19,39 @@ export const Frame = (): JSX.Element => {
         </p>
       </div>
 
-      <button className=''>
-        <img src='/assets/landing/state=default, device=web.svg' alt='Button Lading' />
-      </button>
+      <div className='w-[300px]'>
+        <AuthButton
+          className='bg-white border-black text-black'
+          onClick={signInWithGoogle}
+          icon={<GoogleLogo className='w-6 h-6' />}
+        >
+          Sign up with Google
+        </AuthButton>
+      </div>
 
       <img
-        className='relative w-[198px] h-[35.69px]'
+        className='relative w-[198px] h-[35.69px] select-none'
         alt='Group'
-        src='/assets/landing/Group 22.svg'
+        src='/assets/landing/more-about.svg'
       />
 
       <div className='flex flex-col items-start gap-px relative self-stretch w-full flex-[0_0_auto]'>
         <div className='relative w-full min-h-[198px]'>
           <img
-            className='object-cover w-full h-auto'
-            alt='Frame'
-            src='/assets/landing/Frame 1025.svg'
+            className='object-cover w-full h-auto select-none'
+            alt='Dun watch demo video'
+            src='/assets/landing/hero.jpg'
           />
         </div>
 
         <div className='flex flex-col md:flex-row items-stretch gap-px relative self-stretch w-full flex-[0_0_auto] bg-variable-collection-landing-logo-text-buttons-strokes border-t border-black'>
           <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 border-b md:border-b-0 md:border-r border-black bg-[#faf9f6] flex-col justify-start items-center gap-1 inline-flex overflow-hidden'>
             <div className='flex flex-col items-center justify-start gap-5 pt-10 sm:pb-10'>
-              <img className='w-[247px] h-[196px]' alt='Cat' src='/assets/landing/Cat-50tabs.svg' />
+              <img
+                className='w-[247px] h-[196px]  select-none'
+                alt='Problem 50 tabs cat'
+                src='/assets/landing/cat-50tabs.svg'
+              />
 
               <div className='flex flex-col items-start gap-2.5 relative flex-[0_0_auto]'>
                 <div className='relative w-[202px] m-0 font-monaspace font-semibold text-variable-collection-landing-logo-text-buttons-strokes text-xl tracking-[0] leading-[30px]'>
@@ -56,9 +71,9 @@ export const Frame = (): JSX.Element => {
           <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 bg-[#faf9f6] flex-col justify-start items-center gap-1 inline-flex overflow-hidden'>
             <div className='flex flex-col items-center justify-start gap-5 pt-10 pb-10'>
               <img
-                className='w-[228px] h-[196px]'
-                alt='Cat dun'
-                src='/assets/landing/Cat-dun.svg'
+                className='w-[228px] h-[196px] select-none'
+                alt='Happy cat without problems'
+                src='/assets/landing/cat-dun.svg'
               />
 
               <div className='flex flex-col items-center justify-center gap-[30px] relative flex-[0_0_auto]'>
@@ -75,15 +90,20 @@ export const Frame = (): JSX.Element => {
                   </ul>
                 </div>
 
-                <button className=''>
-                  <img src='/assets/landing/state=default, device=web.svg' alt='Button Landing' />
-                </button>
+                <div className='w-[300px]'>
+                  <AuthButton
+                    className='bg-white border-black text-black'
+                    onClick={signInWithGoogle}
+                    icon={<GoogleLogo className='w-6 h-6' />}
+                  >
+                    Sign up with Google
+                  </AuthButton>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-     
     </div>
   )
 }
