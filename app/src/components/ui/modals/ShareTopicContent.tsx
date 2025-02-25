@@ -12,6 +12,7 @@ import { ICard } from '../../../types/Card'
 import { shareCard, unshareCard } from '../../../services/card.service'
 import { ConfirmModal } from './ConfirmModal'
 import { SharingOption } from '../../Card/Sharing/SharingOption'
+import { useBreakpoint } from '../../../hooks/useBreakpoint'
 
 interface IShareTopicContentProps {
   card: ICard
@@ -20,11 +21,10 @@ interface IShareTopicContentProps {
 
 const InviteLinkSection = ({ copyUrl }: { copyUrl: string }) => (
   <div className='flex items-center justify-between mt-4 h-14 border-y-1 border-borders-purple'>
-    <div className='w-1/4 px-5 ml-3 font-bold font-monaspace'>Invite link</div>
-    <div className='flex items-center w-2/4 h-full px-3 my-5 text-sm border-x-1 border-borders-purple overflow-hidden'>
+    <div className='flex items-center w-[calc(100%_-_120px)] h-full px-3 my-5 overflow-hidden text-sm truncate border-x-1 border-borders-purple'>
       {copyUrl}
     </div>
-    <div className='w-1/4 h-14'>
+    <div style={{ width: '120px' }} className='h-14'>
       <CopyButton value={copyUrl}>
         {({ copied, copy }) => (
           <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
@@ -135,7 +135,7 @@ const UserListSection = ({
   </>
 )
 
-export function ShareTopicContent({ card, onClose }: IShareTopicContentProps) {
+export function ShareTopicContent({ card }: IShareTopicContentProps) {
   const { id: projectId, cardId } = useParams()
   const { users, updateCard, project, optimisticUpdateCard } = useProject()
   const [isPrivate, setIsPrivate] = useState(!card.public)

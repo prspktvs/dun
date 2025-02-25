@@ -3,53 +3,73 @@ import React from 'react'
 import Logo from '../../components/ui/Logo'
 
 function Footer() {
+  const year = new Date().getFullYear()
   return (
-    <>
-      <div className='flex md:h-[361px] bg-[#C5D4D2] flex-col '>
-        <div className='flex justify-around border-b-1  border-black sm:flex-col flex-col md:flex-row'>
-          <div className='flex-1 my-5 ml-5'>
+    <div className='w-full h-[137px] bg-[#343434] flex-col justify-start items-start gap-px inline-flex'>
+      <div className='self-stretch h-[68px] justify-start items-start gap-px inline-flex'>
+        <div className='grow shrink basis-0 self-stretch px-10 py-5 bg-[#c5d4d2] flex-col justify-start items-start gap-1 inline-flex'>
+          <div className='w-[81.78px] h-[33px] relative'>
             <Logo />
           </div>
-          <div className='md:border-l-1 md:border-r-1 border-black flex-1'>
-            <p className='m-5'>Dun@gmail.com</p>
-          </div>
-          <div className='flex-1'>
-            <p className='m-5'>+358 942 550 354</p>
-          </div>
         </div>
-
-        <div className='flex justify-around border-b-1 border-t-1 border-black my-16 sm:flex-col flex-col md:flex-row '>
-          <p className='flex-1 w-full text-xl ml-5 uppercase font-rubik '>
-            Got Questions, Buddy? Ask Away!
-          </p>
-
-          {/* ////////////////// */}
-          <div className='md:border-l-1 md:border-r-1  border-black flex-1 flex-col flex'>
-            <div className='md:border-b-1 border-b-1 border-black sm:border-y-1 border-y-1 md:border-y-0'>
-              <input className='bg-[#C5D4D2] m-5 font-monaspace' type='text' placeholder='name' />
-            </div>
-            <div>
-              <input
-                className='bg-[#C5D4D2] m-5 font-monaspace'
-                type='text'
-                placeholder='message'
-              />
-            </div>
-          </div>
-          {/* /////////////////////// */}
-          <div className='flex-1 flex-col flex'>
-            <div className='sm:border-t-1 border-t-1 md:border-t-0 border-black'>
-              <input className='bg-[#C5D4D2] m-5 font-monaspace' type='text' placeholder='email' />
-            </div>
-            <div className='text-center border-t-1  border-black'>
-              <button className='sm:w-[500px] w-[300px] md:w-[200px] lg:w-[410px] h-[52px] bg-black text-white my-2.5 font-monaspace hover:cursor-pointer hover:bg-gray-800'>
-                shoot your message to dun
-              </button>
-            </div>
-          </div>
+        <div className='grow shrink basis-0 self-stretch px-10 py-5 bg-[#c5d4d2] flex-col justify-center items-start gap-1 inline-flex'>
+          <a
+            href='mailto:hi@p11.co'
+            target='_blank'
+            rel='noreferrer'
+            className="text-[#343434] text-lg font-normal font-['National Park '] uppercase leading-snug no-underline hover:opacity-75"
+          >
+            HI@P11.CO
+          </a>
+        </div>
+        <div className='grow shrink basis-0 self-stretch px-10 py-5 bg-[#c5d4d2] justify-start items-center gap-3 flex'>
+          <a
+            href='https://github.com/prspktvs/dun'
+            target='_blank'
+            rel='noreferrer'
+            className='overflow-hidden transition-opacity shrink-0 hover:opacity-80'
+          >
+            <img
+              alt='Github'
+              src='/assets/landing/logo-github.svg'
+              className='w-full h-full select-none'
+            />
+          </a>
+          <a
+            href='https://x.com/prspktvs'
+            target='_blank'
+            rel='noreferrer'
+            className='overflow-hidden transition-opacity shrink-0 hover:opacity-80'
+          >
+            <img
+              alt='Twitter'
+              src='/assets/landing/logo-x.svg'
+              className='w-full h-full select-none'
+            />
+          </a>
+          <a
+            href='https://p11.co'
+            target='_blank'
+            rel='noreferrer'
+            className='overflow-hidden transition-opacity shrink-0 hover:opacity-80'
+          >
+            <img
+              alt='LinkedIn'
+              src='/assets/landing/logo-p.svg'
+              className='w-full h-full select-none'
+            />
+          </a>
         </div>
       </div>
-    </>
+      <div className='self-stretch h-[68px] px-10 py-2.5 bg-[#c5d4d2] justify-between items-center inline-flex'>
+        <div className="text-[#343434] text-lg font-normal font-['National Park '] uppercase leading-snug">
+          Terms & conditions
+        </div>
+        <div className="text-[#343434] text-lg font-normal font-['National Park '] leading-snug">
+          ©{year} Perspektives
+        </div>
+      </div>
+    </div>
   )
 }
 
