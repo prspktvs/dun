@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { onValue, push, ref, set, get, off } from '@firebase/database'
-import { first, isEmpty } from 'lodash'
+import { onValue, ref, off } from '@firebase/database'
+import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 

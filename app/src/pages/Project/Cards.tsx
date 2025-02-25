@@ -12,6 +12,7 @@ import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
 import ProjectSelector from '../../components/Project/ProjectSelector'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
+import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
 
 function SortButton({
@@ -51,7 +52,6 @@ export function CardsPage() {
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
-    console.log('cards', cards)
     const nonEmptyCards = cards.filter(
       (card) =>
         card.title ||
@@ -59,7 +59,6 @@ export function CardsPage() {
         card?.tasks?.length > 0 ||
         card?.files?.length > 0,
     )
-    console.log('nonEmptyCards', nonEmptyCards)
     setFilteredCards(search.q ? search.results : nonEmptyCards)
   }, [search.q, cards])
 
@@ -83,7 +82,12 @@ export function CardsPage() {
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section>
-        {isMobile && <ProjectSelector />}
+        {isMobile && (
+          <div className='flex w-full items-center justify-between border-b-1 border-borders-purple px-5'>
+            <ProjectSelector />
+            <UserPanel />
+          </div>
+        )}
         <div className='flex items-center justify-between h-10 border-borders-purple md:h-14'>
           <div className='flex justify-between w-full h-full border-b-1 border-borders-purple'>
             {isMobile ? (
