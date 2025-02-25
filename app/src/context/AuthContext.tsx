@@ -28,6 +28,7 @@ import {
   LOGGED_IN_MESSAGE,
 } from '../constants/messages'
 import { registerForPushNotifications } from '../utils/push'
+import { genId } from '../utils'
 
 interface ILoginCredentials {
   email: string
@@ -70,13 +71,12 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const { from } = location.state || { from: { pathname: '/' } }
+  const from = location.state?.from?.pathname ?? '/dashboard'
 
   const loginWithEmailAndPassword = async ({ email, password }: ILoginCredentials) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
-      if (!userCredential.user?.emailVerified) return notifyError(EMAIL_NOT_VERIFIED_MESSAGE)
       if (userCredential) {
         const userData = await getOrCreateUser(userCredential.user as firebase.User)
         setUser(userData)
@@ -171,8 +171,8 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
         setUser(userData)
 
         const token = await user.getIdToken()
-        setToken(token)
         localStorage.setItem('token', token)
+        setToken(token)
       }
       setLoading(false)
     })

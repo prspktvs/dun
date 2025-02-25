@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import UserList from '../User/UserList'
 import { useAuth } from '../../context/AuthContext'
@@ -44,12 +45,21 @@ export function ProjectsList({ search }: { search?: string }) {
   }, [search, projects])
 
   return (
-    <ul className='divide-y-[1px] divide-borders-purple'>
-      {filteredProjects.map((project) => (
-        <li key={'dashboard-project-' + project.id}>
-          <ProjectPreview project={project} />
-        </li>
-      ))}
+    <ul className='h-full divide-y-[1px] divide-borders-purple'>
+      {!isEmpty(filteredProjects) ? (
+        filteredProjects.map((project) => (
+          <li key={'dashboard-project-' + project.id}>
+            <ProjectPreview project={project} />
+          </li>
+        ))
+      ) : (
+        <div className='flex h-full w-full px-10 justify-center items-center'>
+          <span className='font-monaspace text-inactiveText'>
+            You haven't set up your work area yet. To start,{' '}
+            <span className='font-bold text-btnBg'>create new project workspace</span>
+          </span>
+        </div>
+      )}
     </ul>
   )
 }

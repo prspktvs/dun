@@ -63,7 +63,9 @@ export const searchCards = async (req, res) => {
 export const getAllProjectCards = async (req, res) => {
   try {
     const { projectId: id, sort = 'createdAt' } = req.query
+
     const userId = req.user.user_id
+    console.log('User', req.user)
     const cards = await allQuery(SELECT_ALL_CARDS_BY_PROJECTID_QUERY(sort), [id, userId, userId])
 
     res.status(200).json(cards.map(deserializeCard))

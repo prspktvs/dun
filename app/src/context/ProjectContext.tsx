@@ -112,7 +112,7 @@ export const ProjectProvider = ({
     }
 
     fetchData()
-  }, [projectId, sortType, user?.id])
+  }, [projectId, sortType, token])
 
   useEffect(() => {
     if (!projectId || !user) return
