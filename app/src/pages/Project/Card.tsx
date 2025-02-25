@@ -122,9 +122,9 @@ const Card = ({ card }: ICardProps) => {
       />
       <div className='flex'>
         {!isMobile && (
-          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pt-[20px] pl-[30px] '>
+          <section className='h-[calc(100vh_-_112px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden bg-white z-20 pt-[20px] pl-[30px] '>
             <textarea
-              className='font-rubik align-middle min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden w-[300px] md:w-3/4 lg:w-5/6'
+              className='font-rubik align-middle min-h-[40px] text-[32px] border-none ml-12 mb-6 resize-none overflow-hidden bg-white w-[300px] md:w-3/4 lg:w-5/6'
               placeholder='Type title'
               rows={1}
               ref={inputRef}

@@ -101,5 +101,5 @@ input {
   @apply bg-background;
 }
 .bn-editor {
-  @apply bg-background;
+  @apply bg-white;
 }

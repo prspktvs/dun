@@ -25,7 +25,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   showConfirmModal,
   onRemoveCard,
 }) => (
-  <div className='flex items-center justify-between h-14 border-b-1 bg-[#edebf3] border-borders-purple'>
+  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
     <div className='flex items-center justify-between h-full mx-3 grow'>
       <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
         {'<'} back to topics
