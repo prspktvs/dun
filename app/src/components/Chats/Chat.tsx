@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { onValue, push, ref, set, get, off } from '@firebase/database'
-import { first, isEmpty } from 'lodash'
+import { onValue, ref, off } from '@firebase/database'
+import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 import { MentionsInput, Mention, SuggestionDataItem } from 'react-mentions'
 
@@ -45,7 +45,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const [messages, setMessages] = useState<IMessage[]>([])
   const { editor } = useEditor()
   const { project } = useProject()
-  const [content, setContent] = useState('Main discussion')
+  const [content, setContent] = useState('Discussion')
   const [newMessage, setNewMessage] = useState('')
   const { closeChat } = useChats()
   const { user } = useAuth()
@@ -121,7 +121,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   }
 
   return (
-    <div className='h-[calc(100vh-_90px)] flex flex-col'>
+    <div className='h-[calc(100vh-_90px)] md:h-[calc(100vh-_168px)] flex flex-col'>
       <div
         className='flex gap-3 items-center font-monaspace px-3 hover:cursor-pointer border-b-1 border-borders-purple'
         onClick={closeChat}

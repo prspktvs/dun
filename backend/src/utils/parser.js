@@ -61,9 +61,8 @@ function handleTaskBlock(parsedBlock, blockId, addContent) {
         switch (content.type) {
           case 'text':
           case 'mention':
-            return content.text
           case 'link':
-            return content.content.text
+            return content.text
           default:
             return ''
         }
@@ -211,13 +210,17 @@ function extractDescriptionAndSearchText(blocks) {
   }
 }
 
-function parseBNXmlToBlocks(data) {
+function parseBNXmlToBlocks(data, cardId) {
   const content = {
     tasks: [],
     files: [],
     mentions: [],
   }
-  const addContent = (type, data) => content[type].push(data)
+  const addContent = (type, data) => {
+    const blockId = data.id
+    data.id = `${cardId}_${blockId}`
+    content[type].push(data)
+  }
 
   const blocks = data.content?.map((block) => parseBlockGroup(block, addContent))
   const { description, searchText } = extractDescriptionAndSearchText(blocks[0])

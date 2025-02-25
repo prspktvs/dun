@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
 import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icons'
@@ -23,6 +24,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
   const [isLoading, setLoading] = useState(false)
   const [isPassHidden, setPassHidden] = useState(true)
   const navigate = useNavigate()
+  const location = useLocation()
   const handleTermsClick = () => {
     console.log('Terms clicked - functionality not implemented yet')
     // TODO: Implement terms navigation when ready
@@ -42,7 +44,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           email,
           password,
           name,
-          cb: () => navigate(`/${genId()}`),
+          cb: () => navigate(location.state?.from?.pathname ?? `/${genId()}`),
         })
       }
     } catch (error) {
@@ -141,28 +143,22 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
         )}
       </div>
 
-      <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
-        Continue with Google
-      </AuthButton>
+      <div className='flex flex-row h-md:flex-col gap-3 justify-center items-center'>
+        <AuthButton onClick={signInWithGoogle} icon={<GoogleLogo className='w-6 h-6' />}>
+          Continue with Google
+        </AuthButton>
 
-      {tab === 'signup' && (
-        <AuthButton
-          onClick={() => setTab('login')}
-          icon={<MailIcon className='w-7 h-7' />}
-          className='mt-1'
-        >
-          Log in with email
-        </AuthButton>
-      )}
-      {tab === 'login' && (
-        <AuthButton
-          onClick={() => setTab('signup')}
-          icon={<NewUserIcon className='w-7 h-7' />}
-          className='mt-1'
-        >
-          Create account
-        </AuthButton>
-      )}
+        {tab === 'signup' && (
+          <AuthButton onClick={() => setTab('login')} icon={<MailIcon className='w-7 h-7' />}>
+            Log in with email
+          </AuthButton>
+        )}
+        {tab === 'login' && (
+          <AuthButton onClick={() => setTab('signup')} icon={<NewUserIcon className='w-7 h-7' />}>
+            Create account
+          </AuthButton>
+        )}
+      </div>
     </form>
   )
 }

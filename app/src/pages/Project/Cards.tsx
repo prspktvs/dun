@@ -12,6 +12,7 @@ import { useSearch } from '../../components/ui/Search'
 import { Loader } from '../../components/ui/Loader'
 import ProjectSelector from '../../components/Project/ProjectSelector'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
+import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
 
 function SortButton({
@@ -81,7 +82,12 @@ export function CardsPage() {
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
       <section>
-        {isMobile && <ProjectSelector />}
+        {isMobile && (
+          <div className='flex w-full items-center justify-between border-b-1 border-borders-purple px-5'>
+            <ProjectSelector />
+            <UserPanel />
+          </div>
+        )}
         <div className='flex items-center justify-between h-10 border-borders-purple md:h-14'>
           <div className='flex justify-between w-full h-full border-b-1 border-borders-purple'>
             {isMobile ? (

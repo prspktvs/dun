@@ -23,7 +23,7 @@ const ProjectSelector = () => {
 
   useEffect(() => {
     getAllUserProject(user.id).then((data) => setProjects(data))
-  }, [user.id])
+  }, [user?.id])
 
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
@@ -38,7 +38,7 @@ const ProjectSelector = () => {
       onChange={(opened) => setMenuOpened(opened)}
     >
       <Menu.Target>
-        <nav className='relative z-50 flex flex-col justify-between pl-4 pr-[15px] md:px-5 bg-[#edebf3] text-3xl border-borders-purple h-14 md:w-80 border-b-1 border-r-1 hover:cursor-pointer '>
+        <nav className='relative z-50 flex flex-col w-full justify-between pl-4 pr-[15px] md:px-5 text-3xl h-14 md:w-80 hover:cursor-pointer '>
           {/* Overproject section */}
           <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
             <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>

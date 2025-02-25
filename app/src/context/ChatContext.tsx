@@ -88,8 +88,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const messagesRef = ref(realtimeDb, `projects/${projectId}/cards/${currentCardId}/chats`)
     onValue(messagesRef, (snapshot) => {
       const chats = snapshot.val()
-      const allChats = []
+      if (!chats) return
 
+      const allChats = []
       Object.entries(chats).forEach(([chatId, chat]) => {
         allChats.push({ cardId: currentCardId, chatId, chat })
       })

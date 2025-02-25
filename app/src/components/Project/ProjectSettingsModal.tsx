@@ -1,7 +1,7 @@
 import { Button, CopyButton } from '@mantine/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { debounce, isEmpty } from 'lodash'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
 import ButtonDun from '../ui/buttons/ButtonDun'
@@ -25,6 +25,7 @@ export default function ProjectSettingsModal({
   const [isTitleEditing, setIsTitleEditing] = useState(false)
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false)
   const [removeTitle, setRemoveTitle] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (isLoading) return
@@ -40,7 +41,11 @@ export default function ProjectSettingsModal({
   const debouncedSaveTitle = useCallback(debounce(saveTitle, 2000), [projectId])
   const debouncedSaveDescription = useCallback(debounce(saveDescription, 2000), [projectId])
 
-  const handleDelete = () => deleteProject(projectId)
+  const handleDelete = () => {
+    if (!projectId) return
+    deleteProject(projectId)
+    navigate('/dashboard')
+  }
 
   const projectUrl = useMemo(() => DUN_URL + `/${projectId}`, [projectId])
 

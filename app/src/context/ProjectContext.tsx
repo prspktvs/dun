@@ -99,6 +99,7 @@ export const ProjectProvider = ({
     if (!projectId) return
     async function fetchData() {
       const allCards = await getProjectCards(projectId, sortType)
+
       setCards(allCards)
       setIsCardsLoading(false)
     }
@@ -192,8 +193,10 @@ export const ProjectProvider = ({
 
   const optimisticUpdateCard = async (card: Partial<ICard>) => {
     try {
-      await updateCard(card)
-      _updateCard(card)
+      const updatedCard = await updateCard(card)
+
+      if (!updatedCard) return
+      _updateCard(updatedCard)
     } catch (error) {}
   }
 

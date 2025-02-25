@@ -7,7 +7,7 @@ import {
   INSERT_MENTION_QUERY,
   INSERT_TASK_QUERY,
   SELECT_ALL_CARD_TASKS_QUERY,
-  SELECT_CARD_WITH_FILES_QUERY,
+  SELECT_CARD_BY_ID_QUERY,
   SELECT_MENTIONS_QUERY,
   UPDATE_CARD_QUERY,
 } from '../database/queries.js'
@@ -130,8 +130,7 @@ const onStoreDocument = async ({
     mentions: allMentions,
     description,
     text,
-  } = parser(json)
-  console.log('ALL FILES', allFiles)
+  } = parser(json, cardId)
 
   // without await to not block the response
   // @TODO: optimize card title
@@ -142,7 +141,7 @@ const onStoreDocument = async ({
   const mentionsIds = allMentions.map((mention) => mention.id)
   const mentionsPlaceholders = mentionsIds.map(() => '?').join(',')
   const [currentCard, currentMentions, allCardTasks] = await Promise.all([
-    getQuery(SELECT_CARD_WITH_FILES_QUERY, cardId),
+    getQuery(SELECT_CARD_BY_ID_QUERY, cardId),
     allQuery(SELECT_MENTIONS_QUERY(mentionsPlaceholders), mentionsIds),
     allQuery(SELECT_ALL_CARD_TASKS_QUERY, cardId),
   ])
@@ -181,18 +180,6 @@ const onStoreDocument = async ({
       })
     })
   }
-  console.log('Current card', {
-    id: cardId,
-    title: currentCard?.title,
-    project_id: projectId,
-    content: text,
-    updated_at: Date.now(),
-    created_at: Date.now(),
-    author_id: user.user_id,
-    author: user.name,
-    public: false,
-    user_ids: JSON.parse(currentCard.users || '[]'),
-  })
   addDocument({
     id: cardId,
     title: currentCard?.title,
@@ -215,9 +202,17 @@ const onStoreDocument = async ({
 
   const isCardUpdated =
     currentCard.description !== JSON.stringify(description) ||
-    currentCard.files !== JSON.stringify(allFiles)
+    currentCard.files !== JSON.stringify(allFiles) ||
+    currentCard.tasks !== JSON.stringify(allTasks)
+
   if (isCardUpdated)
-    sendMessageToProject(projectId, { id: cardId, description, files: allFiles, type: 'card' })
+    sendMessageToProject(projectId, {
+      id: cardId,
+      description,
+      files: allFiles,
+      tasks: allTasks,
+      type: 'card',
+    })
 
   Object.keys(notifications).forEach((userId) => {
     sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId })

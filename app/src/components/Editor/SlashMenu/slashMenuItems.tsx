@@ -39,11 +39,12 @@ export function CustomSlashMenu(props: SuggestionMenuProps<DefaultReactSuggestio
 
   return (
     <div className='relative overflow-auto border-1 border-black rounded-[8px] p-1 min-w-60 bg-white'>
-      {groups.map((group) => (
-        <div className='mb-3'>
+      {groups.map((group, index) => (
+        <div key={`group_menu_${group}_${index}`} className='mb-3'>
           <div className='text-14 font-rubik'>{group}</div>
-          {groupedTools[group].map((item) => (
+          {groupedTools[group].map((item, index) => (
             <div
+              key={`group_menu_item_${item.title}_${index}`}
               className={`block w-full text-16 text-left font-rubik pl-3 ${
                 checkSelected(item)
                   ? 'text-black font-semibold border-1 border-black rounded-md'
