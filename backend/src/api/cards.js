@@ -130,7 +130,7 @@ export const updateCard = async (req, res) => {
     const { id } = req.params
     const updateFields = req.body
 
-    const fieldsToRemove = ['projectId', 'author', 'createdAt', 'files', 'tasks']
+    const fieldsToRemove = ['projectId', 'author', 'createdAt', 'files', 'tasks', 'type']
     fieldsToRemove.forEach((field) => delete updateFields[field])
 
     const card = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
@@ -159,7 +159,8 @@ export const updateCard = async (req, res) => {
     const query = `UPDATE cards SET ${columnsToUpdate} WHERE id=?`
 
     await runQuery(query, valuesToUpdate)
-    const updatedCard = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
+
+    const updatedCard = { ...card, ...newFields }
     res.status(200).json(deserializeCard(updatedCard))
   } catch (error) {
     handleError(res, error)
