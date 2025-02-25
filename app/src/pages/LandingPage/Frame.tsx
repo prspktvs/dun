@@ -49,8 +49,8 @@ export const Frame = (): JSX.Element => {
             <div className='flex flex-col items-center justify-start gap-5 pt-10 sm:pb-10'>
               <img
                 className='w-[247px] h-[196px]  select-none'
-                alt='Problem 50 tabs cat'
-                src='./assets/landing/cat-50tabs.svg'
+                alt='Problem 50 tabs'
+                src='./assets/landing/comparison-left.svg'
               />
 
               <div className='flex flex-col items-start gap-2.5 relative flex-[0_0_auto]'>
@@ -72,8 +72,8 @@ export const Frame = (): JSX.Element => {
             <div className='flex flex-col items-center justify-start gap-5 pt-10 pb-10'>
               <img
                 className='w-[228px] h-[196px] select-none'
-                alt='Happy cat without problems'
-                src='./assets/landing/cat-dun.svg'
+                alt='Solved problem'
+                src='./assets/landing/comparison-right.svg'
               />
 
               <div className='flex flex-col items-center justify-center gap-[30px] relative flex-[0_0_auto]'>

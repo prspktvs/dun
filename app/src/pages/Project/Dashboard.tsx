@@ -28,7 +28,7 @@ export default function Dashboard() {
           </ButtonDun>
         </div>
       </section>
-      <section className='overflow-y-scroll h-[calc(100vh-52px)]'>
+      <section className='overflow-y-scroll h-[calc(100vh-120px)]'>
         <ProjectsList search={search} />
       </section>
     </div>

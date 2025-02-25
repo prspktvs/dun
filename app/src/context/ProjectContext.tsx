@@ -99,13 +99,20 @@ export const ProjectProvider = ({
     if (!projectId) return
     async function fetchData() {
       const allCards = await getProjectCards(projectId, sortType)
+      const nonEmptyCards = allCards.filter(
+        (card) =>
+          card.title ||
+          card?.description?.length > 0 ||
+          card?.tasks?.length > 0 ||
+          card?.files?.length > 0,
+      )
 
-      setCards(allCards)
+      setCards(nonEmptyCards)
       setIsCardsLoading(false)
     }
 
     fetchData()
-  }, [projectId, sortType])
+  }, [projectId, sortType, token])
 
   useEffect(() => {
     if (!projectId || !user) return

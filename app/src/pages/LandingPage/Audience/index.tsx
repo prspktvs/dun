@@ -86,13 +86,13 @@ function Audience() {
           'w-full flex flex-col bg-no-repeat bg-cover bg-paper border-t  border-black',
         )}
       >
-        <div className='flex flex-col items-center justify-around'>
+        <div className='flex flex-col items-center gjustify-around'>
           {/* Desktop images */}
           <div className='flex-row justify-between hidden w-full border-t md:flex'>
             {/* Left side with cloud image */}
             <div className='relative flex items-center w-1/2 md:h-[600px] lg:h-[697px] xl:h-[760px]'>
               <img
-                src='./assets/landing/cloud.svg'
+                src='./assets/landing/relax-cloud.svg'
                 className='object-cover w-full h-full translate-y-2 select-none'
                 alt='Cloud dun cat'
               />

@@ -77,13 +77,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!currentCardId) return
-    getAllCardChats(`projects/${projectId}/cards/${currentCardId}`).then((data) =>
-      setCardChats(data),
-    )
-  }, [projectId, currentCardId])
-
-  useEffect(() => {
-    if (!currentCardId) return
 
     const messagesRef = ref(realtimeDb, `projects/${projectId}/cards/${currentCardId}/chats`)
     onValue(messagesRef, (snapshot) => {
@@ -94,6 +87,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       Object.entries(chats).forEach(([chatId, chat]) => {
         allChats.push({ cardId: currentCardId, chatId, chat })
       })
+
+      setCardChats(allChats.map(({ chat }) => chat))
 
       const data = allChats.map(({ cardId, chatId, chat }) => {
         if (!chat || !chat.id || !chat.messages) return { cardId, chatId: '', unreadCount: 0 }

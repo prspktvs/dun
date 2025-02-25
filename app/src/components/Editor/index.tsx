@@ -167,32 +167,6 @@ function Editor({ projectId, card, users }: IEditorProps) {
         </Alert>
       )}
       <BlockNoteView editor={editor} theme='light' sideMenu={false} slashMenu={false}>
-        {/* <FormattingToolbarController
-          formattingToolbar={() => (
-            <FormattingToolbar
-              blockTypeSelectItems={[
-                {
-                  name: 'paragraph',
-                  type: 'paragraph',
-                  isSelected: () => false,
-                  icon: undefined,
-                },
-              ]}
-            >
-              <BlockTypeSelect key={'blockTypeSelect'} />
-
-              <BasicTextStyleButton basicTextStyle={'bold'} key={'boldStyleButton'} />
-              <BasicTextStyleButton basicTextStyle={'italic'} key={'italicStyleButton'} />
-              <BasicTextStyleButton basicTextStyle={'underline'} key={'underlineStyleButton'} />
-              <BasicTextStyleButton basicTextStyle={'strike'} key={'strikeStyleButton'} />
-              <BasicTextStyleButton key={'codeStyleButton'} basicTextStyle={'code'} />
-
-              <TextAlignButton textAlignment={'left'} key={'textAlignLeftButton'} />
-              <TextAlignButton textAlignment={'center'} key={'textAlignCenterButton'} />
-              <TextAlignButton textAlignment={'right'} key={'textAlignRightButton'} />
-            </FormattingToolbar>
-          )}
-        /> */}
         <SideMenuController sideMenu={CustomSideMenu} />
         <SuggestionMenuController
           triggerCharacter='/'

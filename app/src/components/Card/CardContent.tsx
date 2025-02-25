@@ -41,7 +41,7 @@ const CardContent: React.FC<CardContentProps> = ({
       ) : (
         <>
           {activeTab === 'editor' && isMobile && (
-            <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll overflow-x-hidden z-20 pl-[20px]'>
+            <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll bg-white overflow-x-hidden z-20 pl-[20px]'>
               <textarea
                 ref={inputRef}
                 value={title}
@@ -51,7 +51,7 @@ const CardContent: React.FC<CardContentProps> = ({
                 }}
                 placeholder='Type title'
                 rows={1}
-                className="max-w-full resize-none focus:outline-none text-[#46434e] text-[28px] font-medium font-['Rubik']"
+                className="max-w-full resize-none focus:outline-none bg-white text-[#46434e] text-[28px] font-medium font-['Rubik']"
                 style={{
                   height: `${inputRef.current?.scrollHeight}px`,
                   border: 'none',

@@ -9,11 +9,12 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
     if (!projectId || !user) return null
     const projectRef = doc(collection(db, 'projects'), projectId)
     const snap = await getDoc(projectRef)
-    const { users } = snap.data()
-    const isUserFound = users?.find((u) => u.id === user.id)
+    const data = snap.data()
+
+    const isUserFound = data?.users?.find((u) => u.id === user.id)
     if (isUserFound) return console.log('User already exists in project')
 
-    const newUsers = users?.length > 0 ? [...users, user] : [user]
+    const newUsers = data?.users?.length > 0 ? [...data?.users ?? [], user] : [user]
     await setDoc(projectRef, { users: newUsers }, { merge: true })
   } catch (e) {
     console.error(e)

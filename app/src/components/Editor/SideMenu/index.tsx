@@ -1,18 +1,14 @@
 import { AddBlockButton, DragHandleButton, SideMenu, SideMenuProps } from '@blocknote/react'
-import { Button } from '@mantine/core'
-import { useParams } from 'react-router-dom'
-import { useEffect } from 'react'
 import clsx from 'clsx'
 
-import { createNewChat, saveChatAndMessage } from '../../../services'
 import { useChats } from '../../../context/ChatContext'
 
 export default function CustomSideMenu(props: SideMenuProps) {
-  const { id: projectId, cardId } = useParams()
-  const { openChatById, getUnreadMessagesCount } = useChats()
+  const { openChatById, getUnreadMessagesCount, cardChats } = useChats()
   const blockId = props.block.id
 
   const unreadCount = getUnreadMessagesCount(blockId)
+  const hasMasseges = cardChats.some((chat) => chat.id === blockId)
 
   return (
     <SideMenu {...props}>
@@ -21,8 +17,10 @@ export default function CustomSideMenu(props: SideMenuProps) {
           className={clsx(
             'relative text-xl -top-[2px] pr-[2px] hover:cursor-pointer',
             unreadCount > 0
-              ? 'text-red-700 ri-message-3-fill'
-              : 'ri-message-3-line text-[#CFCFCF] hover:bg',
+              ? 'text-black ri-message-3-fill'
+              : hasMasseges
+                ? 'text-black ri-message-3-line'
+                : 'ri-message-3-line text-[#CFCFCF] hover:bg',
           )}
           onClick={async (e) => {
             openChatById(blockId)
