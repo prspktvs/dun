@@ -20,10 +20,8 @@ export default function ProjectSettingsModal({
 }) {
   const { id: projectId } = useParams()
   const { users, project, isLoading } = useProject()
-  const [title, setTitle] = useState()
-  const [description, setDescription] = useState()
-  const [isTitleEditing, setIsTitleEditing] = useState(false)
-  const [isDescriptionEditing, setIsDescriptionEditing] = useState(false)
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [removeTitle, setRemoveTitle] = useState('')
   const navigate = useNavigate()
 
@@ -47,57 +45,43 @@ export default function ProjectSettingsModal({
     navigate('/dashboard')
   }
 
+  const onCloseWithSave = () => {
+    saveTitle(title)
+    saveDescription(description)
+    onClose()
+  }
+
   const projectUrl = useMemo(() => DUN_URL + `/${projectId}`, [projectId])
 
   return (
-    <Modal opened={opened} onClose={onClose} title='Project settings'>
+    <Modal opened={opened} onClose={onCloseWithSave} title='Project settings'>
       <div className='flex flex-col justify-between'>
         <div>
           <div className='px-5'>
-            {isTitleEditing ? (
-              <input
-                className='font-bold font-rubik text-xl outline-none'
-                type='text'
-                value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value)
-                  debouncedSaveTitle(e.target.value)
-                }}
-                placeholder='Type the title'
-                autoFocus
-                onBlur={() => setIsTitleEditing(false)}
-              />
-            ) : (
-              <span
-                onClick={() => setIsTitleEditing(true)}
-                className='font-bold font-rubik text-xl cursor-pointer'
-              >
-                {title}
-              </span>
-            )}
+            <input
+              className='font-bold font-rubik text-xl outline-none bg-white'
+              type='text'
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value)
+                debouncedSaveTitle(e.target.value)
+              }}
+              placeholder='Type the title'
+              autoFocus
+            />
           </div>
           <div className='px-5'>
-            {isDescriptionEditing ? (
-              <input
-                className='font-rubik text-16 outline-none'
-                type='text'
-                value={description}
-                onChange={(e) => {
-                  setDescription(e.target.value)
-                  debouncedSaveDescription(e.target.value)
-                }}
-                placeholder='Type the description'
-                autoFocus
-                onBlur={() => setIsDescriptionEditing(false)}
-              />
-            ) : (
-              <span
-                onClick={() => setIsDescriptionEditing(true)}
-                className='font-rubik text-16 cursor-pointer'
-              >
-                {description}
-              </span>
-            )}
+            <input
+              className='font-rubik text-16 outline-none bg-white'
+              type='text'
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value)
+                debouncedSaveDescription(e.target.value)
+              }}
+              placeholder='Type the description'
+              autoFocus
+            />
           </div>
 
           <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-borders-purple'>

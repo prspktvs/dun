@@ -38,6 +38,7 @@ export function ProjectsList({ search }: { search?: string }) {
   }, [user?.id])
 
   useEffect(() => {
+    if (!search) return
     const foundProject = projects.filter((project) =>
       project.title.toLowerCase().includes(search.toLowerCase()),
     )
