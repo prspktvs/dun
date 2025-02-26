@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { useProject } from '../../context/ProjectContext'
 import AvatarDun from '../ui/Avatar'
-import { DUN_URL } from '../../constants'
+import { DUN_URL, ROUTES } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
 
@@ -42,7 +42,7 @@ export default function ProjectSettingsModal({
   const handleDelete = () => {
     if (!projectId) return
     deleteProject(projectId)
-    navigate('/dashboard')
+    navigate(ROUTES.DASHBOARD, { replace: true })
   }
 
   const onCloseWithSave = () => {

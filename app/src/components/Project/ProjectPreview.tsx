@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext'
 import { getAllUserProject } from '../../services'
 import { IProject } from '../../types/Project'
 import { IUser } from '../../types/User'
+import { getRandomProjectRoute } from '../../utils'
 
 export default function ProjectPreview({ project }: { project: IProject }) {
   const navigate = useNavigate()
@@ -56,7 +57,9 @@ export function ProjectsList({ search }: { search: string }) {
         <div className='flex h-full w-full px-10 justify-center items-center'>
           <span className='font-monaspace text-inactiveText'>
             You haven't set up your work area yet. To start,{' '}
-            <span className='font-bold text-btnBg'>create new project workspace</span>
+            <a href={getRandomProjectRoute()} className='font-bold text-btnBg no-underline'>
+              create new project workspace
+            </a>
           </span>
         </div>
       )}

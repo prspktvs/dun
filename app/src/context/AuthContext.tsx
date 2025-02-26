@@ -21,14 +21,15 @@ import {
   INVALID_PASSWORD,
   USER_NOT_FOUND,
   WEAK_PASSWORD,
-} from '../constants/errors'
+} from '../constants/errors.constants'
 import {
   EMAIL_NOT_VERIFIED_MESSAGE,
   EMAIL_VERIFIED_MESSAGE,
   LOGGED_IN_MESSAGE,
-} from '../constants/messages'
+} from '../constants/messages.constants'
 import { registerForPushNotifications } from '../utils/push'
 import { genId } from '../utils'
+import { ROUTES } from '../constants'
 
 interface ILoginCredentials {
   email: string
@@ -71,7 +72,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname ?? '/dashboard'
+  const from = location.state?.from?.pathname ?? ROUTES.DASHBOARD
 
   const loginWithEmailAndPassword = async ({ email, password }: ILoginCredentials) => {
     try {

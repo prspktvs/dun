@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Header from '../../components/ui/Header'
 import { ProjectsList } from '../../components/Project/ProjectPreview'
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
-import { genId } from '../../utils'
+import { genId, getRandomProjectRoute } from '../../utils'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import SearchBar from '../../components/Project/SearchBar'
 
@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState('')
   const { isMobile } = useBreakpoint()
 
-  const goToNewProject = () => navigate(`/${genId()}`)
+  const goToNewProject = () => navigate(getRandomProjectRoute())
 
   return (
     <div>

@@ -3,6 +3,8 @@ export function genId(length = 20): string {
   return [...new Array(length)].map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
+export const getRandomProjectRoute = () => `/${genId()}`
+
 export function extractCardPath(input: string): string | null {
   const regex = /([^\/]+)\/cards\/([^\/]+)/
   const match = input.match(regex)
