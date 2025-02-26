@@ -27,7 +27,7 @@ export default function ProjectPreview({ project }: { project: IProject }) {
   )
 }
 
-export function ProjectsList({ search }: { search?: string }) {
+export function ProjectsList({ search }: { search: string }) {
   const { user } = useAuth()
   const [projects, setProjects] = useState<IProject[]>([])
   const [filteredProjects, setFilteredProjects] = useState<IProject[]>([])
@@ -38,11 +38,10 @@ export function ProjectsList({ search }: { search?: string }) {
   }, [user?.id])
 
   useEffect(() => {
-    if (!search) return
-    const foundProject = projects.filter((project) =>
-      project.title.toLowerCase().includes(search.toLowerCase()),
+    const foundProjects = projects.filter(({ title }) =>
+      title?.toLowerCase()?.includes(search.toLowerCase()),
     )
-    setFilteredProjects(foundProject)
+    setFilteredProjects(foundProjects)
   }, [search, projects])
 
   return (
