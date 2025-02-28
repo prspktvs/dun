@@ -20,9 +20,12 @@ export const LandingHeader = () => {
   return (
     <header className='w-full h-14 overflow-hidden flex flex-row items-start justify-center gap-px border-b border-black bg-[#c5d4d2]'>
       {/* Logo */}
-      <div className='grow shrink basis-0 md:grow-0 self-stretch flex flex-col items-start md:items-center justify-center px-2.5 md:px-5 lg:px-10 border-r-[1px] border-black'>
+      <a
+        href='/'
+        className='grow shrink basis-0 md:grow-0 self-stretch flex flex-col items-start md:items-center justify-center px-2.5 md:px-5 lg:px-10 border-r-[1px] border-black no-underline'
+      >
         <Logo />
-      </div>
+      </a>
 
       {/* Navigation */}
       <nav className='items-center self-stretch justify-center flex-1 hidden gap-2 px-2 md:flex md:gap-10 md:px-10'>
