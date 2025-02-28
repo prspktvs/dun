@@ -52,6 +52,8 @@
     "@mantine/core": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
     "@mantine/notifications": "^7.11.0",
+    "@sentry/react": "^9.2.0",
+    "@sentry/tracing": "^7.120.3",
     "@tiptap/core": "^2.1.8",
     "@tiptap/extension-mention": "^2.1.9",
     "@tiptap/pm": "^2.1.10",

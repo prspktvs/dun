@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Header from '../../components/ui/Header'
 import { ProjectsList } from '../../components/Project/ProjectPreview'
 import ButtonDun from '../../components/ui/buttons/ButtonDun'
-import { genId, getRandomProjectRoute } from '../../utils'
+import { getRandomProjectRoute } from '../../utils'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import SearchBar from '../../components/Project/SearchBar'
 

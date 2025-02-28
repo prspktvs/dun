@@ -110,7 +110,7 @@ const ProjectSelector = () => {
         <div className='h-14 w-full'>
           <ButtonDun
             onClick={() => navigate(ROUTES.DASHBOARD, { replace: true })}
-            className='w-full h-full bg-[#F9F9F9] border-none text-btnBg hover:bg-gray-100 hover:text-btnBg'
+            className='w-full h-full bg-gray-100 border-none text-btnBg hover:bg-gray-100 hover:text-btnBg'
           >
             All projects
           </ButtonDun>
