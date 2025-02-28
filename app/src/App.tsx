@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
-
 import '@mantine/core/styles.css'
+
+import { useEffect } from 'react'
+
 import { AuthProvider } from './context/AuthContext'
 import Login from './pages/Auth/Login'
 import Logout from './pages/Auth/Logout'
@@ -16,8 +18,14 @@ import { CardPage } from './pages/Project/Card'
 import { MyWorkPage } from './pages/Project/Work'
 import Dashboard from './pages/Project/Dashboard'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
+import { logAnalytics } from './utils/analytics'
+import { ANALYTIC_EVENTS } from './constants'
 
 export default function App() {
+  useEffect(() => {
+    logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'app' })
+  }, [])
+
   return (
     <MantineProvider>
       <Notifications position='top-right' />

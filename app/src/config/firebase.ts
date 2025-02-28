@@ -3,6 +3,8 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import { getDatabase } from 'firebase/database'
+import { getAnalytics } from 'firebase/analytics'
+
 
 const firebaseConfig = {
   apiKey: process.env.VITE_API_KEY,
@@ -24,4 +26,6 @@ const storage = getStorage(app)
 
 const realtimeDb = getDatabase(app)
 
-export { app, auth, db, storage, realtimeDb }
+const analytics = getAnalytics(app)
+
+export { app, auth, db, storage, realtimeDb, analytics }
