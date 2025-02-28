@@ -64,12 +64,20 @@ function Footer() {
       </div>
       <div className='self-stretch h-[68px] px-10 py-2.5 bg-[#c5d4d2] justify-between items-center inline-flex'>
         <a
-          href={ROUTES.TERMS_AND_CONDITIONS}
+          href={`${ROUTES.TERMS_AND_CONDITIONS}#terms`}
           target='_blank'
           rel='noreferrer'
           className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
         >
-          Terms & conditions
+          Terms of use
+        </a>
+        <a
+          href={`${ROUTES.TERMS_AND_CONDITIONS}#privacy`}
+          target='_blank'
+          rel='noreferrer'
+          className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
+        >
+          Privacy policy
         </a>
         <a
           href='https://p11.co'

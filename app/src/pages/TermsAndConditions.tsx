@@ -1,15 +1,29 @@
+import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+
 import { DUN_EMAIL } from '../constants'
 import { LandingHeader } from './LandingPage'
 import Footer from './LandingPage/Footer'
 import { RulerSeparator } from './LandingPage/RulerSeparator'
 
 export default function TermsAndConditions() {
+  const { hash } = useLocation()
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.querySelector(hash)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [hash])
   return (
     <div className='h-screen w-full overflow-x-hidden scroll-smooth bg-[#faf9f6]'>
       <div className='m-2 border border-black'>
         <LandingHeader />
-        <section className='font-monaspace px-40 text-[18px]'>
-          <h1 className='text-center text-[80px] font-commissioner'>Terms & Policies</h1>
+
+        <h1 className='text-center text-[80px] font-commissioner'>Terms & Policies</h1>
+        <section id='terms' className='font-monaspace px-40 text-[18px]'>
           <h2 className='text-center text-[28px]'>Terms of Use</h2>
           <p className='mb-12'>Last Updated: Feb 27, 2025 </p>
           <ul>
@@ -95,6 +109,8 @@ export default function TermsAndConditions() {
               </p>
             </li>
           </ul>
+        </section>
+        <section id='privacy' className='font-monaspace px-40 text-[18px]'>
           <h2 className='text-center text-[28px] my-12'>Privacy Policy</h2>
           <p>Last Updated: Feb 27, 2025</p>
           <ul>
