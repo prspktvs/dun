@@ -11,7 +11,7 @@ function ProjectContent() {
   const { project } = useProject()
   const { isMobile } = useBreakpoint()
 
-  if (!project) return <CreateProject projectId={projectId} />
+  if (!project?.id) return <CreateProject projectId={projectId} />
 
   return (
     <div className='h-screen overflow-y-hidden'>

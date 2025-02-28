@@ -101,6 +101,7 @@ const Project = () => {
 
 const ProjectPage = () => {
   const { id: projectId = '' } = useParams()
+
   return (
     <ProjectProvider projectId={projectId}>
       <Project />

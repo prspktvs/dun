@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Logo from '../../components/ui/Logo'
+import { DUN_EMAIL, ROUTES } from '../../constants'
 
 function Footer() {
   const year = new Date().getFullYear()
@@ -14,12 +15,12 @@ function Footer() {
         </div>
         <div className='grow shrink basis-0 self-stretch px-10 py-5 bg-[#c5d4d2] flex-col justify-center items-start gap-1 inline-flex'>
           <a
-            href='mailto:hi@p11.co'
+            href={`mailto:${DUN_EMAIL}`}
             target='_blank'
             rel='noreferrer'
             className="text-[#343434] text-lg font-normal font-['National Park '] uppercase leading-snug no-underline hover:opacity-75"
           >
-            HI@P11.CO
+            {DUN_EMAIL.toUpperCase()}
           </a>
         </div>
         <div className='grow shrink basis-0 self-stretch px-10 py-5 bg-[#c5d4d2] justify-start items-center gap-3 flex'>
@@ -48,13 +49,13 @@ function Footer() {
             />
           </a>
           <a
-            href='https://p11.co'
+            href='/'
             target='_blank'
             rel='noreferrer'
             className='overflow-hidden transition-opacity shrink-0 hover:opacity-80'
           >
             <img
-              alt='LinkedIn'
+              alt='Product Hunt'
               src='/assets/landing/logo-p.svg'
               className='w-full h-full select-none'
             />
@@ -62,12 +63,30 @@ function Footer() {
         </div>
       </div>
       <div className='self-stretch h-[68px] px-10 py-2.5 bg-[#c5d4d2] justify-between items-center inline-flex'>
-        <div className="text-[#343434] text-lg font-normal font-['National Park '] uppercase leading-snug">
-          Terms & conditions
-        </div>
-        <div className="text-[#343434] text-lg font-normal font-['National Park '] leading-snug">
+        <a
+          href={`${ROUTES.TERMS_AND_CONDITIONS}#terms`}
+          target='_blank'
+          rel='noreferrer'
+          className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
+        >
+          Terms of use
+        </a>
+        <a
+          href={`${ROUTES.TERMS_AND_CONDITIONS}#privacy`}
+          target='_blank'
+          rel='noreferrer'
+          className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
+        >
+          Privacy policy
+        </a>
+        <a
+          href='https://p11.co'
+          target='_blank'
+          rel='noreferrer'
+          className="text-[#343434] text-lg font-normal font-['National Park'] leading-snug  no-underline hover:opacity-80"
+        >
           ©{year} Perspektives
-        </div>
+        </a>
       </div>
     </div>
   )

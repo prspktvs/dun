@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icons'
 import { Loader } from '../ui/Loader'
 import { AuthButton } from '../ui/buttons/AuthButton'
-import { genId } from '../../utils'
+import { genId, getRandomProjectRoute } from '../../utils'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
 
@@ -44,7 +44,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           email,
           password,
           name,
-          cb: () => navigate(location.state?.from?.pathname ?? `/${genId()}`),
+          cb: () => navigate(location.state?.from?.pathname ?? getRandomProjectRoute()),
         })
       }
     } catch (error) {

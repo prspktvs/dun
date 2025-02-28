@@ -9,6 +9,7 @@ import { useAuth } from '../../context/AuthContext'
 import { IProject, IUser } from '../../types'
 import { createProject } from '../../services'
 import Logo from '../ui/Logo'
+import { ROUTES } from '../../constants'
 
 interface ICreateProjectProps {
   projectId: string
@@ -37,7 +38,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     <div className='flex flex-col'>
       <div className='flex-1'>
         <textarea
-          className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 md:pb-6 '
+          className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 '
           placeholder='Type new project title'
           value={title}
           name='title'
@@ -45,7 +46,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         ></textarea>
 
         <textarea
-          className='resize-none mt-6 text-sm font-monaspace border-none w-full h-[188px] pl-4 placeholder-slate-400 text-[#47444F] leading-tight'
+          className='resize-none text-sm font-monaspace border-none w-full min-h-20 pl-4 placeholder-slate-400 text-[#47444F] leading-tight'
           placeholder='Description'
           value={description}
           name='description'
@@ -91,7 +92,7 @@ export const CreateProject = (props: ICreateProjectProps) => {
   const { user } = useAuth()
   const isNewUser = !user?.lastProjectId
 
-  const goToDashboard = () => navigate('/dashboard')
+  const goToDashboard = () => navigate(ROUTES.DASHBOARD)
 
   const onCreate = async () => {
     const project: Partial<IProject> = {

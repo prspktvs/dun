@@ -1,15 +1,17 @@
 import { Menu } from '@mantine/core'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import clsx from 'clsx'
 
 import { IProject } from '../../types/Project'
 import { useProject } from '../../context/ProjectContext'
-import { genId } from '../../utils'
+import { genId, getRandomProjectRoute } from '../../utils'
 import { getAllUserProject } from '../../services'
 import { useAuth } from '../../context/AuthContext'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { SettingsIcon } from '../icons'
 import ButtonDun from '../ui/buttons/ButtonDun'
+import { ROUTES } from '../../constants'
 
 const ProjectSelector = () => {
   const navigate = useNavigate()
@@ -32,9 +34,9 @@ const ProjectSelector = () => {
   return (
     <Menu
       shadow='md'
-      width={isMobile ? '100%' : 280}
+      width={isMobile ? '100%' : 300}
       offset={isMobile ? 0 : undefined}
-      radius={isMobile ? 0 : 'md'}
+      radius={0}
       onChange={(opened) => setMenuOpened(opened)}
     >
       <Menu.Target>
@@ -65,29 +67,27 @@ const ProjectSelector = () => {
       </Menu.Target>
 
       <Menu.Dropdown
-        className={`w-screen max-w-full p-0 m-0 ${isMobile ? 'fixed left-0' : ''} bg-[#f9f9f9]`}
-        style={
-          isMobile
-            ? {
-                position: 'fixed',
-                left: 0,
-                maxHeight: '63vh',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-              }
-            : {}
-        }
+        className={clsx(
+          `w-screen max-w-full p-0 m-0 bg-[#f9f9f9]`,
+          isMobile && 'fixed left-0 overflow-y-scroll overflow-x-hidden',
+        )}
+        style={{ boxShadow: '14px 14px 0px 0px #C1BAD0' }}
       >
         <Menu.Label className={`text-md font-monospace ${isMobile ? 'hidden' : ''}`}>
           Your projects
         </Menu.Label>
-        <div className='overflow-y-scroll h-[50vh]'>
+        <div className='max-h-[40vh] overflow-y-scroll'>
           {projects.map((project, idx) => (
             <Menu.Item
               key={'prjx-' + idx}
-              className={`flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md ${
-                isMobile ? 'font-monaspace' : ''
-              } ${isMobile && project.id === currentProjectId ? 'text-[#8279bd]' : ''}`}
+              className={clsx(
+                `flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md`,
+                isMobile
+                  ? project.id === currentProjectId
+                    ? 'text-[#8279bd]'
+                    : 'font-monaspace'
+                  : '',
+              )}
               onClick={() => goToProject(project.id)}
             >
               <span className='flex-1'>{project?.title || 'Empty project'}</span>
@@ -99,12 +99,20 @@ const ProjectSelector = () => {
             </Menu.Item>
           ))}
         </div>
-        <div className='h-14 my-1 px-2 w-full flex justify-center items-center'>
+        <div className='h-14 w-full'>
           <ButtonDun
-            onClick={() => (window.location.href = `/${genId()}`)}
+            onClick={() => navigate(getRandomProjectRoute(), { replace: true })}
             className='w-full h-full'
           >
             + Create new project
+          </ButtonDun>
+        </div>
+        <div className='h-14 w-full'>
+          <ButtonDun
+            onClick={() => navigate(ROUTES.DASHBOARD, { replace: true })}
+            className='w-full h-full bg-gray-100 border-none text-btnBg hover:bg-gray-100 hover:text-btnBg'
+          >
+            All projects
           </ButtonDun>
         </div>
       </Menu.Dropdown>

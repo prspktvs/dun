@@ -20,7 +20,6 @@ export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
 
 export const renderMessage = (message: string) => {
   const mentionRegex = /(@\[.*?\]\(.*?\))/g
-
   const parts = message.split(mentionRegex)
 
   const renderedParts = parts.map((part, index) => {
@@ -34,7 +33,12 @@ export const renderMessage = (message: string) => {
       )
     }
 
-    return part
+    return part.split('\n').map((line, i) => (
+      <React.Fragment key={`line-${index}-${i}`}>
+        {line}
+        {i !== part.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ))
   })
 
   return renderedParts
@@ -98,6 +102,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
     if (newMessage === '') return alert('Message cannot be empty')
 
     const mentions: string[] = []
+
     newMessage.split(mentionsPattern).forEach((part, index) => {
       if (index % 3 === 1) {
         const id = newMessage.split(mentionsPattern)[index + 1]
@@ -118,6 +123,19 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       content: 'Discussion',
     })
     setNewMessage('')
+  }
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        setNewMessage((prev) => prev + '\n')
+      } else {
+        e.preventDefault()
+        handleMessageSend()
+      }
+    }
   }
 
   return (
@@ -184,29 +202,31 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       <div className='min-h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
-          className='ml-1 flex-1 font-commissioner max-h-[200px] overflow-hidden'
+          className='ml-1 flex-1 font-commissioner max-h-[200px]'
           style={{
-            '&multiLine': {
-              input: {
-                outline: 0,
-                border: 0,
-                resize: 'none',
-                whiteSpace: 'pre-wrap',
-                overflowY: 'scroll',
-              },
+            input: {
+              outline: 0,
+              border: 0,
+              resize: 'none',
+              overflow: 'auto',
+              whiteSpace: 'pre-wrap',
             },
-            '&singleLine': { input: { outline: 0, border: 0 } },
-            suggestions: { borderRadius: 8, border: '1px solid #000' },
+            highlighter: {
+              overflow: 'hidden',
+            },
+            suggestions: {
+              borderRadius: 8,
+              border: '1px solid #000',
+            },
           }}
-          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleMessageSend()}
+          onKeyDown={handleKeyDown}
           value={newMessage}
+          singleLine={false}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder='Your comment'
           forceSuggestionsAboveCursor
         >
           <Mention
-            className='relative mention z-10 font-bold top-[1px] text-[15.95px] bg-background py-1'
-            style={{ fontWeight: 600 }}
             trigger='@'
             data={
               project.users?.map((user) => ({

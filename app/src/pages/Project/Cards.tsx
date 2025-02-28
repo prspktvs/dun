@@ -14,6 +14,8 @@ import ProjectSelector from '../../components/Project/ProjectSelector'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
+import { logAnalytics } from '../../utils/analytics'
+import { ANALYTIC_EVENTS } from '../../constants'
 
 function SortButton({
   children,
@@ -49,6 +51,10 @@ export function CardsPage() {
   } = useProject()
   const search = useSearch(searchText, projectId)
   const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
+
+  useEffect(() => {
+    logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'project_cards', projectId })
+  }, [])
 
   useEffect(() => {
     setFilteredCards(search.q ? search.results : cards)

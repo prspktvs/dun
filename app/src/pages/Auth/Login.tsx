@@ -5,6 +5,8 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { AuthTabs } from '../../components/Auth'
 import Logo from '../../components/ui/Logo'
+import { logAnalytics } from '../../utils/analytics'
+import { ANALYTIC_EVENTS } from '../../constants'
 
 export type Tab = 'login' | 'signup' | 'forgot'
 
@@ -12,6 +14,10 @@ export default function AuthPage() {
   const [tab, setTab] = useState<Tab>('login')
   const { isAuthenticated, loading } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'login' })
+  }, [])
 
   useEffect(() => {
     if (!isAuthenticated || loading) return
