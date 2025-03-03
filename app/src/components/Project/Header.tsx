@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { useProject } from '../../context/ProjectContext'
 import Header from '../ui/Header'
+import { ROUTES } from '../../constants'
 
 export function ProjectHeader() {
   const { id: projectId = '' } = useParams()
@@ -9,7 +10,7 @@ export function ProjectHeader() {
   const { search, setSearch } = useProject()
 
   return (
-    <Header onLogoClick={() => navigate(`/${projectId}`)} search={search} setSearch={setSearch} />
+    <Header onLogoClick={() => navigate(ROUTES.DASHBOARD)} search={search} setSearch={setSearch} />
   )
 }
 
