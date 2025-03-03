@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import * as Sentry from '@sentry/react'
 import clsx from 'clsx'
 
 import { useProject } from '../../context/ProjectContext'
@@ -9,11 +10,13 @@ import LeftPanelButton from '../ui/buttons/LeftPanelButton'
 import ProjectSettingsModal from './ProjectSettingsModal'
 import UserList from '../User/UserList'
 import ProjectSelector from '../Project/ProjectSelector'
+import FeedbackModal from '../ui/modals/FeedbackModal'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
   const location = useLocation()
   const [isSettingsOpened, setSettingsOpened] = useState(false)
+  const [isFeedbackOpened, setFeedbackOpened] = useState(false)
   const navigate = useNavigate()
 
   const { tasks, cards, users } = useProject()
@@ -28,6 +31,8 @@ function LeftPanel() {
     [cards],
   )
   const groupedTasksById = useMemo(() => groupBy(tasks, (task) => task.card_id), [tasks])
+
+  const handleFeedback = () => setFeedbackOpened(true)
 
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
@@ -62,6 +67,10 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
+      <section>
+        <LeftPanelButton onClick={handleFeedback}>Share feedback</LeftPanelButton>
+        <FeedbackModal opened={isFeedbackOpened} onClose={() => setFeedbackOpened(false)} />
+      </section>
       <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
         <div
           className={clsx(

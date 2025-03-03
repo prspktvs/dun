@@ -2,15 +2,12 @@ import { Button } from '@mantine/core'
 import clsx from 'clsx'
 import React from 'react'
 
-export default function ButtonDun({
-  children,
-  className,
-  onClick,
-}: {
+interface IButtonDunProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
   className?: string
-  onClick: () => void
-}) {
+}
+
+export default function ButtonDun({ children, className, onClick, ...props }: IButtonDunProps) {
   return (
     <div className='flex items-center justify-center w-full h-full'>
       <Button
@@ -19,6 +16,7 @@ export default function ButtonDun({
         variant='outline'
         color='#FFFFFF'
         onClick={onClick}
+        {...props}
       >
         {children}
       </Button>
