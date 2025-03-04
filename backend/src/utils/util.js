@@ -215,7 +215,7 @@ const onStoreDocument = async ({
     })
 
   Object.keys(notifications).forEach((userId) => {
-    sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId })
+    sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId, projectId })
   })
 }
 

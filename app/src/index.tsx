@@ -6,7 +6,12 @@ import './index.css'
 
 Sentry.init({
   dsn: process.env.VITE_SENTRY_DSN,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  integrations: [
+    Sentry.feedbackIntegration({
+      autoInject: false,
+      colorScheme: 'system',
+    }),
+  ],
   tracePropagationTargets: ['localhost', 'dun.wtf'],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,

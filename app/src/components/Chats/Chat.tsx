@@ -202,7 +202,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       <div className='min-h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
         <AvatarDun user={user} />
         <MentionsInput
-          className='ml-1 flex-1 font-commissioner max-h-[200px]'
+          className='ml-1 flex-1 font-commissioner max-h-[200px] w-3/4'
           style={{
             input: {
               outline: 0,
@@ -210,6 +210,8 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
               resize: 'none',
               overflow: 'auto',
               whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
             },
             highlighter: {
               overflow: 'hidden',

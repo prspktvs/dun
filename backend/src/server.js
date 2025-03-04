@@ -80,7 +80,11 @@ export function sendMessageToUser(userId, message) {
     sendNotification(userId, {
       title: 'Tasks updated',
       body: `Tasks: ${updatedTasks.join(', ')} have been updated`,
-      data: { cardId, projectId, tasks: message.updatedTasks },
+      data: {
+        cardId,
+        projectId,
+        tasks: message.updatedTasks,
+      },
     })
   }
 
@@ -88,7 +92,11 @@ export function sendMessageToUser(userId, message) {
     sendNotification(userId, {
       title: 'Mentions',
       body: `You have been mentioned in: ${mentions.join(', ')}`,
-      data: { cardId, projectId, mentions: message.mentions },
+      data: {
+        cardId,
+        projectId,
+        mentions: message.mentions,
+      },
     })
   }
 

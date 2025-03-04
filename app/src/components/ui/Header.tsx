@@ -1,7 +1,6 @@
 import Logo from '../ui/Logo'
 import UserPanel from '../User/UserPanel'
 import { useAuth } from '../../context/AuthContext'
-import { SearchIcon } from '../icons'
 import SearchBar from '../Project/SearchBar'
 
 export function Header({

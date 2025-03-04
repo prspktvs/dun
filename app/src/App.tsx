@@ -3,7 +3,6 @@ import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 import * as Sentry from '@sentry/react'
 import '@mantine/core/styles.css'
-
 import { useEffect } from 'react'
 
 import { AuthProvider } from './context/AuthContext'

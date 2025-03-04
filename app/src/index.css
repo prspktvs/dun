@@ -37,7 +37,6 @@ li {
   @apply p-0 m-0;
 }
 
-
 .border-none {
   @apply border-0 outline-none;
 }

@@ -5,7 +5,7 @@ import FeatureCard from './FeatureCard'
 interface IFeatureCard {
   title: string
   backgroundColor: string
-  imageSrc: string
+  videoSrc: string
   backgroundImage: string
 }
 
@@ -14,27 +14,31 @@ const FEATURES: IFeatureCard[] = [
     title:
       'Everything related to a certain topic is always located in the same place - all chats, tasks, notes, docs, files and links',
     backgroundColor: '#cbb9cf',
-    imageSrc: './assets/landing/features-video-1.mp4',
+    videoSrc:
+      'https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Ffeatures-video-1.mp4?alt=media',
     backgroundImage: `url('./assets/landing/features-rects.svg')`,
   },
   {
     title:
       'Organize discussions around specific content to avoid getting lost in endless spammy chats',
     backgroundColor: '#f5cbbc',
-    imageSrc: './assets/landing/features-video-2.mp4',
+    videoSrc:
+      'https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Ffeatures-video-2.mp4?alt=media',
     backgroundImage: `url('./assets/landing/features-lines.svg')`,
   },
   {
     title: 'Sharing option is always available, as well as making it private again',
     backgroundColor: '#fff5d2',
-    imageSrc: './assets/landing/features-video-3.mp4',
+    videoSrc:
+      'https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Ffeatures-video-3.mp4?alt=media',
     backgroundImage: `url('./assets/landing/features-plaid.svg')`,
   },
   {
     title:
       'Tap a task in your left bar to quickly access its full context and details. Stop worrying about',
     backgroundColor: '#afb5d4',
-    imageSrc: './assets/landing/features-video-4.mp4',
+    videoSrc:
+      'https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Ffeatures-video-4.mp4?alt=media',
     backgroundImage: `url('./assets/landing/features-lines-back.svg')`,
   },
 ]
