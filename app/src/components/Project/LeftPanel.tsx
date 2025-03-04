@@ -67,7 +67,7 @@ function LeftPanel() {
           </li>
         </ul>
       </nav>
-      <section>
+      <section className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
         <LeftPanelButton onClick={handleFeedback}>Share feedback</LeftPanelButton>
         <FeedbackModal opened={isFeedbackOpened} onClose={() => setFeedbackOpened(false)} />
       </section>
