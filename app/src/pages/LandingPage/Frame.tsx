@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRef, useState } from 'react'
 
 import { GoogleLogo } from '../../components/icons'
 import { AuthButton } from '../../components/ui/buttons/AuthButton'
@@ -6,6 +6,16 @@ import { useAuth } from '../../context/AuthContext'
 
 export const Frame = (): JSX.Element => {
   const { signInWithGoogle } = useAuth()
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+
+  const promoVideoRef = useRef<HTMLVideoElement>(null)
+  const handleStartVideo = () => {
+    if (!promoVideoRef.current) return
+
+    promoVideoRef.current.play()
+    promoVideoRef.current.controls = true
+    setIsVideoPlaying(true)
+  }
   return (
     <div className='flex flex-col items-center gap-[30px] mt-10 md:mt-[60px]'>
       <div className='inline-flex flex-col items-center gap-5 md:gap-[30px] relative flex-[0_0_auto]'>
@@ -36,12 +46,29 @@ export const Frame = (): JSX.Element => {
       />
 
       <div className='flex flex-col items-start gap-px relative self-stretch w-full flex-[0_0_auto]'>
-        <div className='relative w-full min-h-[198px]'>
-          <img
-            className='object-cover w-full h-auto select-none'
-            alt='Dun watch demo video'
-            src='/assets/landing/hero.jpg'
-          />
+        <div className='relative w-full h-auto aspect-video'>
+          <video
+            ref={promoVideoRef}
+            className='object-cover w-full h-full'
+            preload='none'
+            poster='/assets/landing/promo.jpg'
+          >
+            <source src='/assets/landing/promo.mp4' type='video/mp4' />
+          </video>
+
+          {!isVideoPlaying && (
+            <div
+              className='absolute top-0 left-0 w-full h-full bg-opacity-10 flex flex-col gap-3 items-center justify-center'
+              onClick={handleStartVideo}
+            >
+              <div className='bg-black/90 h-40 w-40 rounded-2xl flex items-center justify-center'>
+                <i className='ri-play-fill text-white text-[100px]' />
+              </div>
+              <div className='bg-black/90 h-16 w-40 rounded-2xl flex items-center justify-center text-white text-lg font-monaspace font-semibold'>
+                Watch demo
+              </div>
+            </div>
+          )}
         </div>
 
         <div className='flex flex-col md:flex-row items-stretch gap-px relative self-stretch w-full flex-[0_0_auto] bg-variable-collection-landing-logo-text-buttons-strokes border-t border-black'>
