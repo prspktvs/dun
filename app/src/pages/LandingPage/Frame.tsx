@@ -53,12 +53,15 @@ export const Frame = (): JSX.Element => {
             preload='none'
             poster='/assets/landing/promo.jpg'
           >
-            <source src='/assets/landing/promo.mp4' type='video/mp4' />
+            <source
+              src='https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Fpromo.mp4?alt=media'
+              type='video/mp4'
+            />
           </video>
 
           {!isVideoPlaying && (
             <div
-              className='absolute top-0 left-0 w-full h-full bg-opacity-10 flex flex-col gap-3 items-center justify-center'
+              className='absolute top-0 left-0 w-full h-full bg-opacity-10 flex flex-col gap-3 items-center justify-center cursor-pointer'
               onClick={handleStartVideo}
             >
               <div className='bg-black/90 h-40 w-40 rounded-2xl flex items-center justify-center'>

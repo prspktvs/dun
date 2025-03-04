@@ -4,7 +4,7 @@ import clsx from 'clsx'
 interface IFeatureCard {
   title: string
   backgroundColor: string
-  imageSrc: string
+  videoSrc: string
   backgroundImage: string
 }
 
@@ -15,7 +15,7 @@ interface IFeatureCardProps extends IFeatureCard {
 function FeatureCard({
   title,
   backgroundColor,
-  imageSrc,
+  videoSrc,
   index,
   backgroundImage,
 }: IFeatureCardProps) {
@@ -74,11 +74,11 @@ function FeatureCard({
               'shadow-[8px_8px_0px_0px_rgba(197,212,210,1.00)]',
               'xl:shadow-[16px_16px_0px_0px_rgba(197,212,210,1.00)]',
             )}
-            autoPlay
             loop
-            preload='metadata'
+            autoPlay
+            muted
           >
-            <source src={imageSrc} type='video/mp4' />
+            <source src={videoSrc} type='video/mp4' />
           </video>
         </div>
       </div>
