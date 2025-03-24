@@ -17,7 +17,7 @@ export const Frame = (): JSX.Element => {
     setIsVideoPlaying(true)
   }
   return (
-    <div className='flex flex-col items-center gap-[30px] mt-10 md:mt-[60px]'>
+    <div className='flex flex-col items-center gap-[30px] mt-24 md:mt-32'>
       <div className='inline-flex flex-col items-center gap-5 md:gap-[30px] relative flex-[0_0_auto]'>
         <p className="relative w-fit m-0 font-['National Park '] font-normal text-[44px] md:text-[80px] text-center tracking-[0] leading-[48.40px] md:leading-[88.0px]">
           The simplest app <br />
@@ -29,7 +29,7 @@ export const Frame = (): JSX.Element => {
         </p>
       </div>
 
-      <div className='w-[300px]'>
+      <div className='w-[300px] flex flex-col gap-4 items-center'>
         <AuthButton
           className='bg-white border-black text-black'
           onClick={signInWithGoogle}
@@ -37,6 +37,17 @@ export const Frame = (): JSX.Element => {
         >
           Sign up with Google
         </AuthButton>
+
+        <a
+          href='https://www.producthunt.com/posts/dun?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dun'
+          target='_blank'
+        >
+          <img
+            className='w-[290px]'
+            src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=938482&theme=neutral&t=1742815798349'
+            alt='Dun - The&#0032;simplest&#0032;app&#0032;for&#0032;small&#0032;team&#0032;collaboration | Product Hunt'
+          />
+        </a>
       </div>
 
       <img
