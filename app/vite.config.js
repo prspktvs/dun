@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
+        workbox: {
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+        },
         includeAssets: ['favicon.svg'],
         manifest: {
           name: 'Dun App',
