@@ -8,8 +8,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
+        registerType: 'autoUpdate',
         workbox: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+          globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
         },
         includeAssets: ['favicon.svg'],
         manifest: {
