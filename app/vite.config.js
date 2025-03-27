@@ -9,7 +9,8 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        injectRegister: 'script',
+        injectRegister: 'inline',
+        filename: 'sw.js',
         workbox: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
