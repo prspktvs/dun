@@ -10,7 +10,9 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
-        filename: 'service-worker.js',
+        base: '/',
+        scope: '/',
+        filename: 'sw.js',
         workbox: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
