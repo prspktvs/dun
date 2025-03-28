@@ -1,8 +1,11 @@
 import ReactDOM from 'react-dom/client'
 import * as Sentry from '@sentry/react'
+// import { registerSW } from 'virtual:pwa-register'
 
 import App from './App'
 import './index.css'
+
+// registerSW({ immediate: true })
 
 Sentry.init({
   dsn: process.env.VITE_SENTRY_DSN,

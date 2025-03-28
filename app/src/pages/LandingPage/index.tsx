@@ -24,7 +24,7 @@ export const LandingHeader = () => {
         {/* Logo */}
         <a
           href='/'
-          className='grow shrink basis-0 md:grow-0 self-stretch flex flex-col items-start md:items-center justify-center px-2.5 md:px-5 lg:px-10 border-r-[1px] border-black no-underline'
+          className='grow shrink basis-0 md:grow-0 self-stretch flex flex-col items-start md:items-center justify-center px-2.5 md:px-5 lg:px-10 md:border-r-[1px] border-black no-underline'
         >
           <Logo />
         </a>
@@ -44,7 +44,7 @@ export const LandingHeader = () => {
           ))}
         </nav>
 
-        <div className='hidden md:flex flex-col items-center self-stretch justify-center border-l border-black px-2.5 md:px-5 lg:px-10'>
+        <div className='md:flex flex-col items-center self-stretch justify-center md:border-l border-black px-2.5 md:px-5 lg:px-10'>
           <a
             href={user ? '/dashboard' : '/login'}
             className='h-[50px] py-2 flex items-center justify-center no-underline'
