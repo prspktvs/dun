@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
         },
-        includeAssets: ['favicon.svg'],
+        includeAssets: ['favicon.ico'],
         manifest: {
           name: 'Dun App',
           short_name: 'Dun',
