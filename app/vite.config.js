@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
-        base: '/',
         scope: '/',
         filename: 'sw.js',
         workbox: {
