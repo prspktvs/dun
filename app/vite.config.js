@@ -9,10 +9,10 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         injectRegister: false,
+        injectManifest: false,
         workbox: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         },
-        includeAssets: ['favicon.ico'],
         manifest: {
           name: 'Dun App',
           short_name: 'Dun',
