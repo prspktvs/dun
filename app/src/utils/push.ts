@@ -16,8 +16,17 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray
 }
 
-// // Register a Service Worker.
-// navigator.serviceWorker.register('/sw.js')
+// Register a Service Worker.
+navigator.serviceWorker.register('/sw.js').then((registration) => {
+  console.log('Service Worker registered with scope:', registration.scope)
+  if (navigator.serviceWorker.controller) {
+    console.log('Service Worker is controlling the page')
+  } else {
+    console.log('Service Worker is not controlling the page')
+  }
+}).catch((error) => {
+  console.error('Service Worker registration failed:', error)
+})
 
 navigator.serviceWorker.addEventListener("message", (event) => {
   console.log('sw message', event.data)

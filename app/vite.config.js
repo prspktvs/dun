@@ -9,10 +9,11 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        injectRegister: 'auto',
+        injectRegister: false,
         scope: '/',
         filename: 'sw.js',
         workbox: {
+          importScripts: ['sw.js'],
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
         },
