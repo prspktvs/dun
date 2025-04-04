@@ -8,16 +8,11 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
-        registerType: 'autoUpdate',
-        injectRegister: 'auto',
-        base: '/',
-        scope: '/',
-        filename: 'sw.js',
+        injectRegister: false,
+        injectManifest: false,
         workbox: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}'],
         },
-        includeAssets: ['favicon.ico'],
         manifest: {
           name: 'Dun App',
           short_name: 'Dun',
