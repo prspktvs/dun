@@ -30,14 +30,23 @@ function LeftPanel() {
       }, {}),
     [cards],
   )
-  const groupedTasksById = useMemo(() => groupBy(tasks, (task) => task.card_id), [tasks])
+
+  const sortedTasks = useMemo(
+    () => tasks.sort((a, b) => (a.created_at > b.created_at ? -1 : 1)),
+    [tasks],
+  )
+
+  const groupedTasksById = useMemo(
+    () => groupBy(sortedTasks, (task) => task.card_id),
+    [sortedTasks],
+  )
 
   const handleFeedback = () => setFeedbackOpened(true)
 
   return (
     <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
       <section className='border-b-1 border-borders-purple h-14'>
-        <ProjectSelector />
+        <ProjectSelector onOpenSettings={() => setSettingsOpened(true)} />
       </section>
       <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
         <UserList users={users} />
@@ -92,6 +101,7 @@ function LeftPanel() {
                 onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
                 className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
+                {task.createdAt}
                 <TaskPreview task={task} />
               </div>
             ))}
