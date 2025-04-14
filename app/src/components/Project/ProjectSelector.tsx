@@ -13,7 +13,7 @@ import { SettingsIcon } from '../icons'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { ROUTES } from '../../constants'
 
-const ProjectSelector = () => {
+const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) => {
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
   const { id: currentProjectId } = useParams()
@@ -27,6 +27,15 @@ const ProjectSelector = () => {
     getAllUserProject(user.id).then((data) => setProjects(data))
   }, [user?.id])
 
+  const onSettingsClick = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!onOpenSettings) return
+    setMenuOpened(false)
+    onOpenSettings()
+  }
+
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
   const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
@@ -37,7 +46,8 @@ const ProjectSelector = () => {
       width={isMobile ? '100%' : 300}
       offset={isMobile ? 0 : undefined}
       radius={0}
-      onChange={(opened) => setMenuOpened(opened)}
+      opened={isMenuOpened}
+      onChange={setMenuOpened}
     >
       <Menu.Target>
         <nav className='relative z-50 flex flex-col w-full justify-between pl-4 pr-[15px] md:px-5 text-3xl h-14 md:w-80 hover:cursor-pointer '>
@@ -80,19 +90,23 @@ const ProjectSelector = () => {
           {projects.map((project, idx) => (
             <Menu.Item
               key={'prjx-' + idx}
-              className={clsx(
-                `flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md`,
-                isMobile
-                  ? project.id === currentProjectId
-                    ? 'text-[#8279bd]'
-                    : 'font-monaspace'
-                  : '',
-              )}
+              classNames={{
+                itemLabel: clsx(
+                  `flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md`,
+                ),
+              }}
               onClick={() => goToProject(project.id)}
             >
-              <span className='flex-1'>{project?.title || 'Empty project'}</span>
-              {isMobile && project.id === currentProjectId && (
-                <button className=''>
+              <span
+                className={clsx(
+                  'flex-1 font-monaspace font-bold',
+                  project.id === currentProjectId && 'text-btnBg',
+                )}
+              >
+                {project?.title || 'Empty project'}
+              </span>
+              {project.id === currentProjectId && (
+                <button onClick={onSettingsClick}>
                   <SettingsIcon />
                 </button>
               )}

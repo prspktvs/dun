@@ -43,8 +43,8 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   const taskCountExcess = (card?.tasks?.length || 0) - MAX_TASKS
 
-  const createdAt = new Date(card.createdAt)
-  const relativeTime = formatDistanceToNow(createdAt, { addSuffix: true })
+  const updatedAt = new Date(card.updatedAt)
+  const relativeTime = formatDistanceToNow(updatedAt, { addSuffix: true })
 
   const unreadMessagesCount = getUnreadCardMessagesCount(card.id)
 
