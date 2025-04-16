@@ -1,5 +1,5 @@
 import { Menu } from '@mantine/core'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
@@ -25,7 +25,16 @@ const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) =>
 
   useEffect(() => {
     getAllUserProject(user.id).then((data) => setProjects(data))
-  }, [user?.id])
+  }, [user?.id, project.title])
+
+  const sortedProjects = useMemo(() => {
+    if (!projects.length) return []
+    const current = projects.find((p) => p.id === currentProjectId)
+    const others = projects.filter((p) => p.id !== currentProjectId)
+    return current ? [current, ...others] : projects
+  }, [projects, currentProjectId])
+
+  const isCurrentProject = (projectId: string) => projectId === currentProjectId
 
   const onSettingsClick = (e) => {
     e.stopPropagation()
@@ -38,7 +47,7 @@ const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) =>
 
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })
 
-  const otherProjectsCount = projects.length > 1 ? projects.length - 1 : 0
+  const otherProjectsCount = sortedProjects.length > 1 ? sortedProjects.length - 1 : 0
 
   return (
     <Menu
@@ -87,12 +96,13 @@ const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) =>
           Your projects
         </Menu.Label>
         <div className='max-h-[40vh] overflow-y-scroll'>
-          {projects.map((project, idx) => (
+          {sortedProjects.map((project, idx) => (
             <Menu.Item
               key={'prjx-' + idx}
               classNames={{
                 itemLabel: clsx(
                   `flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md`,
+                  isCurrentProject(project.id) && 'bg-btnBg/10',
                 ),
               }}
               onClick={() => goToProject(project.id)}
@@ -100,12 +110,12 @@ const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) =>
               <span
                 className={clsx(
                   'flex-1 font-monaspace font-bold',
-                  project.id === currentProjectId && 'text-btnBg',
+                  isCurrentProject(project.id) && 'text-btnBg',
                 )}
               >
                 {project?.title || 'Empty project'}
               </span>
-              {project.id === currentProjectId && (
+              {isCurrentProject(project.id) && (
                 <button onClick={onSettingsClick}>
                   <SettingsIcon />
                 </button>
