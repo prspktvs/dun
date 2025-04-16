@@ -19,7 +19,41 @@ webPush.setVapidDetails(
 )
 
 export default function createPushAPI(app, route) {
+  const lastPushTimestamps = {}
+
+  function cleanupOldTimestamps() {
+    const now = Date.now()
+    Object.keys(lastPushTimestamps).forEach((key) => {
+      if (now - lastPushTimestamps[key] > 30000) {
+        delete lastPushTimestamps[key]
+      }
+    })
+  }
+
+  setInterval(cleanupOldTimestamps, 60000)
+
+  function canSendNotification(key) {
+    const now = Date.now()
+    if (lastPushTimestamps[key] && now - lastPushTimestamps[key] < 30000) {
+      return false
+    }
+    lastPushTimestamps[key] = now
+    return true
+  }
+
   async function sendNotification(userId, payload) {
+    const projectId = payload.data.projectId
+    const cardId = payload.data.cardId
+    const entityId = payload.data.tasks ? payload.data.tasks[0].id : payload.data.mentions[0].id
+    const key = `${userId}-${projectId}-${cardId}-${entityId}`
+    const now = Date.now()
+
+    if (!canSendNotification(key)) {
+      console.log('Debounced push notification for key:', key)
+      return
+    }
+
+    lastPushTimestamps[key] = now
     console.log('sendNotification', userId, payload)
     const pushTokens = await allQuery(GET_PUSH_TOKENS, [userId])
     await Promise.all(
