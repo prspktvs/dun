@@ -44,9 +44,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           email,
           password,
           name,
-          // TODO: implement project protection and only then redirect to project after sign up
-          // cb: () => navigate(location.state?.from?.pathname ?? '/dashboard'),
-          cb: () => navigate('/dashboard'),
+          cb: () => navigate(location.state?.from?.pathname ?? '/dashboard'),
         })
       }
     } catch (error) {

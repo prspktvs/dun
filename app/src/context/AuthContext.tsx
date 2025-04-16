@@ -30,6 +30,7 @@ import {
 import { registerForPushNotifications } from '../utils/push'
 import { genId } from '../utils'
 import { ROUTES } from '../constants'
+import { useBreakpoint } from '../hooks/useBreakpoint'
 
 interface ILoginCredentials {
   email: string
@@ -69,10 +70,11 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
   const [user, setUser] = useState<firebase.User | IUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState<string | null>(null)
+  const { isMobile } = useBreakpoint()
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname ?? ROUTES.DASHBOARD
+  const from = isMobile ? ROUTES.DASHBOARD : (location.state?.from?.pathname ?? ROUTES.DASHBOARD)
 
   const loginWithEmailAndPassword = async ({ email, password }: ILoginCredentials) => {
     try {

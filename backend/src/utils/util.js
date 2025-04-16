@@ -192,7 +192,7 @@ const onStoreDocument = async ({
     public: false,
     user_ids: JSON.parse(currentCard.users || '[]'),
   })
-    .then((res) => console.log('Document added to typesense', res))
+    // .then((res) => console.log('Document added to typesense', res))
     .catch(console.error)
 
   // Send updates
