@@ -19,6 +19,7 @@ export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   author TEXT DEFAULT '',
   priority TEXT DEFAULT 'Low',
   status TEXT DEFAULT 'Planned',
+  createdAt TEXT,
   card_id TEXT,
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
@@ -66,8 +67,8 @@ export const INSERT_NEW_CARD_QUERY = `
 `
 
 export const INSERT_TASK_QUERY = `
-  INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id, createdAt)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 export const INSERT_FILES_QUERY = `

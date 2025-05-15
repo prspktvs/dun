@@ -32,7 +32,7 @@ function LeftPanel() {
   )
 
   const sortedTasks = useMemo(
-    () => tasks.sort((a, b) => (a.created_at > b.created_at ? -1 : 1)),
+    () => tasks.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
     [tasks],
   )
 
@@ -101,7 +101,6 @@ function LeftPanel() {
                 onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
                 className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
-                {task.createdAt}
                 <TaskPreview task={task} />
               </div>
             ))}
