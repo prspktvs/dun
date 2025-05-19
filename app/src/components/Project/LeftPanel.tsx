@@ -19,7 +19,7 @@ function LeftPanel() {
   const [isFeedbackOpened, setFeedbackOpened] = useState(false)
   const navigate = useNavigate()
 
-  const { tasks, cards, users } = useProject()
+  const { tasks, cards, users, isOnboarding } = useProject()
   const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
@@ -48,9 +48,11 @@ function LeftPanel() {
       <section className='border-b-1 border-borders-purple h-14'>
         <ProjectSelector onOpenSettings={() => setSettingsOpened(true)} />
       </section>
-      <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
-        <UserList users={users} />
-      </section>
+      {!isOnboarding && (
+        <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
+          <UserList users={users} />
+        </section>
+      )}
       <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
         <ul>
           <li className='mb-2'>

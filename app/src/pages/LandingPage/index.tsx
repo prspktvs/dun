@@ -7,6 +7,7 @@ import TargetAudience from './Audience'
 import Footer from './Footer'
 import { Frame } from './Frame'
 import { useAuth } from '../../context/AuthContext'
+import { Loader } from '../../components/ui/Loader'
 
 const NAVIGATION_ITEMS = [
   { name: 'About', id: 'about' },
@@ -16,7 +17,7 @@ const NAVIGATION_ITEMS = [
 ]
 
 export const LandingHeader = () => {
-  const { user } = useAuth()
+  const { user, loading: isLoading } = useAuth()
   return (
     <div className='fixed top-0 left-2 right-2 z-50'>
       <div className='h-2 bg-[#faf9f6]' />
@@ -49,9 +50,15 @@ export const LandingHeader = () => {
             href={user ? '/dashboard' : '/login'}
             className='h-[50px] py-2 flex items-center justify-center no-underline'
           >
-            <span className='text-[#343434] hover:opacity-75 text-base font-semibold font-monaspace  whitespace-nowrap'>
-              {user ? 'Go to Dashboard' : 'Try for free'}
-            </span>
+            {isLoading ? (
+              <div className='w-36'>
+                <Loader color='gray' />
+              </div>
+            ) : (
+              <span className='text-[#343434] w-36 text-center hover:opacity-75 text-base font-semibold font-monaspace  whitespace-nowrap'>
+                {user ? 'Go to Dashboard' : 'Try for free'}
+              </span>
+            )}
           </a>
         </div>
       </header>

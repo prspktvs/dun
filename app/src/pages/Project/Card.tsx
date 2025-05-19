@@ -15,6 +15,7 @@ import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
 import CardHeader from '../../components/Card/CardHeader'
 import Editor from '../../components/Editor'
 import CardContent from '../../components/Card/CardContent'
+import OnboardingEditor from '../../components/Editor/OnboardingEditor'
 
 interface ICardProps {
   card: ICard
@@ -131,7 +132,7 @@ const Card = ({ card }: ICardProps) => {
               value={title}
               onChange={onTitleChange}
             />
-            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+            <Editor key={card.id} card={card} users={users} />
           </section>
         )}
         <aside

@@ -8,10 +8,12 @@ import { CreateProject } from './CreateProject'
 
 function ProjectContent() {
   const { id: projectId = '' } = useParams()
-  const { project } = useProject()
+  const { project, isLoading } = useProject()
   const { isMobile } = useBreakpoint()
 
-  if (!project?.id) return <CreateProject projectId={projectId} />
+  if (isLoading) return null
+
+  if (!project?.id && !isLoading) return <CreateProject projectId={projectId} />
 
   return (
     <div className='h-screen overflow-y-hidden'>

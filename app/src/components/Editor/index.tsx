@@ -13,7 +13,6 @@ import {
   defaultInlineContentSpecs,
   defaultStyleSpecs,
   filterSuggestionItems,
-  UniqueID,
 } from '@blocknote/core'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
@@ -32,8 +31,12 @@ import TaskBlock from './Blocks/TaskBlock'
 import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
 import { Loader } from '../ui/Loader'
+import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
+import { useProject } from '../../context/ProjectContext'
 
-const schema = BlockNoteSchema.create({
+import { useParams } from 'react-router-dom'
+
+const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
     image: ImageBlock,
@@ -50,7 +53,6 @@ const schema = BlockNoteSchema.create({
 const SAVING_DELAY = 2000
 
 interface IEditorProps {
-  projectId: string
   card: ICard
   users: IUser[]
 }
@@ -66,7 +68,7 @@ function useWebRtc(
   users: IUser[],
   token: string,
 ) {
-  // const lastId = useRef<string>(id)
+  const { isOnboarding } = useProject()
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
   const [provider, setProvider] = useState(
@@ -75,14 +77,16 @@ function useWebRtc(
         url: `${BACKEND_URL}/collaboration`,
         token: token,
         name: id,
+        broadcast: true,
         document: doc,
         onStatus,
         onClose,
       }),
   )
   // console.log('useWebRtc', provider)
-
+  const cardId = id.split('/').pop()
   const editor = useCreateBlockNote({
+    initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
     _tiptapOptions: {
       editable: false,
       extensions: [
@@ -105,28 +109,31 @@ function useWebRtc(
         }),
       ],
     },
-    // onEditorContentChange: (editor) => onDebouncedSave(editor),
-    collaboration: provider
-      ? {
-          provider,
-          fragment: doc.getXmlFragment('document-store'),
-          user: { name: user.name, color: user.color },
-        }
-      : undefined,
-    schema,
+    collaboration:
+      provider && !isOnboarding
+        ? {
+            provider,
+            fragment: doc.getXmlFragment('document-store'),
+            user: { name: user.name, color: user.color },
+          }
+        : undefined,
+    schema: EDITOR_SCHEMA,
     uploadFile,
   })
 
   return { provider, doc, editor }
 }
 
-function Editor({ projectId, card, users }: IEditorProps) {
+function Editor({ card, users }: IEditorProps) {
+  const { id: projectId } = useParams()
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
   const { user, token } = useAuth()
-  const { chatId } = useChats()
+
   const { setEditor } = useEditor()
-  const { provider, doc, editor } = useWebRtc(
+
+  const { editor } = useWebRtc(
     `${projectId}/cards/${card.id}`,
     ({ status }) => {
       if (status !== 'connected') return
@@ -140,6 +147,25 @@ function Editor({ projectId, card, users }: IEditorProps) {
     users,
     token,
   )
+
+  useEffect(() => {
+    function handleOnline() {
+      setIsOnline(true)
+    }
+
+    function handleOffline() {
+      setIsOnline(false)
+    }
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
+  console.log('blocks', editor.document)
 
   useEffect(() => {
     setEditor(editor as BlockNoteEditor)
@@ -161,6 +187,17 @@ function Editor({ projectId, card, users }: IEditorProps) {
     <Loader />
   ) : (
     <>
+      {!isOnline && (
+        <Alert
+          variant='light'
+          color='red'
+          title='No Internet Connection'
+          icon={<i className='ri-wifi-off-line' />}
+          className='mb-2'
+        >
+          You're offline. Your changes may not be saved.
+        </Alert>
+      )}
       {!editable && (
         <Alert variant='light' color='red' title='' icon={<MantineLoader color='red' size={20} />}>
           Loading...
