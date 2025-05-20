@@ -110,7 +110,7 @@ const Card = ({ card }: ICardProps) => {
   }
 
   return (
-    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100%_-_320px)]')}>
+    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100vw_-_320px)]')}>
       <CardHeader
         goBack={goBack}
         isAuthor={isAuthor}

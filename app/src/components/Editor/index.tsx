@@ -5,7 +5,7 @@ import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
-import { debounce } from 'lodash'
+import { debounce, set } from 'lodash'
 import {
   BlockNoteEditor,
   BlockNoteSchema,
@@ -23,8 +23,7 @@ import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuI
 import suggestion from './Mentions/suggestion'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
-import { useChats } from '../../context/ChatContext'
-import { useEditor } from '../../context/EditorContext'
+import { useEditor, useHighlightBlock } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
 import '@blocknote/mantine/style.css'
 import TaskBlock from './Blocks/TaskBlock'
@@ -34,13 +33,15 @@ import { Loader } from '../ui/Loader'
 import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
 import { useProject } from '../../context/ProjectContext'
 
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
+
+import { TaskList } from './Blocks/TaskList'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
+    task: TaskList,
     image: ImageBlock,
-    task: TaskBlock,
   },
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
@@ -83,10 +84,12 @@ function useWebRtc(
         onClose,
       }),
   )
-  // console.log('useWebRtc', provider)
+
   const cardId = id.split('/').pop()
   const editor = useCreateBlockNote({
-    initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
+    ...(isOnboarding && {
+      initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
+    }),
     _tiptapOptions: {
       editable: false,
       extensions: [
@@ -126,10 +129,13 @@ function useWebRtc(
 
 function Editor({ card, users }: IEditorProps) {
   const { id: projectId } = useParams()
+  const [searchParams] = useSearchParams()
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const { user, token } = useAuth()
+
+  const highlightBlock = useHighlightBlock()
 
   const { setEditor } = useEditor()
 
@@ -147,6 +153,22 @@ function Editor({ card, users }: IEditorProps) {
     users,
     token,
   )
+  console.log('editor', editor.document)
+
+  useEffect(() => {
+    const taskId = searchParams.get('taskId')
+    const chatId = location.pathname.includes('/chats/')
+      ? location.pathname.split('/chats/').pop()
+      : null
+
+    if (!isLoading && editable) {
+      if (taskId) {
+        setTimeout(() => highlightBlock(taskId), 100)
+      } else if (chatId && card.chatIds?.includes(chatId)) {
+        setTimeout(() => highlightBlock(chatId), 100)
+      }
+    }
+  }, [editor, searchParams, location.pathname, isLoading, editable, highlightBlock, card.chatIds])
 
   useEffect(() => {
     function handleOnline() {
@@ -165,7 +187,6 @@ function Editor({ card, users }: IEditorProps) {
       window.removeEventListener('offline', handleOffline)
     }
   }, [])
-  console.log('blocks', editor.document)
 
   useEffect(() => {
     setEditor(editor as BlockNoteEditor)

@@ -1,9 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { BlockSchema, defaultProps, PartialBlock, PropSchema } from '@blocknote/core'
+import {
+  BlockNoteEditor,
+  BlockSchema,
+  defaultProps,
+  getBlockInfo,
+  getBlockInfoFromTransaction,
+  getNearestBlockPos,
+  PartialBlock,
+  PropSchema,
+  updateBlockCommand,
+} from '@blocknote/core'
 import { createReactBlockSpec } from '@blocknote/react'
 import { useEffect, useRef, useState } from 'react'
 import { Menu, Popover } from '@mantine/core'
 import clsx from 'clsx'
+import { EditorState } from '@tiptap/pm/state'
 
 import { insertOrUpdateBlock } from '../../../../utils/editor'
 import { ITask, TaskPriority, TaskStatus } from '../../../../types/Task.d.ts'
@@ -26,6 +37,64 @@ type Task = {
   }
   users: {
     default: string[]
+  }
+}
+
+export const splitBlockCommand = (posInBlock: number, keepType?: boolean, keepProps?: boolean) => {
+  return ({
+    state,
+    dispatch,
+  }: {
+    state: EditorState
+    dispatch: ((args?: any) => any) | undefined
+  }) => {
+    const nearestBlockContainerPos = getNearestBlockPos(state.doc, posInBlock)
+
+    const info = getBlockInfo(nearestBlockContainerPos)
+
+    if (!info.isBlockContainer) {
+      throw new Error(`BlockContainer expected when calling splitBlock, position ${posInBlock}`)
+    }
+
+    const types = [
+      {
+        type: info.bnBlock.node.type, // always keep blockcontainer type
+        attrs: keepProps ? { ...info.bnBlock.node.attrs, id: undefined } : {},
+      },
+      {
+        type: keepType ? info.blockContent.node.type : state.schema.nodes['paragraph'],
+        attrs: keepProps ? { ...info.blockContent.node.attrs } : {},
+      },
+    ]
+
+    if (dispatch) {
+      state.tr.split(posInBlock, 2, types)
+    }
+
+    return true
+  }
+}
+
+export const handleEnter = (editor: BlockNoteEditor<any, any, any>) => {
+  const { blockInfo, selectionEmpty } = editor.transact((tr) => {
+    return {
+      blockInfo: getBlockInfoFromTransaction(tr),
+      selectionEmpty: tr.selection.anchor === tr.selection.head,
+    }
+  })
+
+  if (!blockInfo.isBlockContainer) {
+    return false
+  }
+  const { bnBlock: blockContainer, blockContent } = blockInfo
+
+  if (
+    !(
+      blockContent.node.type.name === 'task' || blockContent.node.type.name === 'numberedListItem'
+    ) ||
+    !selectionEmpty
+  ) {
+    return false
   }
 }
 
@@ -153,52 +222,53 @@ const TaskBlock = createReactBlockSpec(
   {
     render: ({ block, editor, contentRef }) => {
       const { status, priority, author } = block.props
-
       const { user } = useAuth()
 
-      const isNextBlockTask = useRef(true)
+      // useEffect(() => {
+      //   const handleKeyDown = (e: KeyboardEvent) => {
+      //     console.log('1')
+      //     const currentBlock = editor.getTextCursorPosition()?.block
+      //     if (currentBlock?.id !== block.id) {
+      //       return
+      //     }
+      //     console.log('2')
+      //     if (e.key === 'Enter' && !e.shiftKey) {
+      //       e.preventDefault()
 
-      useEffect(() => {
-        isNextBlockTask.current = true
-      }, [block.content])
+      //       const pos = editor._tiptapEditor.state.selection.from
+      //       const blockPos = getNearestBlockPos(editor._tiptapEditor.state.doc, pos)
+      //       const info = getBlockInfo(blockPos)
 
-      useEffect(() => {
-        const handler = (e: KeyboardEvent) => {
-          const prevBlock = editor.getTextCursorPosition().prevBlock
+      //       if (!info.isBlockContainer) {
+      //         return
+      //       }
 
-          switch (e.key) {
-            case 'Enter':
-              if (
-                prevBlock?.content?.[0]?.text &&
-                prevBlock?.type === 'task' &&
-                isNextBlockTask.current
-              ) {
-                insertOrUpdateBlock(editor, {
-                  type: 'task',
-                } as PartialBlock<BlockSchema>)
-                return
-              }
-              return
-            case 'Backspace':
-              isNextBlockTask.current = false
-              return
-            default:
-              return
-          }
-        }
-        document.addEventListener('keydown', handler)
+      //       // Проверяем содержимое блока
+      //       const isEmpty = info.blockContent.node.childCount === 0
 
-        return () => document.removeEventListener('keydown', handler)
-      }, [])
+      //       if (isEmpty) {
+      //         editor.updateBlock(block, {
+      //           type: 'paragraph',
+      //           props: {},
+      //         })
+      //       } else {
+      //         const newBlock = {
+      //           type: 'task' as const,
+      //           props: {
+      //             ...block.props,
+      //             isDone: false,
+      //             author: user?.id || '',
+      //           },
+      //         }
 
-      useEffect(() => {
-        if (!block?.props?.author && user) {
-          // microtask to avoid react lifecycle warning
-          Promise.resolve().then(() => {
-            editor.updateBlock(block, { props: { author: user.id } })
-          })
-        }
-      }, [user])
+      //         editor.insertBlocks([newBlock], block, 'after')
+      //       }
+      //     }
+      //   }
+
+      //   document.addEventListener('keydown', handleKeyDown, true) // используем capture phase
+      //   return () => document.removeEventListener('keydown', handleKeyDown, true)
+      // }, [block, editor, user, contentRef])
 
       const isBlockActive = block === editor?.getTextCursorPosition()?.block
 

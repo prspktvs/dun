@@ -32,7 +32,7 @@ function LeftPanel() {
   )
 
   const sortedTasks = useMemo(
-    () => tasks.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+    () => tasks.filter((task) => !task.isDone).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
     [tasks],
   )
 
@@ -100,7 +100,12 @@ function LeftPanel() {
             {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
-                onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
+                onClick={() =>
+                  task?.cardPath &&
+                  navigate(`/${task.cardPath}?taskId=${task.id.split('_').pop()}`, {
+                    replace: true,
+                  })
+                }
                 className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
                 <TaskPreview task={task} />
