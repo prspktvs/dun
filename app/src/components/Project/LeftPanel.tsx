@@ -19,7 +19,7 @@ function LeftPanel() {
   const [isFeedbackOpened, setFeedbackOpened] = useState(false)
   const navigate = useNavigate()
 
-  const { tasks, cards, users } = useProject()
+  const { tasks, cards, users, isOnboarding } = useProject()
   const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(
@@ -32,7 +32,7 @@ function LeftPanel() {
   )
 
   const sortedTasks = useMemo(
-    () => tasks.sort((a, b) => (a.created_at > b.created_at ? -1 : 1)),
+    () => tasks.filter((task) => !task.isDone).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
     [tasks],
   )
 
@@ -48,9 +48,11 @@ function LeftPanel() {
       <section className='border-b-1 border-borders-purple h-14'>
         <ProjectSelector onOpenSettings={() => setSettingsOpened(true)} />
       </section>
-      <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
-        <UserList users={users} />
-      </section>
+      {!isOnboarding && (
+        <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
+          <UserList users={users} />
+        </section>
+      )}
       <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
         <ul>
           <li className='mb-2'>
@@ -98,10 +100,14 @@ function LeftPanel() {
             {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}
-                onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}
+                onClick={() =>
+                  task?.cardPath &&
+                  navigate(`/${task.cardPath}?taskId=${task.id.split('_').pop()}`, {
+                    replace: true,
+                  })
+                }
                 className='rounded-md py-2 px-1.5 hover:cursor-pointer hover:bg-gray-100'
               >
-                {task.createdAt}
                 <TaskPreview task={task} />
               </div>
             ))}

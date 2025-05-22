@@ -50,6 +50,7 @@ function AddNewChat({ onClick }: { onClick: () => void }) {
 export default function Discussions({ users }: { users: IUser[] }) {
   const { cardId } = useParams<{ cardId: string }>()
   const { chatId, openChatById, createChat, deleteChat, cardChats } = useChats()
+  
   const [search, setSearch] = useState('')
   const [filteredChats, setFilteredChats] = useState<IChat[]>([])
 

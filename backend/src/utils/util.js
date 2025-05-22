@@ -78,6 +78,7 @@ const saveAllContent = ({
           task.author,
           JSON.stringify(task.users),
           cardId,
+          new Date().toISOString(),
         )
         tasks_stmt.run(
           task.id,
@@ -88,6 +89,7 @@ const saveAllContent = ({
           task.author,
           JSON.stringify(task.users),
           cardId,
+          new Date().toISOString(),
         )
 
         addToUserNotifications('update_task', { ...task, card_id: cardId })

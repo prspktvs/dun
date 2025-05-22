@@ -16,13 +16,15 @@ import { groupBy } from 'lodash'
 import { insertOrUpdateBlock } from '../../../utils/editor'
 import ImageBlock from '../Blocks/ImageBlock'
 import TaskBlock from '../Blocks/TaskBlock'
+import { TaskList } from '../Blocks/TaskList'
+import { auth } from '../../../config/firebase'
 
 const EXCLUDED_KEYS = ['Check List', 'Image', 'Emoji']
 
 export const customSchema: unknown = {
   ...defaultBlockSchema,
   image: ImageBlock,
-  task: TaskBlock,
+  task: TaskList,
 }
 
 export function CustomSlashMenu(props: SuggestionMenuProps<DefaultReactSuggestionItem>) {
@@ -77,18 +79,25 @@ const insertImage = (editor: BlockNoteEditor) => ({
   subtext: 'Insert an image',
 })
 
-const insertTask = (editor: BlockNoteEditor) => ({
-  title: 'Task',
-  onItemClick: () => {
-    insertOrUpdateBlock(editor, {
-      type: 'task',
-    })
-  },
-  aliases: ['task', '/task'],
-  group: 'Tasks',
-  icon: <i className='ri-checkbox-line' />,
-  subtext: 'Add a task',
-})
+const insertTask = (editor: BlockNoteEditor) => {
+  const user = auth.currentUser
+  return {
+    title: 'Task',
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: 'task',
+        props: {
+          isDone: false,
+          author: user ? user.uid : '',
+        },
+      })
+    },
+    aliases: ['task', '/task'],
+    group: 'Tasks',
+    icon: <i className='ri-checkbox-line' />,
+    subtext: 'Add a task',
+  }
+}
 
 export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => [
   ...getDefaultReactSlashMenuItems(editor).filter(

@@ -28,6 +28,7 @@ export type ProjectContext = {
   author: IUser['id']
   isLoading: boolean
   isCardsLoading: boolean
+  isOnboarding: boolean
   search: string
   sortType: 'createdAt' | 'updatedAt'
   setSearch: (search: string) => void
@@ -235,6 +236,7 @@ export const ProjectProvider = ({
     tasks,
     isLoading,
     isCardsLoading,
+    isOnboarding: projectId === 'onboarding',
     sortType,
     setSortType,
     setSearch,

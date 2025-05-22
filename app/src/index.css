@@ -70,6 +70,29 @@ li {
   @apply underline text-blue-600;
 }
 
+.bn-highlight-animation {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.bn-highlight-animation.active {
+  animation: highlight-fade 3s ease-in-out;
+}
+
+@keyframes highlight-fade {
+  0% {
+    background-color: transparent;
+  }
+  10% {
+    background-color: #fcdc75;
+  }
+  90% {
+    background-color: #fcdc75;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 .hide-scrollbar {
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;

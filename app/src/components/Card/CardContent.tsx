@@ -58,7 +58,7 @@ const CardContent: React.FC<CardContentProps> = ({
                   boxShadow: 'none',
                 }}
               />
-              <Editor key={card.id} projectId={projectId} card={card} users={users} />
+              <Editor key={card.id} card={card} users={users} />
             </div>
           )}
           {activeTab === 'attachments' && <Attachments files={files} />}

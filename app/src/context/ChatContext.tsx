@@ -7,6 +7,7 @@ import { IChat, IMessage } from '../types/Chat'
 import { getAllCardChats, removeCardChat, saveChatAndMessage } from '../services'
 import { useAuth } from './AuthContext'
 import { getChatPath } from '../utils/chat'
+import { useHighlightBlock } from './EditorContext'
 
 export type ChatContext = {
   chatId: string
@@ -36,10 +37,13 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const { user } = useAuth()
 
+  const highlightBlock = useHighlightBlock()
+
   const navigate = useNavigate()
 
   const openChatById = (id: string) => {
     setChatId(id)
+    highlightBlock(id)
     const newUrl = `/${projectId}/cards/${currentCardId}/chats/${id}`
     navigate(newUrl, { replace: true })
   }

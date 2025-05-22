@@ -23,6 +23,18 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
     [tasks],
   )
 
+  const sortedTasks = useMemo(() => {
+    const priorityOrder = {
+      [TaskPriority.Urgent]: 1,
+      [TaskPriority.High]: 2,
+      [TaskPriority.Medium]: 3,
+      [TaskPriority.Low]: 4,
+      [TaskPriority.NoPriority]: 5,
+    }
+
+    return [...tasks].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+  }, [tasks])
+
   const urgentTasks = tasksCountByPriority?.[TaskPriority.Urgent] || 0
   const highTasks = tasksCountByPriority?.[TaskPriority.High] || 0
   const mediumTasks = tasksCountByPriority?.[TaskPriority.Medium] || 0
@@ -44,7 +56,7 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
       </div>
       <div className='ml-8'>
         {isOpen ? (
-          tasks.map((task, idx) => (
+          sortedTasks.map((task, idx) => (
             <div
               key={'grouped-task-' + task.id}
               onClick={() => task?.cardPath && navigate(`/${task.cardPath}`, { replace: true })}

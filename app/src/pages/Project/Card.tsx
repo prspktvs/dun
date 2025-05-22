@@ -15,6 +15,7 @@ import { ShareTopicModal } from '../../components/ui/modals/ShareTopicModal'
 import CardHeader from '../../components/Card/CardHeader'
 import Editor from '../../components/Editor'
 import CardContent from '../../components/Card/CardContent'
+import OnboardingEditor from '../../components/Editor/OnboardingEditor'
 
 interface ICardProps {
   card: ICard
@@ -109,7 +110,7 @@ const Card = ({ card }: ICardProps) => {
   }
 
   return (
-    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100%_-_320px)]')}>
+    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100vw_-_320px)]')}>
       <CardHeader
         goBack={goBack}
         isAuthor={isAuthor}
@@ -131,7 +132,7 @@ const Card = ({ card }: ICardProps) => {
               value={title}
               onChange={onTitleChange}
             />
-            <Editor key={card.id} projectId={projectId} card={card} users={users} />
+            <Editor key={card.id} card={card} users={users} />
           </section>
         )}
         <aside

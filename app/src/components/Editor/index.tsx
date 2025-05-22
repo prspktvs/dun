@@ -5,7 +5,7 @@ import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
-import { debounce } from 'lodash'
+import { debounce, set } from 'lodash'
 import {
   BlockNoteEditor,
   BlockNoteSchema,
@@ -13,7 +13,6 @@ import {
   defaultInlineContentSpecs,
   defaultStyleSpecs,
   filterSuggestionItems,
-  UniqueID,
 } from '@blocknote/core'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
@@ -24,20 +23,25 @@ import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuI
 import suggestion from './Mentions/suggestion'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
-import { useChats } from '../../context/ChatContext'
-import { useEditor } from '../../context/EditorContext'
+import { useEditor, useHighlightBlock } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
 import '@blocknote/mantine/style.css'
 import TaskBlock from './Blocks/TaskBlock'
 import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
 import { Loader } from '../ui/Loader'
+import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
+import { useProject } from '../../context/ProjectContext'
 
-const schema = BlockNoteSchema.create({
+import { useParams, useSearchParams } from 'react-router-dom'
+
+import { TaskList } from './Blocks/TaskList'
+
+const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
+    task: TaskList,
     image: ImageBlock,
-    task: TaskBlock,
   },
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
@@ -50,7 +54,6 @@ const schema = BlockNoteSchema.create({
 const SAVING_DELAY = 2000
 
 interface IEditorProps {
-  projectId: string
   card: ICard
   users: IUser[]
 }
@@ -66,7 +69,7 @@ function useWebRtc(
   users: IUser[],
   token: string,
 ) {
-  // const lastId = useRef<string>(id)
+  const { isOnboarding } = useProject()
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
 
   const [provider, setProvider] = useState(
@@ -75,14 +78,18 @@ function useWebRtc(
         url: `${BACKEND_URL}/collaboration`,
         token: token,
         name: id,
+        broadcast: true,
         document: doc,
         onStatus,
         onClose,
       }),
   )
-  // console.log('useWebRtc', provider)
 
+  const cardId = id.split('/').pop()
   const editor = useCreateBlockNote({
+    ...(isOnboarding && {
+      initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
+    }),
     _tiptapOptions: {
       editable: false,
       extensions: [
@@ -105,28 +112,34 @@ function useWebRtc(
         }),
       ],
     },
-    // onEditorContentChange: (editor) => onDebouncedSave(editor),
-    collaboration: provider
-      ? {
-          provider,
-          fragment: doc.getXmlFragment('document-store'),
-          user: { name: user.name, color: user.color },
-        }
-      : undefined,
-    schema,
+    collaboration:
+      provider && !isOnboarding
+        ? {
+            provider,
+            fragment: doc.getXmlFragment('document-store'),
+            user: { name: user.name, color: user.color },
+          }
+        : undefined,
+    schema: EDITOR_SCHEMA,
     uploadFile,
   })
 
   return { provider, doc, editor }
 }
 
-function Editor({ projectId, card, users }: IEditorProps) {
+function Editor({ card, users }: IEditorProps) {
+  const { id: projectId } = useParams()
+  const [searchParams] = useSearchParams()
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
   const { user, token } = useAuth()
-  const { chatId } = useChats()
+
+  const highlightBlock = useHighlightBlock()
+
   const { setEditor } = useEditor()
-  const { provider, doc, editor } = useWebRtc(
+
+  const { editor } = useWebRtc(
     `${projectId}/cards/${card.id}`,
     ({ status }) => {
       if (status !== 'connected') return
@@ -140,6 +153,40 @@ function Editor({ projectId, card, users }: IEditorProps) {
     users,
     token,
   )
+  console.log('editor', editor.document)
+
+  useEffect(() => {
+    const taskId = searchParams.get('taskId')
+    const chatId = location.pathname.includes('/chats/')
+      ? location.pathname.split('/chats/').pop()
+      : null
+
+    if (!isLoading && editable) {
+      if (taskId) {
+        setTimeout(() => highlightBlock(taskId), 100)
+      } else if (chatId && card.chatIds?.includes(chatId)) {
+        setTimeout(() => highlightBlock(chatId), 100)
+      }
+    }
+  }, [editor, searchParams, location.pathname, isLoading, editable, highlightBlock, card.chatIds])
+
+  useEffect(() => {
+    function handleOnline() {
+      setIsOnline(true)
+    }
+
+    function handleOffline() {
+      setIsOnline(false)
+    }
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   useEffect(() => {
     setEditor(editor as BlockNoteEditor)
@@ -161,6 +208,17 @@ function Editor({ projectId, card, users }: IEditorProps) {
     <Loader />
   ) : (
     <>
+      {!isOnline && (
+        <Alert
+          variant='light'
+          color='red'
+          title='No Internet Connection'
+          icon={<i className='ri-wifi-off-line' />}
+          className='mb-2'
+        >
+          You're offline. Your changes may not be saved.
+        </Alert>
+      )}
       {!editable && (
         <Alert variant='light' color='red' title='' icon={<MantineLoader color='red' size={20} />}>
           Loading...
