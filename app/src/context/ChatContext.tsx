@@ -3,11 +3,11 @@ import { off, onValue, ref } from 'firebase/database'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { realtimeDb } from '../config/firebase'
-import { IChat, IMessage } from '../types/Chat'
-import { getAllCardChats, removeCardChat, saveChatAndMessage } from '../services'
+import { IChat } from '../types/Chat'
+import { removeCardChat } from '../services'
 import { useAuth } from './AuthContext'
 import { getChatPath } from '../utils/chat'
-import { useHighlightBlock } from './EditorContext'
+import { useHighlightBlock } from '../hooks/editor/useHighlightBlock'
 
 export type ChatContext = {
   chatId: string

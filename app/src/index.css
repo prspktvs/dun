@@ -75,7 +75,13 @@ li {
 }
 
 .bn-highlight-animation.active {
+  border-radius: 0.3rem;
   animation: highlight-fade 3s ease-in-out;
+}
+
+
+[class^="bn-block"] {
+  position: relative;
 }
 
 @keyframes highlight-fade {
@@ -83,10 +89,10 @@ li {
     background-color: transparent;
   }
   10% {
-    background-color: #fcdc75;
+    background-color: #FBFCDB;
   }
   90% {
-    background-color: #fcdc75;
+    background-color: #FBFCDB;
   }
   100% {
     background-color: transparent;

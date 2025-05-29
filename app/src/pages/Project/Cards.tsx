@@ -50,15 +50,10 @@ export function CardsPage() {
     optimisticCreateCard,
   } = useProject()
   const search = useSearch(searchText, projectId)
-  const [filteredCards, setFilteredCards] = useState<ICard[]>(cards)
 
   useEffect(() => {
     logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'project_cards', projectId })
   }, [])
-
-  useEffect(() => {
-    setFilteredCards(search.q ? search.results : cards)
-  }, [search.q, cards])
 
   const onChooseCard = (card: ICard) => {
     navigate(`/${projectId}/cards/${card.id}`)
@@ -119,9 +114,9 @@ export function CardsPage() {
         </div>
       </section>
       <section className='h-full overflow-y-scroll hide-scrollbar'>
-        {!isEmpty(filteredCards) ? (
+        {!isEmpty(cards) ? (
           <div className='grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'>
-            {filteredCards.map((card, index) => (
+            {cards.map((card, index) => (
               <div key={'card-' + index} className='border-b-1 border-borders-purple padding-0'>
                 <CardPreview
                   card={card}

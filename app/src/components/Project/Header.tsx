@@ -10,7 +10,12 @@ export function ProjectHeader() {
   const { search, setSearch } = useProject()
 
   return (
-    <Header onLogoClick={() => navigate(ROUTES.DASHBOARD)} search={search} setSearch={setSearch} />
+    <Header
+      onLogoClick={() => navigate(ROUTES.DASHBOARD)}
+      search={search}
+      setSearch={setSearch}
+      isProjectSearch
+    />
   )
 }
 
