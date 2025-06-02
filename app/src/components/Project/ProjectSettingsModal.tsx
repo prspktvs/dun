@@ -135,9 +135,8 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   const projectUrl = useMemo(() => DUN_URL + `/${projectId}`, [projectId])
 
   return (
-    <div className='flex flex-col h-full min-h-[600px]'>
-      {/* Top section */}
-      <div className='flex flex-col flex-none'>
+    <div className='flex flex-col justify-between'>
+      <div>
         <div className='px-5'>
           <EditableField
             value={title}
@@ -177,21 +176,17 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
-      {/* Team section - will stretch */}
-      <div className='flex flex-col flex-1'>
-        <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
-          <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
-        </div>
-
-        <div className='flex-1 px-5 overflow-y-auto'>
-          {!isEmpty(users)
-            ? users.map((user) => <TeamMember key={'ps-user-' + user.id} user={user} />)
-            : null}
-        </div>
+      <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+        <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
       </div>
 
-      {/* Delete section - will stay at bottom */}
-      <div className='flex-none border-borders-purple border-t-1 border-b-1 flex items-center font-monaspace px-5'>
+      <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
+        {!isEmpty(users)
+          ? users.map((user, index) => <TeamMember key={'ps-user-' + user.id} user={user} />)
+          : null}
+      </div>
+
+      <div className='border-borders-purple border-t-1 border-b-1 flex items-center font-monaspace px-5'>
         <div className='flex-1 flex flex-col border-r-1 border-borders-purple'>
           <span className='text-12'>
             Type project title (<span className='font-bold'>{title}</span>) to delete it:
