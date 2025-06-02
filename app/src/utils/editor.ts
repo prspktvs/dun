@@ -72,21 +72,18 @@ export const createChatIconPlugin = (key: PluginKey['key'], {
                   transition: opacity 0.2s ease;
                 `
 
-                // Set icon based on whether there are unread messages
                 iconWrapper.innerHTML = unreadCount > 0 ? UNREAD_CHAT_ICON : READ_CHAT_ICON
 
                 const blockElement = document.querySelector(`[data-id="${blockId}"]`)
               
                 if (blockElement) {
                   blockElement.addEventListener('mouseenter', () => {
-                    // Show icon on hover only for blocks without messages
                     if (!hasMessages && !unreadCount) {
                       iconWrapper.style.opacity = '0.6'
                     }
                   })
 
                   blockElement.addEventListener('mouseleave', () => {
-                    // Hide icon on mouse leave only for blocks without messages
                     if (!hasMessages && !unreadCount) {
                       iconWrapper.style.opacity = '0'
                     }

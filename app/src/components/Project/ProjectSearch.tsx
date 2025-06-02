@@ -28,7 +28,7 @@ const SearchResult = ({ card, onSelect }: { card: SearchResultCard; onSelect: ()
       className='grid grid-cols-7 justify-between items-center p-2 cursor-pointer'
       onClick={() => {
         navigate(`/${projectId}/cards/${card.id}`)
-        onSelect() // Call onSelect when clicking a result
+        onSelect()
       }}
     >
       <Text size='md' fw={500} className='col-span-2 text-btnBg'>
@@ -65,7 +65,7 @@ const ProjectSearch: React.FC<SearchBarProps> = ({ search, setSearch }) => {
 
   const handleResultSelect = () => {
     setOpened(false)
-    setSearch('') // Optionally clear the search input
+    setSearch('')
   }
 
   return (
@@ -88,7 +88,7 @@ const ProjectSearch: React.FC<SearchBarProps> = ({ search, setSearch }) => {
             search={search}
             setSearch={(value) => {
               setSearch(value)
-              setOpened(true) // Open dropdown when typing
+              setOpened(true)
             }}
           />
         </div>
