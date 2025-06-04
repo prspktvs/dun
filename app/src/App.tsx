@@ -22,6 +22,7 @@ import { logAnalytics } from './utils/analytics'
 import { ANALYTIC_EVENTS } from './constants'
 import { NotFound } from './pages/NotFound'
 import TermsAndConditions from './pages/TermsAndConditions'
+import { SettingPage } from './pages/Project/Settings'
 
 export default function App() {
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function App() {
                   <Route path=':id' element={<ProjectLayout />}>
                     <Route index element={<CardsPage />} />
                     <Route path='my-work' element={<MyWorkPage />} />
+                    <Route path='settings' element={<SettingPage />} />
                     <Route path='cards/:cardId' element={<CardPage />} />
                     <Route path='cards/:cardId/chats/:chatId' element={<CardPage />} />
                   </Route>

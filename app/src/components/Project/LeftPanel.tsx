@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import { useProject } from '../../context/ProjectContext'
 import TaskPreview from '../Task/TaskPreview'
 import LeftPanelButton from '../ui/buttons/LeftPanelButton'
-import ProjectSettingsModal from './ProjectSettingsModal'
+import { ProjectSettingsModal } from './ProjectSettingsModal'
 import UserList from '../User/UserList'
 import ProjectSelector from '../Project/ProjectSelector'
 import FeedbackModal from '../ui/modals/FeedbackModal'
@@ -72,7 +72,10 @@ function LeftPanel() {
             </LeftPanelButton>
           </li>
           <li className='mb-2'>
-            <LeftPanelButton isActive={isSettingsOpened} onClick={() => setSettingsOpened(true)}>
+            <LeftPanelButton
+              isActive={location.pathname.endsWith('settings') && !isSettingsOpened}
+              onClick={() => navigate('settings')}
+            >
               Project settings
             </LeftPanelButton>
           </li>

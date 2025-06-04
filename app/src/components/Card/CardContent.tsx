@@ -41,7 +41,7 @@ const CardContent: React.FC<CardContentProps> = ({
       ) : (
         <>
           {activeTab === 'editor' && isMobile && (
-            <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll bg-white overflow-x-hidden z-20 pl-[20px]'>
+            <div className='h-[calc(100vh_-_90px)] flex-1 hide-scrollbar overflow-y-scroll bg-white overflow-x-hidden z-20 pl-[8px]'>
               <textarea
                 ref={inputRef}
                 value={title}

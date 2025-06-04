@@ -5,7 +5,7 @@ import '@blocknote/core/style.css'
 import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
-import { debounce, set } from 'lodash'
+import { debounce, get, set } from 'lodash'
 import {
   BlockNoteEditor,
   BlockNoteSchema,
@@ -23,7 +23,7 @@ import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuI
 import suggestion from './Mentions/suggestion'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
-import { useEditor, useHighlightBlock } from '../../context/EditorContext'
+import { useEditor } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
 import '@blocknote/mantine/style.css'
 import TaskBlock from './Blocks/TaskBlock'
@@ -36,6 +36,9 @@ import { useProject } from '../../context/ProjectContext'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { TaskList } from './Blocks/TaskList'
+import { useChats } from '../../context/ChatContext'
+import { useHighlightBlock } from '../../hooks/editor/useHighlightBlock'
+import { useEditorChats } from '../../hooks/editor/useEditorChats'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
@@ -135,9 +138,8 @@ function Editor({ card, users }: IEditorProps) {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const { user, token } = useAuth()
 
-  const highlightBlock = useHighlightBlock()
-
   const { setEditor } = useEditor()
+  const { openChatById, cardChats, getUnreadMessagesCount } = useChats()
 
   const { editor } = useWebRtc(
     `${projectId}/cards/${card.id}`,
@@ -153,7 +155,10 @@ function Editor({ card, users }: IEditorProps) {
     users,
     token,
   )
-  console.log('editor', editor.document)
+
+  const highlightBlock = useHighlightBlock()
+
+  useEditorChats(editor, { openChatById, cardChats, getUnreadMessagesCount })
 
   useEffect(() => {
     const taskId = searchParams.get('taskId')

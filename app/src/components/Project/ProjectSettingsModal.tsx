@@ -1,4 +1,4 @@
-import { Button, CopyButton } from '@mantine/core'
+import { Button, CopyButton, Popover, Text } from '@mantine/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { debounce, isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,14 +10,95 @@ import AvatarDun from '../ui/Avatar'
 import { DUN_URL, ROUTES } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
+import { ITeamMember, UserRole } from '../../types/User'
 
-export default function ProjectSettingsModal({
-  opened,
-  onClose,
-}: {
-  opened: boolean
-  onClose: () => void
-}) {
+const ROLE_OPTIONS = [
+  { value: 'viewer', label: 'Viewer' },
+  { value: 'editor', label: 'Editor' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'owner', label: 'Owner' },
+]
+
+export function TeamMember({ user }: { user: ITeamMember }) {
+  const { role, hasPermission } = useProject()
+
+  return (
+    <div className='my-2 ml-3 flex items-center gap-3'>
+      <AvatarDun user={user} size={40} />
+      <div className='flex flex-col flex-1'>
+        <span className='text-base font-medium'>{user.name}</span>
+        <span className='text-sm text-gray-500'>{user.email}</span>
+      </div>
+      {/* <Select
+        value={user.role}
+        data={ROLE_OPTIONS}
+        disabled={!hasPermission('owner')}
+        onChange={(newRole) => {
+          if (newRole) {
+            // TODO: Implement role change
+            console.log(`Changing ${user.name}'s role to ${newRole}`)
+          }
+        }}
+        styles={{
+          input: {
+            width: '120px',
+            border: 'none',
+            backgroundColor: 'transparent',
+            fontFamily: 'monospace',
+          },
+        }}
+      /> */}
+    </div>
+  )
+}
+
+interface EditableFieldProps {
+  value: string
+  onChange: (value: string) => void
+  placeholder: string
+  className?: string
+  isTitle?: boolean
+}
+
+function EditableField({ value, onChange, placeholder, className, isTitle }: EditableFieldProps) {
+  const [showHint, setShowHint] = useState(false)
+
+  return (
+    <Popover opened={showHint} position='top-start' shadow='md' withArrow offset={0}>
+      <Popover.Target>
+        <input
+          className={clsx(
+            'font-rubik outline-none w-full bg-transparent cursor-pointer px-2 py-1 rounded hover:bg-gray-50 transition-colors',
+            isTitle ? 'text-xl font-bold' : 'text-16',
+            !value && 'text-gray-400',
+            className,
+          )}
+          type='text'
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          onMouseEnter={() => setShowHint(true)}
+          onMouseLeave={() => setShowHint(false)}
+          onFocus={() => setShowHint(false)}
+        />
+      </Popover.Target>
+
+      <Popover.Dropdown
+        className='border-borders-purple border-1 rounded-md bg-[#EDEBF3]'
+        classNames={{
+          dropdown: 'p-2',
+          arrow: 'bg-[#EDEBF3] border-borders-purple border-1',
+        }}
+      >
+        <Text size='xs' color='dimmed' className='font-monaspace'>
+          Click to edit
+        </Text>
+      </Popover.Dropdown>
+    </Popover>
+  )
+}
+
+export function ProjectSettings({ onClose }: { onClose: () => void }) {
   const { id: projectId } = useParams()
   const { users, project, isLoading } = useProject()
   const [title, setTitle] = useState('')
@@ -54,100 +135,99 @@ export default function ProjectSettingsModal({
   const projectUrl = useMemo(() => DUN_URL + `/${projectId}`, [projectId])
 
   return (
-    <Modal opened={opened} onClose={onCloseWithSave} title='Project settings'>
-      <div className='flex flex-col justify-between'>
-        <div>
-          <div className='px-5'>
-            <input
-              className='font-bold font-rubik text-xl outline-none bg-white'
-              type='text'
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value)
-                debouncedSaveTitle(e.target.value)
-              }}
-              placeholder='Type the title'
-              autoFocus
-            />
-          </div>
-          <div className='px-5'>
-            <input
-              className='font-rubik text-16 outline-none bg-white'
-              type='text'
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value)
-                debouncedSaveDescription(e.target.value)
-              }}
-              placeholder='Type the description'
-              autoFocus
-            />
-          </div>
-
-          <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-borders-purple'>
-            <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
-            <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
-              {projectUrl}
-            </div>
-            <div className='w-1/4 h-14'>
-              <CopyButton value={projectUrl}>
-                {({ copied, copy }) => (
-                  <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
-                    {copied ? 'Copied' : 'Copy'}
-                  </ButtonDun>
-                )}
-              </CopyButton>
-            </div>
-          </div>
+    <div className='flex flex-col justify-between'>
+      <div>
+        <div className='px-5'>
+          <EditableField
+            value={title}
+            onChange={(value) => {
+              setTitle(value)
+              debouncedSaveTitle(value)
+            }}
+            placeholder='Type the title'
+            isTitle
+          />
+        </div>
+        <div className='px-5 mt-2'>
+          <EditableField
+            value={description}
+            onChange={(value) => {
+              setDescription(value)
+              debouncedSaveDescription(value)
+            }}
+            placeholder='Type the description'
+          />
         </div>
 
-        <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
-          <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
-        </div>
-
-        <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
-          {!isEmpty(users)
-            ? users.map((user, index) => (
-                <div key={'ps-user-' + user.id} className='my-2 ml-3 flex items-center gap-3'>
-                  <AvatarDun user={user} size={40} />
-                  <div className='flex flex-col'>
-                    <span className='text-base font-medium '>{user.name}</span>
-                    <span className='text-sm '>{user.email}</span>
-                  </div>
-                </div>
-              ))
-            : null}
-        </div>
-
-        <div className='border-borders-purple border-t-1 flex items-center font-monaspace px-5'>
-          <div className='flex-1 border-r-1 border-borders-purple'>
-            <span className='text-12'>
-              Type project title (<span className='font-bold'>{title}</span>) to delete it:
-            </span>
-            <input
-              value={removeTitle}
-              onChange={(e) => setRemoveTitle(e.target.value)}
-              className='w-full text-sm my-2 bg-white outline-none'
-              placeholder={title}
-            />
+        <div className='flex mt-4 justify-between items-center h-14 border-y-1 border-borders-purple'>
+          <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
+          <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
+            {projectUrl}
           </div>
-
-          <Button
-            onClick={handleDelete}
-            className={clsx(
-              'font-monaspace',
-              removeTitle === title ? 'text-red-400' : 'text-[#969696]',
-            )}
-            radius={0}
-            variant='transparent'
-            color='red'
-            bg='transparent'
-            disabled={removeTitle !== title}
-          >
-            Delete project
-          </Button>
+          <div className='w-1/4 h-14'>
+            <CopyButton value={projectUrl}>
+              {({ copied, copy }) => (
+                <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
+                  {copied ? 'Copied' : 'Copy'}
+                </ButtonDun>
+              )}
+            </CopyButton>
+          </div>
         </div>
       </div>
+
+      <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+        <span className='px-5 ml-3 font-bold font-monaspace'>Your team</span>
+      </div>
+
+      <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
+        {!isEmpty(users)
+          ? users.map((user, index) => <TeamMember key={'ps-user-' + user.id} user={user} />)
+          : null}
+      </div>
+
+      <div className='border-borders-purple border-t-1 border-b-1 flex items-center font-monaspace px-5'>
+        <div className='flex-1 flex flex-col border-r-1 border-borders-purple'>
+          <span className='text-12'>
+            Type project title (<span className='font-bold'>{title}</span>) to delete it:
+          </span>
+          <input
+            value={removeTitle}
+            onChange={(e) => setRemoveTitle(e.target.value)}
+            className='w-1/2 text-sm my-2 bg-transparent outline-none border-borders-purple border-1 px-3 py-1'
+            placeholder={title}
+          />
+        </div>
+
+        <Button
+          onClick={handleDelete}
+          className={clsx(
+            'font-monaspace',
+            removeTitle === title ? 'text-red-400' : 'text-[#969696]',
+          )}
+          radius={0}
+          variant='transparent'
+          color='red'
+          bg='transparent'
+          disabled={removeTitle !== title}
+        >
+          Delete project
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export function ProjectSettingsModal({
+  opened,
+  onClose,
+}: {
+  opened: boolean
+  onClose: () => void
+}) {
+  return (
+    <Modal opened={opened} onClose={onClose} title='Project settings'>
+      <ProjectSettings onClose={onClose} />
     </Modal>
   )
 }

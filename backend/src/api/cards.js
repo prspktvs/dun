@@ -49,12 +49,42 @@ export const searchCards = async (req, res) => {
       q,
       query_by: 'title,content,author',
       filter_by: `project_id:=${project_id} && (author_id:=${req.user.user_id} || user_ids:=${req.user.user_id})`,
+      highlight_fields: 'title,content',
+      highlight_full_fields: 'content',
+      highlight_affix_num_tokens: 4,
+      highlight_start_tag: '<mark>',
+      highlight_end_tag: '</mark>',
     })
+
     const cardIds = results.hits.map((hit) => `'${hit.document.id}'`).join(',')
-    const cards = cardIds?.length
-      ? await allQuery(SELECT_ALL_CARDS_BY_IDS_QUERY.replace('$IDS', cardIds), [project_id]) // :derp; https://github.com/TryGhost/node-sqlite3/issues/762
-      : []
-    res.json(cards.map(deserializeCard))
+
+    const highlightsMap = results.hits.reduce((acc, hit) => {
+      acc[hit.document.id] = {
+        title: hit.highlights.find((h) => h.field === 'title')?.snippet,
+        content: hit.highlights.find((h) => h.field === 'content')?.snippet,
+      }
+      return acc
+    }, {})
+
+    // Check if we have any results
+    if (!cardIds?.length) {
+      return res.json([])
+    }
+
+    // Use SELECT_ALL_CARDS_BY_IDS_QUERY instead
+    const query =
+      typeof SELECT_ALL_CARDS_BY_IDS_QUERY === 'function'
+        ? SELECT_ALL_CARDS_BY_IDS_QUERY(cardIds)
+        : SELECT_ALL_CARDS_BY_IDS_QUERY.replace('$IDS', cardIds)
+
+    const cards = await allQuery(query, [project_id])
+
+    const cardsWithHighlights = cards.map((card) => ({
+      ...deserializeCard(card),
+      highlights: highlightsMap[card.id] || null,
+    }))
+
+    res.json(cardsWithHighlights)
   } catch (error) {
     handleError(res, error)
   }

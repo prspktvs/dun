@@ -16,21 +16,29 @@ import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
-import { IUser } from '../types/User'
+import { IUser, UserRole } from '../types/User'
 import { realtimeDb } from '../config/firebase'
-import { IChat, IMessage } from '../types/Chat'
+
+export const ROLES: Record<UserRole, number> = {
+  owner: 4,
+  admin: 3,
+  editor: 2,
+  viewer: 1,
+}
 
 export type ProjectContext = {
   project: IProject
   cards: ICard[]
   tasks: ITask[]
   users: IUser[]
+  role: UserRole
   author: IUser['id']
   isLoading: boolean
   isCardsLoading: boolean
   isOnboarding: boolean
   search: string
   sortType: 'createdAt' | 'updatedAt'
+  hasPermission: (minRole: UserRole) => boolean
   setSearch: (search: string) => void
   setSortType: (type: 'createdAt' | 'updatedAt') => void
   updateCard: (card: Partial<ICard>) => void
@@ -56,6 +64,18 @@ export const ProjectProvider = ({
   const [isCardsLoading, setIsCardsLoading] = useState(true)
 
   const { data: project, loading: isLoading } = useFirebaseDocument(`projects/${projectId}`)
+
+  const role: UserRole = useMemo(
+    () => project?.users?.find((u) => u.id === user?.id)?.role,
+    [project, user],
+  )
+  console.log('Project role:', role)
+
+  const hasPermission = (minRole: UserRole) => {
+    if (!role) return false
+    return ROLES[role] >= ROLES[minRole]
+  }
+
   useEffect(() => {
     const fetchChats = async () => {
       try {
@@ -128,7 +148,6 @@ export const ProjectProvider = ({
     }
 
     fetchData()
-
     addUserToProject(projectId, user)
 
     // Firefox thows an error if the url has http:// instead ls ws://
@@ -182,7 +201,7 @@ export const ProjectProvider = ({
     ws.onerror = (err) => console.error('WebSocket error', err)
 
     return () => ws.close()
-  }, [projectId, user])
+  }, [projectId, user?.id])
 
   const getUnreadCardMessagesCount = (cardId: string) => {
     const chatsInCard = unreadChats.filter((chat) => chat.cardId === cardId)
@@ -234,6 +253,8 @@ export const ProjectProvider = ({
     search,
     cards,
     tasks,
+    role,
+    hasPermission,
     isLoading,
     isCardsLoading,
     isOnboarding: projectId === 'onboarding',

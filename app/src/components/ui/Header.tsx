@@ -2,15 +2,18 @@ import Logo from '../ui/Logo'
 import UserPanel from '../User/UserPanel'
 import { useAuth } from '../../context/AuthContext'
 import SearchBar from '../Project/SearchBar'
+import ProjectSearch from '../Project/ProjectSearch'
 
 export function Header({
   onLogoClick,
   search,
   setSearch,
+  isProjectSearch = false,
 }: {
   onLogoClick: () => void
   search: string
   setSearch: (value: string) => void
+  isProjectSearch?: boolean
 }) {
   const { user } = useAuth()
 
@@ -22,7 +25,13 @@ export function Header({
       >
         <Logo />
       </div>
-      <SearchBar search={search} setSearch={setSearch} />
+      <div className='flex-1'>
+        {isProjectSearch ? (
+          <ProjectSearch search={search} setSearch={setSearch} />
+        ) : (
+          <SearchBar search={search} setSearch={setSearch} />
+        )}
+      </div>
       <div className='flex items-center justify-center w-48 h-full py-2 border-l px-7 border-borders-purple '>
         <div className='flex items-center h-full p-5'>
           <UserPanel user={user} />
