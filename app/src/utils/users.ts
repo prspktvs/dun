@@ -2,7 +2,8 @@ import { addDoc, collection, doc, getDoc, getDocs, limit, query, updateDoc, wher
 import { nanoid } from 'nanoid'
 
 import { db } from '../config/firebase'
-import { ITeamMember, UserRole } from '../types/User'
+import { ITeamMember } from '../types/User'
+import { UserRole } from '../constants/roles.constants'
 
 export interface ProjectInvite {
   id: string
