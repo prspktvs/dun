@@ -1,5 +1,4 @@
 import { addDoc, collection, doc, getDoc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore'
-import { nanoid } from 'nanoid'
 
 import { db } from '../config/firebase'
 import { ITeamMember } from '../types/User'
@@ -51,76 +50,6 @@ export const updateRole = async (
     console.error('Error updating user role:', error)
     throw new Error('Failed to update user role')
   }
-}
-
-export const getLatestProjectInvite = async (projectId: string): Promise<ProjectInvite | null> => {
-  const invitesRef = collection(db, 'invites')
-  const q = query(
-    invitesRef, 
-    where('projectId', '==', projectId),
-    where('used', '==', false),
-    where('expiresAt', '>', new Date()),
-    limit(1)
-  )
-  
-  const snapshot = await getDocs(q)
-  return snapshot.empty ? null : (snapshot.docs[0].data() as ProjectInvite)
-}
-
-export const createProjectInvite = async (
-  projectId: string, 
-  role: 'viewer' | 'editor'
-): Promise<ProjectInvite> => {
-
-  const existingInvite = await getLatestProjectInvite(projectId)
-  if (existingInvite) {
-    return existingInvite
-  }
-
-
-  const invite: ProjectInvite = {
-    id: nanoid(20),
-    projectId,
-    role,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    used: false
-  }
-
-  const invitesRef = collection(db, 'invites')
-  await addDoc(invitesRef, invite)
-
-  return invite
-}
-
-export const processInvite = async (inviteId: string, userId: string): Promise<ProjectInvite> => {
-  const invitesRef = collection(db, 'invites')
-  const q = query(invitesRef, where('id', '==', inviteId))
-  const snapshot = await getDocs(q)
-
-  if (snapshot.empty) {
-    throw new Error('Invalid invite link')
-  }
-
-  const invite = snapshot.docs[0].data() as ProjectInvite
-
-  if (invite.used) {
-    throw new Error('This invite link has already been used')
-  }
-
-  if (new Date() > new Date(invite.expiresAt)) {
-    throw new Error('This invite link has expired')
-  }
-
-  await updateDoc(snapshot.docs[0].ref, {
-    used: true,
-    usedBy: {
-      userId,
-      usedAt: new Date()
-    }
-  })
-
-  return invite
 }
 
 export const removeUserFromProject = async (
