@@ -10,8 +10,12 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       sourcemap: true,
+      chunkSizeWarningLimit: 1200,
       rollupOptions: {
         external: ['#minpath', '#minproc', '#minurl'],
+      },
+      optimizeDeps: {
+        exclude: ['@blocknote/core'],
       },
     },
   }
