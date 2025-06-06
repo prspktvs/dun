@@ -10,6 +10,9 @@ import { useEditor } from '../../context/EditorContext'
 import { renderMessage } from './Chat'
 import AvatarDun from '../ui/Avatar'
 import UnreadIndicator from '../ui/UnreadIndicator'
+import { ROLES } from '../../constants/roles.constants'
+import { useAuth } from '../../context/AuthContext'
+import { useProject } from '../../context/ProjectContext'
 
 function MessagePreview({
   user,
@@ -59,6 +62,8 @@ export default function ChatPreview({
   onClick: () => void
 }) {
   const { getUnreadMessagesCount, unreadChats } = useChats()
+  const { user } = useAuth()
+  const { hasPermission } = useProject()
 
   const chatUsers = users.reduce((acc, user) => ({ ...acc, [user.id]: user }), {})
 
@@ -82,6 +87,9 @@ export default function ChatPreview({
 
   const author = chatUsers?.[firstMessage?.authorId]
   const secondAuthor = chatUsers?.[lastMessage?.authorId]
+
+  const isAuthor = author?.id === user?.id
+  const canDeleteChat = hasPermission(ROLES.ADMIN) || isAuthor
 
   useEffect(() => {
     setUnreadMessages(getUnreadMessagesCount(chat.id))
@@ -118,26 +126,30 @@ export default function ChatPreview({
                 </div>
               </div>
             ) : null}
-            <Menu shadow='md' width={200}>
-              <Menu.Target>
-                <i
-                  onClick={(e) => e.stopPropagation()}
-                  className='absolute right-0 z-40 hidden text-2xl ri-more-2-fill top-1 md:block'
-                />
-              </Menu.Target>
+            {canDeleteChat ? (
+              <Menu shadow='md' radius={0} width={200}>
+                <Menu.Target>
+                  <i
+                    onClick={(e) => e.stopPropagation()}
+                    className='text-2xl cursor-pointer ri-more-2-fill'
+                  />
+                </Menu.Target>
 
-              <Menu.Dropdown>
-                <Menu.Item
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDeleteChat()
-                  }}
-                  className='text-red-600'
-                >
-                  Delete discussion
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+                <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
+                  <Menu.Item
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDeleteChat()
+                    }}
+                    className='text-red-600'
+                  >
+                    Remove discussion
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            ) : (
+              <div />
+            )}
           </div>
           {!isEmpty(chat?.messages) ? (
             <>

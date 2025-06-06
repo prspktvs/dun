@@ -16,6 +16,7 @@ import CardHeader from '../../components/Card/CardHeader'
 import Editor from '../../components/Editor'
 import CardContent from '../../components/Card/CardContent'
 import OnboardingEditor from '../../components/Editor/OnboardingEditor'
+import { ROLES } from '../../constants/roles.constants'
 
 interface ICardProps {
   card: ICard
@@ -29,7 +30,7 @@ const Card = ({ card }: ICardProps) => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { closeChat, unreadChats, cardChats } = useChats()
-  const { optimisticDeleteCard, optimisticUpdateCard, users } = useProject()
+  const { optimisticDeleteCard, optimisticUpdateCard, users, hasPermission } = useProject()
   const { isMobile } = useBreakpoint()
 
   const [isFirstTimeViewed, setFirstTimeViewed] = useState(location.hash === '#new')
@@ -42,6 +43,7 @@ const Card = ({ card }: ICardProps) => {
   const files = card?.files?.filter((file) => file.url) || []
 
   const isAuthor = card.author === user?.id
+  const canShareAndRemoveTopic = isAuthor || hasPermission(ROLES.OWNER)
 
   const unreadDiscussions = unreadChats.reduce(
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
@@ -113,7 +115,7 @@ const Card = ({ card }: ICardProps) => {
     <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100vw_-_320px)]')}>
       <CardHeader
         goBack={goBack}
-        isAuthor={isAuthor}
+        canShareAndRemoveTopic={canShareAndRemoveTopic}
         openShareModal={openShareModal}
         isFirstTimeViewed={isFirstTimeViewed}
         updateSharingMode={updateSharingMode}

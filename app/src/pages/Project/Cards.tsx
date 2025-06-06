@@ -16,6 +16,7 @@ import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
 import { logAnalytics } from '../../utils/analytics'
 import { ANALYTIC_EVENTS } from '../../constants'
+import { ROLES } from '../../constants/roles.constants'
 
 function SortButton({
   children,
@@ -40,6 +41,9 @@ export function CardsPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
+  const { hasPermission } = useProject()
+
+  const canCreateCard = hasPermission(ROLES.EDITOR)
 
   const {
     setSortType,
@@ -102,14 +106,16 @@ export function CardsPage() {
                 </SortButton>
               </div>
             )}
-            <div className='flex items-center justify-center flex-shrink-0 md:w-48 w-[111px] h-full border-l border-borders-purple'>
-              <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
-                <span className='justify-center text-sm font-normal font-monaspace pr-1 md:font-thin md:text-xl'>
-                  +
-                </span>
-                Topic
-              </ButtonDun>
-            </div>
+            {canCreateCard && (
+              <div className='flex items-center justify-center flex-shrink-0 md:w-48 w-[111px] h-full border-l border-borders-purple'>
+                <ButtonDun onClick={onCreateNewCard} className='w-full h-full'>
+                  <span className='justify-center text-sm font-normal font-monaspace pr-1 md:font-thin md:text-xl'>
+                    +
+                  </span>
+                  Topic
+                </ButtonDun>
+              </div>
+            )}
           </div>
         </div>
       </section>

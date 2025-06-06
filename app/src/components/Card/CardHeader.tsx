@@ -6,7 +6,7 @@ import { ConfirmModal } from '../ui/modals/ConfirmModal'
 
 interface CardHeaderProps {
   goBack: () => void
-  isAuthor: boolean
+  canShareAndRemoveTopic: boolean
   openShareModal: () => void
   isFirstTimeViewed: boolean
   updateSharingMode: (isPrivate: boolean) => void
@@ -17,7 +17,7 @@ interface CardHeaderProps {
 
 const CardHeader: React.FC<CardHeaderProps> = ({
   goBack,
-  isAuthor,
+  canShareAndRemoveTopic,
   openShareModal,
   isFirstTimeViewed,
   updateSharingMode,
@@ -30,7 +30,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({
       <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
         {'<'} back to topics
       </div>
-      {isAuthor && (
+      {canShareAndRemoveTopic && (
         <div className='flex items-center h-full gap-1'>
           <div className='relative hidden w-full h-full sm:block'>
             <ButtonDun onClick={openShareModal}>Share topic</ButtonDun>

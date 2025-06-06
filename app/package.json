@@ -45,9 +45,9 @@
     "vite-plugin-pwa": "^1.0.0"
   },
   "dependencies": {
-    "@blocknote/core": "^0.29.1",
-    "@blocknote/mantine": "^0.29.1",
-    "@blocknote/react": "^0.29.1",
+    "@blocknote/core": "^0.32.0-hackdays.0",
+    "@blocknote/mantine": "^0.32.0-hackdays.0",
+    "@blocknote/react": "^0.32.0-hackdays.0",
     "@headlessui/react": "^0.0.0-insiders.f016dc5",
     "@hocuspocus/provider": "^2.13.2",
     "@mantine/core": "^7.0.0",
@@ -64,6 +64,7 @@
     "date-fns": "^4.1.0",
     "firebase": "^10.3.1",
     "lodash": "^4.17.21",
+    "nanoid": "^5.1.5",
     "prosemirror-model": "^1.19.3",
     "react-firebase-hooks": "^5.1.1",
     "react-mentions": "^4.4.10",
