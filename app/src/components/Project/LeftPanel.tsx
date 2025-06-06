@@ -7,7 +7,6 @@ import clsx from 'clsx'
 import { useProject } from '../../context/ProjectContext'
 import TaskPreview from '../Task/TaskPreview'
 import LeftPanelButton from '../ui/buttons/LeftPanelButton'
-import { ProjectSettingsModal } from './ProjectSettingsModal'
 import UserList from '../User/UserList'
 import ProjectSelector from '../Project/ProjectSelector'
 import FeedbackModal from '../ui/modals/FeedbackModal'
@@ -15,7 +14,7 @@ import FeedbackModal from '../ui/modals/FeedbackModal'
 function LeftPanel() {
   const { id: projectId } = useParams()
   const location = useLocation()
-  const [isSettingsOpened, setSettingsOpened] = useState(false)
+
   const [isFeedbackOpened, setFeedbackOpened] = useState(false)
   const navigate = useNavigate()
 
@@ -44,10 +43,11 @@ function LeftPanel() {
   const handleFeedback = () => setFeedbackOpened(true)
 
   return (
-    <aside className='flex flex-col items-center h-screen gap-1 w-80 border-r-1 border-borders-purple'>
+    <aside className='flex flex-col items-center h-screen w-80 border-r-1 border-borders-purple'>
       <section className='border-b-1 border-borders-purple h-14'>
-        <ProjectSelector onOpenSettings={() => setSettingsOpened(true)} />
+        <ProjectSelector />
       </section>
+
       {!isOnboarding && (
         <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
           <UserList users={users} />
@@ -57,7 +57,7 @@ function LeftPanel() {
         <ul>
           <li className='mb-2'>
             <LeftPanelButton
-              isActive={location.pathname.endsWith('my-work') && !isSettingsOpened}
+              isActive={location.pathname.endsWith('my-work')}
               onClick={() => navigate('my-work')}
             >
               My work
@@ -65,7 +65,7 @@ function LeftPanel() {
           </li>
           <li className='mb-2'>
             <LeftPanelButton
-              isActive={location.pathname.endsWith(projectId) && !isSettingsOpened}
+              isActive={location.pathname.endsWith(projectId)}
               onClick={() => navigate(`/${projectId}`)}
             >
               Topics ・{topicCount}
@@ -73,7 +73,7 @@ function LeftPanel() {
           </li>
           <li className='mb-2'>
             <LeftPanelButton
-              isActive={location.pathname.endsWith('settings') && !isSettingsOpened}
+              isActive={location.pathname.endsWith('settings')}
               onClick={() => navigate('settings')}
             >
               Project settings
@@ -117,7 +117,6 @@ function LeftPanel() {
           </div>
         ))}
       </section>
-      <ProjectSettingsModal opened={isSettingsOpened} onClose={() => setSettingsOpened(false)} />
     </aside>
   )
 }

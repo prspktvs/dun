@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { genId } from '../../utils'
 import { useProject } from '../../context/ProjectContext'
-import { ProjectSettings } from '../../components/Project/ProjectSettingsModal'
+import { ProjectSettings } from '../../components/Project/ProjectSettings'
 
 export function SettingPage() {
   const { id: projectId } = useParams()
@@ -21,7 +21,7 @@ export function SettingPage() {
       <section className='flex-none border-borders-purple border-b-1 flex items-center h-14' />
 
       {/* Content with fixed height and scroll */}
-      <div className='flex-1 min-h-0 py-5'>
+      <div className='flex-1 min-h-0 pb-5'>
         <div className='h-full mx-auto'>
           <ProjectSettings onClose={() => {}} />
         </div>

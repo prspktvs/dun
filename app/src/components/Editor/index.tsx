@@ -39,6 +39,7 @@ import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
 import { useHighlightBlock } from '../../hooks/editor/useHighlightBlock'
 import { useEditorChats } from '../../hooks/editor/useEditorChats'
+import { ROLES } from '../../constants/roles.constants'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
@@ -137,9 +138,11 @@ function Editor({ card, users }: IEditorProps) {
   const [editable, setEditable] = useState(false)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const { user, token } = useAuth()
-
+  const { hasPermission } = useProject()
   const { setEditor } = useEditor()
   const { openChatById, cardChats, getUnreadMessagesCount } = useChats()
+
+  const canEdit = hasPermission(ROLES.EDITOR)
 
   const { editor } = useWebRtc(
     `${projectId}/cards/${card.id}`,
@@ -198,8 +201,13 @@ function Editor({ card, users }: IEditorProps) {
   }, [editor])
 
   useEffect(() => {
-    editor.isEditable = editable
-  }, [editable])
+    if (canEdit) {
+      editor.isEditable = editable
+      return
+    }
+
+    editor.isEditable = false
+  }, [editable, canEdit])
 
   const onDebouncedSave = debounce(async (editor) => {
     console.log('onDebounceSave editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
@@ -233,7 +241,6 @@ function Editor({ card, users }: IEditorProps) {
         <SideMenuController sideMenu={CustomSideMenu} />
         <SuggestionMenuController
           triggerCharacter='/'
-          suggestionMenuComponent={CustomSlashMenu}
           getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
         />
       </BlockNoteView>

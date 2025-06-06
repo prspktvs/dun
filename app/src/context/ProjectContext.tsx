@@ -16,15 +16,9 @@ import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
-import { IUser, UserRole } from '../types/User'
+import { IUser } from '../types/User'
 import { realtimeDb } from '../config/firebase'
-
-export const ROLES: Record<UserRole, number> = {
-  owner: 4,
-  admin: 3,
-  editor: 2,
-  viewer: 1,
-}
+import { ROLE_LEVELS, UserRole } from '../constants/roles.constants'
 
 export type ProjectContext = {
   project: IProject
@@ -69,11 +63,10 @@ export const ProjectProvider = ({
     () => project?.users?.find((u) => u.id === user?.id)?.role,
     [project, user],
   )
-  console.log('Project role:', role)
 
   const hasPermission = (minRole: UserRole) => {
     if (!role) return false
-    return ROLES[role] >= ROLES[minRole]
+    return ROLE_LEVELS[role] >= ROLE_LEVELS[minRole]
   }
 
   useEffect(() => {

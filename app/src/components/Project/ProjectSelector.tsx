@@ -13,7 +13,7 @@ import { SettingsIcon } from '../icons'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { ROUTES } from '../../constants'
 
-const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) => {
+const ProjectSelector = () => {
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
   const { id: currentProjectId } = useParams()
@@ -40,9 +40,8 @@ const ProjectSelector = ({ onOpenSettings }: { onOpenSettings?: () => void }) =>
     e.stopPropagation()
     e.preventDefault()
 
-    if (!onOpenSettings) return
+    navigate(`/${currentProjectId}/settings`, { replace: true })
     setMenuOpened(false)
-    onOpenSettings()
   }
 
   const goToProject = (id: string) => navigate(`/${id}`, { replace: true })

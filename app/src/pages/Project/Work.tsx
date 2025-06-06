@@ -8,6 +8,7 @@ import { useProject } from '../../context/ProjectContext'
 import TaskPreview from '../../components/Task/TaskPreview'
 import { ITask, TaskPriority } from '../../types/Task.d.ts'
 import { Minus, Plus } from '../../components/icons'
+import { ROLES } from '../../constants/roles.constants'
 
 function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
   const [isOpen, setOpen] = useState(false)
@@ -98,7 +99,8 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
 export function MyWorkPage() {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
-  const { optimisticCreateCard, tasks, cards } = useProject()
+  const { optimisticCreateCard, tasks, cards, hasPermission } = useProject()
+  const canCreateCard = hasPermission(ROLES.EDITOR)
 
   const cardsTitles = useMemo(
     () =>
@@ -121,11 +123,13 @@ export function MyWorkPage() {
     <div className='w-full h-full overflow-hidden pb-32'>
       <section className='border-borders-purple flex items-center h-14 '>
         <div className='h-full flex w-full justify-end border-b-1 border-borders-purple sm:gap-x-1 '>
-          <div className='h-full w-48 border-l-1 border-borders-purple'>
-            <ButtonDun onClick={onCreateNewCard}>
-              <span className='pr-1 text-xl font-thin'>+</span>Topic
-            </ButtonDun>
-          </div>
+          {canCreateCard && (
+            <div className='h-full w-48 border-l-1 border-borders-purple'>
+              <ButtonDun onClick={onCreateNewCard}>
+                <span className='pr-1 text-xl font-thin'>+</span>Topic
+              </ButtonDun>
+            </div>
+          )}
         </div>
       </section>
 
