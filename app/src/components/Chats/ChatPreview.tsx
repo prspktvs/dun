@@ -13,6 +13,7 @@ import UnreadIndicator from '../ui/UnreadIndicator'
 import { ROLES } from '../../constants/roles.constants'
 import { useAuth } from '../../context/AuthContext'
 import { useProject } from '../../context/ProjectContext'
+import { KebabMenu } from '../ui/KebabMenu'
 
 function MessagePreview({
   user,
@@ -127,26 +128,13 @@ export default function ChatPreview({
               </div>
             ) : null}
             {canDeleteChat ? (
-              <Menu shadow='md' radius={0} width={200}>
-                <Menu.Target>
-                  <i
-                    onClick={(e) => e.stopPropagation()}
-                    className='text-2xl cursor-pointer ri-more-2-fill'
-                  />
-                </Menu.Target>
-
-                <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
-                  <Menu.Item
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onDeleteChat()
-                    }}
-                    className='text-red-600'
-                  >
-                    Remove discussion
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              <KebabMenu
+                menuText='Remove discussion'
+                confirmMessage='Are you sure you want to remove this discussion?'
+                confirmText='Remove'
+                onConfirm={onDeleteChat}
+                withoutConfirm
+              />
             ) : (
               <div />
             )}
