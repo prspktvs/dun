@@ -61,8 +61,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteChat = async (cardId: string, chatId: string) => {
     try {
-      if (!confirm('Are you sure?')) return
-
       const path = getChatPath(projectId, cardId, chatId)
       await removeCardChat(path)
       setCardChats((prev) => prev.filter((c) => c.id !== chatId))

@@ -35,7 +35,6 @@ const Card = ({ card }: ICardProps) => {
 
   const [isFirstTimeViewed, setFirstTimeViewed] = useState(location.hash === '#new')
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<RightPanelTab>(isMobile ? 'editor' : 'discussions')
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -119,8 +118,6 @@ const Card = ({ card }: ICardProps) => {
         openShareModal={openShareModal}
         isFirstTimeViewed={isFirstTimeViewed}
         updateSharingMode={updateSharingMode}
-        setShowConfirmModal={setShowConfirmModal}
-        showConfirmModal={showConfirmModal}
         onRemoveCard={onRemoveCard}
       />
       <div className='flex'>

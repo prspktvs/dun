@@ -20,6 +20,7 @@ import {
 } from '../../utils/users'
 import { ROLE_OPTIONS, ROLES, UserRole } from '../../constants/roles.constants'
 import { useAuth } from '../../context/AuthContext'
+import { KebabMenu } from '../ui/KebabMenu'
 
 export function TeamMember({ user }: { user: ITeamMember }) {
   const { id: projectId } = useParams()
@@ -38,48 +39,36 @@ export function TeamMember({ user }: { user: ITeamMember }) {
       </div>
 
       {user.role === 'owner' ? (
-        <div className='font-monaspace text-14 text-left pl-3'>Owner</div>
+        <div className='font-monaspace text-14 text-left font-bold pl-3'>Owner</div>
       ) : (
         <Select
           value={user.role}
           data={ROLE_OPTIONS}
-          disabled={!canUpdateAndRemoveUser}
+          readOnly={!canUpdateAndRemoveUser}
           onChange={(newRole) => {
             if (newRole) {
               updateRole(projectId as string, user.id, newRole as UserRole)
             }
           }}
           rightSection={<i className='ri-arrow-down-s-line text-gray-500' />}
-          rightSectionWidth={30}
           classNames={{
-            root: 'w-[120px]',
-            input: 'text-left font-monaspace text-md border-none bg-transparent cursor-pointer',
+            root: 'w-[100px]',
+            input: clsx(
+              'text-left font-monaspace text-md border-none bg-transparent font-bold',
+              canUpdateAndRemoveUser ? 'cursor-pointer' : 'cursor-default',
+            ),
             dropdown: 'border-borders-purple border-1',
           }}
         />
       )}
 
       {canUpdateAndRemoveUser ? (
-        <Menu shadow='md' radius={0} width={180} position='bottom-end'>
-          <Menu.Target>
-            <i
-              onClick={(e) => e.stopPropagation()}
-              className='text-lg cursor-pointer ri-more-2-fill justify-self-end'
-            />
-          </Menu.Target>
-
-          <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
-            <Menu.Item
-              onClick={(e) => {
-                e.stopPropagation()
-                removeUserFromProject(projectId as string, user.id, currentUser?.id)
-              }}
-              className='text-red-600'
-            >
-              Remove from project
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <KebabMenu
+          menuText='Remove user'
+          confirmMessage='Are you sure you want to remove this user?'
+          confirmText='Remove'
+          onConfirm={() => removeUserFromProject(projectId as string, user.id, currentUser?.id)}
+        />
       ) : (
         <div />
       )}
@@ -256,7 +245,7 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
-      <div className='flex items-center justify-between h-14 border-b-1 border-t-1 border-borders-purple'>
+      <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
         <span className='px-5 ml-3 font-bold font-monaspace'>{title} team</span>
       </div>
 

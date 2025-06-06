@@ -2,7 +2,7 @@ import { Menu } from '@mantine/core'
 
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { SharingMenu } from './Sharing/SharingMenu'
-import { ConfirmModal } from '../ui/modals/ConfirmModal'
+import { KebabMenu } from '../ui/KebabMenu'
 
 interface CardHeaderProps {
   goBack: () => void
@@ -10,8 +10,6 @@ interface CardHeaderProps {
   openShareModal: () => void
   isFirstTimeViewed: boolean
   updateSharingMode: (isPrivate: boolean) => void
-  setShowConfirmModal: (value: boolean) => void
-  showConfirmModal: boolean
   onRemoveCard: () => void
 }
 
@@ -21,8 +19,6 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   openShareModal,
   isFirstTimeViewed,
   updateSharingMode,
-  setShowConfirmModal,
-  showConfirmModal,
   onRemoveCard,
 }) => (
   <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
@@ -41,32 +37,11 @@ const CardHeader: React.FC<CardHeaderProps> = ({
               />
             )}
           </div>
-          <Menu shadow='md' radius={0} width={200}>
-            <Menu.Target>
-              <i
-                onClick={(e) => e.stopPropagation()}
-                className='text-2xl cursor-pointer ri-more-2-fill'
-              />
-            </Menu.Target>
-
-            <Menu.Dropdown className='shadow-[6px_6px_0px_0px_#C1BAD0]'>
-              <Menu.Item
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowConfirmModal(true)
-                }}
-                className='text-red-600'
-              >
-                Remove topic
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-          <ConfirmModal
-            message='Are you sure you want to remove this topic?'
+          <KebabMenu
+            menuText='Remove topic'
+            confirmMessage='Are you sure you want to remove this topic?'
             confirmText='Remove'
-            onClose={() => setShowConfirmModal(false)}
             onConfirm={onRemoveCard}
-            opened={showConfirmModal}
           />
         </div>
       )}
