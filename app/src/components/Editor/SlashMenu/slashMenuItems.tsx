@@ -15,11 +15,10 @@ import { groupBy } from 'lodash'
 
 import { insertOrUpdateBlock } from '../../../utils/editor'
 import ImageBlock from '../Blocks/ImageBlock'
-import TaskBlock from '../Blocks/TaskBlock'
 import { TaskList } from '../Blocks/TaskList'
 import { auth } from '../../../config/firebase'
 
-const EXCLUDED_KEYS = ['Check List', 'Image', 'Emoji']
+const EXCLUDED_KEYS = ['Check List']
 
 export const customSchema: unknown = {
   ...defaultBlockSchema,
@@ -66,19 +65,6 @@ export function CustomSlashMenu(props: SuggestionMenuProps<DefaultReactSuggestio
   )
 }
 
-const insertImage = (editor: BlockNoteEditor) => ({
-  title: 'Image',
-  onItemClick: () => {
-    insertOrUpdateBlock(editor, {
-      type: 'image',
-    })
-  },
-  aliases: ['image', 'img', 'picture', 'media'],
-  group: 'Media',
-  icon: <i className='ri-image-add-line' />,
-  subtext: 'Insert an image',
-})
-
 const insertTask = (editor: BlockNoteEditor) => {
   const user = auth.currentUser
   return {
@@ -94,16 +80,23 @@ const insertTask = (editor: BlockNoteEditor) => {
     },
     aliases: ['task', '/task'],
     group: 'Tasks',
-    icon: <i className='ri-checkbox-line' />,
+    icon: (
+      <div className='bg-[#edebf3] h-[18px] w-[18px] flex items-center justify-center rounded-md'>
+        <i className='ri-checkbox-fill' />
+      </div>
+    ),
     subtext: 'Add a task',
+    badge: '⌘-Shift-0',
   }
 }
 
-export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => [
-  ...getDefaultReactSlashMenuItems(editor).filter(
-    (item: DefaultReactSuggestionItem) =>
-      !EXCLUDED_KEYS.includes((item as DefaultSuggestionItem).title),
-  ),
-  insertTask(editor),
-  insertImage(editor),
-]
+export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => {
+  console.log(getDefaultReactSlashMenuItems(editor))
+  return [
+    ...getDefaultReactSlashMenuItems(editor).filter(
+      (item: DefaultReactSuggestionItem) =>
+        !EXCLUDED_KEYS.includes((item as DefaultSuggestionItem).title),
+    ),
+    insertTask(editor),
+  ]
+}

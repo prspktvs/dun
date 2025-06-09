@@ -53,18 +53,19 @@ export const useEditorChats = (
       }
 
       try {
-        const plugins = editor.prosemirrorView.state.plugins.filter(
+        const currentPlugins = editor.prosemirrorView.state.plugins
+        const otherPlugins = currentPlugins.filter(
           (p) => p.key !== MESSAGE_ICON_PLUGIN_KEY.key,
         )
+        
+        const newState = editor.prosemirrorView.state.reconfigure({
+          plugins: [...otherPlugins, messageIconPlugin],
+        })
+        
+        // Directly update the editor's state with the new configuration.
+        // This avoids dispatching a separate transaction that might interfere with history.
+        editor.prosemirrorView.updateState(newState)
 
-        editor.prosemirrorView.updateState(
-          editor.prosemirrorView.state.reconfigure({
-            plugins: [...plugins, messageIconPlugin],
-          }),
-        )
-
-        const tr = editor.prosemirrorView.state.tr
-        editor.prosemirrorView.dispatch(tr.setMeta('forceUpdate', true))
       } catch (error) {
         console.error('Error updating message plugin:', error)
       }
@@ -81,11 +82,11 @@ export const useEditorChats = (
             (p) => p.key !== MESSAGE_ICON_PLUGIN_KEY.key,
           )
           editor.prosemirrorView.updateState(editor.prosemirrorView.state.reconfigure({ plugins }))
-          console.log('Message plugin removed')
+
         }
       } catch (error) {
         console.error('Error removing plugin:', error)
       }
     }
-  }, [editor, messageIconPlugin, cardChats.length, updateKey])
+  }, [messageIconPlugin, cardChats.length, updateKey])
 }
