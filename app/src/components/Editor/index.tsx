@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { SideMenuController, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
-import Mention from '@tiptap/extension-mention'
+// import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
 import { debounce, get, set } from 'lodash'
@@ -16,30 +16,28 @@ import {
 } from '@blocknote/core'
 import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import { IUser } from '../../types/User'
 import { ICard } from '../../types/Card'
-import { CustomSlashMenu, getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
-import suggestion from './Mentions/suggestion'
+import { getCustomSlashMenuItems } from './SlashMenu/slashMenuItems'
 import { useAuth } from '../../context/AuthContext'
 import CustomSideMenu from './SideMenu'
 import { useEditor } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
 import '@blocknote/mantine/style.css'
-import TaskBlock from './Blocks/TaskBlock'
 import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
 import { Loader } from '../ui/Loader'
 import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
 import { useProject } from '../../context/ProjectContext'
-
-import { useParams, useSearchParams } from 'react-router-dom'
-
 import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
 import { useHighlightBlock } from '../../hooks/editor/useHighlightBlock'
 import { useEditorChats } from '../../hooks/editor/useEditorChats'
 import { ROLES } from '../../constants/roles.constants'
+import { Mention } from './Mentions/Mention'
+import { getMentionMenuItems } from './SlashMenu/MentionMenu'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
@@ -49,6 +47,7 @@ const EDITOR_SCHEMA = BlockNoteSchema.create({
   },
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
+    mention: Mention,
   },
   styleSpecs: {
     ...defaultStyleSpecs,
@@ -63,18 +62,15 @@ interface IEditorProps {
 }
 
 const BACKEND_URL = getWsUrl(process.env.VITE_BACKEND_URL || '')
-console.log('BACKEND_URL', BACKEND_URL)
 
-function useWebRtc(
+function useCreateCollaborationEditor(
   id: string,
   onStatus: ({ status }: { status: string }) => void,
   onClose: ({ event }: { event: unknown }) => void,
-  user: IUser | firebase.User | null,
-  users: IUser[],
-  token: string,
 ) {
   const { isOnboarding } = useProject()
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
+  const { user, token } = useAuth()
 
   const [provider, setProvider] = useState(
     () =>
@@ -94,28 +90,6 @@ function useWebRtc(
     ...(isOnboarding && {
       initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
     }),
-    _tiptapOptions: {
-      editable: false,
-      extensions: [
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
-          },
-          renderText({ options, node }) {
-            return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
-          },
-          suggestion: {
-            ...suggestion,
-            items: ({ query }) => {
-              return (
-                users?.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase())) ||
-                []
-              )
-            },
-          },
-        }),
-      ],
-    },
     collaboration:
       provider && !isOnboarding
         ? {
@@ -137,14 +111,13 @@ function Editor({ card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const { user, token } = useAuth()
   const { hasPermission } = useProject()
   const { setEditor } = useEditor()
   const { openChatById, cardChats, getUnreadMessagesCount } = useChats()
 
   const canEdit = hasPermission(ROLES.EDITOR)
 
-  const { editor } = useWebRtc(
+  const { editor } = useCreateCollaborationEditor(
     `${projectId}/cards/${card.id}`,
     ({ status }) => {
       if (status !== 'connected') return
@@ -154,9 +127,6 @@ function Editor({ card, users }: IEditorProps) {
     ({ event }) => {
       setEditable(false)
     },
-    user,
-    users,
-    token,
   )
 
   const highlightBlock = useHighlightBlock()
@@ -242,6 +212,12 @@ function Editor({ card, users }: IEditorProps) {
         <SuggestionMenuController
           triggerCharacter='/'
           getItems={async (query) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
+        />
+        <SuggestionMenuController
+          triggerCharacter={'@'}
+          getItems={async (query) =>
+            filterSuggestionItems(getMentionMenuItems(editor, users), query)
+          }
         />
       </BlockNoteView>
     </>

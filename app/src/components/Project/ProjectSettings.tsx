@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { debounce, isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
-import { nanoid } from 'nanoid'
+
 
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { useProject } from '../../context/ProjectContext'
@@ -13,8 +13,6 @@ import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
 import { ITeamMember } from '../../types/User'
 import {
-  createProjectInvite,
-  ProjectInvite,
   removeUserFromProject,
   updateRole,
 } from '../../utils/users'
@@ -200,7 +198,7 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
         <div className='flex justify-between items-center h-14 border-b-1 border-borders-purple'>
           <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
           <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
-            {}
+            {inviteUrl}
           </div>
           <div className='w-1/4 h-14'>
             <CopyButton value={inviteUrl}>

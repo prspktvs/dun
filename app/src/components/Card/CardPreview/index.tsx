@@ -94,9 +94,9 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
         </div>
         {/* Images Preview */}
         {imageUrls.length > 0 && (
-          <div className='flex mb-2'>
+          <div className='flex mb-2 '>
             {imageUrls.map((url, idx) => (
-              <Image key={url + idx} className='w-12' src={url} alt='' />
+              <Image key={url + idx} className='max-h-12 max-w-12' src={url} alt='' />
             ))}
             {card.files?.length > MAX_IMAGES && (
               <span className='flex items-center h-full ml-3 text-sm underline font'>
@@ -110,6 +110,5 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
     </div>
   )
 }
-// TODO: Ask about this logic and confirm if it's correct for change it toAvatarDun component
 
 export default CardPreview
