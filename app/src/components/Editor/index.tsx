@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { SideMenuController, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
-import Mention from '@tiptap/extension-mention'
+// import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
 import { debounce, get, set } from 'lodash'
@@ -35,7 +35,7 @@ import { useProject } from '../../context/ProjectContext'
 
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { TaskList } from './Blocks/TaskList'
+// import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
 import { useHighlightBlock } from '../../hooks/editor/useHighlightBlock'
 import { useEditorChats } from '../../hooks/editor/useEditorChats'
@@ -44,7 +44,7 @@ import { ROLES } from '../../constants/roles.constants'
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
-    task: TaskList,
+    // task: TaskList,
     image: ImageBlock,
   },
   inlineContentSpecs: {
@@ -97,23 +97,23 @@ function useWebRtc(
     _tiptapOptions: {
       editable: false,
       extensions: [
-        Mention.configure({
-          HTMLAttributes: {
-            class: 'mention',
-          },
-          renderText({ options, node }) {
-            return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
-          },
-          suggestion: {
-            ...suggestion,
-            items: ({ query }) => {
-              return (
-                users?.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase())) ||
-                []
-              )
-            },
-          },
-        }),
+        // Mention.configure({
+        //   HTMLAttributes: {
+        //     class: 'mention',
+        //   },
+        //   renderText({ options, node }) {
+        //     return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
+        //   },
+        //   suggestion: {
+        //     ...suggestion,
+        //     items: ({ query }) => {
+        //       return (
+        //         users?.filter((user) => user.name.toLowerCase().startsWith(query.toLowerCase())) ||
+        //         []
+        //       )
+        //     },
+        //   },
+        // }),
       ],
     },
     collaboration:
@@ -208,14 +208,6 @@ function Editor({ card, users }: IEditorProps) {
 
     editor.isEditable = false
   }, [editable, canEdit])
-
-  const onDebouncedSave = debounce(async (editor) => {
-    console.log('onDebounceSave editor.topLevelBlocks', editor.topLevelBlocks, 'editor', editor)
-  }, SAVING_DELAY)
-
-  useEffect(() => {
-    return () => onDebouncedSave.cancel()
-  }, [onDebouncedSave])
 
   return isLoading ? (
     <Loader />

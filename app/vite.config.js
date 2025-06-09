@@ -12,10 +12,22 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
       chunkSizeWarningLimit: 1200,
       rollupOptions: {
-        external: ['#minpath', '#minproc', '#minurl'],
+        // external: ['#minpath', '#minproc', '#minurl'],
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            // editor: ['@blocknote/core', '@blocknote/react', '@blocknote/mantine'],
+            // prosemirror: ['prosemirror-state', 'prosemirror-view', 'prosemirror-model'],
+          },
+        },
       },
       optimizeDeps: {
-        exclude: ['@blocknote/core'],
+        include: ['@blocknote/core'],
+        exclude: [],
+      },
+      server: {
+        open: true,
+        host: true,
       },
     },
   }
