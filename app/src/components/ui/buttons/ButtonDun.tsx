@@ -4,17 +4,28 @@ import React from 'react'
 
 interface IButtonDunProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
+  variant?: 'filled' | 'outline' | 'subtle'
   className?: string
 }
 
-export default function ButtonDun({ children, className, onClick, ...props }: IButtonDunProps) {
+export default function ButtonDun({
+  children,
+  className,
+  onClick,
+  variant = 'filled',
+  ...props
+}: IButtonDunProps) {
   return (
     <div className='flex items-center justify-center w-full h-full'>
       <Button
-        className={clsx('font-monaspace bg-btnBg hover:bg-btnBg scale-button', className)}
+        classNames={{
+          root: clsx('font-monaspace scale-button'),
+        }}
+        w='100%'
+        h='100%'
+        color='#8279BD'
         radius={0}
-        variant='outline'
-        color='#FFFFFF'
+        variant={variant}
         onClick={onClick}
         {...props}
       >
