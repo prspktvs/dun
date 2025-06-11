@@ -100,7 +100,7 @@ const ProjectSelector = () => {
               key={'prjx-' + idx}
               classNames={{
                 itemLabel: clsx(
-                  `flex justify-between items-center py-5 pr-4 text-lg font-medium h-14 pl-7 md:text-md`,
+                  `flex justify-between items-center py-5 pr-4 h-10 pl-7 md:text-md`,
                   isCurrentProject(project.id) && 'bg-btnBg/10',
                 ),
               }}
@@ -108,7 +108,7 @@ const ProjectSelector = () => {
             >
               <span
                 className={clsx(
-                  'flex-1 font-monaspace font-bold',
+                  'flex-1 font-rubik text-16 font-semibold',
                   isCurrentProject(project.id) && 'text-btnBg',
                 )}
               >
@@ -123,18 +123,12 @@ const ProjectSelector = () => {
           ))}
         </div>
         <div className='h-14 w-full'>
-          <ButtonDun
-            onClick={() => navigate(getRandomProjectRoute(), { replace: true })}
-            className='w-full h-full'
-          >
+          <ButtonDun onClick={() => navigate(getRandomProjectRoute(), { replace: true })}>
             + Create new project
           </ButtonDun>
         </div>
         <div className='h-14 w-full'>
-          <ButtonDun
-            onClick={() => navigate(ROUTES.DASHBOARD, { replace: true })}
-            className='w-full h-full bg-gray-100 border-none text-btnBg hover:bg-gray-100 hover:text-btnBg'
-          >
+          <ButtonDun onClick={() => navigate(ROUTES.DASHBOARD, { replace: true })} variant='subtle'>
             All projects
           </ButtonDun>
         </div>

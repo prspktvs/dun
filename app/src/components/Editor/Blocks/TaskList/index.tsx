@@ -315,7 +315,7 @@ const taskBlockContent = createStronglyTypedTiptapNode({
   addNodeView() {
     return ({ node, getPos, editor, HTMLAttributes }) => {
       const wrapper = document.createElement('div')
-      wrapper.classList.add('flex', 'items-center', 'gap-4')
+      wrapper.classList.add('flex', 'items-start', 'gap-4')
 
       const checkboxWrapper = document.createElement('div')
       checkboxWrapper.contentEditable = 'false'

@@ -4,7 +4,6 @@ import { debounce, isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { useProject } from '../../context/ProjectContext'
 import AvatarDun from '../ui/Avatar'
@@ -12,10 +11,7 @@ import { DUN_URL, ROUTES } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
 import { ITeamMember } from '../../types/User'
-import {
-  removeUserFromProject,
-  updateRole,
-} from '../../utils/users'
+import { removeUserFromProject, updateRole } from '../../utils/users'
 import { ROLE_OPTIONS, ROLES, UserRole } from '../../constants/roles.constants'
 import { useAuth } from '../../context/AuthContext'
 import { KebabMenu } from '../ui/KebabMenu'
@@ -259,7 +255,7 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
             <input
               value={removeTitle}
               onChange={(e) => setRemoveTitle(e.target.value)}
-              className='w-1/2 text-sm my-2 bg-transparent outline-none border-borders-purple border-1 px-3 py-1'
+              className='w-1/2 text-sm my-2 bg-transparent outline-none px-3 py-1'
               placeholder={title}
             />
           </div>
