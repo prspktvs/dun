@@ -1,3 +1,5 @@
+import { ITeamMember } from './User'
+
 export interface IUser {
   id: string
   name: string
@@ -26,6 +28,6 @@ export interface IProject {
   description?: string
   tags?: string[]
   author: IUser
-  users: IUser[]
+  users: ITeamMember[]
   public: boolean
 } 

@@ -10,6 +10,7 @@ import { IProject, IUser } from '../../types'
 import { createProject } from '../../services'
 import Logo from '../ui/Logo'
 import { ROUTES } from '../../constants'
+import { ITeamMember } from '../../types/User'
 
 interface ICreateProjectProps {
   projectId: string
@@ -99,7 +100,7 @@ export const CreateProject = (props: ICreateProjectProps) => {
       id: props.projectId,
       title,
       description,
-      users: [user as IUser],
+      users: [{ ...user, role: 'owner' } as ITeamMember],
       tags: [],
     }
     await createProject(project)
