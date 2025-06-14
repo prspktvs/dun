@@ -1,4 +1,4 @@
-import { IUser } from './User'
+import { ITeamMember, IUser } from './User'
 import { ITask } from './Task'
 
 export interface IProject {
@@ -6,6 +6,6 @@ export interface IProject {
   title: string
   description?: string
   tags: string[] | null
-  users: IUser[] | null
+  users: ITeamMember[] | null
   cards: ICard[] | null
 }
