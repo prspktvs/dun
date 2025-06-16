@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { useProject } from '../../context/ProjectContext'
 import AvatarDun from '../ui/Avatar'
-import { DUN_URL, ROUTES } from '../../constants'
+import { ROUTES } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
 import { ITeamMember } from '../../types/User'
@@ -21,7 +21,8 @@ export function TeamMember({ user }: { user: ITeamMember }) {
   const { user: currentUser } = useAuth()
   const { hasPermission } = useProject()
 
-  const canUpdateAndRemoveUser = hasPermission(ROLES.ADMIN) && user.role !== 'owner'
+  const canUpdateAndRemoveUser =
+    hasPermission(ROLES.ADMIN) && user.role !== 'owner' && user.id !== currentUser?.id
 
   return (
     <div className='my-2 ml-3 grid grid-cols-[auto_1fr_120px_40px] items-center gap-3'>
@@ -124,11 +125,11 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   const [removeTitle, setRemoveTitle] = useState('')
   const navigate = useNavigate()
 
+  const inviteUrl = project.inviteUrl
+
   const canDeleteProject = hasPermission(ROLES.OWNER)
   const canEditTitleAndDescription = hasPermission(ROLES.ADMIN)
   const canInviteUsers = hasPermission(ROLES.ADMIN)
-
-  const inviteUrl = DUN_URL + '/' + projectId
 
   useEffect(() => {
     if (isLoading) return

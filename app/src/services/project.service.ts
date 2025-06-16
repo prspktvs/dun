@@ -1,10 +1,11 @@
 import { getFirestore, collection, doc, deleteDoc, setDoc, getDoc, getDocs } from 'firebase/firestore'
 
 import { IProject } from '../types/Project'
-import { IUser } from '../types/User'
+import { ITeamMember } from '../types/User'
 import { db } from '../config/firebase'
+import { ROLES } from '../constants/roles.constants'
 
-export const addUserToProject = async (projectId: string, user: IUser) => {
+export const addUserToProject = async (projectId: string, user: Partial<ITeamMember>) => {
   try {
     if (!projectId || !user) return null
     const projectRef = doc(collection(db, 'projects'), projectId)
@@ -14,7 +15,8 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
     const isUserFound = data?.users?.find((u) => u.id === user.id)
     if (isUserFound) return console.log('User already exists in project')
 
-    const newUsers = data?.users?.length > 0 ? [...data?.users ?? [], user] : [user]
+    const newUser = {...user, role: user?.role ?? ROLES.VIEWER  }
+    const newUsers = data?.users?.length > 0 ? [...data?.users ?? [], newUser] : [{...newUser, role: ROLES.OWNER }]
     await setDoc(projectRef, { users: newUsers }, { merge: true })
   } catch (e) {
     console.error(e)
@@ -25,6 +27,7 @@ export const addUserToProject = async (projectId: string, user: IUser) => {
 export const createProject = async (project: Partial<IProject>) => {
   try {
     const projectId = project.id
+    if (!projectId) throw new Error('project.id is required')
     const projectRef = doc(collection(db, 'projects'), projectId)
     const snap = await setDoc(projectRef, project)
 
