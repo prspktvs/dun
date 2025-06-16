@@ -91,7 +91,6 @@ const insertTask = (editor: BlockNoteEditor) => {
 }
 
 export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => {
-  console.log(getDefaultReactSlashMenuItems(editor))
   return [
     ...getDefaultReactSlashMenuItems(editor).filter(
       (item: DefaultReactSuggestionItem) =>

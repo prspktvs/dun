@@ -11,8 +11,6 @@ const isDev = Boolean(process.env.FUNCTIONS_EMULATOR)
 const REGION = isDev ? 'us-central1' : 'europe-west1'
 const API_HOST = isDev ? 'http://localhost:3000' : 'https://api.dun.wtf'
 
-console.log('API_HOST', API_HOST, 'REGION', REGION)
-
 exports.onWrittenFunction = onValueWritten(
   {
     ref: '/chats/{chatId}/messages/{messageId}',

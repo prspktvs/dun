@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { off, onValue, ref } from 'firebase/database'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import { IChat } from '../types/Chat'
 import { removeCardChat } from '../services'
 import { useAuth } from './AuthContext'
 import { getChatPath } from '../utils/chat'
-import { useHighlightBlock } from '../hooks/editor/useHighlightBlock'
+import { useEditor } from './EditorContext'
 
 export type ChatContext = {
   chatId: string
@@ -33,11 +33,19 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [chatId, setChatId] = useState<string>(currentChatId ?? '')
   const [cardChats, setCardChats] = useState<IChat[]>([])
+  const { editor } = useEditor()
   const [unreadChats, setUnreadChats] = useState<{ id: string; unreadCount: number }[]>([])
 
   const { user } = useAuth()
 
-  const highlightBlock = useHighlightBlock()
+  const highlightBlock = useCallback(
+    (blockId: string) => {
+      if (editor && blockId) {
+        editor._tiptapEditor.commands.highlightBlock(blockId)
+      }
+    },
+    [editor],
+  )
 
   const navigate = useNavigate()
 

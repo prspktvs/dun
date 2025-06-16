@@ -1,11 +1,10 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { SideMenuController, SuggestionMenuController, useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import '@blocknote/core/style.css'
-// import Mention from '@tiptap/extension-mention'
 import { Loader as MantineLoader, Alert } from '@mantine/core'
 import * as Y from 'yjs'
-import { debounce, get, set } from 'lodash'
+import { debounce } from 'lodash'
 import {
   BlockNoteEditor,
   BlockNoteSchema,
@@ -14,7 +13,6 @@ import {
   defaultStyleSpecs,
   filterSuggestionItems,
 } from '@blocknote/core'
-import firebase from 'firebase/compat/app'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -33,11 +31,11 @@ import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
 import { useProject } from '../../context/ProjectContext'
 import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
-import { useHighlightBlock } from '../../hooks/editor/useHighlightBlock'
-import { useEditorChats } from '../../hooks/editor/useEditorChats'
 import { ROLES } from '../../constants/roles.constants'
 import { Mention } from './Mentions/Mention'
 import { getMentionMenuItems } from './SlashMenu/MentionMenu'
+import { HighlightBlockExtension } from './Extensions/HighlightBlock'
+import { ChatIconExtension } from './Extensions/ChatIcon'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
@@ -71,6 +69,7 @@ function useCreateCollaborationEditor(
   const { isOnboarding } = useProject()
   const [doc, setDoc] = useState<Y.Doc>(new Y.Doc())
   const { user, token } = useAuth()
+  const { openChatById, getUnreadMessagesCount, cardChats } = useChats()
 
   const [provider, setProvider] = useState(
     () =>
@@ -99,6 +98,20 @@ function useCreateCollaborationEditor(
           }
         : undefined,
     schema: EDITOR_SCHEMA,
+    _tiptapOptions: {
+      extensions: [
+        HighlightBlockExtension.configure({
+          duration: 3000,
+          color: 'rgba(255, 255, 0, 0.3)',
+          behavior: 'smooth',
+        }),
+        ChatIconExtension.configure({
+          openChatById,
+          getUnreadMessagesCount,
+          cardChats,
+        }),
+      ],
+    },
     uploadFile,
   })
 
@@ -129,9 +142,30 @@ function Editor({ card, users }: IEditorProps) {
     },
   )
 
-  const highlightBlock = useHighlightBlock()
+  const highlightBlock = useCallback(
+    (blockId: string) => {
+      if (editor && blockId) {
+        editor._tiptapEditor.commands.highlightBlock(blockId)
+      }
+    },
+    [editor],
+  )
 
-  useEditorChats(editor, { openChatById, cardChats, getUnreadMessagesCount })
+  useEffect(() => {
+    if (editor && editor._tiptapEditor && !editor._tiptapEditor.isDestroyed) {
+      editor._tiptapEditor.extensionStorage.chatIcon = {
+        openChatById,
+        cardChats,
+        getUnreadMessagesCount,
+      }
+
+      try {
+        editor._tiptapEditor.commands.updateChatIcons()
+      } catch (error) {
+        console.error('Failed to update chat icons on change:', error)
+      }
+    }
+  }, [editor, openChatById, cardChats, getUnreadMessagesCount])
 
   useEffect(() => {
     const taskId = searchParams.get('taskId')

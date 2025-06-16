@@ -23,7 +23,6 @@ export function useFirebaseCollection(path: string) {
           taskSnapshot.forEach((task) => {
             tasks.push({ id: task.id, ...task.data() })
           })
-          console.log(doc.id, tasks)
 
           return {
             ...doc.data(),
