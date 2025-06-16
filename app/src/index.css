@@ -16,7 +16,6 @@ body {
   @apply bg-background text-primary-text font-rubik;
 }
 
-/* @TODO: check if we actually need that */
 *,
 ::before,
 ::after {
@@ -70,33 +69,45 @@ li {
   @apply underline text-blue-600;
 }
 
-.bn-highlight-animation {
-  transition: background-color 0.3s ease-in-out;
-}
-
-.bn-highlight-animation.active {
-  border-radius: 0.3rem;
-  animation: highlight-fade 3s ease-in-out;
-}
-
-
-[class^="bn-block"] {
+.ProseMirror [data-neo-id], .ProseMirror [data-id] {
   position: relative;
 }
 
-@keyframes highlight-fade {
+.bn-highlight-block-active {
+  background-color: rgba(255, 255, 0, 0.3);
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  border: 2px solid rgba(255, 193, 7, 0.8) !important;
+  box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+  animation: highlightPulse 3s ease-in-out;
+}
+
+@keyframes highlightPulse {
   0% {
-    background-color: transparent;
+    background-color: rgba(255, 255, 0, 0.5);
+    transform: scaleX(1.005);
+    border-color: rgba(255, 193, 7, 1);
   }
-  10% {
-    background-color: #FBFCDB;
-  }
-  90% {
-    background-color: #FBFCDB;
+  50% {
+    background-color: rgba(255, 255, 0, 0.3);
+    transform: scaleX(1.005);
+    border-color: rgba(255, 193, 7, 0.8);
   }
   100% {
-    background-color: transparent;
+    background-color: rgba(255, 255, 0, 0.1);
+    transform: scaleX(1.005);
+    border-color: rgba(255, 193, 7, 0.6);
   }
+}
+
+.chat-icon-hover-only {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.blockContainer:hover .chat-icon-hover-only {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .hide-scrollbar {

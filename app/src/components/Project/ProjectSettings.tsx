@@ -1,5 +1,5 @@
-import { Button, CopyButton, Menu, Popover, Select, Text } from '@mantine/core'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Button, CopyButton, Popover, Select, Text } from '@mantine/core'
+import { useCallback, useEffect, useState } from 'react'
 import { debounce, isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
@@ -122,50 +122,12 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [removeTitle, setRemoveTitle] = useState('')
-  // const [activeInvite, setActiveInvite] = useState<ProjectInvite | null>(null)
-  // const [isGenerating, setIsGenerating] = useState(false)
   const navigate = useNavigate()
 
   const canDeleteProject = hasPermission(ROLES.OWNER)
   const canEditTitleAndDescription = hasPermission(ROLES.ADMIN)
   const canInviteUsers = hasPermission(ROLES.ADMIN)
 
-  // useEffect(() => {
-  //   const setupInviteLink = async () => {
-  //     if (!projectId) return
-
-  //     setIsGenerating(true)
-  //     try {
-  //       const invite = await createProjectInvite(projectId, 'viewer')
-  //       setActiveInvite(invite)
-  //     } catch (error) {
-  //       console.error('Failed to setup invite:', error)
-  //     } finally {
-  //       setIsGenerating(false)
-  //     }
-  //   }
-
-  //   setupInviteLink()
-  // }, [projectId])
-
-  // const regenerateInviteLink = async (role: 'viewer' | 'editor') => {
-  //   if (!projectId) return
-  //   setIsGenerating(true)
-  //   try {
-  //     // Force create new invite
-  //     const newInvite = await createProjectInvite(projectId, role, true)
-  //     setActiveInvite(newInvite)
-  //   } catch (error) {
-  //     console.error('Failed to regenerate invite:', error)
-  //   } finally {
-  //     setIsGenerating(false)
-  //   }
-  // }
-
-  // const inviteUrl = useMemo(
-  //   () => (activeInvite ? `${DUN_URL}/${projectId}/join/${activeInvite.id}` : ''),
-  //   [activeInvite, projectId],
-  // )
   const inviteUrl = DUN_URL + '/' + projectId
 
   useEffect(() => {

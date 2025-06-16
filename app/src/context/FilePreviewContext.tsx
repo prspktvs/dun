@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect , useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { IFile } from '../types/File'
 import FilePreviewModal from '../components/ui/modals/FilePreviewModal'
@@ -12,7 +12,6 @@ export const FilePreviewProvider = ({
 }) => {
   const [fileUrl, setFileUrl] = useState<FilePreviewContext['fileUrl']>(undefined)
 
-  // Need to open the preview modal from vanilla JS (where can't use hooks)
   useEffect(() => {
     const handleOpenPreview = (event) => {
       const { detail } = event
