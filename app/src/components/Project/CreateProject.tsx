@@ -6,11 +6,12 @@ import { Button } from '@mantine/core'
 
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { useAuth } from '../../context/AuthContext'
-import { IProject, IUser } from '../../types'
 import { createProject } from '../../services'
 import Logo from '../ui/Logo'
 import { ROUTES } from '../../constants'
 import { ITeamMember } from '../../types/User'
+import { generateInviteLink } from '../../utils'
+import { IProject } from '../../types/Project'
 
 interface ICreateProjectProps {
   projectId: string
@@ -96,12 +97,14 @@ export const CreateProject = (props: ICreateProjectProps) => {
   const goToDashboard = () => navigate(ROUTES.DASHBOARD)
 
   const onCreate = async () => {
+    const inviteUrl = generateInviteLink(props.projectId)
     const project: Partial<IProject> = {
       id: props.projectId,
       title,
       description,
       users: [{ ...user, role: 'owner' } as ITeamMember],
       tags: [],
+      inviteUrl,
     }
     await createProject(project)
   }

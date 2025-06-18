@@ -1,9 +1,13 @@
+import { DUN_URL } from '../constants'
+
 export function genId(length = 20): string {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   return [...new Array(length)].map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
 export const getRandomProjectRoute = () => `/${genId()}`
+
+export const generateInviteLink = (projectId: string): string => DUN_URL + `/${projectId}?inviteToken=${genId(30)}`
 
 export function extractCardPath(input: string): string | null {
   const regex = /([^\/]+)\/cards\/([^\/]+)/

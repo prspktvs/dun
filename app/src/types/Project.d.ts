@@ -8,4 +8,5 @@ export interface IProject {
   tags: string[] | null
   users: ITeamMember[] | null
   cards: ICard[] | null
+  inviteUrl?: string
 }

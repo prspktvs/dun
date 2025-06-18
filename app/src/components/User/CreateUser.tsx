@@ -2,9 +2,10 @@ import { Input, Modal, Button } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useState } from 'react'
 
-import { IUser } from '../../types/User'
+import { ITeamMember, IUser } from '../../types/User'
 import { genId } from '../../utils'
 import { addUserToProject } from '../../services'
+import { ROLES } from '../../constants/roles.constants'
 
 interface ICreateUserProps {
   projectId: string
@@ -14,10 +15,11 @@ function CreateUser({ projectId }: ICreateUserProps) {
   const [name, setName] = useState('')
 
   const createUser = async () => {
-    const newUser: IUser = {
+    const newUser: Partial<ITeamMember> = {
       id: genId(),
       name,
       color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+      role: ROLES.VIEWER,
     }
 
     await addUserToProject(projectId, newUser)

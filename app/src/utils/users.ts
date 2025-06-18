@@ -3,6 +3,7 @@ import { addDoc, collection, doc, getDoc, getDocs, limit, query, updateDoc, wher
 import { db } from '../config/firebase'
 import { ITeamMember } from '../types/User'
 import { UserRole } from '../constants/roles.constants'
+import { generateInviteLink } from '.'
 
 export interface ProjectInvite {
   id: string
@@ -92,9 +93,11 @@ export const removeUserFromProject = async (
     }
 
     const updatedUsers = users.filter((u: ITeamMember) => u.id !== userIdToRemove)
+    const updatedInviteUrl = generateInviteLink(projectId)
 
     await updateDoc(projectRef, {
-      users: updatedUsers
+      users: updatedUsers,
+      inviteUrl: updatedInviteUrl
     })
   } catch (error) {
     console.error('Error removing user:', error)

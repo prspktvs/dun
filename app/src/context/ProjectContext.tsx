@@ -3,14 +3,7 @@ import { get, off, onValue, ref } from 'firebase/database'
 
 import { ITask } from '../types/Task'
 import { useAuth } from './AuthContext'
-import {
-  addUserToProject,
-  createCard,
-  getAllUserTasks,
-  getProjectCards,
-  removeCard,
-  updateCard,
-} from '../services'
+import { createCard, getAllUserTasks, getProjectCards, removeCard, updateCard } from '../services'
 import { updateUser } from '../services/user.service'
 import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
@@ -141,7 +134,6 @@ export const ProjectProvider = ({
     }
 
     fetchData()
-    addUserToProject(projectId, user)
 
     // Firefox thows an error if the url has http:// instead ls ws://
     const wsHost = getWsUrl(process.env.VITE_BACKEND_URL)
