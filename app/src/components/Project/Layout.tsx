@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { showNotification } from '@mantine/notifications'
 
@@ -13,12 +13,16 @@ import { addUserToProject } from '../../services'
 import { ITeamMember } from '../../types/User'
 import { useProjectAccess } from '../../hooks/useProjectAccess'
 
+
 function ProjectContent() {
   const { id: projectId = '' } = useParams()
   const { project } = useProject()
   const { isMobile } = useBreakpoint()
   const { loading: authLoading } = useAuth()
   const { checked, allow, isLoading } = useProjectAccess()
+
+  const location = useLocation()
+  const isKanban = location.pathname.includes('/kanban')
 
   if (!project?.id && !isLoading) return <CreateProject projectId={projectId} />
 
@@ -30,7 +34,7 @@ function ProjectContent() {
     <div className='h-screen overflow-y-hidden'>
       {!isMobile && <ProjectHeader />}
       <div className='w-full h-full overflow-y-hidden md:flex'>
-        {!isMobile && <LeftPanel />}
+        {!isMobile && !isKanban && <LeftPanel />}
         <Outlet />
       </div>
     </div>

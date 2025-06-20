@@ -94,122 +94,129 @@ export const UPDATE_CARD_QUERY = `
 `
 
 export const SELECT_USER_TASKS_QUERY = `
-  SELECT tasks.* FROM tasks 
-  JOIN cards ON tasks.card_id = cards.id 
+  SELECT tasks.* FROM tasks
+  JOIN cards ON tasks.card_id = cards.id
   WHERE cards.project_id = ? AND tasks.users LIKE ?
 `
+export const SELECT_PROJECT_TASKS_QUERY = `
+  SELECT tasks.* FROM tasks
+  JOIN cards ON tasks.card_id = cards.id
+  WHERE cards.public = 1 AND cards.project_id = ? AND tasks.isDone = ?
+  LIMIT ?, ?
+`
+
 
 export const SELECT_ALL_CARDS_BY_IDS_QUERY = `
-  SELECT 
-    cards.*, 
+  SELECT
+    cards.*,
     COALESCE((
-        SELECT 
+        SELECT
           json_group_array(
             json_object('id', files.id, 'type', files.type, 'url', files.url)
-          ) 
+          )
         FROM files
         WHERE cards.id = files.card_id
       ), '[]'
     ) AS files,
     COALESCE((
       SELECT json_group_array(json_object(
-        'id', tasks.id, 
-        'isDone', tasks.isDone, 
-        'text', tasks.text, 
-        'users', tasks.users, 
-        'author', tasks.author, 
-        'priority', tasks.priority, 
+        'id', tasks.id,
+        'isDone', tasks.isDone,
+        'text', tasks.text,
+        'users', tasks.users,
+        'author', tasks.author,
+        'priority', tasks.priority,
         'status', tasks.status
       ))
       FROM tasks WHERE cards.id = tasks.card_id), '[]') AS tasks
-  FROM cards 
-  LEFT JOIN files ON cards.id = files.card_id 
-  WHERE cards.project_id = ? AND cards.id in ($IDS) 
+  FROM cards
+  LEFT JOIN files ON cards.id = files.card_id
+  WHERE cards.project_id = ? AND cards.id in ($IDS)
   GROUP BY cards.id
 `
 
 export const SELECT_ALL_CARDS_BY_PROJECTID_QUERY = (orderBy) => `
-  SELECT cards.*, 
+  SELECT cards.*,
     COALESCE((
       SELECT json_group_array(
         json_object(
-          'id', files.id, 
-          'type', files.type, 
+          'id', files.id,
+          'type', files.type,
           'url', files.url
         )
       )
       FROM files WHERE cards.id = files.card_id), '[]') AS files,
     COALESCE((
       SELECT json_group_array(json_object(
-        'id', tasks.id, 
-        'isDone', tasks.isDone, 
-        'text', tasks.text, 
-        'users', tasks.users, 
-        'author', tasks.author, 
-        'priority', tasks.priority, 
+        'id', tasks.id,
+        'isDone', tasks.isDone,
+        'text', tasks.text,
+        'users', tasks.users,
+        'author', tasks.author,
+        'priority', tasks.priority,
         'status', tasks.status
       ))
       FROM tasks WHERE cards.id = tasks.card_id), '[]') AS tasks
-  FROM cards 
-  LEFT JOIN files ON cards.id = files.card_id 
-  WHERE cards.project_id = ? 
+  FROM cards
+  LEFT JOIN files ON cards.id = files.card_id
+  WHERE cards.project_id = ?
     AND (cards.public = 1 OR cards.author = ? OR EXISTS (
-      SELECT 1 
-      FROM json_each(cards.users) 
+      SELECT 1
+      FROM json_each(cards.users)
       WHERE json_each.value = ?
     ))
     AND (
       cards.title <> '' OR cards.description <> '[]' OR EXISTS (
-        SELECT 1 
-        FROM tasks 
+        SELECT 1
+        FROM tasks
         WHERE tasks.card_id = cards.id
       ) <> '[]' OR EXISTS (
-        SELECT 1 
-        FROM files 
+        SELECT 1
+        FROM files
         WHERE files.card_id = cards.id
       )
     )
-  GROUP BY cards.id 
+  GROUP BY cards.id
   ORDER BY ${orderBy} DESC
 `
 
 export const SELECT_CARD_BY_ID_QUERY = `
-  SELECT 
-    cards.*, 
+  SELECT
+    cards.*,
     COALESCE((
       SELECT json_group_array(
         json_object('id', files.id, 'type', files.type, 'url', files.url)
-      ) 
+      )
       FROM files
       WHERE cards.id = files.card_id
     ), '[]') AS files,
     COALESCE((
       SELECT json_group_array(
         json_object(
-          'id', tasks.id, 
-          'isDone', tasks.isDone, 
-          'text', tasks.text, 
-          'users', tasks.users, 
-          'author', tasks.author, 
-          'priority', tasks.priority, 
+          'id', tasks.id,
+          'isDone', tasks.isDone,
+          'text', tasks.text,
+          'users', tasks.users,
+          'author', tasks.author,
+          'priority', tasks.priority,
           'status', tasks.status
         )
       )
-      FROM tasks 
+      FROM tasks
       WHERE cards.id = tasks.card_id
     ), '[]') AS tasks
-  FROM cards 
+  FROM cards
   WHERE cards.id = ?
 `
 
 export const SELECT_CARD_BY_CHAT_ID = 'SELECT * FROM cards WHERE chatIds LIKE ?'
 
 export const SELECT_CARD_WITH_FILES_QUERY = `
-  SELECT cards.*, 
+  SELECT cards.*,
     COALESCE((
       SELECT json_group_array(json_object('id', files.id, 'type', files.type, 'url', files.url))
-      FROM files WHERE cards.id = files.card_id), '[]') AS files 
-  FROM cards 
+      FROM files WHERE cards.id = files.card_id), '[]') AS files
+  FROM cards
   WHERE cards.id = ?
 `
 
