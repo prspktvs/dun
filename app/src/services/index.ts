@@ -2,5 +2,5 @@ export { createCard, updateCard, removeCard, getProjectCards, getCardById } from
 export { createNewChat, saveChatAndMessage, getAllCardChats, removeCardChat } from './chat.service'
 export { addUserToProject, createProject, getAllUserProject } from './project.service'
 export { uploadImage } from './upload.service'
-export { getAllUserTasks } from './task.service'
+export { getAllUserTasks, getProjectTasks, updateTask } from './task.service'
 export { getOrCreateUser } from './user.service'

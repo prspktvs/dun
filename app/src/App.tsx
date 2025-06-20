@@ -21,6 +21,9 @@ const LandingPage = lazy(() => import('./pages/LandingPage'))
 const ProjectLayout = lazy(() =>
   import('./components/Project/Layout').then((m) => ({ default: m.ProjectLayout })),
 )
+const KanbanPage = lazy(() =>
+  import('./pages/Project/Kanban').then((m) => ({ default: m.KanbanPage })),
+)
 const CardsPage = lazy(() =>
   import('./pages/Project/Cards').then((m) => ({ default: m.CardsPage })),
 )
@@ -64,6 +67,7 @@ export default function App() {
                       <Route index element={<CardsPage />} />
                       <Route path='my-work' element={<MyWorkPage />} />
                       <Route path='settings' element={<SettingPage />} />
+                      <Route path='kanban' element={<KanbanPage />} />
                       <Route path='cards/:cardId' element={<CardPage />} />
                       <Route path='cards/:cardId/chats/:chatId' element={<CardPage />} />
                     </Route>
