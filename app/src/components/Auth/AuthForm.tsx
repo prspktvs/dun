@@ -7,6 +7,7 @@ import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icon
 import { Loader } from '../ui/Loader'
 import { AuthButton } from '../ui/buttons/AuthButton'
 import { genId, getRandomProjectRoute } from '../../utils'
+import { ROUTES } from '../../constants'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
 
@@ -44,7 +45,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           email,
           password,
           name,
-          cb: () => navigate(location.state?.from?.pathname ?? '/dashboard'),
+          cb: () => navigate(location.state?.from ?? ROUTES.DASHBOARD, { replace: true }),
         })
       }
     } catch (error) {

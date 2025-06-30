@@ -74,7 +74,9 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = isMobile ? ROUTES.DASHBOARD : (location.state?.from?.pathname ?? ROUTES.DASHBOARD)
+  const from = isMobile
+    ? { pathname: ROUTES.DASHBOARD }
+    : location.state?.from || { pathname: ROUTES.DASHBOARD }
 
   const loginWithEmailAndPassword = async ({ email, password }: ILoginCredentials) => {
     try {
@@ -86,7 +88,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       }
 
       notifySuccess(LOGGED_IN_MESSAGE)
-      navigate(from)
+      navigate(from, { replace: true })
     } catch (error) {
       console.error('Error signing in with email and password:', error)
       switch (error.code) {
@@ -140,7 +142,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
     try {
       await signInWithPopup(auth, provider)
-      navigate(from)
+      navigate(from, { replace: true })
     } catch (error) {
       console.error('Error signing in with Google:', error)
     }
