@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragStartEvent,
+  DragOverEvent,
   useSensor,
   useSensors,
   MouseSensor,
@@ -11,23 +11,17 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   DropAnimation,
-  pointerWithin,
   closestCenter,
-  getFirstCollision,
-  UniqueIdentifier,
 } from '@dnd-kit/core'
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useNavigate } from 'react-router-dom'
+import { arrayMove } from '@dnd-kit/sortable'
 
-import { RiArrowLeftSLine as ChevronLeft, Plus } from '../icons'
-// import { Task, TaskStatus, PriorityLevel, ColumnData, SwimLane } from './types/task';
 import { SwimLane } from './types/task'
-import { TaskStatus, TaskPriority } from './types/task'
+import { TaskStatus } from './types/task'
 import type { Task } from './types/task'
 import SwimLaneRow from './SwimLaneRow'
 import TaskCard from './TaskCard'
+import { apiRequest } from '../../utils/api'
 
-// Custom drop animation
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
     styles: {
@@ -55,183 +49,191 @@ export default function KanbanBoard({
   setTasks: (tasks: Task[]) => void
   updateTask: (task: Task) => void
 }) {
-  const swimLanes = topics
-
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeContainer, setActiveContainer] = useState<string | null>(null)
   const [overContainer, setOverContainer] = useState<string | null>(null)
   const [lastOverId, setLastOverId] = useState<string | null>(null)
   const [clonedTasks, setClonedTasks] = useState<Task[]>(tasks)
+  const [invalidDrop, setInvalidDrop] = useState<boolean>(false)
+  const [collapsedColumns, setCollapsedColumns] = useState<Record<string, boolean>>({})
+
+  const prevCountsRef = useRef<Record<string, number>>({})
 
   useEffect(() => {
     setClonedTasks(tasks)
   }, [tasks])
 
-  // const setTasks = (newTasks: Task[]) => {
-  //   // Update the tasks state with the new tasks
-  //   console.log('Setting new tasks:', newTasks);
-  //   // Here you would typically update the state in a parent component or context
-  //   // For this example, we will just log the new tasks
-  //   console.log('Tasks updated:', newTasks);
-  // };
+  const taskCountsByStatus = useMemo(() => {
+    const statusMap = {
+      Planned: TaskStatus.Planned,
+      NoStatus: TaskStatus.NoStatus,
+      InProgress: TaskStatus.InProgress,
+      InReview: TaskStatus.InReview,
+      Done: TaskStatus.Done,
+    }
 
-  // console.log('KanbanBoard rendered with tasks:', tasks, 'swimLanes:', swimLanes);
+    const counts = {} as Record<string, number>
 
-  // Configure sensors with appropriate activation constraints
+    Object.keys(TaskStatus).forEach((key) => {
+      counts[key] = 0
+    })
+
+    tasks.forEach((task) => {
+      const enumKey = Object.entries(statusMap).find(([_, value]) => value === task.status)?.[0]
+
+      if (enumKey) {
+        counts[enumKey]++
+      }
+
+      if (task.isDone && enumKey !== 'Done') {
+        counts['Done']++
+      }
+    })
+
+    return counts
+  }, [tasks])
+
+  const changedCounts = useMemo(() => {
+    const changed = {} as Record<string, boolean>
+
+    Object.keys(TaskStatus).forEach((status) => {
+      if (prevCountsRef.current[status] !== taskCountsByStatus[status]) {
+        changed[status] = true
+      }
+    })
+
+    return changed
+  }, [taskCountsByStatus])
+
+  useEffect(() => {
+    prevCountsRef.current = { ...taskCountsByStatus }
+  }, [taskCountsByStatus])
+
   const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5, // Start dragging after moving 5px
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100, // Small delay for touch to distinguish from scroll
-        tolerance: 5, // Small tolerance for touch
-      },
-    }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } }),
   )
 
-  // Find the container a task belongs to
   const findContainer = (id: string) => {
-    if (id.includes('-')) {
-      return id
-    }
-
     const task = tasks.find((task) => task.id === id)
-    if (task) {
-      return `${task.card_id}-${task.status}`
-    }
-
-    return null
+    return task ? `${task.card_id}-${task.status}` : id.includes('-') ? id : null
   }
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
     const activeTaskId = active.id as string
+
+    setClonedTasks(JSON.parse(JSON.stringify(tasks)))
+
     const task = tasks.find((t) => t.id === activeTaskId)
-
     if (task) {
-      // Store a clone of the tasks for restoration if needed
-      setClonedTasks([...tasks])
-
-      setActiveTask({ ...task }) // Create a copy of the task
+      setActiveTask({ ...task })
       setActiveId(activeTaskId)
-
-      // Set the active container to the task's current status and swimLane
-      const container = `${task.card_id}-${task.status}`
+      const container = findContainer(activeTaskId)
       setActiveContainer(container)
-      setOverContainer(container)
     }
   }
 
   const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event
-
+    const { over } = event
     if (!over) return
 
-    const activeId = active.id as string
     const overId = over.id as string
-
-    // Find the active task
-    const activeTask = tasks.find((task) => task.id === activeId)
-    if (!activeTask) return
-
-    // Find the containers
-    const activeContainer = findContainer(activeId)
-    const overContainer = findContainer(overId)
-
-    if (!activeContainer || !overContainer) return
-
-    // Update the over container state
-    setOverContainer(overContainer)
     setLastOverId(overId)
+
+    const overContainer = findContainer(overId)
+    if (overContainer) {
+      setOverContainer(overContainer)
+
+      if (activeContainer) {
+        const [activeCardId, activeStatus] = activeContainer.split('-')
+        const [overCardId, overStatus] = overContainer.split('-')
+
+        setInvalidDrop(activeCardId !== overCardId || collapsedColumns[overStatus] === true)
+      }
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (!over || !activeTask || !activeId || !activeContainer) {
-      // If something went wrong, restore the original tasks
-      setTasks(clonedTasks)
+    if (!over || !active) {
       resetDragState()
       return
     }
 
+    const activeId = active.id as string
     const overId = over.id as string
-    const targetContainer = findContainer(overId)
 
-    if (!targetContainer) {
-      // If we couldn't find the target container, restore the original tasks
-      setTasks(clonedTasks)
+    const activeTaskItem = tasks.find((task) => task.id === activeId)
+    if (!activeTaskItem) {
       resetDragState()
       return
     }
 
-    // Make a copy of the current tasks to work with
-    let newTasks = [...tasks]
+    const fromContainer = `${activeTaskItem.card_id}-${activeTaskItem.status}`
+    const toContainer = findContainer(overId) || fromContainer
 
-    // If we're dropping onto a different container
-    if (activeContainer !== targetContainer) {
-      const [card_id, status] = targetContainer.split('-')
+    const [fromCardId, fromStatus] = fromContainer.split('-')
+    const [toCardId, toStatus] = toContainer.split('-')
 
-      // Update the task's status and card_id
-      newTasks = newTasks.map((task) =>
-        task.id === activeId ? { ...task, status: status as TaskStatus, card_id } : task,
-      )
+    const statusMap = {
+      Planned: TaskStatus.Planned,
+      NoStatus: TaskStatus.NoStatus,
+      InProgress: TaskStatus.InProgress,
+      InReview: TaskStatus.InReview,
+      Done: TaskStatus.Done,
     }
-    // If we're dropping onto a different task in the same container, we need to reorder
-    else if (activeId !== overId && !overId.includes('-')) {
-      // Find the active task
-      const activeTask = newTasks.find((t) => t.id === activeId)
-      if (!activeTask) {
-        resetDragState()
-        return
-      }
 
-      // Get the container tasks
+    const newTasks = JSON.parse(JSON.stringify(tasks))
+
+    if (fromStatus !== toStatus) {
+      const activeIndex = newTasks.findIndex((t) => t.id === activeId)
+
+      if (activeIndex !== -1) {
+        const newStatus = statusMap[toStatus] || toStatus
+
+        newTasks[activeIndex] = {
+          ...newTasks[activeIndex],
+          status: newStatus,
+          position: 0,
+        }
+
+        const containerTasks = newTasks.filter(
+          (t) => t.card_id === fromCardId && t.status === newStatus && t.id !== activeId,
+        )
+
+        containerTasks.forEach((task, index) => {
+          const taskIndex = newTasks.findIndex((t) => t.id === task.id)
+          if (taskIndex !== -1) {
+            newTasks[taskIndex].position = (index + 1) * 1000
+          }
+        })
+      }
+    } else if (activeId !== overId) {
       const containerTasks = newTasks.filter(
-        (t) => t.card_id === activeTask.card_id && t.status === activeTask.status,
+        (t) => t.card_id === fromCardId && t.status === fromStatus,
       )
 
-      // Find the indices in the container
       const activeIndex = containerTasks.findIndex((t) => t.id === activeId)
       const overIndex = containerTasks.findIndex((t) => t.id === overId)
 
-      if (activeIndex === -1 || overIndex === -1) {
-        resetDragState()
-        return
-      }
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const reorderedTasks = arrayMove([...containerTasks], activeIndex, overIndex)
 
-      // Create a new array with the tasks in the new order
-      const newContainerTasks = arrayMove(containerTasks, activeIndex, overIndex)
-
-      // Replace the tasks in the original array
-      newTasks = newTasks.map((task) => {
-        if (task.card_id === activeTask.card_id && task.status === activeTask.status) {
-          const index = newContainerTasks.findIndex((t) => t.id === task.id)
-          if (index !== -1) {
-            return newContainerTasks[index]
+        for (let i = 0; i < reorderedTasks.length; i++) {
+          const taskId = reorderedTasks[i].id
+          const taskIndex = newTasks.findIndex((t) => t.id === taskId)
+          if (taskIndex !== -1) {
+            newTasks[taskIndex].position = i * 1000
           }
         }
-        return task
-      })
-    }
-    // If we're dropping onto an empty container
-    else if (overId.includes('-') && overId === targetContainer) {
-      const [card_id, status] = targetContainer.split('-')
-
-      // Update the task's status and card_id
-      newTasks = newTasks.map((task) =>
-        task.id === activeId ? { ...task, status: status as TaskStatus, card_id } : task,
-      )
+      }
     }
 
-    // Update the tasks state with our new tasks
     setTasks(newTasks)
 
-    // Reset all the drag state
     resetDragState()
   }
 
@@ -241,131 +243,186 @@ export default function KanbanBoard({
     setActiveContainer(null)
     setOverContainer(null)
     setLastOverId(null)
+    setInvalidDrop(false)
   }
 
-  const handleDragCancel = () => {
-    // Restore the original tasks
-    setTasks(clonedTasks)
-    resetDragState()
-  }
-
-  const toggleTaskCheck = (taskId: string) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              isDone: !task.isDone,
-              status: !task.isDone ? TaskStatus.Done : task.status,
-            }
-          : task,
-      ),
-    )
-  }
-
-  // Custom collision detection strategy
-  const collisionDetectionStrategy = (args: any) => {
-    // First, let's check for direct collisions with pointer
-    const pointerCollisions = pointerWithin(args)
-
-    if (pointerCollisions.length > 0) {
-      // If we have collisions, return them
-      const firstCollision = getFirstCollision(pointerCollisions, 'id')
-      if (firstCollision) {
-        return pointerCollisions
+  const onToggleCheck = (taskId: string) => {
+    const task = tasks.find((t) => t.id === taskId)
+    if (task) {
+      const updatedTask = {
+        ...task,
+        isDone: !task.isDone,
+        status: !task.isDone ? TaskStatus.Done : task.status,
       }
-      return []
-    }
 
-    // If no direct collisions, use closest center
-    return closestCenter(args)
+      const newTasks = tasks.map((t) => (t.id === taskId ? updatedTask : t))
+
+      setTasks(newTasks)
+
+      updateTask(updatedTask)
+    }
   }
+
+  const toggleColumn = (columnId: string) => {
+    setCollapsedColumns((prev) => ({
+      ...prev,
+      [columnId]: !prev[columnId],
+    }))
+  }
+
+  useEffect(() => {
+    const savedPrefs = localStorage.getItem(`kanban-columns-${projectId}`)
+    if (savedPrefs) {
+      try {
+        setCollapsedColumns(JSON.parse(savedPrefs))
+      } catch (e) {
+        console.error('Failed to parse saved column preferences', e)
+      }
+    }
+  }, [projectId])
+
+  useEffect(() => {
+    localStorage.setItem(`kanban-columns-${projectId}`, JSON.stringify(collapsedColumns))
+  }, [collapsedColumns, projectId])
 
   return (
-    <div className='flex flex-col h-screen bg-white pb-20'>
-      {/* Subheader */}
-      <div className='flex items-center px-6 py-2 bg-white border-b border-gray-200'>
-        <div className='flex items-center space-x-4'>
-          <button className='p-1 text-gray-500 rounded-full hover:bg-gray-100' onClick={goBack}>
-            &lt;- Back
-          </button>
-          {/* <button className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-            All tasks
-          </button>
-          <div className="flex items-center">
-            <span className="text-sm text-gray-500">Assigned to:</span>
-            <button className="ml-2 text-sm text-gray-700 hover:text-purple-600">
-              select
-            </button>
-          </div> */}
+    <div className='flex flex-col h-screen w-full bg-white pb-20'>
+      <div className='flex items-center p-4 border-b border-gray-200'>
+        <button onClick={goBack} className='flex items-center text-gray-600 hover:text-gray-900'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-5 w-5 mr-2'
+            viewBox='0 0 20 20'
+            fill='currentColor'
+          >
+            <path
+              fillRule='evenodd'
+              d='M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z'
+              clipRule='evenodd'
+            />
+          </svg>
+          Back
+        </button>
+      </div>
+
+      <div className='flex sticky top-0 z-20 bg-white'>
+        <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
+          <span>Topic</span>
+        </div>
+        <div className='flex flex-1'>
+          {['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done'].map((status) => (
+            <div
+              key={status}
+              className={`${
+                collapsedColumns[status] ? 'w-[60px]' : 'flex-1 min-w-[180px]'
+              } h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200 transition-all duration-300`}
+            >
+              <div className='flex items-center space-x-2 overflow-hidden'>
+                {!collapsedColumns[status] ? (
+                  <>
+                    <span className='truncate'>{status.replace(/([A-Z])/g, ' $1')}</span>
+                    <span className='text-gray-500'>•</span>
+                    <span className='text-gray-500'>{taskCountsByStatus[status] || 0}</span>
+                  </>
+                ) : (
+                  <span
+                    style={{
+                      writingMode: 'vertical-lr',
+                      transform: 'rotate(180deg)',
+                      whiteSpace: 'nowrap',
+                    }}
+                    className='text-xs'
+                  >
+                    {status.replace(/([A-Z])/g, ' $1')} ({taskCountsByStatus[status] || 0})
+                  </span>
+                )}
+              </div>
+
+              <button
+                onClick={() => toggleColumn(status)}
+                className='ml-auto text-gray-500 hover:text-gray-700 flex-shrink-0'
+                title={collapsedColumns[status] ? 'Expand column' : 'Collapse column'}
+              >
+                {collapsedColumns[status] ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-5 w-5'
+                    viewBox='0 0 20 20'
+                    fill='currentColor'
+                  >
+                    <path
+                      fillRule='evenodd'
+                      d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-5 w-5'
+                    viewBox='0 0 20 20'
+                    fill='currentColor'
+                  >
+                    <path
+                      fillRule='evenodd'
+                      d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Main content */}
       <div
-        className='flex-1 overflow-auto flex flex-row'
+        className='flex-1 overflow-auto w-full'
         style={{
-          overscrollBehavior: 'contain', // Prevents overscroll behavior
+          overscrollBehavior: 'contain',
         }}
       >
         <DndContext
           sensors={sensors}
-          collisionDetection={collisionDetectionStrategy}
+          collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
         >
-          <div className=''>
-            {/* Column Headers */}
-            <div className='flex sticky top-0 z-20 bg-white'>
-              <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
-                <span>Topic</span>
-              </div>
-              <div className='flex flex-1'>
-                {Object.keys(TaskStatus).map((status) => (
-                  <div className='w-[280px] h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
-                    <div key={status} className='flex items-center space-x-2'>
-                      <span>{status.replace(/([A-Z])/g, ' $1')}</span>
-                      <span className='text-gray-500'>•</span>
-                      <span className='text-gray-500'>
-                        {tasks.filter((task) => task.status === status).length}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+          <div className='w-full'>
+            {topics.map((swimLane) => {
+              const swimLaneTasks = tasks
+                .filter((task) => task.card_id === swimLane.id)
+                .sort((a, b) => (a.position || 0) - (b.position || 0))
 
-                {/* <div className="flex-shrink-0 w-[60px] h-[56px] flex items-center justify-center border-b border-gray-200">
-                  <button className="p-2 text-white bg-purple-600 rounded-md hover:bg-purple-700">
-                    <Plus />
-                  </button>
-                </div> */}
-              </div>
-            </div>
-
-            {/* Swim Lanes */}
-            {swimLanes.map((swimLane) => (
-              <SwimLaneRow
-                key={swimLane.id}
-                swimLane={swimLane}
-                tasks={tasks.filter((task) => task.card_id === swimLane.id)}
-                onToggleCheck={toggleTaskCheck}
-                activeId={activeId}
-                activeContainer={activeContainer}
-                overContainer={overContainer}
-                lastOverId={lastOverId}
-                onChooseTask={onChooseTask}
-              />
-            ))}
+              return (
+                <SwimLaneRow
+                  key={swimLane.id}
+                  swimLane={swimLane}
+                  tasks={swimLaneTasks}
+                  onToggleCheck={onToggleCheck}
+                  activeId={activeId}
+                  activeContainer={activeContainer}
+                  overContainer={overContainer}
+                  lastOverId={lastOverId}
+                  onChooseTask={onChooseTask}
+                  collapsedColumns={collapsedColumns}
+                />
+              )
+            })}
           </div>
 
-          {/* Drag Overlay - shows the task being dragged */}
           <DragOverlay dropAnimation={dropAnimation}>
-            {activeTask ? (
+            {activeTask && (
               <div className='w-[260px]'>
-                <TaskCard task={activeTask} onToggleCheck={toggleTaskCheck} isDragOverlay />
+                <TaskCard
+                  task={activeTask}
+                  onToggleCheck={onToggleCheck}
+                  isDragOverlay
+                  isInvalidDrop={invalidDrop}
+                />
               </div>
-            ) : null}
+            )}
           </DragOverlay>
         </DndContext>
       </div>

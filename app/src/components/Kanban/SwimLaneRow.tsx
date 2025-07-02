@@ -15,6 +15,7 @@ interface SwimLaneRowProps {
   overContainer: string | null
   lastOverId: string | null
   onChooseTask?: (task: Task) => void
+  collapsedColumns: Record<string, boolean>
 }
 
 function SwimLaneRowColumn({
@@ -34,97 +35,44 @@ function SwimLaneRowColumn({
   lastOverId: string | null
   onChooseTask?: (task: Task) => void
 }) {
-  // console.log('. Rendering SwimLaneRowColumn:', columnId, columnTasks.length);
-  const taskIds = columnTasks.map((task) => task.id)
   const { setNodeRef } = useDroppable({
     id: columnId,
   })
 
-  // Check if we're currently dragging
-  const isDragging = activeId !== null
+  const sortedTasks = [...columnTasks].sort((a, b) => (a.position || 0) - (b.position || 0))
 
-  // Function to render a column with its tasks and drop indicators
-  const renderColumn = (
-    columnTasks: Task[],
-    columnId: string,
-    isActive: boolean,
-    setRef: (element: HTMLElement | null) => void,
-  ) => {
-    // Get the task IDs for this column
-    const taskIds = columnTasks.map((task) => task.id)
-
-    // Determine where to show the drop indicator
-    let dropIndicatorIndex = -1
-
-    if (isDragging && isActive) {
-      if (columnTasks.length === 0) {
-        // If the column is empty, show the indicator at index 0
-        dropIndicatorIndex = 0
-      } else if (lastOverId && !lastOverId.includes('-')) {
-        // If we're over a task, find its index
-        const overTaskIndex = columnTasks.findIndex((task) => task.id === lastOverId)
-        if (overTaskIndex !== -1) {
-          // Show the indicator after the task we're over
-          dropIndicatorIndex = overTaskIndex + 1
-        }
-      } else if (lastOverId === columnId) {
-        // If we're over the column itself (not a specific task), show at the end
-        dropIndicatorIndex = columnTasks.length
-      }
-    }
-
-    return (
-      <div
-        ref={setRef}
-        className={cn(
-          'w-[280px] border-r border-gray-200 p-2 min-h-[120px] transition-colors duration-200',
-          isActive ? 'bg-purple-50' : '',
-        )}
-      >
-        <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-          <div className='space-y-2'>
-            {columnTasks.map((task, index) => (
-              <>
-                {/* Drop indicator before the first task */}
-                {index === 0 && dropIndicatorIndex === 0 && (
-                  <div className='h-1 bg-purple-500 rounded-full my-1 mx-2' />
-                )}
-
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onToggleCheck={onToggleCheck}
-                  isHidden={task.id === activeId}
-                  onChooseTask={onChooseTask}
-                />
-
-                {/* Drop indicator after each task */}
-                {dropIndicatorIndex === index + 1 && (
-                  <div className='h-1 bg-purple-500 rounded-full my-1 mx-2' />
-                )}
-              </>
-            ))}
-
-            {/* Empty column drop placeholder */}
-            {columnTasks.length === 0 && isDragging && isActive && dropIndicatorIndex === 0 && (
-              <div className='p-3 border-2 border-dashed border-purple-300 rounded-md bg-purple-50 h-[80px]'>
-                <div className='w-full h-full flex items-center justify-center'>
-                  <p className='text-purple-500 text-sm font-medium'>Drop here</p>
-                </div>
-              </div>
-            )}
-
-            {/* Drop indicator at the end of the column */}
-            {columnTasks.length > 0 && dropIndicatorIndex === columnTasks.length && (
-              <div className='h-1 bg-purple-500 rounded-full my-1 mx-2' />
-            )}
-          </div>
-        </SortableContext>
-      </div>
-    )
+  const getDropIndicator = (taskId: string) => {
+    if (!activeId || activeId === taskId) return false
+    return lastOverId === taskId
   }
 
-  return renderColumn(columnTasks, columnId, isActive, setNodeRef)
+  return (
+    <div
+      ref={setNodeRef}
+      className={`w-[280px] border-r border-gray-200 p-2 min-h-[120px] ${
+        isActive ? 'bg-purple-50' : ''
+      }`}
+    >
+      {sortedTasks.map((task) => (
+        <div key={task.id}>
+          {getDropIndicator(task.id) && (
+            <div className='h-1 bg-purple-500 rounded-full my-1 mx-2' />
+          )}
+          <TaskCard
+            task={task}
+            onToggleCheck={onToggleCheck}
+            isHidden={task.id === activeId}
+            onChooseTask={onChooseTask}
+          />
+        </div>
+      ))}
+      {columnTasks.length === 0 && isActive && (
+        <div className='p-3 border-2 border-dashed border-purple-300 rounded-md bg-purple-50 h-[80px] flex items-center justify-center'>
+          Drop here
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function SwimLaneRow({
@@ -136,41 +84,96 @@ export default function SwimLaneRow({
   overContainer,
   lastOverId,
   onChooseTask,
+  collapsedColumns,
 }: SwimLaneRowProps) {
-  // console.log('SwimLaneRow rendered', swimLane.id, tasks);
-
   return (
-    <div className='flex border-b border-gray-200'>
-      {/* Swim Lane Title */}
-      <div className='flex-shrink-0 w-[200px] p-4 border-r border-gray-200 flex items-center'>
-        <span className='font-medium text-gray-700'>{swimLane.title}</span>
+    <div className='flex w-full border-b border-gray-200 hover:bg-gray-50'>
+      <div className='flex-shrink-0 w-[200px] p-4 border-r border-gray-200'>
+        <div className='font-medium text-gray-800'>{swimLane.title}</div>
+        {swimLane.description && (
+          <div className='text-sm text-gray-500 mt-1'>{swimLane.description}</div>
+        )}
       </div>
 
-      {/* Columns */}
       <div className='flex flex-1'>
-        {Object.values(TaskStatus).map((status) => (
-          <SwimLaneRowColumn
-            key={status}
-            columnTasks={
-              tasks.filter(
-                (task) =>
-                  (!task.isDone && task.status === status) ||
-                  (status === TaskStatus.Done && task.isDone),
-              ) as Task[]
-            }
-            columnId={`${swimLane.id}-${status}`}
-            isActive={
-              activeContainer === `${swimLane.id}-${status}` ||
-              (overContainer === `${swimLane.id}-${status}` && activeId !== null)
-            }
-            onToggleCheck={onToggleCheck}
-            activeId={activeId}
-            lastOverId={lastOverId}
-            onChooseTask={onChooseTask}
-          />
-        ))}
+        {['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done'].map((status) => {
+          const columnId = `${swimLane.id}-${status}`
 
-        {/* <div className="flex-shrink-0 w-[60px]"></div> */}
+          const statusMap = {
+            Planned: TaskStatus.Planned,
+            NoStatus: TaskStatus.NoStatus,
+            InProgress: TaskStatus.InProgress,
+            InReview: TaskStatus.InReview,
+            Done: TaskStatus.Done,
+          }
+
+          const actualStatus = statusMap[status]
+
+          const columnTasks = tasks.filter((task) => {
+            const taskStatusLower = task.status?.toLowerCase()
+            const actualStatusLower = actualStatus?.toLowerCase()
+
+            if (status === 'Done') {
+              return task.isDone || taskStatusLower === actualStatusLower
+            }
+            return taskStatusLower === actualStatusLower && !task.isDone
+          })
+
+          const isActive = activeContainer === columnId || overContainer === columnId
+          const isCollapsed = collapsedColumns[status]
+          const { setNodeRef } = useDroppable({
+            id: columnId,
+          })
+
+          return (
+            <div
+              key={status}
+              className={`${
+                isCollapsed ? 'w-[60px]' : 'flex-1 min-w-[180px]'
+              } border-r border-gray-200 transition-all duration-300`}
+            >
+              {isCollapsed ? (
+                <div
+                  className={`h-full py-2 px-1 flex flex-col items-center ${isActive ? 'bg-purple-50' : ''}`}
+                >
+                  {columnTasks.length > 0 ? (
+                    <div className='text-xs text-center'>
+                      {columnTasks.length} task{columnTasks.length !== 1 ? 's' : ''}
+                    </div>
+                  ) : (
+                    <div className='text-xs text-gray-400 text-center'>Empty</div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  ref={setNodeRef}
+                  className={`w-full p-2 min-h-[120px] ${isActive ? 'bg-purple-50' : ''}`}
+                >
+                  {columnTasks.map((task) => (
+                    <div key={task.id}>
+                      {lastOverId === task.id && activeId !== task.id && (
+                        <div className='h-1 bg-purple-500 rounded-full my-1 mx-2' />
+                      )}
+                      <TaskCard
+                        task={task}
+                        onToggleCheck={onToggleCheck}
+                        isHidden={task.id === activeId}
+                        onChooseTask={onChooseTask}
+                      />
+                    </div>
+                  ))}
+                  {columnTasks.length === 0 && (
+                    <div
+                      className={`p-3 border-2 border-dashed ${isActive ? 'border-purple-500' : 'border-purple-300'} rounded-md bg-purple-50 h-[80px] flex items-center justify-center`}
+                    >
+                      {isActive ? 'Drop here' : 'No tasks'}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

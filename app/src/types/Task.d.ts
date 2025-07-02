@@ -18,7 +18,6 @@ export enum TaskPriority {
   Urgent = 'Urgent',
 }
 export interface ITask extends PartialBlock {
-
   id: string
   isDone: boolean
   text: string
@@ -27,6 +26,7 @@ export interface ITask extends PartialBlock {
   priority: TaskPriority
   author: string
   card_id: string
+  position: number
   cardPath?: string
   index?: number
 }

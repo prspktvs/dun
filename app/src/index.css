@@ -110,6 +110,12 @@ li {
   pointer-events: all;
 }
 
+.writing-mode-vertical {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
 .hide-scrollbar {
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
@@ -142,3 +148,4 @@ input {
 .bn-editor {
   @apply bg-white;
 }
+

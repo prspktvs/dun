@@ -67,8 +67,8 @@ export const INSERT_NEW_CARD_QUERY = `
 `
 
 export const INSERT_TASK_QUERY = `
-  INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id, createdAt)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT OR REPLACE INTO tasks (id, isDone, text, priority, status, author, users, card_id, createdAt, position)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 export const INSERT_FILES_QUERY = `
@@ -97,14 +97,15 @@ export const SELECT_USER_TASKS_QUERY = `
   SELECT tasks.* FROM tasks
   JOIN cards ON tasks.card_id = cards.id
   WHERE cards.project_id = ? AND tasks.users LIKE ?
+  ORDER BY tasks.position ASC
 `
 export const SELECT_PROJECT_TASKS_QUERY = `
   SELECT tasks.* FROM tasks
   JOIN cards ON tasks.card_id = cards.id
   WHERE cards.public = 1 AND cards.project_id = ? AND tasks.isDone = ?
+  ORDER BY tasks.position ASC
   LIMIT ?, ?
 `
-
 
 export const SELECT_ALL_CARDS_BY_IDS_QUERY = `
   SELECT

@@ -20,6 +20,7 @@ import { ROLES } from '../../constants/roles.constants'
 import KanbanBoard from '../../components/Kanban/KanbanBoard'
 import { getProjectTasks, updateTask } from '../../services/index'
 import { ITask } from '../../types/Task'
+import { apiRequest } from '../../utils/api'
 
 function SortButton({
   children,
@@ -65,8 +66,9 @@ export function KanbanPage() {
       const tasks = await getProjectTasks(projectId, 0, 0, 1000)
       const doneTasks = await getProjectTasks(projectId, 1, 0, 1000)
 
-      const allTasks = [...tasks, ...doneTasks] //filter unique
-        .filter((task, index, self) => index === self.findIndex((t) => t.id === task.id))
+      const allTasks = [...tasks, ...doneTasks].filter(
+        (task, index, self) => index === self.findIndex((t) => t.id === task.id),
+      )
       setTasks(allTasks)
     } catch (error) {
       console.error('Error fetching tasks:', error)
@@ -76,9 +78,6 @@ export function KanbanPage() {
     fetchTasks()
   }, [projectId])
 
-  console.log('allTasks', tasks)
-
-  // console.log('searchText', searchText)
   const cardsWithTasks = cards
     .map((card) => {
       const cardTasks = tasks.filter((task) => task.card_id === card.id)
@@ -113,22 +112,72 @@ export function KanbanPage() {
       setTasks([])
       return
     }
+
+    const currentTasks = [...tasks]
+
     setTasks(newTasks)
-    const updatedTasks = await Promise.all(newTasks.map((task) => updateTask(task, projectId)))
-    setTasks(updatedTasks)
+
+    try {
+      const tasksToUpdate = newTasks.filter((task) => {
+        const currentTask = currentTasks.find((t) => t.id === task.id)
+        return (
+          !currentTask ||
+          currentTask.position !== task.position ||
+          currentTask.status !== task.status ||
+          currentTask.card_id !== task.card_id
+        )
+      })
+
+      if (tasksToUpdate.length > 0) {
+        await Promise.all(
+          tasksToUpdate.map((task) =>
+            apiRequest(`tasks/${task.id}/order`, {
+              method: 'PATCH',
+              body: JSON.stringify({
+                order: task.position,
+                card_id: task.card_id,
+                status: task.status,
+              }),
+            })
+              .then((response) => {
+                console.log(`Updated task ${task.id}:`, response)
+                return response
+              })
+              .catch((error) => {
+                console.error(`Failed to update task ${task.id}:`, error)
+                throw error
+              }),
+          ),
+        )
+      }
+    } catch (error) {
+      console.error('Failed to update tasks:', error)
+    }
   }
 
   const updateTaskImpl = async (task: ITask) => {
-    const updatedTask = await updateTask(task, projectId)
-    setTasks((prev) => {
-      const index = prev.findIndex((t) => t.id === updatedTask.id)
-      if (index > -1) {
-        const newTasks = [...prev]
-        newTasks[index] = updatedTask
-        return newTasks
-      }
-      return [...prev, updatedTask]
-    })
+    try {
+      setTasks((prev) => {
+        const index = prev.findIndex((t) => t.id === task.id)
+        if (index > -1) {
+          const newTasks = [...prev]
+          newTasks[index] = task
+          return newTasks
+        }
+        return [...prev, task]
+      })
+
+      const updatedTask = await updateTask(task, projectId)
+
+      setTasks((prev) => {
+        return prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+      })
+
+      return updatedTask
+    } catch (error) {
+      console.error('Failed to update task:', error)
+      return task
+    }
   }
 
   return (

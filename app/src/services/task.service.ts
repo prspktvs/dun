@@ -36,5 +36,5 @@ export const updateTask = async (task: ITask, projectId: string): Promise<ITask>
     body: JSON.stringify(task),
   })
 
-  return { ...updatedTask, cardPath: `${projectId}/cards/${updatedTask.card_id}` }
+  return { ...updatedTask }
 }
