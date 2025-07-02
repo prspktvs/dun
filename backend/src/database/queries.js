@@ -20,6 +20,7 @@ export const CREATE_TASKS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS tasks (
   priority TEXT DEFAULT 'Low',
   status TEXT DEFAULT 'Planned',
   createdAt TEXT,
+  position INTEGER DEFAULT 1000,
   card_id TEXT,
   FOREIGN KEY (card_id) REFERENCES cards(id)
 )`
