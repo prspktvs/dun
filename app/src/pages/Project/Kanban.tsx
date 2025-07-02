@@ -66,11 +66,8 @@ export function KanbanPage() {
       const doneTasks = await getProjectTasks(projectId, 1, 0, 1000)
 
       const allTasks = [...tasks, ...doneTasks] //filter unique
-        .filter((task, index, self) =>
-          index === self.findIndex((t) => t.id === task.id)
-        )
+        .filter((task, index, self) => index === self.findIndex((t) => t.id === task.id))
       setTasks(allTasks)
-
     } catch (error) {
       console.error('Error fetching tasks:', error)
     }
@@ -79,17 +76,20 @@ export function KanbanPage() {
     fetchTasks()
   }, [projectId])
 
-
   console.log('allTasks', tasks)
 
   // console.log('searchText', searchText)
-  const cardsWithTasks = cards.map((card) => {
-    const cardTasks = tasks.filter((task) => task.card_id === card.id)
-    return { ...card, tasks: cardTasks }
-  })
-  .filter((card) => {
-    return card.tasks.length > 0 || (searchText.length && card.title.toLowerCase().includes(searchText.toLowerCase()) )
-  })
+  const cardsWithTasks = cards
+    .map((card) => {
+      const cardTasks = tasks.filter((task) => task.card_id === card.id)
+      return { ...card, tasks: cardTasks }
+    })
+    .filter((card) => {
+      return (
+        card.tasks.length > 0 ||
+        (searchText.length && card.title.toLowerCase().includes(searchText.toLowerCase()))
+      )
+    })
 
   useEffect(() => {
     logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'project_cards', projectId })
@@ -140,7 +140,8 @@ export function KanbanPage() {
         updateTask={updateTaskImpl}
         topics={cardsWithTasks}
         onChooseTask={onChooseTask}
-        goBack={goBack} />
+        goBack={goBack}
+      />
     </div>
   )
 }

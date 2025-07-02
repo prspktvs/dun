@@ -67,14 +67,20 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
           </p>
         </object>
       ) : (
-        <div className='h-full w-full flex items-center justify-center' onClick={onClick}>
-          <p>{getFileName(file.url)}</p>
+        <div
+          className='h-full w-full flex items-center justify-center px-3 hover:cursor-pointer hover:bg-hoverBox'
+          onClick={onClick}
+        >
+          <p className='text-center'>{getFileName(file.url)}</p>
         </div>
       )
     case 'audio':
     case 'link':
       return (
-        <div className='h-full w-full flex items-center justify-center' onClick={onClick}>
+        <div
+          className='h-full w-full flex items-center justify-center hover:cursor-pointer hover:bg-hoverBox'
+          onClick={onClick}
+        >
           <a
             href={file.url}
             target='_blank'

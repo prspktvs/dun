@@ -15,7 +15,7 @@ export default function ProjectPreview({ project }: { project: IProject }) {
   const goToProject = () => navigate(`/${project.id}`)
   return (
     <article
-      className='flex justify-between items-center px-10 py-5 hover:cursor-pointer'
+      className='flex justify-between items-center px-10 py-5 hover:cursor-pointer hover:bg-hoverBox'
       onClick={goToProject}
     >
       <div>

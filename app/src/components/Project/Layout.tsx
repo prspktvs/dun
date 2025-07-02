@@ -1,4 +1,11 @@
-import { Navigate, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { showNotification } from '@mantine/notifications'
 
@@ -12,7 +19,6 @@ import { useAuth } from '../../context/AuthContext'
 import { addUserToProject } from '../../services'
 import { ITeamMember } from '../../types/User'
 import { useProjectAccess } from '../../hooks/useProjectAccess'
-
 
 function ProjectContent() {
   const { id: projectId = '' } = useParams()

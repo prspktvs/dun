@@ -27,7 +27,6 @@ import '@blocknote/mantine/style.css'
 import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
 import { Loader } from '../ui/Loader'
-import { INITIAL_ONBOARDING_CONTENT } from '../../utils/editor'
 import { useProject } from '../../context/ProjectContext'
 import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
@@ -86,9 +85,9 @@ function useCreateCollaborationEditor(
 
   const cardId = id.split('/').pop()
   const editor = useCreateBlockNote({
-    ...(isOnboarding && {
-      initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
-    }),
+    // ...(isOnboarding && {
+    //   initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
+    // }),
     collaboration:
       provider && !isOnboarding
         ? {
