@@ -68,6 +68,7 @@ const saveAllContent = ({
           currentTasks.get(task.id).users == JSON.stringify(task.users)
         )
           return
+
         console.log(
           INSERT_TASK_QUERY,
           task.id,

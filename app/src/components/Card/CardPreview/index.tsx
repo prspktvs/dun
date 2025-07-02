@@ -50,7 +50,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
 
   return (
     <div
-      className='h-[23.125rem] p-7 overflow-hidden md:border-r-1 bg-white border-borders-purple hover:cursor-pointer'
+      className='h-[23.125rem] p-7 overflow-hidden md:border-r-1 bg-white border-borders-purple hover:cursor-pointer hover:bg-hoverBox'
       onClick={onClick}
     >
       <div className='flex flex-col h-full'>

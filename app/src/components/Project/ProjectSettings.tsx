@@ -25,7 +25,7 @@ export function TeamMember({ user }: { user: ITeamMember }) {
     hasPermission(ROLES.ADMIN) && user.role !== 'owner' && user.id !== currentUser?.id
 
   return (
-    <div className='my-2 ml-3 grid grid-cols-[auto_1fr_120px_40px] items-center gap-3'>
+    <div className='ml-3 grid grid-cols-[auto_1fr_120px_40px] items-center gap-3'>
       <AvatarDun user={user} size={40} />
 
       <div className='flex flex-col min-w-0'>
@@ -152,63 +152,64 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className='flex flex-col justify-between'>
-      {canInviteUsers && (
-        <div className='flex justify-between items-center h-14 border-b-1 border-borders-purple'>
-          <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
-          <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
-            {inviteUrl}
+    <div className='flex flex-col h-full'>
+      <div>
+        {canInviteUsers && (
+          <div className='flex justify-between items-center h-14 border-b-1 border-borders-purple'>
+            <div className='px-5 w-1/4 font-bold ml-3 font-monaspace'>Invite link</div>
+            <div className='w-2/4 text-sm my-5 h-full border-x-1 border-borders-purple flex items-center px-3'>
+              {inviteUrl}
+            </div>
+            <div className='w-1/4 h-14'>
+              <CopyButton value={inviteUrl}>
+                {({ copied, copy }) => (
+                  <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
+                    {copied ? 'Copied' : 'Copy'}
+                  </ButtonDun>
+                )}
+              </CopyButton>
+            </div>
           </div>
-          <div className='w-1/4 h-14'>
-            <CopyButton value={inviteUrl}>
-              {({ copied, copy }) => (
-                <ButtonDun className={copied ? 'opacity-80' : ''} onClick={copy}>
-                  {copied ? 'Copied' : 'Copy'}
-                </ButtonDun>
-              )}
-            </CopyButton>
+        )}
+        <div className='py-3'>
+          <div className='px-5'>
+            {canEditTitleAndDescription ? (
+              <EditableField
+                value={title}
+                onChange={(value) => {
+                  setTitle(value)
+                  debouncedSaveTitle(value)
+                }}
+                placeholder='Type the title'
+                isTitle
+              />
+            ) : (
+              <Text className='text-xl font-bold px-2 py-1'>{title}</Text>
+            )}
           </div>
-        </div>
-      )}
-      <div className='py-3'>
-        <div className='px-5'>
-          {canEditTitleAndDescription ? (
-            <EditableField
-              value={title}
-              onChange={(value) => {
-                setTitle(value)
-                debouncedSaveTitle(value)
-              }}
-              placeholder='Type the title'
-              isTitle
-            />
-          ) : (
-            <Text className='text-xl font-bold px-2 py-1'>{title}</Text>
-          )}
-        </div>
-        <div className='px-5 mt-2'>
-          {canEditTitleAndDescription ? (
-            <EditableField
-              value={description}
-              onChange={(value) => {
-                setDescription(value)
-                debouncedSaveDescription(value)
-              }}
-              placeholder='Type the description'
-            />
-          ) : (
-            <Text className='px-2 py-1'>{description || 'No description'}</Text>
-          )}
+          <div className='px-5 mt-2'>
+            {canEditTitleAndDescription ? (
+              <EditableField
+                value={description}
+                onChange={(value) => {
+                  setDescription(value)
+                  debouncedSaveDescription(value)
+                }}
+                placeholder='Type the description'
+              />
+            ) : (
+              <Text className='px-2 py-1'>{description || 'No description'}</Text>
+            )}
+          </div>
+          <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
+            <span className='px-5 ml-3 font-bold font-monaspace'>{title} team</span>
+          </div>
         </div>
       </div>
 
-      <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
-        <span className='px-5 ml-3 font-bold font-monaspace'>{title} team</span>
-      </div>
-
-      <div className='px-5 max-h-[300px] flex flex-col overflow-y-scroll'>
+      <div className='flex-1 flex flex-col px-5 overflow-y-auto gap-4'>
         {!isEmpty(users)
-          ? users.map((user, index) => <TeamMember key={'ps-user-' + user.id} user={user} />)
+          ? users.map((user) => <TeamMember key={'ps-user-' + user.id} user={user} />)
           : null}
       </div>
 

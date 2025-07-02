@@ -40,6 +40,7 @@ export default {
           urgent: '#FF7475',
         },
         grayBg: '#EFEFEF',
+        hoverBox: '#FBFBFD',
         inactiveText: '#6F6D73',
         btnBg: '#8279BD',
         paper: '#FAF9F6',

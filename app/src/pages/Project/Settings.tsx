@@ -16,15 +16,11 @@ export function SettingPage() {
   }
 
   return (
-    <div className='flex flex-col w-full h-[calc(100vh-12px)]'>
-      {/* Header */}
+    <div className='flex flex-col w-full h-[calc(100vh-52px)]'>
       <section className='flex-none border-borders-purple border-b-1 flex items-center h-14' />
 
-      {/* Content with fixed height and scroll */}
-      <div className='flex-1 min-h-0 pb-5'>
-        <div className='h-full mx-auto'>
-          <ProjectSettings onClose={() => {}} />
-        </div>
+      <div className='flex flex-col flex-1 min-h-0'>
+        <ProjectSettings onClose={() => {}} />
       </div>
     </div>
   )
