@@ -57,6 +57,8 @@ export default function KanbanBoard({
   const [clonedTasks, setClonedTasks] = useState<Task[]>(tasks)
   const [invalidDrop, setInvalidDrop] = useState<boolean>(false)
   const [collapsedColumns, setCollapsedColumns] = useState<Record<string, boolean>>({})
+  const [collapsedSwimLanes, setCollapsedSwimLanes] = useState<Record<string, boolean>>({})
+  const [hoveringColumn, setHoveringColumn] = useState<string | null>(null)
 
   const prevCountsRef = useRef<Record<string, number>>({})
 
@@ -136,7 +138,7 @@ export default function KanbanBoard({
   }
 
   const handleDragOver = (event: DragOverEvent) => {
-    const { over } = event
+    const { active, over } = event
     if (!over) return
 
     const overId = over.id as string
@@ -145,6 +147,7 @@ export default function KanbanBoard({
     const overContainer = findContainer(overId)
     if (overContainer) {
       setOverContainer(overContainer)
+      setHoveringColumn(overContainer)
 
       if (activeContainer) {
         const [activeCardId, activeStatus] = activeContainer.split('-')
@@ -186,49 +189,64 @@ export default function KanbanBoard({
       Done: TaskStatus.Done,
     }
 
-    const newTasks = JSON.parse(JSON.stringify(tasks))
+    const newTasks = tasks.map((task) => ({ ...task }))
 
-    if (fromStatus !== toStatus) {
-      const activeIndex = newTasks.findIndex((t) => t.id === activeId)
+    if (fromContainer === toContainer) {
+      const containerTasks = newTasks
+        .filter((t) => t.card_id === fromCardId && t.status === fromStatus)
+        .sort((a, b) => (a.position || 0) - (b.position || 0))
 
-      if (activeIndex !== -1) {
-        const newStatus = statusMap[toStatus] || toStatus
+      const activeIndex = containerTasks.findIndex((task) => task.id === activeId)
+      const overIndex = containerTasks.findIndex((task) => task.id === overId)
 
-        newTasks[activeIndex] = {
-          ...newTasks[activeIndex],
-          status: newStatus,
-          position: 0,
-        }
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const reorderedTasks = arrayMove(containerTasks, activeIndex, overIndex)
 
-        const containerTasks = newTasks.filter(
-          (t) => t.card_id === fromCardId && t.status === newStatus && t.id !== activeId,
-        )
-
-        containerTasks.forEach((task, index) => {
+        reorderedTasks.forEach((task, index) => {
           const taskIndex = newTasks.findIndex((t) => t.id === task.id)
           if (taskIndex !== -1) {
-            newTasks[taskIndex].position = (index + 1) * 1000
+            newTasks[taskIndex].position = index * 1000
           }
         })
       }
-    } else if (activeId !== overId) {
-      const containerTasks = newTasks.filter(
-        (t) => t.card_id === fromCardId && t.status === fromStatus,
-      )
+    } else {
+      const activeIndex = newTasks.findIndex((task) => task.id === activeId)
+      if (activeIndex !== -1) {
+        const newStatus = statusMap[toStatus] || toStatus
+        const toCardId = toContainer.split('-')[0]
 
-      const activeIndex = containerTasks.findIndex((t) => t.id === activeId)
-      const overIndex = containerTasks.findIndex((t) => t.id === overId)
+        const overTaskIndex = newTasks.findIndex((task) => task.id === overId)
 
-      if (activeIndex !== -1 && overIndex !== -1) {
-        const reorderedTasks = arrayMove([...containerTasks], activeIndex, overIndex)
-
-        for (let i = 0; i < reorderedTasks.length; i++) {
-          const taskId = reorderedTasks[i].id
-          const taskIndex = newTasks.findIndex((t) => t.id === taskId)
-          if (taskIndex !== -1) {
-            newTasks[taskIndex].position = i * 1000
-          }
+        let newPosition
+        if (overTaskIndex !== -1) {
+          newPosition = newTasks[overTaskIndex].position - 1
+        } else {
+          const targetContainerTasks = newTasks.filter(
+            (task) => task.card_id === toCardId && task.status === newStatus,
+          )
+          newPosition =
+            targetContainerTasks.length > 0
+              ? targetContainerTasks[targetContainerTasks.length - 1].position + 1
+              : 0
         }
+
+        newTasks[activeIndex] = {
+          ...newTasks[activeIndex],
+          card_id: toCardId,
+          status: newStatus,
+          position: newPosition,
+        }
+
+        const targetContainerTasks = newTasks
+          .filter((task) => task.card_id === toCardId && task.status === newStatus)
+          .sort((a, b) => (a.position || 0) - (b.position || 0))
+
+        targetContainerTasks.forEach((task, index) => {
+          const taskIndex = newTasks.findIndex((t) => t.id === task.id)
+          if (taskIndex !== -1) {
+            newTasks[taskIndex].position = index * 1000
+          }
+        })
       }
     }
 
@@ -244,21 +262,27 @@ export default function KanbanBoard({
     setOverContainer(null)
     setLastOverId(null)
     setInvalidDrop(false)
+    setHoveringColumn(null)
   }
 
   const onToggleCheck = (taskId: string) => {
     const task = tasks.find((t) => t.id === taskId)
     if (task) {
+      let newStatus
+      if (task.isDone) {
+        newStatus = TaskStatus.NoStatus
+      } else {
+        newStatus = TaskStatus.Done
+      }
       const updatedTask = {
         ...task,
         isDone: !task.isDone,
-        status: !task.isDone ? TaskStatus.Done : task.status,
+        status: newStatus,
       }
 
       const newTasks = tasks.map((t) => (t.id === taskId ? updatedTask : t))
 
       setTasks(newTasks)
-
       updateTask(updatedTask)
     }
   }
@@ -267,6 +291,13 @@ export default function KanbanBoard({
     setCollapsedColumns((prev) => ({
       ...prev,
       [columnId]: !prev[columnId],
+    }))
+  }
+
+  const toggleSwimLane = (swimLaneId: string) => {
+    setCollapsedSwimLanes((prev) => ({
+      ...prev,
+      [swimLaneId]: !prev[swimLaneId],
     }))
   }
 
@@ -284,6 +315,21 @@ export default function KanbanBoard({
   useEffect(() => {
     localStorage.setItem(`kanban-columns-${projectId}`, JSON.stringify(collapsedColumns))
   }, [collapsedColumns, projectId])
+
+  useEffect(() => {
+    const savedPrefs = localStorage.getItem(`kanban-swimlanes-${projectId}`)
+    if (savedPrefs) {
+      try {
+        setCollapsedSwimLanes(JSON.parse(savedPrefs))
+      } catch (e) {
+        console.error('Failed to parse saved swimlane preferences', e)
+      }
+    }
+  }, [projectId])
+
+  useEffect(() => {
+    localStorage.setItem(`kanban-swimlanes-${projectId}`, JSON.stringify(collapsedSwimLanes))
+  }, [collapsedSwimLanes, projectId])
 
   return (
     <div className='flex flex-col h-screen w-full bg-white pb-20'>
@@ -305,74 +351,100 @@ export default function KanbanBoard({
         </button>
       </div>
 
-      <div className='flex sticky top-0 z-20 bg-white'>
-        <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
+      <div className='flex sticky top-0 z-20 bg-white shadow-sm'>
+        <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
           <span>Topic</span>
+          <button
+            onClick={() => {
+              const allCollapsed = topics.every((t) => collapsedSwimLanes[t.id])
+              const newState = topics.reduce(
+                (acc, topic) => {
+                  acc[topic.id] = !allCollapsed
+                  return acc
+                },
+                {} as Record<string, boolean>,
+              )
+              setCollapsedSwimLanes(newState)
+            }}
+            className='text-gray-500 hover:text-gray-700'
+            title='Toggle all rows'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-5 w-5'
+              viewBox='0 0 20 20'
+              fill='currentColor'
+            >
+              <path d='M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12z' />
+              <path d='M15 8a1 1 0 00-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z' />
+            </svg>
+          </button>
         </div>
         <div className='flex flex-1'>
-          {['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done'].map((status) => (
-            <div
-              key={status}
-              className={`${
-                collapsedColumns[status] ? 'w-[60px]' : 'flex-1 min-w-[180px]'
-              } h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200 transition-all duration-300`}
-            >
-              <div className='flex items-center space-x-2 overflow-hidden'>
-                {!collapsedColumns[status] ? (
-                  <>
-                    <span className='truncate'>{status.replace(/([A-Z])/g, ' $1')}</span>
-                    <span className='text-gray-500'>•</span>
-                    <span className='text-gray-500'>{taskCountsByStatus[status] || 0}</span>
-                  </>
-                ) : (
-                  <span
-                    style={{
-                      writingMode: 'vertical-lr',
-                      transform: 'rotate(180deg)',
-                      whiteSpace: 'nowrap',
-                    }}
-                    className='text-xs'
-                  >
-                    {status.replace(/([A-Z])/g, ' $1')} ({taskCountsByStatus[status] || 0})
-                  </span>
-                )}
-              </div>
+          {(() => {
+            const statuses = ['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done']
+            const collapsedCount = statuses.filter((status) => collapsedColumns[status]).length
+            const allCollapsed = collapsedCount === statuses.length
 
-              <button
-                onClick={() => toggleColumn(status)}
-                className='ml-auto text-gray-500 hover:text-gray-700 flex-shrink-0'
-                title={collapsedColumns[status] ? 'Expand column' : 'Collapse column'}
-              >
-                {collapsedColumns[status] ? (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    className='h-5 w-5'
-                    viewBox='0 0 20 20'
-                    fill='currentColor'
+            return statuses.map((status, index, arr) => {
+              const isCollapsed = collapsedColumns[status]
+              let columnClass = ''
+              if (isCollapsed) {
+                columnClass = allCollapsed ? 'flex-1 min-w-0' : 'w-[150px]'
+              } else {
+                columnClass = 'flex-1 min-w-[180px]'
+              }
+              return (
+                <div
+                  key={status}
+                  className={`${columnClass} h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b ${
+                    index < arr.length - 1 ? 'border-r' : ''
+                  } border-gray-200 transition-all duration-300`}
+                >
+                  <div className='flex items-center space-x-2 overflow-hidden'>
+                    {!isCollapsed ? (
+                      <span className='truncate'>{status.replace(/([A-Z])/g, ' $1')}</span>
+                    ) : (
+                      <span className='text-xs'>{status.replace(/([A-Z])/g, ' $1')}</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => toggleColumn(status)}
+                    className='ml-auto text-gray-500 hover:text-gray-700 flex-shrink-0'
+                    title={isCollapsed ? 'Expand column' : 'Collapse column'}
                   >
-                    <path
-                      fillRule='evenodd'
-                      d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    className='h-5 w-5'
-                    viewBox='0 0 20 20'
-                    fill='currentColor'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          ))}
+                    {isCollapsed ? (
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        className='h-5 w-5'
+                        viewBox='0 0 20 20'
+                        fill='currentColor'
+                      >
+                        <path
+                          fillRule='evenodd'
+                          d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        className='h-5 w-5'
+                        viewBox='0 0 20 20'
+                        fill='currentColor'
+                      >
+                        <path
+                          fillRule='evenodd'
+                          d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              )
+            })
+          })()}
         </div>
       </div>
 
@@ -407,6 +479,8 @@ export default function KanbanBoard({
                   lastOverId={lastOverId}
                   onChooseTask={onChooseTask}
                   collapsedColumns={collapsedColumns}
+                  isCollapsed={collapsedSwimLanes[swimLane.id] || false}
+                  onToggleCollapse={() => toggleSwimLane(swimLane.id)}
                 />
               )
             })}
