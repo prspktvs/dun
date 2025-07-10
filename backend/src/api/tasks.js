@@ -1,6 +1,21 @@
-import e from 'express'
-import { allQuery } from '../database/index.js'
-import { SELECT_USER_TASKS_QUERY, SELECT_PROJECT_TASKS_QUERY } from '../database/queries.js'
+import { allQuery, getQuery } from '../database/index.js'
+import {
+  SELECT_USER_TASKS_QUERY,
+  SELECT_PROJECT_TASKS_QUERY,
+  SELECT_CARD_BY_ID_QUERY,
+  SELECT_TASK_BY_ID,
+  SELECT_PROJECT_ID_BY_TASK_ID,
+} from '../database/queries.js'
+import { sendMessageToProject } from '../server.js'
+import { getCardById } from './cards.js'
+
+function deserializeTask(task) {
+  return {
+    ...task,
+    isDone: !!task?.isDone,
+    users: JSON.parse(task?.users || '[]'),
+  }
+}
 
 export const getProjectTasks = async (req, res) => {
   try {
@@ -11,7 +26,7 @@ export const getProjectTasks = async (req, res) => {
     }
 
     const tasks = await allQuery(SELECT_PROJECT_TASKS_QUERY, [projectId, isDone, offset, limit])
-    res.json({ tasks })
+    res.json({ tasks: tasks.map(deserializeTask) })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Internal server error' })
@@ -31,7 +46,7 @@ export const getUserTasks = async (req, res) => {
     }
 
     const tasks = await allQuery(SELECT_USER_TASKS_QUERY, [projectId, `%${userId}%`])
-    res.json({ tasks })
+    res.json({ tasks: tasks.map(deserializeTask) })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Internal server error' })
@@ -53,9 +68,9 @@ export const updateTask = async (req, res) => {
       WHERE id = ?
     `
     await allQuery(updateQuery, [
-      isDone,
+      +isDone,
       text,
-      users,
+      JSON.stringify(users || []),
       author,
       priority,
       status,
@@ -63,6 +78,16 @@ export const updateTask = async (req, res) => {
       card_id,
       id,
     ])
+
+    const task = await getQuery(SELECT_TASK_BY_ID, [id])
+    const { project_id } = await getQuery(SELECT_PROJECT_ID_BY_TASK_ID, [id])
+
+    if (task) {
+      sendMessageToProject(project_id, {
+        type: 'tasks',
+        updatedTasks: [deserializeTask(task)],
+      })
+    }
 
     res.status(200).json({
       id,
@@ -82,45 +107,32 @@ export const updateTask = async (req, res) => {
   }
 }
 
-export const updateTaskOrder = async (req, res) => {
+export const updateTasksOrderBatch = async (req, res) => {
   try {
-    const { id } = req.params
-    const { order, card_id, status } = req.body
-
-    console.log(
-      `[updateTaskOrder] Task ${id}: order=${order}, card_id=${card_id}, status=${status}`,
-    )
-
-    let query
-    let params
-
-    if (card_id !== undefined && status !== undefined) {
-      query = `
-        UPDATE tasks
-        SET position = ?, card_id = ?, status = ?
-        WHERE id = ?
-      `
-      params = [order, card_id, status, id]
-    } else {
-      query = `
-        UPDATE tasks
-        SET position = ?
-        WHERE id = ?
-      `
-      params = [order, id]
+    const { tasks } = req.body
+    if (!Array.isArray(tasks)) {
+      return res.status(400).json({ error: 'tasks array required' })
     }
 
-    await allQuery(query, params)
+    for (const task of tasks) {
+      await allQuery(`UPDATE tasks SET position = ?, card_id = ?, status = ? WHERE id = ?`, [
+        task.position,
+        task.card_id,
+        task.status,
+        task.id,
+      ])
+    }
 
-    res.status(200).json({
-      id,
-      position: order,
-      card_id,
-      status,
-      success: true,
+    const { project_id } = await getQuery(SELECT_PROJECT_ID_BY_TASK_ID, [tasks[0].id])
+
+    sendMessageToProject(project_id, {
+      type: 'tasks',
+      updatedTasks: tasks,
     })
+
+    res.status(200).json({ success: true })
   } catch (error) {
-    console.error('[updateTaskOrder] Error:', error)
+    console.error('[updateTasksOrderBatch] Error:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }

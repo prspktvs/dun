@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 import { type Task, TaskPriority, TaskStatus } from './types/task'
 import { cn } from './utils'
+import { useProject } from '../../context/ProjectContext'
 
 const Checkbox = ({
   checked,
@@ -55,6 +56,8 @@ export default function TaskCard({
     },
   })
 
+  const { usersMap } = useProject()
+
   const style = isDragOverlay
     ? {
         opacity: isInvalidDrop ? 0.4 : 1,
@@ -74,6 +77,8 @@ export default function TaskCard({
     [TaskPriority.Urgent]: 'bg-rose-50 border-rose-300 shadow-rose-100',
   }
   const cardPriority = priorityStyles[task.priority] || 'bg-white border-gray-200 shadow-gray-100'
+
+  const authorName = usersMap?.[task?.author]?.name || task.author
 
   if (isHidden) {
     return null
@@ -114,33 +119,42 @@ export default function TaskCard({
           >
             {task.text}
           </p>
-          <div className='flex flex-wrap items-center gap-2 mt-1'>
-            {task.users?.map?.((assignee, index) => (
-              <span key={index} className='text-xs text-gray-600 bg-gray-100 rounded px-2 py-0.5'>
-                {assignee}
-              </span>
-            ))}
-            {task.priority === TaskPriority.Urgent && (
-              <span className='text-xs font-semibold text-rose-600 bg-rose-100 rounded px-2 py-0.5 ml-1'>
-                Urgent
-              </span>
-            )}
-            {task.priority === TaskPriority.High && (
-              <span className='text-xs font-semibold text-red-600 bg-red-100 rounded px-2 py-0.5 ml-1'>
-                High
-              </span>
-            )}
-            {task.priority === TaskPriority.Medium && (
-              <span className='text-xs font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-0.5 ml-1'>
-                Medium
-              </span>
-            )}
-            {task.priority === TaskPriority.Low && (
-              <span className='text-xs font-semibold text-blue-700 bg-blue-100 rounded px-2 py-0.5 ml-1'>
-                Low
-              </span>
-            )}
-            {task.author && <span className='text-xs text-gray-400 ml-2'>by {task.author}</span>}
+          <div className='flex flex-col gap-1 items-start'>
+            <div className='flex gap-2 ml-1'>
+              {task.users?.map?.((assignee, index) => (
+                <span
+                  key={index}
+                  className='text-xs text-gray-600 font-bold bg-gray-200 rounded px-2 py-0.5'
+                >
+                  @{usersMap?.[assignee]?.name}
+                </span>
+              ))}
+            </div>
+            <div className='flex flex-wrap items-center gap-2 mt-1'>
+              {task.priority === TaskPriority.Urgent && (
+                <span className='text-xs font-semibold text-rose-600 bg-rose-100 rounded px-2 py-0.5 ml-1'>
+                  Urgent
+                </span>
+              )}
+              {task.priority === TaskPriority.High && (
+                <span className='text-xs font-semibold text-red-600 bg-red-100 rounded px-2 py-0.5 ml-1'>
+                  High
+                </span>
+              )}
+              {task.priority === TaskPriority.Medium && (
+                <span className='text-xs font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-0.5 ml-1'>
+                  Medium
+                </span>
+              )}
+              {task.priority === TaskPriority.Low && (
+                <span className='text-xs font-semibold text-blue-700 bg-blue-100 rounded px-2 py-0.5 ml-1'>
+                  Low
+                </span>
+              )}
+              {task.author ? (
+                <span className='text-xs text-gray-400 ml-2'>by {authorName}</span>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>

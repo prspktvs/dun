@@ -237,6 +237,7 @@ export default function KanbanBoard({
           card_id: toCardId,
           status: newStatus,
           position: newPosition,
+          isDone: newStatus === TaskStatus.Done ? true : false,
         }
 
         const targetContainerTasks = newTasks
@@ -334,174 +335,176 @@ export default function KanbanBoard({
   }, [collapsedSwimLanes, projectId])
 
   return (
-    <div className='flex flex-col h-screen w-full bg-white pb-20'>
-      <div className='flex items-center p-4 border-b border-gray-200'>
-        <button onClick={goBack} className='flex items-center text-gray-600 hover:text-gray-900'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            className='h-5 w-5 mr-2'
-            viewBox='0 0 20 20'
-            fill='currentColor'
-          >
-            <path
-              fillRule='evenodd'
-              d='M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z'
-              clipRule='evenodd'
-            />
-          </svg>
-          Back
-        </button>
-      </div>
-
-      <div className='flex sticky top-0 z-20 bg-white shadow-sm'>
-        <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
-          <span>Topic</span>
-          <button
-            onClick={() => {
-              const allCollapsed = topics.every((t) => collapsedSwimLanes[t.id])
-              const newState = topics.reduce(
-                (acc, topic) => {
-                  acc[topic.id] = !allCollapsed
-                  return acc
-                },
-                {} as Record<string, boolean>,
-              )
-              setCollapsedSwimLanes(newState)
-            }}
-            className='text-gray-500 hover:text-gray-700'
-            title='Toggle all rows'
-          >
+    <div className='flex flex-col h-screen w-full bg-white'>
+      {' '}
+      {/* убрали pb-20 */}
+      <div className='flex-1 flex flex-col overflow-auto w-full pb-14'>
+        <div className='flex items-center p-4 border-b border-gray-200'>
+          <button onClick={goBack} className='flex items-center text-gray-600 hover:text-gray-900'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
-              className='h-5 w-5'
+              className='h-5 w-5 mr-2'
               viewBox='0 0 20 20'
               fill='currentColor'
             >
-              <path d='M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12z' />
-              <path d='M15 8a1 1 0 00-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z' />
+              <path
+                fillRule='evenodd'
+                d='M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z'
+                clipRule='evenodd'
+              />
             </svg>
+            Back
           </button>
         </div>
-        <div className='flex flex-1'>
-          {(() => {
-            const statuses = ['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done']
-            const collapsedCount = statuses.filter((status) => collapsedColumns[status]).length
-            const allCollapsed = collapsedCount === statuses.length
-
-            return statuses.map((status, index, arr) => {
-              const isCollapsed = collapsedColumns[status]
-              let columnClass = ''
-              if (isCollapsed) {
-                columnClass = allCollapsed ? 'flex-1 min-w-0' : 'w-[150px]'
-              } else {
-                columnClass = 'flex-1 min-w-[180px]'
-              }
-              return (
-                <div
-                  key={status}
-                  className={`${columnClass} h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b ${
-                    index < arr.length - 1 ? 'border-r' : ''
-                  } border-gray-200 transition-all duration-300`}
-                >
-                  <div className='flex items-center space-x-2 overflow-hidden'>
-                    {!isCollapsed ? (
-                      <span className='truncate'>{status.replace(/([A-Z])/g, ' $1')}</span>
-                    ) : (
-                      <span className='text-xs'>{status.replace(/([A-Z])/g, ' $1')}</span>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => toggleColumn(status)}
-                    className='ml-auto text-gray-500 hover:text-gray-700 flex-shrink-0'
-                    title={isCollapsed ? 'Expand column' : 'Collapse column'}
-                  >
-                    {isCollapsed ? (
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='h-5 w-5'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='h-5 w-5'
-                        viewBox='0 0 20 20'
-                        fill='currentColor'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              )
-            })
-          })()}
-        </div>
-      </div>
-
-      <div
-        className='flex-1 overflow-auto w-full'
-        style={{
-          overscrollBehavior: 'contain',
-        }}
-      >
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-        >
-          <div className='w-full'>
-            {topics.map((swimLane) => {
-              const swimLaneTasks = tasks
-                .filter((task) => task.card_id === swimLane.id)
-                .sort((a, b) => (a.position || 0) - (b.position || 0))
-
-              return (
-                <SwimLaneRow
-                  key={swimLane.id}
-                  swimLane={swimLane}
-                  tasks={swimLaneTasks}
-                  onToggleCheck={onToggleCheck}
-                  activeId={activeId}
-                  activeContainer={activeContainer}
-                  overContainer={overContainer}
-                  lastOverId={lastOverId}
-                  onChooseTask={onChooseTask}
-                  collapsedColumns={collapsedColumns}
-                  isCollapsed={collapsedSwimLanes[swimLane.id] || false}
-                  activeTask={activeTask}
-                  onToggleCollapse={() => toggleSwimLane(swimLane.id)}
-                />
-              )
-            })}
+        <div className='flex sticky top-0 z-20 bg-white shadow-sm'>
+          <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
+            <span>Topic</span>
+            <button
+              onClick={() => {
+                const allCollapsed = topics.every((t) => collapsedSwimLanes[t.id])
+                const newState = topics.reduce(
+                  (acc, topic) => {
+                    acc[topic.id] = !allCollapsed
+                    return acc
+                  },
+                  {} as Record<string, boolean>,
+                )
+                setCollapsedSwimLanes(newState)
+              }}
+              className='text-gray-500 hover:text-gray-700'
+              title='Toggle all rows'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-5 w-5'
+                viewBox='0 0 20 20'
+                fill='currentColor'
+              >
+                <path d='M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12z' />
+                <path d='M15 8a1 1 0 00-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z' />
+              </svg>
+            </button>
           </div>
+          <div className='flex flex-1'>
+            {(() => {
+              const statuses = ['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done']
+              const collapsedCount = statuses.filter((status) => collapsedColumns[status]).length
+              const allCollapsed = collapsedCount === statuses.length
 
-          <DragOverlay dropAnimation={dropAnimation}>
-            {activeTask && (
-              <div className='w-[260px]'>
-                <TaskCard
-                  task={activeTask}
-                  onToggleCheck={onToggleCheck}
-                  isDragOverlay
-                  isInvalidDrop={invalidDrop}
-                />
-              </div>
-            )}
-          </DragOverlay>
-        </DndContext>
+              return statuses.map((status, index, arr) => {
+                const isCollapsed = collapsedColumns[status]
+                let columnClass = ''
+                if (isCollapsed) {
+                  columnClass = allCollapsed ? 'flex-1 min-w-0' : 'w-[150px]'
+                } else {
+                  columnClass = 'flex-1 min-w-[180px]'
+                }
+                return (
+                  <div
+                    key={status}
+                    className={`${columnClass} h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b ${
+                      index < arr.length - 1 ? 'border-r' : ''
+                    } border-gray-200 transition-all duration-300`}
+                  >
+                    <div className='flex items-center space-x-2 overflow-hidden'>
+                      {!isCollapsed ? (
+                        <span className='truncate'>{status.replace(/([A-Z])/g, ' $1')}</span>
+                      ) : (
+                        <span className='text-xs'>{status.replace(/([A-Z])/g, ' $1')}</span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => toggleColumn(status)}
+                      className='ml-auto text-gray-500 hover:text-gray-700 flex-shrink-0'
+                      title={isCollapsed ? 'Expand column' : 'Collapse column'}
+                    >
+                      {isCollapsed ? (
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          className='h-5 w-5'
+                          viewBox='0 0 20 20'
+                          fill='currentColor'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          className='h-5 w-5'
+                          viewBox='0 0 20 20'
+                          fill='currentColor'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                )
+              })
+            })()}
+          </div>
+        </div>
+        <div
+          className='flex-1 w-full'
+          style={{
+            overscrollBehavior: 'contain',
+          }}
+        >
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <div className='w-full'>
+              {topics.map((swimLane) => {
+                const swimLaneTasks = tasks
+                  .filter((task) => task.card_id === swimLane.id)
+                  .sort((a, b) => (a.position || 0) - (b.position || 0))
+
+                return (
+                  <SwimLaneRow
+                    key={swimLane.id}
+                    swimLane={swimLane}
+                    tasks={swimLaneTasks}
+                    onToggleCheck={onToggleCheck}
+                    activeId={activeId}
+                    activeContainer={activeContainer}
+                    overContainer={overContainer}
+                    lastOverId={lastOverId}
+                    onChooseTask={onChooseTask}
+                    collapsedColumns={collapsedColumns}
+                    isCollapsed={collapsedSwimLanes[swimLane.id] || false}
+                    activeTask={activeTask}
+                    onToggleCollapse={() => toggleSwimLane(swimLane.id)}
+                  />
+                )
+              })}
+            </div>
+
+            <DragOverlay dropAnimation={dropAnimation}>
+              {activeTask && (
+                <div className='w-[260px]'>
+                  <TaskCard
+                    task={activeTask}
+                    onToggleCheck={onToggleCheck}
+                    isDragOverlay
+                    isInvalidDrop={invalidDrop}
+                  />
+                </div>
+              )}
+            </DragOverlay>
+          </DndContext>
+        </div>
       </div>
     </div>
   )

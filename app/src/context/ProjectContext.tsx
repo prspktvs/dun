@@ -19,6 +19,7 @@ export type ProjectContext = {
   cards: ICard[]
   tasks: ITask[]
   users: IUser[]
+  usersMap: Record<string, IUser>
   role: UserRole
   author: IUser['id']
   isLoading: boolean
@@ -28,6 +29,7 @@ export type ProjectContext = {
   sortType: 'createdAt' | 'updatedAt'
   hasPermission: (minRole: UserRole) => boolean
   setSearch: (search: string) => void
+  setTasks: (tasks: ITask[]) => void
   setSortType: (type: 'createdAt' | 'updatedAt') => void
   updateCard: (card: Partial<ICard>) => void
   optimisticCreateCard: (card: Partial<ICard>) => Promise<void>
@@ -62,6 +64,16 @@ export const ProjectProvider = ({
     if (!role) return false
     return ROLE_LEVELS[role] >= ROLE_LEVELS[minRole]
   }
+
+  const usersMap = useMemo(() => {
+    const map: Record<string, IUser> = {}
+    if (project?.users) {
+      project.users.forEach((u) => {
+        map[u.id] = u
+      })
+    }
+    return map
+  }, [project?.users])
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -151,12 +163,12 @@ export const ProjectProvider = ({
       switch (data.type) {
         case 'tasks': {
           const { deletedTasks, updatedTasks } = data
-
-          if (deletedTasks.length > 0) {
+          console.log(updatedTasks)
+          if (deletedTasks?.length > 0) {
             setTasks((prev) => prev.filter((task) => !deletedTasks.includes(task.id)))
           }
 
-          if (updatedTasks.length > 0) {
+          if (updatedTasks?.length > 0) {
             setTasks((prev) => {
               const t: ITask[] = [...prev]
               updatedTasks.forEach((task: ITask) => {
@@ -235,10 +247,12 @@ export const ProjectProvider = ({
   const contextValue: ProjectContext = {
     project,
     users: project?.users || [],
+    usersMap,
     author: project?.author,
     search,
     cards,
     tasks,
+    setTasks,
     role,
     hasPermission,
     isLoading,

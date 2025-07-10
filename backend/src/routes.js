@@ -10,14 +10,14 @@ import {
   unshareCard,
   deleteCardChat,
 } from './api/cards.js'
-import { getUserTasks, updateTask, updateTaskOrder } from './api/tasks.js'
+import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
 
 const router = express.Router()
 
 // tasks
 router.get('/tasks', getUserTasks)
 router.post('/tasks/:id', updateTask)
-router.patch('/tasks/:id/order', updateTaskOrder)
+router.patch('/tasks/order-batch', updateTasksOrderBatch)
 
 // cards
 router.get('/cards', getAllProjectCards)

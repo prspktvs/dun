@@ -182,10 +182,9 @@ export default function SwimLaneRow({
                         paddingRight: '4px',
                       }}
                     >
-              
                       <div
                         id={`${columnId}-dropzone-0`}
-                        className={`relative h-10 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
+                        className={`relative h-2 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
                           ${overId === `${columnId}-dropzone-0` ? 'border-purple-500 bg-purple-50' : 'border-transparent'}
                         `}
                         style={{ cursor: 'copy' }}
@@ -202,7 +201,6 @@ export default function SwimLaneRow({
 
                         return (
                           <div key={task.id + '-wrapper'} className='relative w-full'>
-                      
                             <TaskCard
                               key={task.id}
                               task={task}
@@ -210,10 +208,10 @@ export default function SwimLaneRow({
                               isHidden={task.id === activeId}
                               onChooseTask={onChooseTask}
                             />
-               
+
                             <div
                               id={dropzoneId}
-                              className={`relative h-10 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
+                              className={`relative h-2 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
                                 ${overId === dropzoneId ? 'border-purple-500 bg-purple-50' : 'border-transparent'}
                               `}
                               style={{ cursor: 'copy' }}
