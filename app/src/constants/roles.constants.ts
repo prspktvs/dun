@@ -19,3 +19,5 @@ export const ROLE_OPTIONS = [
 ]
 
 export type UserRole = typeof ROLES[keyof typeof ROLES]
+
+export const ONBOARDING_EDITOR_ID = 'm73CYbjf2VVgZ8j20fndfj9h4Te2'

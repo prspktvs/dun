@@ -30,7 +30,7 @@ import { Loader } from '../ui/Loader'
 import { useProject } from '../../context/ProjectContext'
 import { TaskList } from './Blocks/TaskList'
 import { useChats } from '../../context/ChatContext'
-import { ROLES } from '../../constants/roles.constants'
+import { ONBOARDING_EDITOR_ID, ROLES } from '../../constants/roles.constants'
 import { Mention } from './Mentions/Mention'
 import { getMentionMenuItems } from './SlashMenu/MentionMenu'
 import { HighlightBlockExtension } from './Extensions/HighlightBlock'
@@ -85,17 +85,13 @@ function useCreateCollaborationEditor(
 
   const cardId = id.split('/').pop()
   const editor = useCreateBlockNote({
-    // ...(isOnboarding && {
-    //   initialContent: cardId ? INITIAL_ONBOARDING_CONTENT?.[cardId] : [],
-    // }),
-    collaboration:
-      provider && !isOnboarding
-        ? {
-            provider,
-            fragment: doc.getXmlFragment('document-store'),
-            user: { name: user.name, color: user.color },
-          }
-        : undefined,
+    collaboration: provider
+      ? {
+          provider,
+          fragment: doc.getXmlFragment('document-store'),
+          user: { name: user.name, color: user.color },
+        }
+      : undefined,
     schema: EDITOR_SCHEMA,
     _tiptapOptions: {
       extensions: [
@@ -123,7 +119,8 @@ function Editor({ card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const { hasPermission } = useProject()
+  const { hasPermission, isOnboarding } = useProject()
+  const { user } = useAuth()
   const { setEditor } = useEditor()
   const { openChatById, cardChats, getUnreadMessagesCount } = useChats()
 
@@ -204,6 +201,12 @@ function Editor({ card, users }: IEditorProps) {
   }, [editor])
 
   useEffect(() => {
+    if (isOnboarding) {
+      const isAllowedOnboardingUser = user?.id === ONBOARDING_EDITOR_ID
+      editor.isEditable = isAllowedOnboardingUser
+      return
+    }
+
     if (canEdit) {
       editor.isEditable = editable
       return

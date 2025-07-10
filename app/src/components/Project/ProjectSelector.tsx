@@ -18,7 +18,7 @@ const ProjectSelector = () => {
   const { isMobile } = useBreakpoint()
   const { id: currentProjectId } = useParams()
 
-  const { project } = useProject()
+  const { project, isOnboarding } = useProject()
   const { user } = useAuth()
   const [isMenuOpened, setMenuOpened] = useState(false)
   const [projects, setProjects] = useState<IProject[]>([])
@@ -114,7 +114,7 @@ const ProjectSelector = () => {
               >
                 {project?.title || 'Empty project'}
               </span>
-              {isCurrentProject(project.id) && (
+              {isCurrentProject(project.id) && !isOnboarding && (
                 <button onClick={onSettingsClick}>
                   <SettingsIcon />
                 </button>

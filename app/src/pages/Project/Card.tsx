@@ -16,7 +16,7 @@ import CardHeader from '../../components/Card/CardHeader'
 import Editor from '../../components/Editor'
 import CardContent from '../../components/Card/CardContent'
 import OnboardingEditor from '../../components/Editor/OnboardingEditor'
-import { ROLES } from '../../constants/roles.constants'
+import { ONBOARDING_EDITOR_ID, ROLES } from '../../constants/roles.constants'
 
 interface ICardProps {
   card: ICard
@@ -30,7 +30,8 @@ const Card = ({ card }: ICardProps) => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { closeChat, unreadChats, cardChats } = useChats()
-  const { optimisticDeleteCard, optimisticUpdateCard, users, hasPermission } = useProject()
+  const { optimisticDeleteCard, optimisticUpdateCard, users, hasPermission, isOnboarding } =
+    useProject()
   const { isMobile } = useBreakpoint()
 
   const [isFirstTimeViewed, setFirstTimeViewed] = useState(location.hash === '#new')
@@ -43,6 +44,9 @@ const Card = ({ card }: ICardProps) => {
 
   const isAuthor = card.author === user?.id
   const canShareAndRemoveTopic = isAuthor || hasPermission(ROLES.OWNER)
+
+  const canEditTitle = isOnboarding && user?.id !== ONBOARDING_EDITOR_ID
+  console.log(canEditTitle, isOnboarding, user?.id !== ONBOARDING_EDITOR_ID)
 
   const unreadDiscussions = unreadChats.reduce(
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
@@ -130,6 +134,7 @@ const Card = ({ card }: ICardProps) => {
               ref={inputRef}
               value={title}
               onChange={onTitleChange}
+              disabled={canEditTitle}
             />
             <Editor key={card.id} card={card} users={users} />
           </section>

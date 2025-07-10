@@ -12,6 +12,7 @@ import { getWsUrl } from '../utils/index'
 import { IUser } from '../types/User'
 import { realtimeDb } from '../config/firebase'
 import { ROLE_LEVELS, UserRole } from '../constants/roles.constants'
+import { ONBOARDING_ID } from '../constants/routes.constants'
 
 export type ProjectContext = {
   project: IProject
@@ -242,7 +243,7 @@ export const ProjectProvider = ({
     hasPermission,
     isLoading,
     isCardsLoading,
-    isOnboarding: projectId === 'onboarding',
+    isOnboarding: projectId === ONBOARDING_ID,
     sortType,
     setSortType,
     setSearch,

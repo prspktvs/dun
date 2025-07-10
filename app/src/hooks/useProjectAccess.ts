@@ -6,6 +6,7 @@ import { useProject } from '../context/ProjectContext'
 import { useAuth } from '../context/AuthContext'
 import { ITeamMember } from '../types/User'
 import { addUserToProject } from '../services'
+import { ONBOARDING_ID } from '../constants/routes.constants'
 
 export function useProjectAccess() {
   const { id: projectId = '' } = useParams()
@@ -26,7 +27,7 @@ export function useProjectAccess() {
     }
 
     const isInProject = users?.some((u: ITeamMember) => u.id === user.id)
-    if (isInProject) {
+    if (isInProject || project.id === ONBOARDING_ID) {
       setAllow(true)
       setChecked(true)
       return
