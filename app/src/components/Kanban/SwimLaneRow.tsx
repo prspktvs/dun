@@ -26,6 +26,7 @@ interface SwimLaneRowProps {
   collapsedColumns: Record<string, boolean>
   isCollapsed: boolean
   onToggleCollapse: () => void
+  activeTask: Task | null
 }
 
 export default function SwimLaneRow({
@@ -40,6 +41,7 @@ export default function SwimLaneRow({
   collapsedColumns,
   isCollapsed,
   onToggleCollapse,
+  activeTask,
 }: SwimLaneRowProps) {
   const overId = lastOverId
 
@@ -50,7 +52,7 @@ export default function SwimLaneRow({
       } transition-all duration-300`}
     >
       <div
-        className={`flex-shrink-0 w-[200px] ${isCollapsed ? 'p-4' : 'p-4'} border-r border-gray-200`}
+        className={`flex-shrink-0 overflow-hidden w-[200px] ${isCollapsed ? 'p-4' : 'p-4'} border-r border-gray-200`}
       >
         <div className='flex items-center justify-between'>
           <div className='font-medium text-gray-800'>{swimLane.title}</div>
@@ -89,7 +91,7 @@ export default function SwimLaneRow({
           </button>
         </div>
         {!isCollapsed && swimLane.description && (
-          <div className='text-sm text-gray-500 mt-1'>{swimLane.description}</div>
+          <div className='text-sm text-gray-500 mt-1 '>{swimLane.description}</div>
         )}
       </div>
 
@@ -180,41 +182,52 @@ export default function SwimLaneRow({
                         paddingRight: '4px',
                       }}
                     >
+              
                       <div
                         id={`${columnId}-dropzone-0`}
-                        className={`relative h-6 w-full my-1 rounded transition-colors ${
-                          overId === `${columnId}-dropzone-0` ? 'bg-purple-100' : ''
-                        }`}
-                        style={{ cursor: 'copy', border: '2px dashed transparent' }}
+                        className={`relative h-10 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
+                          ${overId === `${columnId}-dropzone-0` ? 'border-purple-500 bg-purple-50' : 'border-transparent'}
+                        `}
+                        style={{ cursor: 'copy' }}
                       >
                         {overId === `${columnId}-dropzone-0` && (
-                          <div className='absolute left-0 right-0 top-1/2 -translate-y-1/2 h-2 rounded bg-purple-400 opacity-80 z-10 pointer-events-none' />
+                          <div className='w-full h-full flex items-center justify-center text-purple-500 font-medium'>
+                            Drop here
+                          </div>
                         )}
                       </div>
-                      {columnTasks.map((task, idx) => (
-                        <div key={task.id} className='relative w-full'>
-                          <TaskCard
-                            key={task.id}
-                            task={task}
-                            onToggleCheck={onToggleCheck}
-                            isHidden={task.id === activeId}
-                            onChooseTask={onChooseTask}
-                          />
+                      {columnTasks.map((task, idx) => {
+                        const dropzoneId = `${columnId}-dropzone-${idx + 1}`
+                        const isDropPreview = overId === dropzoneId && activeId
 
-                          <div
-                            id={`${columnId}-dropzone-${idx + 1}`}
-                            className={`relative h-6 w-full my-1 rounded transition-colors ${
-                              overId === `${columnId}-dropzone-${idx + 1}` ? 'bg-purple-100' : ''
-                            }`}
-                            style={{ cursor: 'copy', border: '2px dashed transparent' }}
-                          >
-                            {overId === `${columnId}-dropzone-${idx + 1}` && (
-                              <div className='absolute left-0 right-0 top-1/2 -translate-y-1/2 h-2 rounded bg-purple-400 opacity-80 z-10 pointer-events-none' />
-                            )}
+                        return (
+                          <div key={task.id + '-wrapper'} className='relative w-full'>
+                      
+                            <TaskCard
+                              key={task.id}
+                              task={task}
+                              onToggleCheck={onToggleCheck}
+                              isHidden={task.id === activeId}
+                              onChooseTask={onChooseTask}
+                            />
+               
+                            <div
+                              id={dropzoneId}
+                              className={`relative h-10 w-full my-1 rounded border-2 border-dashed transition-colors flex items-center justify-center
+                                ${overId === dropzoneId ? 'border-purple-500 bg-purple-50' : 'border-transparent'}
+                              `}
+                              style={{ cursor: 'copy' }}
+                            >
+                              {overId === dropzoneId && (
+                                <div className='w-full h-full flex items-center justify-center text-purple-500 font-medium'>
+                                  Drop here
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                      {columnTasks.length === 0 && (
+                        )
+                      })}
+                      {/* {columnTasks.length === 0 && (
                         <div
                           className={`p-3 border-2 border-dashed ${
                             isActive ? 'border-purple-500' : 'border-purple-300'
@@ -222,7 +235,7 @@ export default function SwimLaneRow({
                         >
                           {isActive ? 'Drop here' : 'No tasks'}
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </SortableContext>
                 )}

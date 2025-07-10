@@ -145,23 +145,25 @@ export default function KanbanBoard({
     setLastOverId(overId)
 
     const overContainer = findContainer(overId)
-    if (overContainer) {
-      setOverContainer(overContainer)
-      setHoveringColumn(overContainer)
+    setOverContainer(overContainer)
+    setHoveringColumn(overContainer)
 
-      if (activeContainer) {
-        const [activeCardId, activeStatus] = activeContainer.split('-')
-        const [overCardId, overStatus] = overContainer.split('-')
+    if (activeContainer && overContainer) {
+      const [activeCardId] = activeContainer.split('-')
+      const [overCardId] = overContainer.split('-')
 
-        setInvalidDrop(activeCardId !== overCardId || collapsedColumns[overStatus] === true)
+      if (activeCardId !== overCardId) {
+        setInvalidDrop(true)
+        return
       }
+      setInvalidDrop(false)
     }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (!over || !active) {
+    if (!over || !active || invalidDrop) {
       resetDragState()
       return
     }
@@ -480,6 +482,7 @@ export default function KanbanBoard({
                   onChooseTask={onChooseTask}
                   collapsedColumns={collapsedColumns}
                   isCollapsed={collapsedSwimLanes[swimLane.id] || false}
+                  activeTask={activeTask}
                   onToggleCollapse={() => toggleSwimLane(swimLane.id)}
                 />
               )
