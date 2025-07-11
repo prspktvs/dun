@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
@@ -45,7 +45,7 @@ export function KanbanPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
 
-  const { cards, search: searchText, tasks, setTasks } = useProject()
+  const { cards, search: searchText, tasks, setTasks, isOnboarding } = useProject()
 
   const cardsWithTasks = cards
     .map((card) => {
@@ -131,6 +131,8 @@ export function KanbanPage() {
       return task
     }
   }
+
+  if (isOnboarding) return <Navigate to={`/${projectId}`} replace />
 
   return (
     <div className='w-full h-full pb-32 overflow-hidden'>
