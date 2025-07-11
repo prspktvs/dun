@@ -16,7 +16,8 @@ import UserPanel from '../../components/User/UserPanel'
 import SearchBar from '../../components/Project/SearchBar'
 import { logAnalytics } from '../../utils/analytics'
 import { ANALYTIC_EVENTS } from '../../constants'
-import { ROLES } from '../../constants/roles.constants'
+import { ONBOARDING_EDITOR_ID, ROLES } from '../../constants/roles.constants'
+import { useAuth } from '../../context/AuthContext'
 
 function SortButton({
   children,
@@ -41,9 +42,12 @@ export function CardsPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
-  const { hasPermission } = useProject()
+  const { user } = useAuth()
+  const { hasPermission, isOnboarding } = useProject()
 
-  const canCreateCard = hasPermission(ROLES.EDITOR)
+  const canCreateCard = isOnboarding
+    ? user?.id === ONBOARDING_EDITOR_ID
+    : hasPermission(ROLES.EDITOR)
 
   const {
     setSortType,

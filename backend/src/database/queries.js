@@ -94,6 +94,17 @@ export const UPDATE_CARD_QUERY = `
   UPDATE cards SET description = ?, updatedAt = ? WHERE id = ?
 `
 
+export const SELECT_TASK_BY_ID = `
+  SELECT * FROM tasks WHERE id = ?
+`
+
+export const SELECT_PROJECT_ID_BY_TASK_ID = `
+  SELECT cards.project_id
+  FROM tasks
+  JOIN cards ON tasks.card_id = cards.id
+  WHERE tasks.id = ?
+`
+
 export const SELECT_USER_TASKS_QUERY = `
   SELECT tasks.* FROM tasks
   JOIN cards ON tasks.card_id = cards.id

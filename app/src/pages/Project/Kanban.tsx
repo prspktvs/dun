@@ -44,39 +44,8 @@ function SortButton({
 export function KanbanPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
-  const { isMobile } = useBreakpoint()
-  const { hasPermission } = useProject()
 
-  const canCreateCard = hasPermission(ROLES.EDITOR)
-
-  const {
-    setSortType,
-    sortType,
-    cards,
-    search: searchText,
-    setSearch,
-    optimisticCreateCard,
-  } = useProject()
-  const search = useSearch(searchText, projectId)
-
-  const [tasks, setTasks] = useState<ITask[]>([])
-
-  const fetchTasks = async () => {
-    try {
-      const tasks = await getProjectTasks(projectId, 0, 0, 1000)
-      const doneTasks = await getProjectTasks(projectId, 1, 0, 1000)
-
-      const allTasks = [...tasks, ...doneTasks].filter(
-        (task, index, self) => index === self.findIndex((t) => t.id === task.id),
-      )
-      setTasks(allTasks)
-    } catch (error) {
-      console.error('Error fetching tasks:', error)
-    }
-  }
-  useEffect(() => {
-    fetchTasks()
-  }, [projectId])
+  const { cards, search: searchText, tasks, setTasks } = useProject()
 
   const cardsWithTasks = cards
     .map((card) => {
@@ -114,7 +83,6 @@ export function KanbanPage() {
     }
 
     const currentTasks = [...tasks]
-
     setTasks(newTasks)
 
     try {
@@ -129,26 +97,10 @@ export function KanbanPage() {
       })
 
       if (tasksToUpdate.length > 0) {
-        await Promise.all(
-          tasksToUpdate.map((task) =>
-            apiRequest(`tasks/${task.id}/order`, {
-              method: 'PATCH',
-              body: JSON.stringify({
-                order: task.position,
-                card_id: task.card_id,
-                status: task.status,
-              }),
-            })
-              .then((response) => {
-                console.log(`Updated task ${task.id}:`, response)
-                return response
-              })
-              .catch((error) => {
-                console.error(`Failed to update task ${task.id}:`, error)
-                throw error
-              }),
-          ),
-        )
+        await apiRequest('tasks/order-batch', {
+          method: 'PATCH',
+          body: JSON.stringify({ tasks: tasksToUpdate }),
+        })
       }
     } catch (error) {
       console.error('Failed to update tasks:', error)

@@ -82,3 +82,17 @@ export const getAllUserProject = async (userId: string) => {
     return null
   }
 }
+
+export const getProject = async (projectId: string): Promise<IProject | null> => {
+  try {
+    const projectRef = doc(collection(db, 'projects'), projectId)
+    const snap = await getDoc(projectRef)
+    if (snap.exists()) {
+      return { ...snap.data(), id: snap.id } as IProject
+    }
+    return null
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}

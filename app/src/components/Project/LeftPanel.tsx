@@ -53,16 +53,8 @@ function LeftPanel() {
           <UserList users={users} />
         </section>
       )}
-      <nav className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
+      <nav className='w-full px-5 py-3 pb-1 border-b-1 border-borders-purple'>
         <ul>
-          <li className='mb-2'>
-            <LeftPanelButton
-              isActive={location.pathname.endsWith('my-work')}
-              onClick={() => navigate('my-work')}
-            >
-              My work
-            </LeftPanelButton>
-          </li>
           <li className='mb-2'>
             <LeftPanelButton
               isActive={location.pathname.endsWith(projectId)}
@@ -71,17 +63,29 @@ function LeftPanel() {
               Topics ・{topicCount}
             </LeftPanelButton>
           </li>
-          <li className='mb-2'>
-            <LeftPanelButton
-              isActive={location.pathname.endsWith('settings')}
-              onClick={() => navigate('settings')}
-            >
-              Project settings
-            </LeftPanelButton>
-          </li>
+          {!isOnboarding && (
+            <>
+              <li className='mb-2'>
+                <LeftPanelButton
+                  isActive={location.pathname.endsWith('my-work')}
+                  onClick={() => navigate('my-work')}
+                >
+                  My work
+                </LeftPanelButton>
+              </li>
+              <li className='mb-2'>
+                <LeftPanelButton
+                  isActive={location.pathname.endsWith('settings')}
+                  onClick={() => navigate('settings')}
+                >
+                  Project settings
+                </LeftPanelButton>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
-      <section className='w-full px-5 pb-1 border-b-1 border-borders-purple'>
+      <section className='w-full px-5 py-1 border-b-1 border-borders-purple'>
         <LeftPanelButton onClick={handleFeedback}>Share feedback</LeftPanelButton>
         <FeedbackModal opened={isFeedbackOpened} onClose={() => setFeedbackOpened(false)} />
       </section>

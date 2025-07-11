@@ -18,7 +18,7 @@ interface ICardPreviewProps {
 }
 
 function CardPreview({ card, onClick }: ICardPreviewProps) {
-  const { users: projectUsers, getUnreadCardMessagesCount } = useProject()
+  const { users: projectUsers, getUnreadCardMessagesCount, isOnboarding } = useProject()
 
   const imageUrls = useMemo(
     () =>
@@ -105,7 +105,7 @@ function CardPreview({ card, onClick }: ICardPreviewProps) {
             )}
           </div>
         )}
-        <UserList users={users} />
+        {!isOnboarding && <UserList users={users} />}
       </div>
     </div>
   )

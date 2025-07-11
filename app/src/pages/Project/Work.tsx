@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useMemo, useState } from 'react'
 import { groupBy } from 'lodash'
 
@@ -99,7 +99,7 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
 export function MyWorkPage() {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
-  const { optimisticCreateCard, tasks, cards, hasPermission } = useProject()
+  const { optimisticCreateCard, tasks, cards, hasPermission, isOnboarding } = useProject()
   const canCreateCard = hasPermission(ROLES.EDITOR)
 
   const cardsTitles = useMemo(
@@ -119,6 +119,9 @@ export function MyWorkPage() {
 
     navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
+
+  if (isOnboarding) return <Navigate to={`/${projectId}`} replace />
+
   return (
     <div className='w-full h-full overflow-hidden pb-32'>
       <section className='border-borders-purple flex items-center h-14 '>
