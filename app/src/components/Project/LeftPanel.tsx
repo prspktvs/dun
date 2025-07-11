@@ -67,6 +67,14 @@ function LeftPanel() {
             <>
               <li className='mb-2'>
                 <LeftPanelButton
+                  isActive={location.pathname.endsWith('kanban')}
+                  onClick={() => navigate('kanban')}
+                >
+                  Kanban
+                </LeftPanelButton>
+              </li>
+              <li className='mb-2'>
+                <LeftPanelButton
                   isActive={location.pathname.endsWith('my-work')}
                   onClick={() => navigate('my-work')}
                 >
