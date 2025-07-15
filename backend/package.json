@@ -15,6 +15,9 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@blocknote/core": "^0.33.0",
+		"@blocknote/react": "^0.33.0",
+		"@blocknote/server-util": "^0.33.0",
 		"@hocuspocus/extension-logger": "^2.13.5",
 		"@hocuspocus/extension-sqlite": "^2.13.5",
 		"@hocuspocus/server": "^2.13.2",

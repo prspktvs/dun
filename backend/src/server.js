@@ -18,7 +18,7 @@ const presence = {}
 
 const app = express()
 expressWs(app)
-const hocusPocusServer = HocusPocusServer.configure({
+export const hocusPocusServer = HocusPocusServer.configure({
   onStoreDocument: async (data) =>
     onStoreDocument({ data, broadcast: { sendMessageToProject, sendMessageToUser } }),
   async onAuthenticate(data) {

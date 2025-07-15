@@ -10,19 +10,50 @@ import AvatarDun from '../ui/Avatar'
 import { ROUTES } from '../../constants'
 import { deleteProject, updateProject } from '../../services/project.service'
 import { Modal } from '../ui/modals/Modal'
-import { ITeamMember } from '../../types/User'
-import { removeUserFromProject, updateRole } from '../../utils/users'
+import { ITeamMember, IUser } from '../../types/User'
+import { leaveProject, removeUserFromProject, updateRole } from '../../utils/users'
 import { ROLE_OPTIONS, ROLES, UserRole } from '../../constants/roles.constants'
 import { useAuth } from '../../context/AuthContext'
 import { KebabMenu } from '../ui/KebabMenu'
 
+const getUserId = (user: IUser | { uid: string } | null): string | undefined => {
+  if (!user) return undefined
+  return 'id' in user ? user.id : user.uid
+}
+
 export function TeamMember({ user }: { user: ITeamMember }) {
   const { id: projectId } = useParams()
   const { user: currentUser } = useAuth()
-  const { hasPermission } = useProject()
+  const { hasPermission, users } = useProject()
+
+  const currentUserId = getUserId(currentUser)
+  const currentProjectUser = users.find((u) => u.id === currentUserId)
+  const currentUserRole = currentProjectUser?.role
+
+  const isCurrentUser = user.id === currentUserId
+  const isCurrentUserOwner = currentUserRole === ROLES.OWNER
+
+  const isOwner = user.role === ROLES.OWNER
+  const isAdmin = user.role === ROLES.ADMIN
+
+  let roleOptions = ROLE_OPTIONS
+  let canSelectRole = false
+
+  if (currentUserRole === ROLES.OWNER) {
+    roleOptions = ROLE_OPTIONS
+    canSelectRole = !isCurrentUser
+  } else if (currentUserRole === ROLES.ADMIN) {
+    roleOptions = roleOptions.filter((opt) => opt.value !== ROLES.OWNER)
+    canSelectRole = !isCurrentUser && !isOwner
+  } else {
+    canSelectRole = false
+  }
 
   const canUpdateAndRemoveUser =
-    hasPermission(ROLES.ADMIN) && user.role !== 'owner' && user.id !== currentUser?.id
+    hasPermission(ROLES.ADMIN) &&
+    !isOwner &&
+    !isCurrentUser &&
+    !(isAdmin && currentUserRole === ROLES.ADMIN)
 
   return (
     <div className='ml-3 grid grid-cols-[auto_1fr_120px_40px] items-center gap-3'>
@@ -33,16 +64,20 @@ export function TeamMember({ user }: { user: ITeamMember }) {
         <span className='text-sm text-gray-500 truncate'>{user.email}</span>
       </div>
 
-      {user.role === 'owner' ? (
+      {isOwner ? (
         <div className='font-monaspace text-14 text-left font-bold pl-3'>Owner</div>
       ) : (
         <Select
           value={user.role}
-          data={ROLE_OPTIONS}
-          readOnly={!canUpdateAndRemoveUser}
+          data={roleOptions}
+          readOnly={!canSelectRole}
           onChange={(newRole) => {
-            if (newRole) {
-              updateRole(projectId as string, user.id, newRole as UserRole)
+            if (newRole && canSelectRole) {
+              if (newRole === ROLES.OWNER && isCurrentUserOwner) {
+                updateRole(projectId as string, user.id, ROLES.OWNER)
+              } else {
+                updateRole(projectId as string, user.id, newRole as UserRole)
+              }
             }
           }}
           rightSection={<i className='ri-arrow-down-s-line text-gray-500' />}
@@ -50,7 +85,7 @@ export function TeamMember({ user }: { user: ITeamMember }) {
             root: 'w-[100px]',
             input: clsx(
               'text-left font-monaspace text-md border-none bg-transparent font-bold',
-              canUpdateAndRemoveUser ? 'cursor-pointer' : 'cursor-default',
+              canSelectRole ? 'cursor-pointer' : 'cursor-default',
             ),
             dropdown: 'border-borders-purple border-1',
           }}
@@ -62,7 +97,16 @@ export function TeamMember({ user }: { user: ITeamMember }) {
           menuText='Remove user'
           confirmMessage='Are you sure you want to remove this user?'
           confirmText='Remove'
-          onConfirm={() => removeUserFromProject(projectId as string, user.id, currentUser?.id)}
+          onConfirm={() =>
+            removeUserFromProject(projectId as string, user.id, getUserId(currentUser)!)
+          }
+        />
+      ) : isCurrentUser && !isOwner ? (
+        <KebabMenu
+          menuText='Leave project'
+          confirmMessage='Are you sure you want to leave this project?'
+          confirmText='Leave'
+          onConfirm={() => leaveProject(projectId as string, getUserId(currentUser)!)}
         />
       ) : (
         <div />
@@ -117,7 +161,7 @@ function EditableField({ value, onChange, placeholder, className, isTitle }: Edi
   )
 }
 
-export function ProjectSettings({ onClose }: { onClose: () => void }) {
+export function ProjectSettings({ onClose: _onClose }: { onClose: () => void }) {
   const { id: projectId } = useParams()
   const { users, project, isLoading, hasPermission } = useProject()
   const [title, setTitle] = useState('')
@@ -125,7 +169,7 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   const [removeTitle, setRemoveTitle] = useState('')
   const navigate = useNavigate()
 
-  const inviteUrl = project.inviteUrl
+  const inviteUrl = project?.inviteUrl || ''
 
   const canDeleteProject = hasPermission(ROLES.OWNER)
   const canEditTitleAndDescription = hasPermission(ROLES.ADMIN)
@@ -134,19 +178,25 @@ export function ProjectSettings({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     if (isLoading) return
 
-    setTitle(project.title)
-    setDescription(project.description)
+    setTitle(project?.title || '')
+    setDescription(project?.description || '')
   }, [project?.title, project?.description, isLoading])
 
-  const saveTitle = (title: string) => updateProject({ id: projectId, title })
+  const saveTitle = useCallback(
+    (title: string) => updateProject({ id: projectId, title }),
+    [projectId],
+  )
 
-  const saveDescription = (description: string) => updateProject({ id: projectId, description })
+  const saveDescription = useCallback(
+    (description: string) => updateProject({ id: projectId, description }),
+    [projectId],
+  )
 
-  const debouncedSaveTitle = useCallback(debounce(saveTitle, 2000), [projectId])
-  const debouncedSaveDescription = useCallback(debounce(saveDescription, 2000), [projectId])
+  const [debouncedSaveTitle] = useState(() => debounce(saveTitle, 2000))
+  const [debouncedSaveDescription] = useState(() => debounce(saveDescription, 2000))
 
   const handleDelete = () => {
-    if (!projectId && !canDeleteProject) return
+    if (!projectId || !canDeleteProject) return
     deleteProject(projectId)
     navigate(ROUTES.DASHBOARD, { replace: true })
   }
