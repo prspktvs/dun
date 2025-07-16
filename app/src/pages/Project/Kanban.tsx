@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { isEmpty } from 'lodash'
 
@@ -44,8 +44,10 @@ function SortButton({
 export function KanbanPage() {
   const { id: projectId = '' } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [tasks, setTasks] = useState<ITask[]>([])
 
-  const { cards, search: searchText, tasks, setTasks, isOnboarding } = useProject()
+  const { cards, search: searchText, isOnboarding } = useProject()
 
   const cardsWithTasks = cards
     .map((card) => {
@@ -59,9 +61,24 @@ export function KanbanPage() {
       )
     })
 
+  const fetchData = async () => {
+    if (!projectId) return
+    const [completedTasks, incompletedTasks] = await Promise.all([
+      getProjectTasks(projectId, 1, 0, 100),
+      getProjectTasks(projectId, 0, 0, 100),
+    ])
+    setTasks(completedTasks.concat(incompletedTasks))
+  }
+
   useEffect(() => {
     logAnalytics(ANALYTIC_EVENTS.PAGE_OPEN, { page: 'project_cards', projectId })
   }, [])
+
+  useEffect(() => {
+    if (location.pathname.includes('/kanban')) {
+      fetchData()
+    }
+  }, [location.pathname, projectId])
 
   const goBack = () => {
     navigate(`/${projectId}`)

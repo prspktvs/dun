@@ -91,13 +91,13 @@ export default function TaskCard({
       className={cn(
         'p-4 rounded-xl border shadow-sm transition-all duration-200',
         'hover:shadow-lg hover:-translate-y-0.5 hover:bg-opacity-90',
-        !isDragOverlay && 'cursor-grab active:cursor-grabbing',
+        !isDragOverlay && 'cursor-pointer active:cursor-grabbing',
         isDragOverlay && 'shadow-md',
         cardPriority,
         isDragging && 'opacity-60',
       )}
-      onDoubleClick={() => {
-        if (onChooseTask) {
+      onMouseUp={() => {
+        if (onChooseTask && !isDragging) {
           onChooseTask(task)
         }
       }}
@@ -110,51 +110,38 @@ export default function TaskCard({
           className='mt-1'
           onClick={(e) => e.stopPropagation()}
         />
-        <div className='flex-1'>
+        <div className='flex-1 overflow-hidden'>
           <p
             className={cn(
-              'text-gray-900 mb-1 mt-0 text-base font-medium',
+              'text-gray-900 mb-1 mt-0 text-base break-words',
               task.isDone ? 'line-through text-gray-400' : '',
             )}
           >
             {task.text}
           </p>
-          <div className='flex flex-col gap-1 items-start'>
-            <div className='flex gap-2 ml-1'>
-              {task.users?.map?.((assignee, index) => (
-                <span
-                  key={index}
-                  className='text-xs text-gray-600 font-bold bg-gray-200 rounded px-2 py-0.5'
-                >
-                  @{usersMap?.[assignee]?.name}
-                </span>
-              ))}
-            </div>
-            <div className='flex flex-wrap items-center gap-2 mt-1'>
-              {task.priority === TaskPriority.Urgent && (
-                <span className='text-xs font-semibold text-rose-600 bg-rose-100 rounded px-2 py-0.5 ml-1'>
-                  Urgent
-                </span>
-              )}
-              {task.priority === TaskPriority.High && (
-                <span className='text-xs font-semibold text-red-600 bg-red-100 rounded px-2 py-0.5 ml-1'>
-                  High
-                </span>
-              )}
-              {task.priority === TaskPriority.Medium && (
-                <span className='text-xs font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-0.5 ml-1'>
-                  Medium
-                </span>
-              )}
-              {task.priority === TaskPriority.Low && (
-                <span className='text-xs font-semibold text-blue-700 bg-blue-100 rounded px-2 py-0.5 ml-1'>
-                  Low
-                </span>
-              )}
-              {task.author ? (
-                <span className='text-xs text-gray-400 ml-2'>by {authorName}</span>
-              ) : null}
-            </div>
+
+          <div className='flex flex-wrap items-center gap-2 mt-1'>
+            {task.priority === TaskPriority.Urgent && (
+              <span className='text-xs font-semibold text-rose-600 bg-rose-100 rounded px-2 py-0.5'>
+                Urgent
+              </span>
+            )}
+            {task.priority === TaskPriority.High && (
+              <span className='text-xs font-semibold text-red-600 bg-red-100 rounded px-2 py-0.5'>
+                High
+              </span>
+            )}
+            {task.priority === TaskPriority.Medium && (
+              <span className='text-xs font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-0.5'>
+                Medium
+              </span>
+            )}
+            {task.priority === TaskPriority.Low && (
+              <span className='text-xs font-semibold text-blue-700 bg-blue-100 rounded px-2 py-0.5'>
+                Low
+              </span>
+            )}
+            {task.author ? <span className='text-xs text-gray-400'>by {authorName}</span> : null}
           </div>
         </div>
       </div>

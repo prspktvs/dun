@@ -20,7 +20,7 @@ function deserializeTask(task) {
 
 export const getProjectTasks = async (req, res) => {
   try {
-    const { projectId, isDone, offset = 0, limit = 50 } = req.query
+    const { projectId, isDone, offset = 0, limit = 100 } = req.query
 
     if (!projectId) {
       return res.status(400).json({ error: 'projectId is required' })
@@ -100,31 +100,7 @@ export const updateTask = async (req, res) => {
       const updateAttrs = { isDone: Boolean(isDone), priority, status }
 
       blocks = blocks.map((block) => {
-        // if (
-        //   block.type === 'blockContainer' &&
-        //   block.attrs?.id === blockId &&
-        //   Array.isArray(block.content)
-        // ) {
-        //   console.log('[DEBUG] Found blockContainer with id:', blockId)
-        //   return {
-        //     ...block,
-        //     content: block.content.map((innerBlock) => {
-        //       if (innerBlock.type === 'task' && innerBlock.attrs) {
-        //         return {
-        //           ...innerBlock,
-        //           attrs: {
-        //             ...innerBlock.attrs,
-        //             ...updateAttrs,
-        //           },
-        //         }
-        //       }
-        //       return innerBlock
-        //     }),
-        //   }
-        // }
-
         if (block.type === 'task' && block.id === blockId && block.props) {
-          console.log('[BLOCK]: ', block, 'newProps:', updateAttrs)
           return {
             ...block,
             props: {
@@ -136,11 +112,35 @@ export const updateTask = async (req, res) => {
         return block
       })
 
-      editor.blocksToYDoc(blocks, 'document-store')
-      console.log('After:', editor.yDocToBlocks(doc, 'document-store'))
-      // doc.getXmlFragment('document-store').insert(0, changedDoc.getXmlFragment('document-store'))
+      function updateTaskBlocks(blocks) {
+        return blocks.map((block) => {
+          let updatedBlock = { ...block }
 
-      console.log('-------------------------- End --------------------')
+          if (Array.isArray(block.content)) {
+            updatedBlock.content = updateTaskBlocks(block.content)
+          }
+
+          if (Array.isArray(block.children)) {
+            updatedBlock.children = updateTaskBlocks(block.children)
+          }
+
+          if (block.type === 'task' && block.id === blockId && block.props) {
+            updatedBlock = {
+              ...updatedBlock,
+              props: {
+                ...block.props,
+                ...updateAttrs,
+              },
+            }
+          }
+          return updatedBlock
+        })
+      }
+
+      blocks = updateTaskBlocks(blocks)
+
+      const documentStore = doc.getXmlFragment('document-store')
+      editor.blocksToYXmlFragment(blocks, documentStore)
     })
     await docConnection.disconnect()
 
