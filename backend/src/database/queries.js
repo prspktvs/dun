@@ -63,8 +63,8 @@ export const CREATE_TABLES_QUERIES = [
 ]
 
 export const INSERT_NEW_CARD_QUERY = `
-  INSERT INTO cards (id, title, description, createdAt, chatIds, users, author, project_id, public)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO cards (id, title, description, createdAt, updatedAt, chatIds, users, author, project_id, public)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 export const INSERT_TASK_QUERY = `

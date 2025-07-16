@@ -240,6 +240,8 @@ export default function KanbanBoard({
           isDone: newStatus === TaskStatus.Done ? true : false,
         }
 
+        updateTask(newTasks[activeIndex])
+
         const targetContainerTasks = newTasks
           .filter((task) => task.card_id === toCardId && task.status === newStatus)
           .sort((a, b) => (a.position || 0) - (b.position || 0))

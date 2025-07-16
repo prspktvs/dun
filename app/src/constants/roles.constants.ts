@@ -16,6 +16,7 @@ export const ROLE_OPTIONS = [
   { value: ROLES.VIEWER, label: 'Viewer' },
   { value: ROLES.EDITOR, label: 'Editor' },
   { value: ROLES.ADMIN, label: 'Admin' },
+  { value: ROLES.OWNER, label: 'Owner' },
 ]
 
 export type UserRole = typeof ROLES[keyof typeof ROLES]

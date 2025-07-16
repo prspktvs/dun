@@ -9,7 +9,7 @@ import { ICard } from '../types/Card'
 import { useFirebaseDocument } from '../hooks/useFirebaseDocument'
 import { IProject } from '../types/Project'
 import { getWsUrl } from '../utils/index'
-import { IUser } from '../types/User'
+import { ITeamMember, IUser } from '../types/User'
 import { realtimeDb } from '../config/firebase'
 import { ROLE_LEVELS, UserRole } from '../constants/roles.constants'
 import { ONBOARDING_ID } from '../constants/routes.constants'
@@ -18,8 +18,8 @@ export type ProjectContext = {
   project: IProject
   cards: ICard[]
   tasks: ITask[]
-  users: IUser[]
-  usersMap: Record<string, IUser>
+  users: ITeamMember[]
+  usersMap: Record<string, ITeamMember>
   role: UserRole
   author: IUser['id']
   isLoading: boolean
@@ -206,9 +206,20 @@ export const ProjectProvider = ({
     return chatsInCard.reduce((acc, chat) => acc + chat.unreadCount, 0)
   }
 
-  const optimisticCreateCard = async (card: Partial<ICard>) => {
+  const optimisticCreateCard = async (card?: Partial<ICard>) => {
     try {
-      const data = { ...card, author: user.id, users: [], public: false }
+      const createdAt = new Date()
+      const data = {
+        ...card,
+        title: '',
+        public: false,
+        author: user.id,
+        users: [],
+        chatIds: [],
+        createdAt,
+        updatedAt: createdAt,
+      }
+
       const newCard = await createCard(projectId, data)
 
       if (!newCard) return

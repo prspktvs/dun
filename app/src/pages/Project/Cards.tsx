@@ -70,12 +70,7 @@ export function CardsPage() {
   const onCreateNewCard = async () => {
     const id = genId()
 
-    await optimisticCreateCard({
-      id,
-      title: '',
-      chatIds: [],
-      createdAt: new Date(),
-    })
+    await optimisticCreateCard({ id })
 
     navigate(`/${projectId}/cards/${id}#new`, { replace: true })
   }
