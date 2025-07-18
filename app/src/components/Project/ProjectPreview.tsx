@@ -64,7 +64,7 @@ export function ProjectsList({ search }: { search: string }) {
   const showSetupMessage = !hasRegularProjects
 
   return (
-    <ul className='h-full divide-y-[1px] divide-borders-purple'>
+    <ul className='flex flex-col flex-1 h-full divide-y-[1px] divide-borders-purple'>
       {isLoading ? (
         <Loader />
       ) : (
@@ -83,7 +83,7 @@ export function ProjectsList({ search }: { search: string }) {
           )}
 
           {showSetupMessage && (
-            <li>
+            <li className='flex-1'>
               <div className='flex h-full w-full px-10 py-8 justify-center items-center'>
                 <span className='font-monaspace text-inactiveText'>
                   You haven't set up your work area yet. To start,{' '}

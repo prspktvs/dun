@@ -38,7 +38,6 @@ interface ILoginCredentials {
 }
 interface IRegisterCredentials extends ILoginCredentials {
   name: string
-  cb?: () => void
 }
 
 interface AuthContextType {
@@ -86,7 +85,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       }
 
       notifySuccess(LOGGED_IN_MESSAGE)
-      navigate(from)
+      navigate(from, { replace: true })
     } catch (error) {
       console.error('Error signing in with email and password:', error)
       switch (error.code) {
@@ -102,12 +101,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     }
   }
 
-  const registerWithEmailAndPassword = async ({
-    email,
-    password,
-    name,
-    cb,
-  }: IRegisterCredentials) => {
+  const registerWithEmailAndPassword = async ({ email, password, name }: IRegisterCredentials) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
 
@@ -118,7 +112,8 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       await sendEmailVerification(userCredential.user)
 
       notifySuccess(EMAIL_VERIFIED_MESSAGE)
-      if (cb) cb()
+
+      navigate(from, { replace: true })
     } catch (error) {
       console.error('Error signing up with email and password:', error)
       switch (error.code) {
@@ -140,7 +135,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
     try {
       await signInWithPopup(auth, provider)
-      navigate(from)
+      navigate(from, { replace: true })
     } catch (error) {
       console.error('Error signing in with Google:', error)
     }

@@ -1,4 +1,4 @@
-import { Menu } from '@mantine/core'
+import { useLocation, useParams } from 'react-router-dom'
 
 import ButtonDun from '../ui/buttons/ButtonDun'
 import { SharingMenu } from './Sharing/SharingMenu'
@@ -20,33 +20,39 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   isFirstTimeViewed,
   updateSharingMode,
   onRemoveCard,
-}) => (
-  <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
-    <div className='flex items-center justify-between h-full mx-3 grow'>
-      <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
-        {'<'} back to topics
-      </div>
-      {canShareAndRemoveTopic && (
-        <div className='flex items-center h-full gap-1'>
-          <div className='relative hidden w-full h-full sm:block'>
-            <ButtonDun onClick={openShareModal}>Share topic</ButtonDun>
-            {isFirstTimeViewed && (
-              <SharingMenu
-                openFullSharingModal={openShareModal}
-                updateSharingMode={updateSharingMode}
-              />
-            )}
-          </div>
-          <KebabMenu
-            menuText='Remove topic'
-            confirmMessage='Are you sure you want to remove this topic?'
-            confirmText='Remove'
-            onConfirm={onRemoveCard}
-          />
+}) => {
+  const { id: projectId = '' } = useParams()
+  const location = useLocation()
+
+  const isKanbanPrevious = location.state?.backTo === `/${projectId}/kanban`
+  return (
+    <div className='flex items-center justify-between h-14 border-b-1 border-borders-purple'>
+      <div className='flex items-center justify-between h-full mx-3 grow'>
+        <div className='text-sm md:underline font-monaspace hover:cursor-pointer' onClick={goBack}>
+          {'<'} back to {isKanbanPrevious ? 'kanban' : 'topics'}
         </div>
-      )}
+        {canShareAndRemoveTopic && (
+          <div className='flex items-center h-full gap-1'>
+            <div className='relative hidden w-full h-full sm:block'>
+              <ButtonDun onClick={openShareModal}>Share topic</ButtonDun>
+              {isFirstTimeViewed && (
+                <SharingMenu
+                  openFullSharingModal={openShareModal}
+                  updateSharingMode={updateSharingMode}
+                />
+              )}
+            </div>
+            <KebabMenu
+              menuText='Remove topic'
+              confirmMessage='Are you sure you want to remove this topic?'
+              confirmText='Remove'
+              onConfirm={onRemoveCard}
+            />
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default CardHeader

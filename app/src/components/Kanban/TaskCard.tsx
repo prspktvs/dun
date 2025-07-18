@@ -9,12 +9,16 @@ const Checkbox = ({
   checked,
   onClick,
   onCheckedChange,
+  onMouseUp,
+  onPointerDown,
   id,
   className,
 }: {
   checked: boolean | undefined
   onClick: (e: React.MouseEvent<HTMLInputElement>) => void
-  onCheckedChange: () => void
+  onCheckedChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onMouseUp?: (e: React.MouseEvent<HTMLInputElement>) => void
+  onPointerDown?: (e: React.PointerEvent<HTMLInputElement>) => void
   id: string
   className?: string
 }) => (
@@ -24,6 +28,8 @@ const Checkbox = ({
     checked={checked}
     onClick={onClick}
     onChange={onCheckedChange}
+    onMouseUp={onMouseUp}
+    onPointerDown={onPointerDown}
     className={cn(
       'cursor-pointer rounded border-gray-300 text-purple-600 focus:ring-purple-500 focus:ring-2 focus:ring-offset-2',
       className,
@@ -106,9 +112,17 @@ export default function TaskCard({
         <Checkbox
           id={`task-${task.id}`}
           checked={task.isDone}
-          onCheckedChange={() => onToggleCheck(task.id)}
+          onCheckedChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            e.stopPropagation()
+            onToggleCheck(task.id)
+          }}
           className='mt-1'
           onClick={(e) => e.stopPropagation()}
+          onMouseUp={(e) => e.stopPropagation()}
+          onPointerDown={(e: React.PointerEvent<HTMLInputElement>) => {
+            e.preventDefault()
+            e.stopPropagation()
+          }}
         />
         <div className='flex-1 overflow-hidden'>
           <p

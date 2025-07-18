@@ -90,7 +90,9 @@ export function KanbanPage() {
 
   const onChooseTask = (task: ITask) => {
     const taskId = task.id.split('_').pop()
-    navigate(`/${projectId}/cards/${task.card_id}?taskId=${taskId}`)
+    navigate(`/${projectId}/cards/${task.card_id}?taskId=${taskId}`, {
+      state: { backTo: `/${projectId}/kanban` },
+    })
   }
 
   const setTasksImpl = async (newTasks: ITask[]) => {
