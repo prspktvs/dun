@@ -73,7 +73,9 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const from = isMobile ? ROUTES.DASHBOARD : (location.state?.from?.pathname ?? ROUTES.DASHBOARD)
+  const from = isMobile
+    ? { pathname: ROUTES.DASHBOARD }
+    : location.state?.from || { pathname: ROUTES.DASHBOARD }
 
   const loginWithEmailAndPassword = async ({ email, password }: ILoginCredentials) => {
     try {
