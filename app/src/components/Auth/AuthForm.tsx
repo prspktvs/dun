@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
 
 import { useAuth } from '../../context/AuthContext'
 import { GoogleLogo, HideIcon, UnhideIcon, NewUserIcon, MailIcon } from '../icons'
 import { Loader } from '../ui/Loader'
 import { AuthButton } from '../ui/buttons/AuthButton'
-import { genId, getRandomProjectRoute } from '../../utils'
-import { ROUTES } from '../../constants'
 
 type TabType = 'login' | 'signup' | 'verification' | 'forgot'
 
@@ -24,8 +20,7 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
   })
   const [isLoading, setLoading] = useState(false)
   const [isPassHidden, setPassHidden] = useState(true)
-  const navigate = useNavigate()
-  const location = useLocation()
+
   const handleTermsClick = () => {
     console.log('Terms clicked - functionality not implemented yet')
     // TODO: Implement terms navigation when ready
@@ -45,7 +40,6 @@ export function AuthForm({ tab, setTab }: AuthFormProps) {
           email,
           password,
           name,
-          cb: () => navigate(location.state?.from ?? ROUTES.DASHBOARD, { replace: true }),
         })
       }
     } catch (error) {

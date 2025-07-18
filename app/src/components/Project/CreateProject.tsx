@@ -20,7 +20,9 @@ interface ICreateProjectProps {
 interface ProjectFormProps {
   title: string
   description: string
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void
   onCreate: () => void
   goToDashboard?: () => void
   isNewUser?: boolean
@@ -37,15 +39,21 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   isTitleEmpty,
 }) => {
   return (
-    <div className='flex flex-col'>
+    <form className='flex flex-col'>
       <div className='flex-1'>
-        <textarea
+        <input
           className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 '
           placeholder='Type new project title'
           value={title}
           name='title'
           onChange={handleInputChange}
-        ></textarea>
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !isTitleEmpty) {
+              e.preventDefault()
+              onCreate()
+            }
+          }}
+        ></input>
 
         <textarea
           className='resize-none text-sm font-monaspace border-none w-full min-h-20 pl-4 placeholder-slate-400 text-[#47444F] leading-tight'
@@ -53,6 +61,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           value={description}
           name='description'
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !isTitleEmpty) {
+              e.preventDefault()
+              onCreate()
+            }
+          }}
         ></textarea>
       </div>
       <div className='flex flex-col gap-3 md:flex-row'>
@@ -68,6 +82,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           </Button>
         )}
         <Button
+          type='button'
           className={clsx(
             'mt-6 font-monaspace font-thin h-12',
             isTitleEmpty ? 'text-[#A3A1A7]' : 'text-white',
@@ -82,7 +97,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           Dun
         </Button>
       </div>
-    </div>
+    </form>
   )
 }
 
@@ -100,7 +115,7 @@ export const CreateProject = (props: ICreateProjectProps) => {
     const inviteUrl = generateInviteLink(props.projectId)
     const project: Partial<IProject> = {
       id: props.projectId,
-      title,
+      title: title.trim(),
       description,
       users: [{ ...user, role: 'owner' } as ITeamMember],
       tags: [],

@@ -26,6 +26,7 @@ type RightPanelTab = 'discussions' | 'attachments' | 'editor' | 'sharing'
 
 const Card = ({ card }: ICardProps) => {
   const { id: projectId = '', chatId } = useParams()
+
   const location = useLocation()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -46,7 +47,6 @@ const Card = ({ card }: ICardProps) => {
   const canShareAndRemoveTopic = isAuthor || hasPermission(ROLES.OWNER)
 
   const canEditTitle = isOnboarding && user?.id !== ONBOARDING_EDITOR_ID
-  console.log(canEditTitle, isOnboarding, user?.id !== ONBOARDING_EDITOR_ID)
 
   const unreadDiscussions = unreadChats.reduce(
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
@@ -111,7 +111,8 @@ const Card = ({ card }: ICardProps) => {
   const goBack = async () => {
     await onSaveTitle(title)
     closeChat()
-    navigate(`/${projectId}`)
+    const backTo = location.state?.backTo ?? `/${projectId}`
+    navigate(backTo)
   }
 
   return (

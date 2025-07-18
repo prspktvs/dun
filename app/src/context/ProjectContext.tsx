@@ -126,6 +126,7 @@ export const ProjectProvider = ({
           card?.tasks?.length > 0 ||
           card?.files?.length > 0,
       )
+      console.log(allCards)
 
       setCards(nonEmptyCards)
       setIsCardsLoading(false)
