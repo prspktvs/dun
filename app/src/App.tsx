@@ -7,6 +7,7 @@ import { lazy, Suspense, useEffect } from 'react'
 
 import { AuthProvider } from './context/AuthContext'
 import { EditorProvider } from './context/EditorContext'
+import { NotificationProvider } from './context/NotificationContext'
 import '@mantine/notifications/styles.css'
 import './utils/push'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
@@ -54,28 +55,30 @@ export default function App() {
         <Notifications position='top-right' />
         <BrowserRouter>
           <AuthProvider>
-            <EditorProvider>
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
-                  <Route index path='/' element={<LandingPage />} />
-                  <Route path='/login' element={<Login />} />
-                  <Route path='/logout' element={<Logout />} />
-                  <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
-                  <Route element={<ProtectedRoute />}>
-                    <Route path='dashboard' element={<Dashboard />} />
-                    <Route path=':id' element={<ProjectLayout />}>
-                      <Route index element={<CardsPage />} />
-                      <Route path='my-work' element={<MyWorkPage />} />
-                      <Route path='settings' element={<SettingPage />} />
-                      <Route path='kanban' element={<KanbanPage />} />
-                      <Route path='cards/:cardId' element={<CardPage />} />
-                      <Route path='cards/:cardId/chats/:chatId' element={<CardPage />} />
+            <NotificationProvider>
+              <EditorProvider>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Routes>
+                    <Route index path='/' element={<LandingPage />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/logout' element={<Logout />} />
+                    <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+                    <Route element={<ProtectedRoute />}>
+                      <Route path='dashboard' element={<Dashboard />} />
+                      <Route path=':id' element={<ProjectLayout />}>
+                        <Route index element={<CardsPage />} />
+                        <Route path='my-work' element={<MyWorkPage />} />
+                        <Route path='settings' element={<SettingPage />} />
+                        <Route path='kanban' element={<KanbanPage />} />
+                        <Route path='cards/:cardId' element={<CardPage />} />
+                        <Route path='cards/:cardId/chats/:chatId' element={<CardPage />} />
+                      </Route>
                     </Route>
-                  </Route>
-                  <Route path='*' element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </EditorProvider>
+                    <Route path='*' element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </EditorProvider>
+            </NotificationProvider>
           </AuthProvider>
         </BrowserRouter>
       </MantineProvider>

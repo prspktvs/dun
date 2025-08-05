@@ -7,6 +7,7 @@ import { ICard } from '../../types/Card'
 import { useProject } from '../../context/ProjectContext'
 import { ChatProvider, useChats } from '../../context/ChatContext'
 import { FilePreviewProvider } from '../../context/FilePreviewContext'
+import { CardFilesProvider, useCardFiles } from '../../context/CardFilesContext'
 import { Loader } from '../../components/ui/Loader'
 import { useAuth } from '../../context/AuthContext'
 import CardTabs from './CardTabs'
@@ -34,14 +35,13 @@ const Card = ({ card }: ICardProps) => {
   const { optimisticDeleteCard, optimisticUpdateCard, users, hasPermission, isOnboarding } =
     useProject()
   const { isMobile } = useBreakpoint()
+  const { files } = useCardFiles()
 
   const [isFirstTimeViewed, setFirstTimeViewed] = useState(location.hash === '#new')
   const [isShareModalOpened, setIsShareModalOpened] = useState(false)
   const [title, setTitle] = useState(card.title)
   const [activeTab, setActiveTab] = useState<RightPanelTab>(isMobile ? 'editor' : 'discussions')
   const inputRef = useRef<HTMLTextAreaElement>(null)
-
-  const files = card?.files?.filter((file) => file.url) || []
 
   const isAuthor = card.author === user?.id
   const canShareAndRemoveTopic = isAuthor || hasPermission(ROLES.OWNER)
@@ -202,9 +202,17 @@ export function CardPage() {
 
   return (
     <ChatProvider>
-      <FilePreviewProvider files={card?.files || []}>
-        <Card card={card} />
-      </FilePreviewProvider>
+      <CardFilesProvider cardId={card.id}>
+        <FilePreviewProviderWrapper>
+          <Card card={card} />
+        </FilePreviewProviderWrapper>
+      </CardFilesProvider>
     </ChatProvider>
   )
+}
+
+function FilePreviewProviderWrapper({ children }: { children: React.ReactNode }) {
+  const { files } = useCardFiles()
+
+  return <FilePreviewProvider files={files}>{children}</FilePreviewProvider>
 }

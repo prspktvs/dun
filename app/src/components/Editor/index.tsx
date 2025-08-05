@@ -24,7 +24,6 @@ import CustomSideMenu from './SideMenu'
 import { useEditor } from '../../context/EditorContext'
 import { getWsUrl } from '../../utils/index'
 import '@blocknote/mantine/style.css'
-import { uploadFile } from '../../services/upload.service'
 import ImageBlock from './Blocks/ImageBlock'
 import { Loader } from '../ui/Loader'
 import { useProject } from '../../context/ProjectContext'
@@ -35,6 +34,7 @@ import { Mention } from './Mentions/Mention'
 import { getMentionMenuItems } from './SlashMenu/MentionMenu'
 import { HighlightBlockExtension } from './Extensions/HighlightBlock'
 import { ChatIconExtension } from './Extensions/ChatIcon'
+import { uploadFile } from '../../services'
 
 const EDITOR_SCHEMA = BlockNoteSchema.create({
   blockSpecs: {
@@ -107,7 +107,7 @@ function useCreateCollaborationEditor(
         }),
       ],
     },
-    uploadFile,
+    uploadFile: uploadFile,
   })
 
   return { provider, doc, editor }

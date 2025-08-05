@@ -20,6 +20,9 @@
     "rules": "./firestore/firestore.rules",
     "indexes": "./firestore/firestore.indexes.json"
   },
+  "database": {
+    "rules": "./firestore/database.rules.json"
+  },
   "functions": [
     {
       "source": "functions",

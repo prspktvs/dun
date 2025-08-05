@@ -4,6 +4,7 @@ import { IProject } from '../types/Project'
 import { ITeamMember } from '../types/User'
 import { db } from '../config/firebase'
 import { ROLES } from '../constants/roles.constants'
+import { addMemberToRealtimeProject, syncProjectMembership } from './membershipSync.service'
 
 export const addUserToProject = async (projectId: string, user: Partial<ITeamMember>) => {
   try {
@@ -12,12 +13,18 @@ export const addUserToProject = async (projectId: string, user: Partial<ITeamMem
     const snap = await getDoc(projectRef)
     const data = snap.data()
 
-    const isUserFound = data?.users?.find((u) => u.id === user.id)
+    const isUserFound = data?.users?.find((u: any) => u.id === user.id)
     if (isUserFound) return console.log('User already exists in project')
 
     const newUser = {...user, role: user?.role ?? ROLES.VIEWER  }
     const newUsers = data?.users?.length > 0 ? [...data?.users ?? [], newUser] : [{...newUser, role: ROLES.OWNER }]
     await setDoc(projectRef, { users: newUsers }, { merge: true })
+
+
+    if (user.id) {
+      await addMemberToRealtimeProject(projectId, user.id)
+      await syncProjectMembership(projectId, newUsers)
+    }
   } catch (e) {
     console.error(e)
     return null

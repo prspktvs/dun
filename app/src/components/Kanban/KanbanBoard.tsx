@@ -339,7 +339,6 @@ export default function KanbanBoard({
   return (
     <div className='flex flex-col h-screen w-full bg-white'>
       {' '}
-      {/* убрали pb-20 */}
       <div className='flex-1 flex flex-col overflow-auto w-full pb-14'>
         <div className='flex items-center p-4 border-b border-gray-200'>
           <button onClick={goBack} className='flex items-center text-gray-600 hover:text-gray-900'>

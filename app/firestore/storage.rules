@@ -1,12 +1,54 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isValidFileType() {
+      return request.resource.contentType.matches('image/.*') ||
+             request.resource.contentType.matches('video/.*') ||
+             request.resource.contentType.matches('application/pdf') ||
+             request.resource.contentType.matches('text/.*') ||
+             request.resource.contentType.matches('application/msword') ||
+             request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.*');
+    }
+    
+    function isValidFileSize() {
+      return request.resource.size < 200 * 1024 * 1024; // 200MB limit
+    }
+    
+    function isOwnerOrProjectMember(path) {
+      return request.auth.uid != null;
+    }
+
+    match /landing/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    match /images/{imageId} {
+      allow read: if true;
+      allow write: if isSignedIn() && 
+                  isValidFileType() && 
+                  isValidFileSize() &&
+                  request.resource.contentType.matches('image/.*');
+    }
+    
+    match /videos/{videoId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && 
+                  isValidFileType() && 
+                  isValidFileSize() &&
+                  request.resource.contentType.matches('video/.*');
+    }
+    
+    match /files/{fileId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && 
+                  isValidFileType() && 
+                  isValidFileSize();
     }
   }
 }

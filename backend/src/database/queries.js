@@ -45,6 +45,25 @@ export const CREATE_MENTIONS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS mentions 
   user_id TEXT
 )`
 
+export const CREATE_NOTIFICATIONS_TABLE_QUERY = `CREATE TABLE IF NOT EXISTS notifications (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  project_id TEXT,
+  card_id TEXT,
+  chat_id TEXT,
+  task_id TEXT,
+  file_id TEXT,
+  author_id TEXT,
+  author_name TEXT,
+  is_read INTEGER DEFAULT 0,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (project_id) REFERENCES cards(project_id),
+  FOREIGN KEY (card_id) REFERENCES cards(id)
+)`
+
 export const CREATE_ALL_INDEXES = [
   'CREATE INDEX IF NOT EXISTS card_id_index ON tasks (card_id)',
   'CREATE INDEX IF NOT EXISTS project_id_index ON cards (project_id)',
@@ -52,6 +71,9 @@ export const CREATE_ALL_INDEXES = [
   'CREATE INDEX IF NOT EXISTS user_id_index ON push_tokens (user_id)',
   'CREATE INDEX IF NOT EXISTS user_id ON push_tokens (user_id)',
   'CREATE INDEX IF NOT EXISTS user_id ON mentions (user_id)',
+  'CREATE INDEX IF NOT EXISTS user_id_index ON notifications (user_id)',
+  'CREATE INDEX IF NOT EXISTS project_id_index ON notifications (project_id)',
+  'CREATE INDEX IF NOT EXISTS created_at_index ON notifications (created_at)',
 ]
 
 export const CREATE_TABLES_QUERIES = [
@@ -60,6 +82,7 @@ export const CREATE_TABLES_QUERIES = [
   CREATE_FILES_TABLE_QUERY,
   CREATE_PUSH_TOKENS_TABLE_QUERY,
   CREATE_MENTIONS_TABLE_QUERY,
+  CREATE_NOTIFICATIONS_TABLE_QUERY,
 ]
 
 export const INSERT_NEW_CARD_QUERY = `
@@ -261,3 +284,48 @@ export const DELETE_PUSH_TOKEN = `
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
 
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'
+
+export const SELECT_FILES_BY_CARD_ID = 'SELECT * FROM files WHERE card_id = ?'
+
+export const SELECT_FILE_URLS_BY_CARD_ID = 'SELECT url FROM files WHERE card_id = ?'
+
+export const SELECT_CARD_EXISTS_BY_ID = 'SELECT id FROM cards WHERE id = ?'
+
+export const INSERT_FILE_QUERY = 'INSERT INTO files (id, type, url, card_id) VALUES (?, ?, ?, ?)'
+
+export const UPDATE_CARD_UPDATED_AT = 'UPDATE cards SET updatedAt = ? WHERE id = ?'
+
+export const SELECT_FILE_BY_ID_AND_CARD_ID = 'SELECT * FROM files WHERE id = ? AND card_id = ?'
+
+export const DELETE_FILE_BY_ID_AND_CARD_ID = 'DELETE FROM files WHERE id = ? AND card_id = ?'
+
+export const SELECT_FILE_BY_ID = 'SELECT * FROM files WHERE id = ?'
+
+export const INSERT_NOTIFICATION_QUERY = `
+  INSERT INTO notifications (id, user_id, type, title, message, project_id, card_id, chat_id, task_id, file_id, author_id, author_name, created_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`
+
+export const SELECT_USER_NOTIFICATIONS_QUERY = `
+  SELECT * FROM notifications 
+  WHERE user_id = ? 
+  ORDER BY created_at DESC 
+  LIMIT ? OFFSET ?
+`
+
+export const SELECT_UNREAD_NOTIFICATIONS_COUNT_QUERY = `
+  SELECT COUNT(*) as count FROM notifications 
+  WHERE user_id = ? AND is_read = 0
+`
+
+export const MARK_NOTIFICATION_READ_QUERY = `
+  UPDATE notifications SET is_read = 1 WHERE id = ?
+`
+
+export const MARK_ALL_NOTIFICATIONS_READ_QUERY = `
+  UPDATE notifications SET is_read = 1 WHERE user_id = ?
+`
+
+export const DELETE_NOTIFICATION_QUERY = `
+  DELETE FROM notifications WHERE id = ?
+`
