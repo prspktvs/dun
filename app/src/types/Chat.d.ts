@@ -1,3 +1,10 @@
+export interface IAttachment {
+  url: string
+  name: string
+  type: string
+  size?: number
+}
+
 export interface IMessage {
   authorId: string
   author: string
@@ -5,6 +12,7 @@ export interface IMessage {
   timestamp: number
   mentions: string[]
   readBy: string[]
+  attachments?: IAttachment[]
 }
 
 export interface IChat {

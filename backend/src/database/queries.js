@@ -261,3 +261,19 @@ export const DELETE_PUSH_TOKEN = `
 export const DELETE_PUSH_TOKEN_BY_ID = 'DELETE FROM push_tokens WHERE id = ?'
 
 export const GET_PUSH_TOKENS = 'SELECT * FROM push_tokens WHERE user_id = ?'
+
+export const SELECT_FILES_BY_CARD_ID = 'SELECT * FROM files WHERE card_id = ?'
+
+export const SELECT_FILE_URLS_BY_CARD_ID = 'SELECT url FROM files WHERE card_id = ?'
+
+export const SELECT_CARD_EXISTS_BY_ID = 'SELECT id FROM cards WHERE id = ?'
+
+export const INSERT_FILE_QUERY = 'INSERT INTO files (id, type, url, card_id) VALUES (?, ?, ?, ?)'
+
+export const UPDATE_CARD_UPDATED_AT = 'UPDATE cards SET updatedAt = ? WHERE id = ?'
+
+export const SELECT_FILE_BY_ID_AND_CARD_ID = 'SELECT * FROM files WHERE id = ? AND card_id = ?'
+
+export const DELETE_FILE_BY_ID_AND_CARD_ID = 'DELETE FROM files WHERE id = ? AND card_id = ?'
+
+export const SELECT_FILE_BY_ID = 'SELECT * FROM files WHERE id = ?'

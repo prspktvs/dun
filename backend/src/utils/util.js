@@ -48,7 +48,7 @@ const saveAllContent = ({
   currentTasks,
   addToUserNotifications,
 }) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, _reject) => {
     db.serialize(() => {
       const mentions_stmt = db.prepare(INSERT_MENTION_QUERY)
       allMentions.forEach((mention) => {
@@ -97,6 +97,8 @@ const saveAllContent = ({
       })
       tasks_stmt.finalize()
 
+      db.run(`DELETE FROM files WHERE card_id = ? AND id LIKE ?`, [cardId, `${cardId}_%`])
+
       const files_stmt = db.prepare(INSERT_FILES_QUERY)
       allFiles.forEach((file) => {
         files_stmt.run(file.id, file.type, file.url, cardId)
@@ -135,9 +137,6 @@ const onStoreDocument = async ({
     text,
   } = parser(json, cardId)
 
-  // without await to not block the response
-  // @TODO: optimize card title
-
   const { notifications, addToUserNotifications } = new UserNotifications()
 
   const taskIds = allTasks.map((task) => task.id)
@@ -152,10 +151,8 @@ const onStoreDocument = async ({
 
   const deleteTasks = [...currentTasks.values()].filter((t) => !taskIds.includes(t.id))
   const deleteTaskIds = deleteTasks.map((t) => t.id)
-  const deleteFiles = JSON.parse(currentCard?.files || '[]').filter(
-    (file) => !allFiles.map((f) => f.id).includes(file.id),
-  )
-  const deleteFilesIds = deleteFiles.map((f) => f.id)
+
+  const deleteFilesIds = []
 
   const newMentions = allMentions.filter(
     (mention) => !currentMentions.map((m) => m.id).includes(mention.id),
@@ -198,24 +195,30 @@ const onStoreDocument = async ({
     // .then((res) => console.log('Document added to typesense', res))
     .catch(console.error)
 
-  // Send updates
   newMentions.forEach((mention) => {
     addToUserNotifications('mention', { cardId, projectId, ...mention, users: [mention.user] })
   })
 
+  const currentAllFiles = JSON.parse(currentCard?.files || '[]')
+  const currentDocumentFiles = currentAllFiles.filter((file) => file.id.startsWith(`${cardId}_`))
+
   const isCardUpdated =
     currentCard.description !== JSON.stringify(description) ||
-    currentCard.files !== JSON.stringify(allFiles) ||
+    JSON.stringify(currentDocumentFiles) !== JSON.stringify(allFiles) ||
     currentCard.tasks !== JSON.stringify(allTasks)
 
-  if (isCardUpdated)
+  if (isCardUpdated) {
+    const updatedCard = await getQuery(SELECT_CARD_BY_ID_QUERY, cardId)
+    const updatedFiles = JSON.parse(updatedCard?.files || '[]')
+
     sendMessageToProject(projectId, {
       id: cardId,
       description,
-      files: allFiles,
+      files: updatedFiles,
       tasks: allTasks,
       type: 'card',
     })
+  }
 
   Object.keys(notifications).forEach((userId) => {
     sendMessageToUser(userId, { ...notifications[userId], type: 'tasks', cardId, projectId })

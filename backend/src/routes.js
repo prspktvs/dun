@@ -11,6 +11,7 @@ import {
   deleteCardChat,
 } from './api/cards.js'
 import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
+import { getCardFiles, addFilesToCard, removeFileFromCard, getFileById } from './api/files.js'
 
 const router = express.Router()
 
@@ -29,4 +30,11 @@ router.delete('/cards/:id', deleteCard)
 router.post('/cards/:id/share', shareCard)
 router.delete('/cards/:id/share/:userId', unshareCard)
 router.delete('/cards/:id/chats/:chatId', deleteCardChat)
+
+// files
+router.get('/cards/:cardId/files', getCardFiles)
+router.post('/cards/:cardId/files', addFilesToCard)
+router.delete('/cards/:cardId/files/:fileId', removeFileFromCard)
+router.get('/files/:fileId', getFileById)
+
 export default router

@@ -9,12 +9,16 @@ import { useAuth } from '../../context/AuthContext'
 import { IUser } from '../../types/User'
 import { saveChatAndMessage } from '../../services'
 import { useChats } from '../../context/ChatContext'
-import { IMessage } from '../../types/Chat'
+import { IMessage, IAttachment } from '../../types/Chat'
 import { useEditor } from '../../context/EditorContext'
 import { useProject } from '../../context/ProjectContext'
+import { usePreview } from '../../context/FilePreviewContext'
+import { useCardFiles } from '../../context/CardFilesContext'
 import AvatarDun from '../ui/Avatar'
 import { getChatPath } from '../../utils/chat'
 import { updateReadBy } from '../../services/chat.service'
+import { uploadFile } from '../../services/upload.service'
+import { genId } from '../../utils'
 
 export const mentionsPattern = /@\[(.*?)\]\((.*?)\)/g
 
@@ -49,12 +53,17 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   const [messages, setMessages] = useState<IMessage[]>([])
   const { editor } = useEditor()
   const { project } = useProject()
+  const { setFileUrl } = usePreview()
+  const { addFiles } = useCardFiles()
   const [content, setContent] = useState('Discussion')
   const [newMessage, setNewMessage] = useState('')
+  const [uploadingFiles, setUploadingFiles] = useState<File[]>([])
+  const [isUploading, setIsUploading] = useState(false)
   const { closeChat } = useChats()
   const { user } = useAuth()
   const chatUsers = users.reduce((acc, user) => ({ ...acc, [user.id]: user }), {})
   const chatRef = React.useRef<HTMLDivElement>(null)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
   const firstMessage = messages[0]
   const author = firstMessage?.author
 
@@ -99,8 +108,9 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
   }
 
   const handleMessageSend = async () => {
-    if (newMessage === '') return alert('Message cannot be empty')
+    if (newMessage === '' && uploadingFiles.length === 0) return alert('Message cannot be empty')
 
+    setIsUploading(true)
     const mentions: string[] = []
 
     newMessage.split(mentionsPattern).forEach((part, index) => {
@@ -110,19 +120,159 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
       }
     })
 
+    const attachments: IAttachment[] = []
+    const failedUploads: string[] = []
+
+    for (const file of uploadingFiles) {
+      try {
+        const url = await uploadFile(file)
+        if (url) {
+          attachments.push({
+            url,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+          })
+        } else {
+          failedUploads.push(file.name)
+        }
+      } catch {
+        failedUploads.push(file.name)
+      }
+    }
+
+    const messageData: IMessage = {
+      text: newMessage,
+      author: user?.name || '',
+      authorId: user?.id || '',
+      timestamp: Date.now(),
+      mentions,
+      readBy: [user?.id || ''],
+      ...(attachments.length > 0 && { attachments }),
+    }
+
     await saveChatAndMessage({
       path: getChatPath(projectId, cardId, chatId),
-      messageData: {
-        text: newMessage,
-        author: user.name || '',
-        authorId: user.id || '',
-        timestamp: Date.now(),
-        mentions,
-        readBy: [user.id],
-      },
+      messageData,
       content: 'Discussion',
     })
+
+    if (attachments.length > 0) {
+      const files = attachments.map((attachment) => ({
+        id: genId(),
+        type: attachment.type.startsWith('image/')
+          ? 'image'
+          : attachment.type.startsWith('video/')
+            ? 'video'
+            : 'file',
+        url: attachment.url,
+      }))
+
+      try {
+        await addFiles(files)
+      } catch {}
+    }
+
     setNewMessage('')
+    setUploadingFiles([])
+    setIsUploading(false)
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || [])
+
+    const maxFiles = 10
+    const currentCount = uploadingFiles.length
+    const availableSlots = maxFiles - currentCount
+
+    if (files.length > availableSlots) {
+      alert(
+        `Maximum ${maxFiles} files allowed. You have ${currentCount} files, can add ${availableSlots} more.`,
+      )
+      return
+    }
+
+    setUploadingFiles((prev) => [...prev, ...files])
+
+    if (event.target) {
+      event.target.value = ''
+    }
+  }
+
+  const removeFile = (index: number) => {
+    setUploadingFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const renderAttachment = (attachment: IAttachment) => {
+    const isImage = attachment.type.startsWith('image/')
+    const isVideo = attachment.type.startsWith('video/')
+    const isAudio = attachment.type.startsWith('audio/')
+    const fileExtension = attachment.name.split('.').pop()?.toUpperCase() || ''
+
+    const getFileIcon = () => {
+      if (isVideo) return 'ri-video-line'
+      if (isAudio) return 'ri-music-line'
+      if (attachment.type.includes('pdf')) return 'ri-file-pdf-line'
+      if (
+        attachment.type.includes('zip') ||
+        attachment.type.includes('rar') ||
+        attachment.type.includes('7z')
+      )
+        return 'ri-file-zip-line'
+      if (attachment.type.includes('word') || fileExtension === 'DOC' || fileExtension === 'DOCX')
+        return 'ri-file-word-line'
+      if (attachment.type.includes('excel') || fileExtension === 'XLS' || fileExtension === 'XLSX')
+        return 'ri-file-excel-line'
+      if (
+        attachment.type.includes('powerpoint') ||
+        fileExtension === 'PPT' ||
+        fileExtension === 'PPTX'
+      )
+        return 'ri-file-ppt-line'
+      if (attachment.type.includes('javascript') || fileExtension === 'JS') return 'ri-braces-line'
+      if (attachment.type.includes('typescript') || fileExtension === 'TS') return 'ri-braces-line'
+      if (attachment.type.includes('html') || fileExtension === 'HTML') return 'ri-code-line'
+      if (attachment.type.includes('css') || fileExtension === 'CSS') return 'ri-palette-line'
+      if (attachment.type.includes('json') || fileExtension === 'JSON') return 'ri-brackets-line'
+      return 'ri-file-line'
+    }
+
+    return (
+      <div
+        className='w-16 h-16 rounded-lg cursor-pointer hover:opacity-80 bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center relative overflow-hidden'
+        onClick={() =>
+          isImage ? setFileUrl(attachment.url) : window.open(attachment.url, '_blank')
+        }
+      >
+        {isImage ? (
+          <img
+            src={attachment.url}
+            alt='Attached image'
+            className='w-full h-full object-cover rounded-lg'
+          />
+        ) : (
+          <div className='flex flex-col items-center justify-center text-gray-600'>
+            <i className={`${getFileIcon()} text-lg mb-1`} />
+            <div className='text-xs text-center leading-none'>{fileExtension}</div>
+          </div>
+        )}
+
+        {/* File size indicator for non-images */}
+        {!isImage && attachment.size && (
+          <div className='absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs text-center py-0.5'>
+            {formatFileSize(attachment.size)}
+          </div>
+        )}
+      </div>
+    )
   }
 
   const handleKeyDown = (
@@ -191,6 +341,13 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
                   <span className='whitespace-normal break-words font-commissioner'>
                     {renderMessage(message.text)}
                   </span>
+                  {message.attachments && message.attachments.length > 0 && (
+                    <div className='mt-2 flex flex-wrap gap-2'>
+                      {message.attachments.map((attachment, attachIndex) => (
+                        <div key={attachIndex}>{renderAttachment(attachment)}</div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )
@@ -199,8 +356,47 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           <div className='text-gray-400 w-full text-center font-monaspace'>No messages here</div>
         )}
       </div>
+
+      {/* File upload preview */}
+      {uploadingFiles.length > 0 && (
+        <div className='border-t-1 border-borders-purple px-3 py-2 bg-gray-50'>
+          <div className='flex items-center justify-between mb-2'>
+            <div className='text-xs text-gray-600'>Files to upload ({uploadingFiles.length}):</div>
+            <button
+              onClick={() => setUploadingFiles([])}
+              className='text-xs text-red-500 hover:text-red-700'
+            >
+              Clear all
+            </button>
+          </div>
+          <div className='space-y-1'>
+            {uploadingFiles.map((file, index) => (
+              <div key={index} className='flex items-center gap-2 text-sm'>
+                <i className='ri-file-line' />
+                <span className='flex-1 truncate'>{file.name}</span>
+                <span className='text-xs text-gray-500'>{formatFileSize(file.size)}</span>
+                <button
+                  onClick={() => removeFile(index)}
+                  className='text-red-500 hover:text-red-700'
+                >
+                  <i className='ri-close-line' />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className='min-h-14 border-t-1 border-borders-purple px-1 flex w-full items-center'>
-        <AvatarDun user={user} />
+        <AvatarDun user={user as IUser} />
+        <input
+          ref={fileInputRef}
+          type='file'
+          multiple
+          onChange={handleFileSelect}
+          className='hidden'
+          accept='image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.zip,.rar,.7z,.tar,.gz,.js,.ts,.html,.css,.json,.xml,.svg'
+        />
         <MentionsInput
           className='ml-1 flex-1 font-commissioner max-h-[200px] w-3/4'
           style={{
@@ -254,8 +450,28 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
             }}
           />
         </MentionsInput>
-        <button onClick={handleMessageSend}>
-          <i className='ri-send-plane-2-line text-xl' />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className={`text-xl mr-1 relative ${uploadingFiles.length > 0 ? 'text-blue-600' : ''}`}
+          title={`Attach files${uploadingFiles.length > 0 ? ` (${uploadingFiles.length})` : ''}`}
+        >
+          <i className='ri-attachment-2' />
+          {uploadingFiles.length > 0 && (
+            <span className='absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center'>
+              {uploadingFiles.length}
+            </span>
+          )}
+        </button>
+        <button
+          onClick={handleMessageSend}
+          disabled={isUploading}
+          className={`text-xl ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isUploading ? (
+            <i className='ri-loader-4-line animate-spin' />
+          ) : (
+            <i className='ri-send-plane-2-line' />
+          )}
         </button>
       </div>
     </div>

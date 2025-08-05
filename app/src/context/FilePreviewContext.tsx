@@ -13,15 +13,15 @@ export const FilePreviewProvider = ({
   const [fileUrl, setFileUrl] = useState<FilePreviewContext['fileUrl']>(undefined)
 
   useEffect(() => {
-    const handleOpenPreview = (event) => {
+    const handleOpenPreview = (event: CustomEvent) => {
       const { detail } = event
       if (!detail) return
 
       setFileUrl(detail)
     }
 
-    window.addEventListener('open-file-preview', handleOpenPreview)
-    return () => window.removeEventListener('open-file-preview', handleOpenPreview)
+    window.addEventListener('open-file-preview', handleOpenPreview as EventListener)
+    return () => window.removeEventListener('open-file-preview', handleOpenPreview as EventListener)
   }, [])
 
   const opened = Boolean(fileUrl)
@@ -31,6 +31,7 @@ export const FilePreviewProvider = ({
     fileUrl,
     setFileUrl,
   }
+
   return (
     <FilePreviewContext.Provider value={contextValue}>
       {children}

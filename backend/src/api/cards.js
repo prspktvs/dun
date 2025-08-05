@@ -66,12 +66,10 @@ export const searchCards = async (req, res) => {
       return acc
     }, {})
 
-    // Check if we have any results
     if (!cardIds?.length) {
       return res.json([])
     }
 
-    // Use SELECT_ALL_CARDS_BY_IDS_QUERY instead
     const query =
       typeof SELECT_ALL_CARDS_BY_IDS_QUERY === 'function'
         ? SELECT_ALL_CARDS_BY_IDS_QUERY(cardIds)

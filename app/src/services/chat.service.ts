@@ -1,10 +1,36 @@
 import { get, push, ref, remove, set, update } from 'firebase/database'
 
 import { realtimeDb } from '../config/firebase'
-import { IMessage } from '../types/Chat'
+import { IMessage, IAttachment } from '../types/Chat'
 import { updateCard } from './card.service'
 import { apiRequest } from '../utils/api'
 import { extractIdsFromPath } from '../utils/chat'
+import { IFile } from '../types/File'
+import { genId } from '../utils'
+
+
+export const addAttachmentsToCard = async (cardId: string, attachments: IAttachment[]) => {
+  try {
+    if (!attachments || attachments.length === 0) return
+
+    const files: IFile[] = attachments.map(attachment => ({
+      id: genId(),
+      type: attachment.type.startsWith('image/') ? 'image' : 
+            attachment.type.startsWith('video/') ? 'video' : 'file',
+      url: attachment.url
+    }))
+
+    const response = await apiRequest(`cards/${cardId}/files`, {
+      method: 'POST',
+      body: JSON.stringify({ files })
+    })
+
+    return response
+  } catch (error) {
+
+    throw error
+  }
+}
 
 export const createNewChat = async ({
   path,
@@ -42,7 +68,16 @@ export const saveChatAndMessage = async ({
     await createNewChat({ path, content })
   }
 
-  if (messageData) await saveMessage({ path, messageData})
+  if (messageData) {
+    await saveMessage({ path, messageData })
+    
+    if (messageData.attachments && messageData.attachments.length > 0) {
+      const { cardId } = extractIdsFromPath(path)
+      if (cardId) {
+        await addAttachmentsToCard(cardId, messageData.attachments)
+      }
+    }
+  }
 }
 
 export const getAllCardChats = async (path: string) => {
