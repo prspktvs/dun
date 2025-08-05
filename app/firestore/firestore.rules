@@ -2,18 +2,61 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  	// authentication required
     function isSignedIn() {
       return request.auth != null;
     }
-
-    // authentication not required
-    function notAuthenticated() {
-      return request.auth == null;
+    
+    function isProjectOwner(projectResource) {
+      return request.auth.uid in projectResource.data.users &&
+             exists(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)).data.role == 'owner';
     }
     
-    match /{document=**} {
-      allow read, write: if notAuthenticated();
+    function isProjectAdmin(projectResource) {
+      return request.auth.uid in projectResource.data.users &&
+             exists(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)).data.role in ['admin', 'owner'];
+    }
+    
+    function isProjectEditor(projectResource) {
+      return request.auth.uid in projectResource.data.users &&
+             exists(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/projects/$(resource.id)/users/$(request.auth.uid)).data.role in ['editor', 'admin', 'owner'];
+    }
+    
+    function isProjectMember(projectId) {
+      return exists(/databases/$(database)/documents/projects/$(projectId)) &&
+             request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.users;
+    }
+    
+    function hasProjectRole(projectId, roles) {
+      let project = get(/databases/$(database)/documents/projects/$(projectId));
+      let userRole = null;
+      if (request.auth.uid in project.data.users) {
+        let users = project.data.users;
+        let userIndex = 0;
+        while (userIndex < users.size()) {
+          if (users[userIndex].id == request.auth.uid) {
+            userRole = users[userIndex].role;
+            break;
+          }
+          userIndex = userIndex + 1;
+        }
+      }
+      return userRole != null && userRole in roles;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn();
+    }
+
+    match /projects/{projectId} {
+      allow read: if isSignedIn() && isProjectMember(projectId);
+      allow create: if isSignedIn() && 
+                   request.resource.data.users.hasAny([{'id': request.auth.uid, 'role': 'owner'}]);
+      allow update: if isSignedIn() && hasProjectRole(projectId, ['admin', 'owner']);
+      allow delete: if isSignedIn() && hasProjectRole(projectId, ['owner']);
     }
   }
 }

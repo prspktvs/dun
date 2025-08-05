@@ -1,0 +1,53 @@
+{
+  "rules": {
+    "projects": {
+      "$projectId": {
+        ".read": "auth != null",
+        ".write": false,
+        "members": {
+          "$userId": {
+            ".read": "auth != null && auth.uid == $userId",
+            ".write": "false"
+          }
+        },
+        "cards": {
+          "$cardId": {
+            ".read": "auth != null && root.child('projects').child($projectId).child('members').child(auth.uid).exists()",
+            ".write": false,
+            "chats": {
+              "$chatId": {
+                ".read": "auth != null && root.child('projects').child($projectId).child('members').child(auth.uid).exists()",
+                ".write": false,
+                "messages": {
+                  ".read": "auth != null && root.child('projects').child($projectId).child('members').child(auth.uid).exists()",
+                  ".write": false,
+                  "$messageId": {
+                    ".read": "auth != null && root.child('projects').child($projectId).child('members').child(auth.uid).exists()",
+                    ".write": "auth != null && root.child('projects').child($projectId).child('members').child(auth.uid).exists() && newData.child('authorId').val() == auth.uid && (!data.exists() || data.child('authorId').val() == auth.uid)",
+                    ".validate": "newData.hasChildren(['authorId', 'author', 'text', 'timestamp']) && newData.child('authorId').val() == auth.uid && newData.child('text').isString() && newData.child('timestamp').isNumber()"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "userProjects": {
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": false,
+        "$projectId": {
+          ".read": "auth != null && auth.uid == $userId",
+          ".write": false
+        }
+      }
+    },
+    "presence": {
+      "$userId": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $userId"
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { auth } from '../config/firebase'
-import { getOrCreateUser } from '../services'
+import { getOrCreateUser, syncUserProjects } from '../services'
 import { IUser } from '../types/User'
 import { notifyError, notifySuccess } from '../utils/notifications'
 import {
@@ -183,6 +183,15 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       registerForPushNotifications(token)
     }
   }, [token])
+
+  useEffect(() => {
+    if (user && typeof user === 'object' && 'id' in user && user.projects) {
+      const projectIds = user.projects.map((p: any) => p.id || p)
+      syncUserProjects(user.id as string, projectIds).catch(() => {
+       
+      })
+    }
+  }, [user])
 
   const value = {
     isAuthenticated: !!user,

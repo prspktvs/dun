@@ -1,5 +1,6 @@
 import { addDoc, collection, doc, getDoc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore'
 
+import { removeMemberFromRealtimeProject, syncProjectMembership } from '../services/membershipSync.service'
 import { db } from '../config/firebase'
 import { ITeamMember } from '../types/User'
 import { ROLES, UserRole } from '../constants/roles.constants'
@@ -109,6 +110,9 @@ export const removeUserFromProject = async (
       users: updatedUsers,
       inviteUrl: updatedInviteUrl
     })
+
+    await removeMemberFromRealtimeProject(projectId, userIdToRemove)
+    await syncProjectMembership(projectId, updatedUsers)
   } catch (error) {
     console.error('Error removing user:', error)
     throw error
@@ -143,6 +147,10 @@ export const leaveProject = async (
     await updateDoc(projectRef, {
       users: updatedUsers
     })
+
+
+    await removeMemberFromRealtimeProject(projectId, userId)
+    await syncProjectMembership(projectId, updatedUsers)
   } catch (error) {
     console.error('Error leaving project:', error)
     throw error

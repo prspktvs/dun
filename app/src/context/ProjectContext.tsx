@@ -13,6 +13,7 @@ import { ITeamMember, IUser } from '../types/User'
 import { realtimeDb } from '../config/firebase'
 import { ROLE_LEVELS, UserRole } from '../constants/roles.constants'
 import { ONBOARDING_ID } from '../constants/routes.constants'
+import { syncProjectMembership } from '../services/membershipSync.service'
 
 export type ProjectContext = {
   project: IProject
@@ -74,6 +75,14 @@ export const ProjectProvider = ({
     }
     return map
   }, [project?.users])
+
+  useEffect(() => {
+    if (project?.users && projectId) {
+      syncProjectMembership(projectId, project.users).catch((error) => {
+
+      })
+    }
+  }, [project?.users, projectId])
 
   useEffect(() => {
     const fetchChats = async () => {
