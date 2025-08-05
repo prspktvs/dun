@@ -13,30 +13,98 @@ import {
 } from '../database/queries.js'
 import parser from './parser.js'
 import { addDocument } from './typesense.js'
+import { createNotification, NOTIFICATION_TYPES } from '../services/notification.service.js'
+
+const notificationCooldowns = new Map()
+
+const shouldSendTopicNotification = (cardId, userId) => {
+  const key = `${cardId}-${userId}`
+  const now = Date.now()
+  const lastSent = notificationCooldowns.get(key)
+  const cooldownPeriod = 30000
+
+  if (!lastSent || now - lastSent > cooldownPeriod) {
+    notificationCooldowns.set(key, now)
+
+    if (notificationCooldowns.size > 1000) {
+      const cutoff = now - cooldownPeriod * 2
+      for (const [k, timestamp] of notificationCooldowns.entries()) {
+        if (timestamp < cutoff) {
+          notificationCooldowns.delete(k)
+        }
+      }
+    }
+
+    return true
+  }
+  return false
+}
 
 class UserNotifications {
   notifications = {}
 
-  addToUserNotifications = (action, data) => {
+  addToUserNotifications = async (
+    action,
+    data,
+    user = {},
+    projectId = '',
+    topicTitle = '',
+    cardUsers = [],
+  ) => {
     const { id, users } = data
-    users.forEach((userId) => {
+
+    const promises = users.map(async (userId) => {
+      if (!cardUsers.includes(userId)) {
+        return
+      }
+
       if (!this.notifications[userId]) {
         this.notifications[userId] = { updatedTasks: [], deletedTasks: [], mentions: [] }
       }
+
+      let notificationType
+      let notificationData = {
+        firstName: user.name?.split(' ')[0] || 'Someone',
+        fullName: user.name || 'Someone',
+        projectTitle: `Project ${projectId}`,
+        topicTitle,
+      }
+
       switch (action) {
         case 'update_task':
           this.notifications[userId].updatedTasks.push(data)
+          notificationType = NOTIFICATION_TYPES.TASK_ASSIGNED
           break
         case 'delete_task':
           this.notifications[userId].deletedTasks.push(id)
           break
         case 'mention':
           this.notifications[userId].mentions.push(data)
+          notificationType = NOTIFICATION_TYPES.TOPIC_MENTION
           break
         default:
           break
       }
+
+      if (notificationType && userId !== user.user_id) {
+        try {
+          await createNotification({
+            userId,
+            type: notificationType,
+            projectId: projectId,
+            cardId: data.cardId || data.card_id,
+            taskId: action === 'update_task' ? data.id : null,
+            authorId: user.user_id,
+            authorName: user.name,
+            data: notificationData,
+          })
+        } catch (error) {
+          console.error('Error creating notification:', error)
+        }
+      }
     })
+
+    await Promise.all(promises)
   }
 }
 
@@ -157,6 +225,10 @@ const onStoreDocument = async ({
   const newMentions = allMentions.filter(
     (mention) => !currentMentions.map((m) => m.id).includes(mention.id),
   )
+
+  const topicTitle = currentCard?.title || 'Untitled Topic'
+  const cardUsers = JSON.parse(currentCard?.users || '[]')
+
   await Promise.all([
     saveAllContent({
       cardId,
@@ -164,21 +236,40 @@ const onStoreDocument = async ({
       allFiles,
       allMentions,
       currentTasks,
-      addToUserNotifications,
+      addToUserNotifications: (action, data) =>
+        addToUserNotifications(action, data, user, projectId, topicTitle, cardUsers),
     }),
     runQuery(UPDATE_CARD_QUERY, [JSON.stringify(description), new Date().toISOString(), cardId]),
     deleteUnusedContent({ deleteTaskIds, deleteFilesIds }),
   ])
 
   if (deleteTasks.length > 0) {
-    deleteTasks.forEach((task) => {
-      addToUserNotifications('delete_task', {
-        ...task,
-        isDone: Boolean(task.isDone),
-        users: JSON.parse(task.users),
-        card_id: cardId,
-      })
-    })
+    for (const task of deleteTasks) {
+      await addToUserNotifications(
+        'delete_task',
+        {
+          ...task,
+          isDone: Boolean(task.isDone),
+          users: JSON.parse(task.users),
+          card_id: cardId,
+        },
+        user,
+        projectId,
+        topicTitle,
+        cardUsers,
+      )
+    }
+  }
+
+  for (const mention of newMentions) {
+    await addToUserNotifications(
+      'mention',
+      { cardId, projectId, ...mention, users: [mention.user] },
+      user,
+      projectId,
+      topicTitle,
+      cardUsers,
+    )
   }
   addDocument({
     id: cardId,
@@ -191,13 +282,7 @@ const onStoreDocument = async ({
     author: user.name,
     public: false,
     user_ids: JSON.parse(currentCard.users || '[]'),
-  })
-    // .then((res) => console.log('Document added to typesense', res))
-    .catch(console.error)
-
-  newMentions.forEach((mention) => {
-    addToUserNotifications('mention', { cardId, projectId, ...mention, users: [mention.user] })
-  })
+  }).catch(console.error)
 
   const currentAllFiles = JSON.parse(currentCard?.files || '[]')
   const currentDocumentFiles = currentAllFiles.filter((file) => file.id.startsWith(`${cardId}_`))
@@ -218,6 +303,24 @@ const onStoreDocument = async ({
       tasks: allTasks,
       type: 'card',
     })
+
+    for (const userId of cardUsers) {
+      if (userId !== user?.user_id && shouldSendTopicNotification(cardId, userId)) {
+        await createNotification({
+          userId,
+          type: NOTIFICATION_TYPES.TOPIC_CHANGED,
+          projectId,
+          cardId,
+          authorId: user?.user_id,
+          authorName: user?.name,
+          data: {
+            firstName: user?.name?.split(' ')[0] || 'Someone',
+            projectTitle: `Project ${projectId}`,
+            topicTitle: currentCard?.title || 'Untitled Topic',
+          },
+        })
+      }
+    }
   }
 
   Object.keys(notifications).forEach((userId) => {

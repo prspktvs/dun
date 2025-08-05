@@ -12,6 +12,7 @@ import {
 } from './api/cards.js'
 import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
 import { getCardFiles, addFilesToCard, removeFileFromCard, getFileById } from './api/files.js'
+import notificationsRouter from './api/notifications.js'
 
 const router = express.Router()
 
@@ -36,5 +37,8 @@ router.get('/cards/:cardId/files', getCardFiles)
 router.post('/cards/:cardId/files', addFilesToCard)
 router.delete('/cards/:cardId/files/:fileId', removeFileFromCard)
 router.get('/files/:fileId', getFileById)
+
+// notifications
+router.use('/notifications', notificationsRouter)
 
 export default router

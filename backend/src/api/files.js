@@ -9,6 +9,7 @@ import {
   DELETE_FILE_BY_ID_AND_CARD_ID,
   SELECT_FILE_BY_ID,
 } from '../database/queries.js'
+import { createNotification, NOTIFICATION_TYPES } from '../services/notification.service.js'
 
 export const getCardFiles = async (req, res) => {
   try {
@@ -27,6 +28,7 @@ export const addFilesToCard = async (req, res) => {
   try {
     const { cardId } = req.params
     const { files } = req.body
+    const user = req.user
 
     if (!files || !Array.isArray(files)) {
       return res.status(400).json({ error: 'Files array is required' })
@@ -60,6 +62,28 @@ export const addFilesToCard = async (req, res) => {
     await Promise.all(insertPromises)
 
     await runQuery(UPDATE_CARD_UPDATED_AT, [new Date().toISOString(), cardId])
+
+    const cardInfo = await getQuery('SELECT * FROM cards WHERE id = ?', [cardId])
+    const cardUsers = JSON.parse(cardInfo?.users || '[]')
+
+    for (const userId of cardUsers) {
+      if (userId !== user?.user_id) {
+        await createNotification({
+          userId,
+          type: NOTIFICATION_TYPES.FILE_ATTACHED,
+          projectId: cardInfo?.project_id,
+          cardId,
+          fileId: newFiles[0]?.id,
+          authorId: user?.user_id,
+          authorName: user?.name,
+          data: {
+            firstName: user?.name?.split(' ')[0] || 'Someone',
+            projectTitle: `Project ${cardInfo?.project_id}`,
+            topicTitle: cardInfo?.title || 'Untitled Topic',
+          },
+        })
+      }
+    }
 
     const allFiles = await allQuery(SELECT_FILES_BY_CARD_ID, [cardId])
 
