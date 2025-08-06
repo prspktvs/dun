@@ -13,7 +13,6 @@ import {
 import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
 import { getCardFiles, addFilesToCard, removeFileFromCard, getFileById } from './api/files.js'
 import notificationsRouter from './api/notifications.js'
-import { testChatNotification } from './api/test-notifications.js'
 
 const router = express.Router()
 
@@ -41,6 +40,5 @@ router.get('/files/:fileId', getFileById)
 
 // notifications
 router.use('/notifications', notificationsRouter)
-router.post('/test-notification', testChatNotification)
 
 export default router

@@ -4,17 +4,20 @@ const admin = require('firebase-admin')
 
 admin.initializeApp()
 
-const API_HOST = 'https://api.dun.wtf'
+const API_HOST = process.env.FUNCTIONS_EMULATOR ? 'http://localhost:3000' : 'https://api.dun.wtf'
 
-exports.onMessageCreated = functions.database
-  .ref('/chats/{chatId}/messages/{messageId}')
+exports.onMessageCreated = functions
+  .region('europe-west1')
+  .database.ref('/projects/{projectId}/cards/{cardId}/chats/{chatId}/messages/{messageId}')
   .onCreate(async (snapshot, context) => {
     console.log('New message created', context.params)
 
     const msg = snapshot.val()
-    const { chatId, messageId } = context.params
+    const { projectId, cardId, chatId, messageId } = context.params
 
-    const chatRef = admin.database().ref(`/chats/${chatId}/messages`)
+    const chatRef = admin
+      .database()
+      .ref(`/projects/${projectId}/cards/${cardId}/chats/${chatId}/messages`)
     const messagesSnapshot = await chatRef.once('value')
     const messages = messagesSnapshot.val()
     const messageCount = messages ? Object.keys(messages).length : 0
@@ -22,6 +25,8 @@ exports.onMessageCreated = functions.database
 
     const data = {
       ...msg,
+      projectId,
+      cardId,
       chatId,
       messageId,
       isFirstMessage,
