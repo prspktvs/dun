@@ -66,15 +66,14 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
-const sendPushToChat = getSendPushToChatFn(sendNotification)
+const sendPushToChat = getSendPushToChatFn(sendNotification, sendMessageToUser)
 
 app.post('/internal/chat/:chatId', sendPushToChat)
 
 export function sendMessageToUser(userId, message) {
-  // @TODO: add all other types of notifications
   const { cardId, projectId } = message
-  const updatedTasks = message.updatedTasks.map((task) => task.text)
-  const mentions = message.mentions.map((m) => m.text)
+  const updatedTasks = message.updatedTasks?.map((task) => task.text) || []
+  const mentions = message.mentions?.map((m) => m.text) || []
 
   if (updatedTasks.length > 0) {
     sendNotification(userId, {
@@ -102,7 +101,7 @@ export function sendMessageToUser(userId, message) {
 
   clients.forEach((client) => {
     if (client.userId === userId) {
-      client.ws.send(JSON.stringify(message))
+      client.ws.send(JSON.stringify({ ...message, type: 'notification_update' }))
     }
   })
 }

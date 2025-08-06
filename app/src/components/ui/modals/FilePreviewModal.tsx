@@ -19,13 +19,6 @@ interface IFilePreview {
   isFullScreen?: boolean
 }
 
-const stopPropagationWrapper =
-  (handler: (event: React.MouseEvent<HTMLElement>) => void) =>
-  (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    handler(event)
-  }
-
 const getFileName = (url: string) => {
   const parts = decodeURIComponent(url).split('/o/files/')
   return parts.length > 1 ? parts[1].split('?')[0] : null
@@ -35,15 +28,20 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
   switch (file.type) {
     case 'image':
       return (
-        <Image
-          src={file.url}
-          className={clsx(
-            'w-full h-full select-none',
-            isFullScreen ? 'object-contain' : 'object-fit',
-          )}
-          alt='Dun project image preview'
-          onClick={onClick}
-        />
+        <div className='flex justify-center items-center w-full h-full'>
+          <Image
+            src={file.url}
+            className='max-w-full max-h-full select-none object-contain'
+            style={{
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              width: 'auto',
+              height: 'auto',
+            }}
+            alt='Dun project image preview'
+            onClick={onClick}
+          />
+        </div>
       )
     case 'video':
       return (
@@ -59,7 +57,7 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
       )
     case 'file':
       return isFullScreen ? (
-        <object data={file.url} className='w-full h-full'>
+        <object data={file.url} className='w-full h-full' style={{ width: '100%', height: '100%' }}>
           <p>
             <a href={file.url} target='_blank' rel='noopener noreferrer'>
               Download file
@@ -76,7 +74,14 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
       )
     case 'audio':
     case 'link':
-      return (
+      return isFullScreen ? (
+        <iframe
+          src={file.url}
+          className='w-full h-full border-none'
+          style={{ width: '100%', height: '100%' }}
+          title='Link preview'
+        />
+      ) : (
         <div
           className='h-full w-full flex items-center justify-center hover:cursor-pointer hover:bg-hoverBox'
           onClick={onClick}
@@ -85,7 +90,7 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
             href={file.url}
             target='_blank'
             rel='noreferrer'
-            className={clsx('bg-white rounded-md px-5 py-3', !isFullScreen && 'h-full w-full')}
+            className='bg-white rounded-md px-5 py-3 h-full w-full'
           >
             {file.url}
           </a>
@@ -97,7 +102,20 @@ export function FilePreview({ file, onClick, isFullScreen = true }: IFilePreview
 }
 
 export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IAttachmentsProps) {
-  const defaultIndex = files?.findIndex((f) => f.url === fileUrl) ?? 0
+  const tempFile =
+    !files?.length && fileUrl
+      ? {
+          id: 'temp',
+          type:
+            /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(fileUrl) || fileUrl.includes('image')
+              ? 'image'
+              : 'file',
+          url: fileUrl,
+        }
+      : null
+
+  const workingFiles = files?.length ? files : tempFile ? [tempFile] : []
+  const defaultIndex = workingFiles?.findIndex((f) => f.url === fileUrl) ?? 0
   const [selectedIndex, setSelectedIndex] = useState<number | null>(defaultIndex)
   const [scale, setScale] = useState<number>(100)
 
@@ -114,16 +132,16 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
   }, [selectedIndex, files])
 
   const handleNext = () => {
-    if (files && selectedIndex !== null) {
-      const nextIndex = (selectedIndex + 1) % files.length
+    if (workingFiles && selectedIndex !== null) {
+      const nextIndex = (selectedIndex + 1) % workingFiles.length
       setSelectedIndex(nextIndex)
       setScale(100)
     }
   }
 
   const handlePrevious = () => {
-    if (files && selectedIndex !== null) {
-      const prevIndex = (selectedIndex - 1 + files.length) % files.length
+    if (workingFiles && selectedIndex !== null) {
+      const prevIndex = (selectedIndex - 1 + workingFiles.length) % workingFiles.length
       setSelectedIndex(prevIndex)
       setScale(100)
     }
@@ -133,7 +151,9 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
 
   const handleZoomOut = () => setScale((prev) => (prev > 50 ? prev - 10 : prev))
 
-  const handleDownload = (url: string) => window.open(url, '_blank')
+  const handleDownload = (url: string) => {
+    window.open(url, '_blank')
+  }
 
   return (
     <Modal
@@ -151,35 +171,108 @@ export default function FilePreviewModal({ opened, onClose, files, fileUrl }: IA
           <Cross />
         </div>
         <div className='flex h-12 justify-center items-center gap-x-1 font-monaspace text-lg'>
-          <Minus onClick={stopPropagationWrapper(handleZoomOut)} />
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleZoomOut()
+            }}
+            className='cursor-pointer'
+          >
+            <Minus />
+          </div>
           <div className='text-white'>{scale}%</div>
-          <Plus onClick={stopPropagationWrapper(handleZoomIn)} />
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleZoomIn()
+            }}
+            className='cursor-pointer'
+          >
+            <Plus />
+          </div>
           <div
             className='flex ml-5 gap-x-1 cursor-pointer'
-            onClick={() =>
-              selectedIndex !== null &&
-              stopPropagationWrapper(handleDownload(files[selectedIndex].url))
-            }
+            onClick={(e) => {
+              e.stopPropagation()
+              if (selectedIndex !== null && workingFiles[selectedIndex]) {
+                handleDownload(workingFiles[selectedIndex].url)
+              }
+            }}
           >
             <DownloadIcon />
             <div className='text-white select-none'>Download</div>
           </div>
         </div>
         <div className='flex h-[calc(100%_-_60px)] justify-center mt-2 items-center mb-0'>
-          <RiArrowRightSLine onClick={stopPropagationWrapper(handlePrevious)} />
+          {workingFiles.length > 1 && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                handlePrevious()
+              }}
+              className='cursor-pointer text-white text-2xl p-4'
+            >
+              <RiArrowRightSLine />
+            </div>
+          )}
 
-          <div className='flex justify-center items-center w-full h-full overflow-hidden'>
-            <div style={{ transform: `scale(${scale / 100})`, width: '100%', height: '100%' }}>
-              {selectedIndex !== null && !isEmpty(files) && (
-                <FilePreview
-                  file={files?.[selectedIndex]}
-                  onClick={stopPropagationWrapper(() => {})}
-                />
+          <div
+            className={`flex justify-center items-center w-full h-full overflow-hidden ${selectedIndex !== null && (workingFiles[selectedIndex]?.type === 'file' || workingFiles[selectedIndex]?.type === 'link') ? '' : 'px-4'}`}
+          >
+            <div
+              style={{
+                transform:
+                  selectedIndex !== null &&
+                  (workingFiles[selectedIndex]?.type === 'file' ||
+                    workingFiles[selectedIndex]?.type === 'link')
+                    ? 'none'
+                    : `scale(${scale / 100})`,
+                maxWidth:
+                  selectedIndex !== null &&
+                  (workingFiles[selectedIndex]?.type === 'file' ||
+                    workingFiles[selectedIndex]?.type === 'link')
+                    ? 'none'
+                    : '100%',
+                maxHeight:
+                  selectedIndex !== null &&
+                  (workingFiles[selectedIndex]?.type === 'file' ||
+                    workingFiles[selectedIndex]?.type === 'link')
+                    ? 'none'
+                    : '100%',
+                width:
+                  selectedIndex !== null &&
+                  (workingFiles[selectedIndex]?.type === 'file' ||
+                    workingFiles[selectedIndex]?.type === 'link')
+                    ? '100%'
+                    : 'auto',
+                height:
+                  selectedIndex !== null &&
+                  (workingFiles[selectedIndex]?.type === 'file' ||
+                    workingFiles[selectedIndex]?.type === 'link')
+                    ? '100%'
+                    : 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {selectedIndex !== null && !isEmpty(workingFiles) && workingFiles && (
+                <FilePreview file={workingFiles[selectedIndex]} onClick={() => {}} />
               )}
             </div>
           </div>
 
-          <RiArrowLeftSLine onClick={stopPropagationWrapper(handleNext)} />
+          {workingFiles.length > 1 && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                handleNext()
+              }}
+              className='cursor-pointer text-white text-2xl p-4'
+            >
+              <RiArrowLeftSLine />
+            </div>
+          )}
         </div>
       </div>
     </Modal>

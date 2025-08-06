@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore'
 
 import { ICard } from '../types/Card'
+import { IFile } from '../types/File'
 import { genId } from '../utils'
 import { db } from '../config/firebase'
 import { apiRequest } from '../utils/api'
@@ -79,4 +80,46 @@ export const unshareCard = async (cardId: string, userId: string) => {
   await apiRequest(`cards/${cardId}/share/${userId}`, {
     method: 'DELETE',
   })
+}
+
+
+export const getCardFiles = async (cardId: string): Promise<IFile[]> => {
+  if (!cardId) return []
+  
+  try {
+    const res = await apiRequest<IFile[]>(`cards/${cardId}/files`)
+    return res || []
+  } catch (error) {
+    console.error('Error getting card files:', error)
+    return []
+  }
+}
+
+export const addFilesToCard = async (cardId: string, files: IFile[]): Promise<{ files: IFile[], addedCount: number } | null> => {
+  if (!cardId || !files || files.length === 0) return null
+  
+  try {
+    const res = await apiRequest<{ files: IFile[], addedCount: number }>(`cards/${cardId}/files`, {
+      method: 'POST',
+      body: JSON.stringify({ files })
+    })
+    return res
+  } catch (error) {
+    console.error('Error adding files to card:', error)
+    return null
+  }
+}
+
+export const removeFileFromCard = async (cardId: string, fileId: string): Promise<boolean> => {
+  if (!cardId || !fileId) return false
+  
+  try {
+    await apiRequest(`cards/${cardId}/files/${fileId}`, {
+      method: 'DELETE'
+    })
+    return true
+  } catch (error) {
+    console.error('Error removing file from card:', error)
+    return false
+  }
 }

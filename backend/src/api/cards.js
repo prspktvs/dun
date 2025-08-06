@@ -9,6 +9,7 @@ import {
   UPDATE_CARD_CHAT_IDS_QUERY,
 } from '../database/queries.js'
 import { searchDocuments } from '../utils/typesense.js'
+import { createNotification, NOTIFICATION_TYPES } from '../services/notification.service.js'
 
 function deserializeCard(card) {
   return {
@@ -66,12 +67,10 @@ export const searchCards = async (req, res) => {
       return acc
     }, {})
 
-    // Check if we have any results
     if (!cardIds?.length) {
       return res.json([])
     }
 
-    // Use SELECT_ALL_CARDS_BY_IDS_QUERY instead
     const query =
       typeof SELECT_ALL_CARDS_BY_IDS_QUERY === 'function'
         ? SELECT_ALL_CARDS_BY_IDS_QUERY(cardIds)
@@ -216,11 +215,34 @@ export const shareCard = async (req, res) => {
   try {
     const { id } = req.params
     const { userIds } = req.body
+    const user = req.user
     const card = await getQuery(SELECT_CARD_BY_ID_QUERY, [id])
     if (!card || !userIds) return res.status(404).send('Card or user IDs not found')
+
     const currentUserIds = JSON.parse(card.users || '[]')
+    const newUserIds = userIds.filter((userId) => !currentUserIds.includes(userId))
     const updatedUsers = Array.from(new Set([...currentUserIds, ...userIds]))
+
     await runQuery(INSERT_NEW_USERS_TO_CARD_QUERY, [JSON.stringify(updatedUsers), id])
+
+    for (const userId of newUserIds) {
+      if (userId !== user?.user_id) {
+        await createNotification({
+          userId,
+          type: NOTIFICATION_TYPES.TOPIC_SHARED,
+          projectId: card.project_id,
+          cardId: id,
+          authorId: user?.user_id,
+          authorName: user?.name,
+          data: {
+            firstName: user?.name?.split(' ')[0] || 'Someone',
+            projectTitle: `Project ${card.project_id}`,
+            topicTitle: card.title || 'Untitled Topic',
+          },
+        })
+      }
+    }
+
     res.status(200).send({ message: 'Card is shared' })
   } catch (error) {
     handleError(res, error)

@@ -23,8 +23,6 @@ function CreateUser({ projectId }: ICreateUserProps) {
     }
 
     await addUserToProject(projectId, newUser)
-
-    // window.location.href = `/${projectId}`
   }
 
   return (
