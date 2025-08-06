@@ -66,7 +66,7 @@ app.ws('/collaboration', (websocket, request) => {
 })
 
 const sendNotification = createPushAPI(app, '/push/')
-const sendPushToChat = getSendPushToChatFn(sendNotification)
+const sendPushToChat = getSendPushToChatFn(sendNotification, sendMessageToUser)
 
 app.post('/internal/chat/:chatId', sendPushToChat)
 

@@ -3,7 +3,7 @@ import { SELECT_CARD_BY_CHAT_ID } from '../database/queries.js'
 import { searchDocuments } from '../utils/typesense.js'
 import { createNotification, NOTIFICATION_TYPES } from '../services/notification.service.js'
 
-export const getSendPushToChatFn = (sendNotification) => async (req, res) => {
+export const getSendPushToChatFn = (sendNotification, sendMessageToUser) => async (req, res) => {
   try {
     const msg = req.body
     const dbCard = await getQuery(SELECT_CARD_BY_CHAT_ID, ['%' + req.params.chatId + '%'])
@@ -22,11 +22,7 @@ export const getSendPushToChatFn = (sendNotification) => async (req, res) => {
     const authorName = msg?.author || 'Someone'
     const cardUsers = JSON.parse(dbCard.users || '[]')
 
-    for (const userId of card.user_ids || []) {
-      if (!cardUsers.includes(userId)) {
-        continue
-      }
-
+    for (const userId of cardUsers) {
       sendNotification(userId, notification)
 
       if (userId !== msg.authorId) {
@@ -44,10 +40,12 @@ export const getSendPushToChatFn = (sendNotification) => async (req, res) => {
           authorName,
           data: {
             firstName: authorName.split(' ')[0] || 'Someone',
-            projectTitle: `Project ${projectId}`,
+            projectTitle: `in project`,
             topicTitle: card.title || 'Untitled Topic',
           },
         })
+
+        sendMessageToUser(userId, { type: 'notification_update' })
       }
     }
 
@@ -64,10 +62,12 @@ export const getSendPushToChatFn = (sendNotification) => async (req, res) => {
             authorName,
             data: {
               firstName: authorName.split(' ')[0] || 'Someone',
-              projectTitle: `Project ${projectId}`,
+              projectTitle: `in project`,
               topicTitle: card.title || 'Untitled Topic',
             },
           })
+
+          sendMessageToUser(mentionUserId, { type: 'notification_update' })
         }
       }
     }

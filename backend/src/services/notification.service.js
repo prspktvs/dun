@@ -44,11 +44,11 @@ const NOTIFICATION_TEMPLATES = {
   },
   [NOTIFICATION_TYPES.DISCUSSION_MESSAGE]: {
     title: 'New Message',
-    message: '{firstName} left a message in discussion {projectTitle}: {topicTitle}',
+    message: '{firstName} sent a message {projectTitle}: {topicTitle}',
   },
   [NOTIFICATION_TYPES.DISCUSSION_MENTION]: {
-    title: 'Mentioned in Discussion',
-    message: '{firstName} mentioned you in discussion {projectTitle}: {topicTitle}',
+    title: 'You were mentioned',
+    message: '{firstName} mentioned you {projectTitle}: {topicTitle}',
   },
   [NOTIFICATION_TYPES.TOPIC_MENTION]: {
     title: 'Mentioned in Topic',
