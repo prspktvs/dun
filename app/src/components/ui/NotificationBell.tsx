@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 
 import { useNotifications, INotification } from '../../context/NotificationContext'
+import { BellIcon } from '../icons'
 
 function NotificationItem({ notification }: { notification: INotification }) {
   const { markAsRead, deleteNotification } = useNotifications()
@@ -39,7 +40,7 @@ function NotificationItem({ notification }: { notification: INotification }) {
   return (
     <div
       className={`p-3 cursor-pointer hover:bg-gray-50 border-l-4 ${
-        notification.isRead ? 'border-gray-200' : 'border-blue-500'
+        notification.isRead ? 'border-gray-200' : 'border-[#8279BD]'
       }`}
       onClick={handleClick}
     >
@@ -78,14 +79,14 @@ export default function NotificationBell() {
   return (
     <Menu shadow='md' width={400} position='bottom-end'>
       <Menu.Target>
-        <ActionIcon variant='subtle' size='lg' className='relative'>
-          <i className='ri-notification-3-line text-lg' />
+        <ActionIcon variant='subtle' size='xl' className='relative' color='#8279BD'>
+          <BellIcon />
           {unreadCount > 0 && (
             <Badge
-              size='xs'
-              variant='filled'
-              color='red'
-              className='absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center'
+              size='md'
+              variant='transparent'
+              color='black'
+              className='absolute top-1 -right-2 min-w-[18px] h-[18px] flex items-center justify-center font-normal'
             >
               {unreadCount > 99 ? '99+' : unreadCount}
             </Badge>
@@ -100,11 +101,17 @@ export default function NotificationBell() {
               Notifications
             </Text>
             <Group gap='xs'>
-              <ActionIcon variant='subtle' size='sm' onClick={handleRefresh} loading={loading}>
+              <ActionIcon
+                variant='subtle'
+                size='sm'
+                onClick={handleRefresh}
+                loading={loading}
+                color='#8279BD'
+              >
                 <i className='ri-refresh-line' />
               </ActionIcon>
               {unreadCount > 0 && (
-                <Button variant='subtle' size='xs' onClick={handleMarkAllRead}>
+                <Button variant='subtle' size='xs' onClick={handleMarkAllRead} color='#8279BD'>
                   Mark all read
                 </Button>
               )}

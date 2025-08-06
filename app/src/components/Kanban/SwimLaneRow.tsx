@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import { type Task, TaskStatus, TaskPriority, SwimLane } from './types/task'
 import TaskCard from './TaskCard'
+import ButtonDun from '../ui/buttons/ButtonDun'
 
 const statuses = ['NoStatus', 'Planned', 'InProgress', 'InReview', 'Done']
 
@@ -212,12 +213,9 @@ function KanbanColumn({
             </div>
           ))}
           {showReadMore && (
-            <button
-              className='w-full mt-2 py-1 px-2 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 text-sm'
-              onClick={onReadMore}
-            >
-              Read more
-            </button>
+            <div className='h-6 w-full rounded-md'>
+              <ButtonDun onClick={onReadMore}>Read more</ButtonDun>
+            </div>
           )}
         </div>
       </SortableContext>
