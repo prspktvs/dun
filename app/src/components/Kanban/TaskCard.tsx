@@ -64,25 +64,45 @@ export default function TaskCard({
 
   const { usersMap } = useProject()
 
+  const priorityStyles = {
+    [TaskPriority.Low]: 'bg-blue-50',
+    [TaskPriority.Medium]: 'bg-yellow-50',
+    [TaskPriority.High]: 'bg-orange-50',
+    [TaskPriority.Urgent]: 'bg-red-50',
+  }
+
+  const cardPriority = priorityStyles[task.priority] || 'bg-white'
+
+  const getShadowColor = (priority: TaskPriority) => {
+    switch (priority) {
+      case TaskPriority.Urgent:
+        return '#FF7474'
+      case TaskPriority.High:
+        return '#FFB774'
+      case TaskPriority.Medium:
+        return '#F5CC63'
+      case TaskPriority.Low:
+        return '#00A3FF'
+      default:
+        return 'rgba(0, 0, 0, 0.2)'
+    }
+  }
+
+  const shadowColor = getShadowColor(task.priority)
+
   const style = isDragOverlay
     ? {
         opacity: isInvalidDrop ? 0.4 : 1,
         cursor: isInvalidDrop ? 'not-allowed' : 'grab',
         border: isInvalidDrop ? '2px solid #ff0000' : undefined,
+        boxShadow: `4px 4px 0px ${shadowColor}`,
       }
     : {
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.4 : 1,
+        boxShadow: `6px 6px 0px ${shadowColor}`,
       }
-
-  const priorityStyles = {
-    [TaskPriority.Low]: 'bg-blue-50 border-blue-200 shadow-blue-100',
-    [TaskPriority.Medium]: 'bg-yellow-50 border-yellow-200 shadow-yellow-100',
-    [TaskPriority.High]: 'bg-red-50 border-red-200 shadow-red-100',
-    [TaskPriority.Urgent]: 'bg-rose-50 border-rose-300 shadow-rose-100',
-  }
-  const cardPriority = priorityStyles[task.priority] || 'bg-white border-gray-200 shadow-gray-100'
 
   const authorName = usersMap?.[task?.author]?.name || task.author
 
@@ -93,15 +113,27 @@ export default function TaskCard({
   return (
     <div
       {...(isDragOverlay ? {} : { ...attributes, ...listeners, ref: setNodeRef })}
-      style={style}
+      style={{
+        ...style,
+        transition: style.transition || 'all 0.2s',
+      }}
       className={cn(
-        'p-4 rounded-xl border shadow-sm transition-all duration-200',
-        'hover:shadow-lg hover:-translate-y-0.5 hover:bg-opacity-90',
+        'p-4 border border-[#C1B9CF] transition-all duration-200',
+        'hover:-translate-y-0.5 hover:bg-opacity-90',
         !isDragOverlay && 'cursor-pointer active:cursor-grabbing',
-        isDragOverlay && 'shadow-md',
         cardPriority,
         isDragging && 'opacity-60',
       )}
+      onMouseEnter={(e) => {
+        if (!isDragOverlay) {
+          e.currentTarget.style.boxShadow = `4px 4px 0px ${shadowColor}`
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isDragOverlay) {
+          e.currentTarget.style.boxShadow = `6px 6px 0px ${shadowColor}`
+        }
+      }}
       onMouseUp={() => {
         if (onChooseTask && !isDragging) {
           onChooseTask(task)
@@ -135,27 +167,31 @@ export default function TaskCard({
           </p>
 
           <div className='flex flex-wrap items-center gap-2 mt-1'>
+            {task.author ? (
+              <span className='text-xs text-gray-400'>
+                Created by <b>{authorName}</b>
+              </span>
+            ) : null}
             {task.priority === TaskPriority.Urgent && (
-              <span className='text-xs font-semibold text-rose-600 bg-rose-100 rounded px-2 py-0.5'>
+              <span className='text-xs font-semibold text-white bg-[#FF7474] rounded px-2 py-0.5'>
                 Urgent
               </span>
             )}
             {task.priority === TaskPriority.High && (
-              <span className='text-xs font-semibold text-red-600 bg-red-100 rounded px-2 py-0.5'>
+              <span className='text-xs font-semibold text-white bg-[#FFB774] rounded px-2 py-0.5'>
                 High
               </span>
             )}
             {task.priority === TaskPriority.Medium && (
-              <span className='text-xs font-semibold text-yellow-700 bg-yellow-100 rounded px-2 py-0.5'>
+              <span className='text-xs font-semibold text-black bg-[#F5CC63] rounded px-2 py-0.5'>
                 Medium
               </span>
             )}
             {task.priority === TaskPriority.Low && (
-              <span className='text-xs font-semibold text-blue-700 bg-blue-100 rounded px-2 py-0.5'>
+              <span className='text-xs font-semibold text-white bg-[#00A3FF] rounded px-2 py-0.5'>
                 Low
               </span>
             )}
-            {task.author ? <span className='text-xs text-gray-400'>by {authorName}</span> : null}
           </div>
         </div>
       </div>
