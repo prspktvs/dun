@@ -49,7 +49,7 @@ function LeftPanel() {
       </section>
 
       {!isOnboarding && (
-        <section className='flex items-center justify-center w-full h-14 border-b-1 border-borders-purple'>
+        <section className='flex items-center justify-start px-5 w-full h-14 border-b-1 border-borders-purple'>
           <UserList users={users} />
         </section>
       )}
@@ -97,7 +97,7 @@ function LeftPanel() {
         <LeftPanelButton onClick={handleFeedback}>Share feedback</LeftPanelButton>
         <FeedbackModal opened={isFeedbackOpened} onClose={() => setFeedbackOpened(false)} />
       </section>
-      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll'>
+      <section className='flex-1 w-full px-6 py-5 overflow-y-scroll pb-16'>
         <div
           className={clsx(
             'border border-[#46434e] flex items-center justify-center w-[140px] h-6 px-1.5 rounded mb-5',
@@ -110,8 +110,10 @@ function LeftPanel() {
         </div>
 
         {Object.keys(groupedTasksById).map((cardId) => (
-          <div key={'grouped-tasks-card-id-' + cardId} className='mb-7'>
-            <div className='text-[#46434e] text-sm font-bold mb-3'>{cardsTitles[cardId]}</div>
+          <div key={'grouped-tasks-card-id-' + cardId} className='flex flex-col gap-1 mt-3'>
+            <div className='text-[#46434e] text-sm font-bold'>
+              {cardsTitles?.[cardId] ? cardsTitles?.[cardId] : 'Unknown topic'}
+            </div>
             {groupedTasksById[cardId].map((task) => (
               <div
                 key={'grouped-task-' + task.id}

@@ -31,14 +31,25 @@ export const LandingHeader = () => {
         </a>
 
         {/* Navigation */}
-        <nav className='items-center self-stretch justify-center flex-1 hidden gap-2 px-2 md:flex md:gap-10 md:px-10'>
+        <nav className='relative items-center self-stretch justify-center flex-1 hidden gap-2 px-2 md:flex md:gap-10 md:px-10'>
+          <a
+            className='hidden absolute top-[5px] left-[5px] w-[200px] z-10 xl:block'
+            href='https://www.producthunt.com/posts/dun?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dun'
+            target='_blank'
+          >
+            <img
+              className='w-full h-auto'
+              src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=938482&theme=neutral&t=1742815798349'
+              alt='Dun - The&#0032;simplest&#0032;app&#0032;for&#0032;small&#0032;team&#0032;collaboration | Product Hunt'
+            />
+          </a>
           {NAVIGATION_ITEMS.map((item) => (
             <a
               key={item.id}
               href={`/#${item.id}`}
               className='flex items-center justify-center pt-3 pb-2 no-underline'
             >
-              <span className='text-[#343434] hover:opacity-75 text-base font-medium font-monaspace uppercase whitespace-nowrap'>
+              <span className='text-[#343434] hover:opacity-75 text-sm md:text-base font-medium font-national uppercase whitespace-nowrap'>
                 {item.name}
               </span>
             </a>
@@ -55,7 +66,7 @@ export const LandingHeader = () => {
                 <Loader color='gray' />
               </div>
             ) : (
-              <span className='text-[#343434] w-36 text-center hover:opacity-75 text-base font-semibold font-monaspace  whitespace-nowrap'>
+              <span className='text-[#343434] w-36 text-center hover:opacity-75 text-sm md:text-base font-semibold font-rubik whitespace-nowrap'>
                 {user ? 'Go to Dashboard' : 'Try for free'}
               </span>
             )}

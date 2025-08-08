@@ -118,6 +118,7 @@ const Card = ({ card }: ICardProps) => {
   return (
     <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100vw_-_320px)]')}>
       <CardHeader
+        card={card as ICard}
         goBack={goBack}
         canShareAndRemoveTopic={canShareAndRemoveTopic}
         openShareModal={openShareModal}

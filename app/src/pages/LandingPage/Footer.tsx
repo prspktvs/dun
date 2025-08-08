@@ -18,7 +18,7 @@ function Footer() {
             href={`mailto:${DUN_EMAIL}`}
             target='_blank'
             rel='noreferrer'
-            className="text-[#343434] text-lg font-normal font-['National Park '] uppercase leading-snug no-underline hover:opacity-75"
+            className='text-[#343434] text-base md:text-lg font-normal font-national uppercase leading-snug no-underline hover:opacity-75'
           >
             {DUN_EMAIL.toUpperCase()}
           </a>
@@ -67,7 +67,7 @@ function Footer() {
           href={`${ROUTES.TERMS_AND_CONDITIONS}#terms`}
           target='_blank'
           rel='noreferrer'
-          className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
+          className="text-[#343434] text-base md:text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
         >
           Terms of use
         </a>
@@ -75,7 +75,7 @@ function Footer() {
           href={`${ROUTES.TERMS_AND_CONDITIONS}#privacy`}
           target='_blank'
           rel='noreferrer'
-          className="text-[#343434] text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
+          className="text-[#343434] text-base md:text-lg font-normal font-['National Park'] uppercase leading-snug no-underline hover:opacity-80"
         >
           Privacy policy
         </a>
@@ -83,7 +83,7 @@ function Footer() {
           href='https://p11.co'
           target='_blank'
           rel='noreferrer'
-          className="text-[#343434] text-lg font-normal font-['National Park'] leading-snug  no-underline hover:opacity-80"
+          className="text-[#343434] text-base md:text-lg font-normal font-['National Park'] leading-snug no-underline hover:opacity-80"
         >
           ©{year} Perspektives
         </a>

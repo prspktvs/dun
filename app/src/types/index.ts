@@ -17,8 +17,8 @@ export interface ICard {
   cardPath?: string
   createdAt: string
   updatedAt: string
-  author: IUser
-  users: IUser[]
+  author: IUser['id']
+  users: IUser['id'][]
   public: boolean
 }
 

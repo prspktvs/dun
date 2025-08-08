@@ -20,6 +20,7 @@ export default {
         monaspace: ['MonaspaceArgon', 'sans-serif'],
         rubik: ['Rubik', 'sans-serif'],
         commissioner: ['Commissioner', 'sans-serif'],
+        national: ['National Park', 'sans-serif'],
       },
       fontSize: {
         10: '10px',
