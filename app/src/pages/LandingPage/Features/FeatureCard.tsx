@@ -47,7 +47,7 @@ function FeatureCard({
             className={clsx(
               'relative z-10 text-[#343434] font-monaspace',
               'text-base md:text-lg xl:text-xl',
-              'md:w-[512px]',
+              'md:max-w-[550px]',
               'leading-[27px] xl:leading-[30px]',
             )}
           >

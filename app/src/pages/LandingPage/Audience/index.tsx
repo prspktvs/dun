@@ -39,7 +39,7 @@ const TextContent = () => {
         <AuthButton
           className='bg-white border-black text-black'
           onClick={signInWithGoogle}
-          icon={<GoogleLogo className='w-6 h-6' />}
+          icon={<GoogleLogo />}
         >
           Sign up with Google
         </AuthButton>
@@ -53,15 +53,14 @@ function Audience() {
 
   return (
     <>
-      {/* Unified Header */}
       <div className='w-full bg-[#faf9f6]'>
         {!isMobile ? (
           // Desktop Header
-          <div className='w-full h-[98px] p-5 flex justify-between items-center'>
-            <div className="text-[#343434] text-5xl font-normal font-['National Park '] leading-[57.60px]">
+          <div className='w-full h-[120px] p-5 flex justify-between items-center'>
+            <div className='text-[#343434] text-3xl md:text-5xl font-normal font-national leading-[57.60px]'>
               Get things DONE with DUN
             </div>
-            <div className='text-[#343434] text-lg font-normal font-monaspace leading-[27px]'>
+            <div className='text-[#343434] text-base md:text-lg font-normal font-monaspace leading-[27px]'>
               Use internally and with your clients
             </div>
           </div>
@@ -69,10 +68,10 @@ function Audience() {
           // Mobile Header
           <div className='h-[110px] px-2.5 py-5 flex-col justify-start items-start gap-[15px] flex'>
             <div className='self-stretch h-[70px] flex-col justify-start items-start flex'>
-              <div className='text-[#343434] text-xs font-normal font-monaspace leading-none'>
+              <div className='text-[#343434] text-xs md:text-sm font-normal font-monaspace leading-none'>
                 Use internally and with your clients
               </div>
-              <div className="self-stretch text-[#343434] text-[40px] font-normal font-['National Park '] leading-[54px]">
+              <div className='self-stretch text-[#343434] text-3xl md:text-[40px] font-normal font-national leading-[54px]'>
                 Get things DONE with DUN
               </div>
             </div>

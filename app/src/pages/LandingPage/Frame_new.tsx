@@ -10,21 +10,9 @@ export const Frame = (): JSX.Element => {
   const carouselRef = useRef<HTMLDivElement>(null)
 
   const images = [
-    {
-      src: '/assets/landing/topics.jpg',
-      alt: 'Topics view',
-      caption: 'Just one topic. Endless uses. Plan, chat, brainstorm — your way',
-    },
-    {
-      src: '/assets/landing/kanban.jpg',
-      alt: 'Kanban board',
-      caption: 'Not just Kanban. In Dun, tasks live in topics — just tap to dive into the context',
-    },
-    {
-      src: '/assets/landing/editor.jpg',
-      alt: 'Editor view',
-      caption: 'Simple editor. Edits, chats, files, tasks — always in context',
-    },
+    { src: '/assets/landing/kanban.jpg', alt: 'Kanban board' },
+    { src: '/assets/landing/topics.jpg', alt: 'Topics view' },
+    { src: '/assets/landing/editor.jpg', alt: 'Editor view' },
   ]
 
   useEffect(() => {
@@ -50,7 +38,7 @@ export const Frame = (): JSX.Element => {
 
   return (
     <div className='flex flex-col items-center gap-[30px] mt-24 md:mt-32'>
-      <div className='inline-flex flex-col items-center gap-5 md:gap-5 relative flex-[0_0_auto] mb-5'>
+      <div className='inline-flex flex-col items-center gap-5 md:gap-[30px] relative flex-[0_0_auto]'>
         <p className='relative w-fit m-0 font-national font-normal text-[44px] md:text-[80px] text-center tracking-[0] leading-[48.40px] md:leading-[88.0px]'>
           The simplest app <br />
           to handle all your projects
@@ -81,7 +69,7 @@ export const Frame = (): JSX.Element => {
         <div className='relative w-full overflow-hidden'>
           <div
             ref={carouselRef}
-            className='image-carousel flex snap-x snap-mandatory gap-10 overflow-x-auto scrollbar-hide select-none'
+            className='image-carousel flex snap-x snap-mandatory gap-10 overflow-x-auto scrollbar-hide'
             style={{ paddingLeft: '10vw', paddingRight: '10vw' }}
           >
             {images.map((image, index) => (
@@ -94,19 +82,18 @@ export const Frame = (): JSX.Element => {
                 <img
                   src={image.src}
                   alt={image.alt}
-                  className='shadow-lg w-full h-auto object-cover'
+                  className='shadow-2xl w-full h-auto object-cover'
                 />
-                <div className='font-rubik text-18'>{image.caption}</div>
               </div>
             ))}
           </div>
         </div>
-        <div className='flex gap-3 mt-2 mb-7'>
+        <div className='flex gap-3 mt-2'>
           {images.map((_, idx) => (
             <button
               key={idx}
               className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                idx === activeImageIndex ? 'bg-[#8379BD]' : 'bg-gray-300'
+                idx === activeImageIndex ? 'bg-purple-600' : 'bg-gray-300'
               }`}
               onClick={() => handleDotClick(idx)}
             />
@@ -115,7 +102,7 @@ export const Frame = (): JSX.Element => {
       </div>
 
       <div className='flex flex-col md:flex-row items-stretch gap-px relative self-stretch w-full flex-[0_0_auto] bg-variable-collection-landing-logo-text-buttons-strokes border-t border-black'>
-        <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 border-b md:border-b-0 md:border-r border-black bg-[#F1EDED] flex-col justify-between items-center gap-1 inline-flex overflow-hidden'>
+        <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 border-b md:border-b-0 md:border-r border-black bg-[#faf9f6] flex-col justify-between items-center gap-1 inline-flex overflow-hidden'>
           <div className='flex flex-col items-center justify-start gap-5 pt-10'>
             <img
               className='w-[247px] h-[196px] select-none'
@@ -123,11 +110,10 @@ export const Frame = (): JSX.Element => {
               src='./assets/landing/comparison-left.svg'
             />
 
-            <div className='flex flex-col items-start gap-5 relative flex-[0_0_auto]'>
+            <div className='flex flex-col items-start gap-2.5 relative flex-[0_0_auto]'>
               <div className='relative w-[202px] m-0 font-monaspace font-semibold text-variable-collection-landing-logo-text-buttons-strokes text-xl tracking-[0] leading-[30px]'>
                 Before Dun
               </div>
-
               <ul className='relative w-fit m-0 font-monaspace font-normal text-variable-collection-landing-logo-text-buttons-strokes text-sm lg:text-lg tracking-[0] leading-[27.2px]'>
                 <li>← Slack → Trello → Notion → Gmail → </li>
                 <li>→ Gmail → Notion ← Trello ← Slack ←</li>
@@ -145,7 +131,7 @@ export const Frame = (): JSX.Element => {
           <div className='h-[100px] pb-10'></div>
         </div>
 
-        <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 bg-[#EFF2EF] flex-col justify-between items-center gap-1 inline-flex overflow-hidden'>
+        <div className='w-full md:w-auto md:flex-1 px-16 md:px-5 lg:px-16 bg-[#faf9f6] flex-col justify-between items-center gap-1 inline-flex overflow-hidden'>
           <div className='flex flex-col items-center justify-start gap-5 pt-10'>
             <img
               className='w-[228px] h-[196px] select-none'
@@ -153,7 +139,7 @@ export const Frame = (): JSX.Element => {
               src='./assets/landing/comparison-right.svg'
             />
 
-            <div className='flex flex-col items-start gap-5 relative flex-[0_0_auto]'>
+            <div className='flex flex-col items-start gap-2.5 relative flex-[0_0_auto]'>
               <div className='relative w-[202px] m-0 font-monaspace font-semibold text-variable-collection-landing-logo-text-buttons-strokes text-xl tracking-[0] leading-[30px]'>
                 With Dun
               </div>
@@ -172,7 +158,7 @@ export const Frame = (): JSX.Element => {
             </div>
           </div>
 
-          <div className='w-[300px] mt-5 pb-10'>
+          <div className='w-[300px] pb-10'>
             <AuthButton
               className='bg-white border-black text-black'
               onClick={signInWithGoogle}

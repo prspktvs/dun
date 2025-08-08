@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 
 import FeatureCard from './FeatureCard'
 
@@ -43,37 +43,67 @@ const FEATURES: IFeatureCard[] = [
   },
 ]
 
-function Section2() {
+function Features() {
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const promoVideoRef = useRef<HTMLVideoElement>(null)
+
+  const handleStartVideo = () => {
+    if (!promoVideoRef.current) return
+
+    promoVideoRef.current.play()
+    promoVideoRef.current.controls = true
+    setIsVideoPlaying(true)
+  }
+
   return (
     <>
       <div className='w-full h-[98px] p-5 bg-[#faf9f6] justify-start items-center gap-[195px] inline-flex'>
-        <div className="text-[#343434] text-[58px] font-normal font-['National Park '] leading-[57.60px]">
+        <div className='text-[#343434] text-4xl md:text-[58px] font-normal font-national leading-[57.60px]'>
           Features
         </div>
       </div>
 
       <div className='flex items-start justify-around overflow-hidden border-t border-b border-black'>
-        <div className='w-full md:w-1/2 h-full p-5 bg-[#faf9f6] flex-col justify-start items-start inline-flex overflow-hidden md:border-r border-black'>
-          <div className='self-stretch text-[#343434] text-xl font-normal font-monaspace leading-normal'>
-            Each Topic is a note for sharing, discussion, brainstorming. Customize Topic's
-            accessability to fit your purpose.
+        <div className='w-full md:w-1/2 h-full p-8 bg-[#faf9f6] flex-col justify-center items-start inline-flex overflow-hidden '>
+          <div className='max-w-[700px] text-[#343434] text-lg md:text-xl font-normal font-monaspace leading-normal '>
+            You can organize your topics into different workspaces by projects or any way you like.
           </div>
         </div>
-        <div className='hidden md:flex w-1/2 h-full p-5 bg-[#faf9f6] flex-col justify-start items-start overflow-hidden'>
-          <div className='self-stretch text-[#343434] text-xl font-normal font-monaspace leading-normal'>
-            You can organize your topics into different workspaces by projects or any way you like.
+        <div className='hidden md:flex w-1/2 h-full p-8 bg-[#faf9f6] flex-col justify-center items-start overflow-hidden md:border-l border-black'>
+          <div className='max-w-[700px] text-[#343434] text-lg md:text-xl font-normal font-monaspace leading-normal '>
+            Each Topic is a note for sharing, discussion, brainstorming. Customize Topic's
+            accessibility to fit your purpose.
           </div>
         </div>
       </div>
 
-      <div className='relative w-full bg-[#c5d4d2] p-10 overflow-hidden border-b  border-black'>
-        {' '}
-        <div className='relative w-full h-full pb-[45%]'>
-          <img
-            className='absolute top-0 left-0 object-contain w-full h-full select-none'
-            alt='Frame'
-            src='/assets/landing/dun-layout.png'
-          />
+      <div className='relative w-full overflow-hidden border-b border-black'>
+        <div className='relative w-full h-full aspect-video'>
+          <video
+            ref={promoVideoRef}
+            className='object-cover w-full h-full'
+            preload='none'
+            poster='/assets/landing/promo.jpg'
+          >
+            <source
+              src='https://firebasestorage.googleapis.com/v0/b/dun-imba.appspot.com/o/landing%2Fpromo.mp4?alt=media'
+              type='video/mp4'
+            />
+          </video>
+
+          {!isVideoPlaying && (
+            <div
+              className='absolute top-0 left-0 w-full h-full bg-opacity-10 flex flex-col gap-3 items-center justify-center cursor-pointer'
+              onClick={handleStartVideo}
+            >
+              <div className='bg-black/90 h-32 w-32 md:h-40 md:w-40 rounded-2xl flex items-center justify-center'>
+                <i className='ri-play-fill text-white text-7xl md:text-[100px]' />
+              </div>
+              <div className='bg-black/90 h-12 w-32 md:h-16 md:w-40 rounded-2xl flex items-center justify-center text-white text-base md:text-lg font-monaspace font-semibold'>
+                Watch demo
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -88,4 +118,4 @@ function Section2() {
   )
 }
 
-export default Section2
+export default Features
