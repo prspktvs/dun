@@ -72,7 +72,7 @@ const ProjectSelector = () => {
 
           {/* Project title section */}
           <div className='flex items-center w-full gap-2 md:gap-4 md:justify-between'>
-            <span className='text-[#46434e] text-lg font-medium font-argon'>
+            <span className='text-[#46434e] text-lg font-medium font-argon truncate'>
               {project?.title || 'Empty project'}
             </span>
             {isMenuOpened ? (
@@ -100,7 +100,7 @@ const ProjectSelector = () => {
               key={'prjx-' + idx}
               classNames={{
                 itemLabel: clsx(
-                  `flex justify-between items-center py-5 pr-4 h-10 pl-7 md:text-md`,
+                  `flex truncate justify-between items-center py-5 pr-4 h-10 pl-7 md:text-md`,
                   isCurrentProject(project.id) && 'bg-btnBg/10',
                 ),
               }}
@@ -108,7 +108,7 @@ const ProjectSelector = () => {
             >
               <span
                 className={clsx(
-                  'flex-1 font-rubik text-16 font-semibold',
+                  'flex-1 truncate font-rubik text-16 font-semibold',
                   isCurrentProject(project.id) && 'text-btnBg',
                 )}
               >

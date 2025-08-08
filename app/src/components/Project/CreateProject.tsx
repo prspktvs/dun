@@ -39,10 +39,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   isTitleEmpty,
 }) => {
   return (
-    <form className='flex flex-col'>
+    <form className='flex flex-col flex-1 h-full '>
       <div className='flex-1'>
         <input
-          className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 '
+          className='block resize-none align-middle text-2xl font-monaspace border-none w-full placeholder-slate-400 text-[#47444F] pl-4 pr-[15px] pt-8 mb-3'
           placeholder='Type new project title'
           value={title}
           name='title'
@@ -69,12 +69,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           }}
         ></textarea>
       </div>
-      <div className='flex flex-col gap-3 md:flex-row'>
+      <div className='flex flex-col h-full items-end gap-3 md:flex-row'>
         {!isNewUser && goToDashboard && (
           <Button
             className='mt-6 font-monaspace font-thin text-[#47444F] h-12 border-[#47444F] hover:text-[#47444F]'
             fullWidth
             radius={0}
+            color='#47444F'
             variant='outline'
             onClick={goToDashboard}
           >

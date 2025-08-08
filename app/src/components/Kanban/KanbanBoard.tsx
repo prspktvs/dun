@@ -337,11 +337,9 @@ export default function KanbanBoard({
   }, [collapsedSwimLanes, projectId])
 
   return (
-    <div className='flex flex-col h-screen w-full bg-white'>
-      {' '}
-      {/* убрали pb-20 */}
-      <div className='flex-1 flex flex-col overflow-auto w-full pb-14'>
-        <div className='flex items-center p-4 border-b border-gray-200'>
+    <div className='flex  flex-col h-screen w-full bg-white'>
+      <div className='flex-1 flex flex-col w-full overflow-auto pb-14'>
+        <div className='sticky top-0 z-30 flex items-center p-4 border-b border-gray-200 bg-white'>
           <button onClick={goBack} className='flex items-center text-gray-600 hover:text-gray-900'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -355,10 +353,10 @@ export default function KanbanBoard({
                 clipRule='evenodd'
               />
             </svg>
-            Back
+            Back to topics
           </button>
         </div>
-        <div className='flex sticky top-0 z-20 bg-white shadow-sm'>
+        <div className='flex sticky top-[60px] z-20 bg-white shadow-sm'>
           <div className='flex-shrink-0 w-[200px] h-[56px] flex items-center justify-between p-4 font-medium text-gray-700 border-b border-r border-gray-200'>
             <span>Topic</span>
             <button

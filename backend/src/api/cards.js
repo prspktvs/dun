@@ -49,7 +49,7 @@ export const searchCards = async (req, res) => {
     const results = await searchDocuments({
       q,
       query_by: 'title,content,author',
-      filter_by: `project_id:=${project_id} && (author_id:=${req.user.user_id} || user_ids:=${req.user.user_id})`,
+      filter_by: `project_id:=${project_id} && (author_id:=${req.user.user_id} || user_ids:=${req.user.user_id} || public:=true)`,
       highlight_fields: 'title,content',
       highlight_full_fields: 'content',
       highlight_affix_num_tokens: 4,
