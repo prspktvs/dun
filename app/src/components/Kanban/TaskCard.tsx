@@ -140,59 +140,60 @@ export default function TaskCard({
         }
       }}
     >
-      <div className='flex items-start gap-3'>
-        <Checkbox
-          id={`task-${task.id}`}
-          checked={task.isDone}
-          onCheckedChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            e.stopPropagation()
-            onToggleCheck(task.id)
-          }}
-          className='mt-1'
-          onClick={(e) => e.stopPropagation()}
-          onMouseUp={(e) => e.stopPropagation()}
-          onPointerDown={(e: React.PointerEvent<HTMLInputElement>) => {
-            e.preventDefault()
-            e.stopPropagation()
-          }}
-        />
-        <div className='flex-1 overflow-hidden'>
-          <p
-            className={cn(
-              'text-gray-900 mb-1 mt-0 text-base break-words',
-              task.isDone ? 'line-through text-gray-400' : '',
-            )}
-          >
-            {task.text}
-          </p>
-
-          <div className='flex flex-wrap items-center gap-2 mt-1'>
-            {task.author ? (
-              <span className='text-xs text-gray-400'>
-                Created by <b>{authorName}</b>
-              </span>
-            ) : null}
-            {task.priority === TaskPriority.Urgent && (
-              <span className='text-xs font-semibold text-white bg-[#FF7474] rounded px-2 py-0.5'>
-                Urgent
-              </span>
-            )}
-            {task.priority === TaskPriority.High && (
-              <span className='text-xs font-semibold text-white bg-[#FFB774] rounded px-2 py-0.5'>
-                High
-              </span>
-            )}
-            {task.priority === TaskPriority.Medium && (
-              <span className='text-xs font-semibold text-black bg-[#F5CC63] rounded px-2 py-0.5'>
-                Medium
-              </span>
-            )}
-            {task.priority === TaskPriority.Low && (
-              <span className='text-xs font-semibold text-white bg-[#00A3FF] rounded px-2 py-0.5'>
-                Low
-              </span>
-            )}
+      <div className='flex flex-col items-start gap-1'>
+        <div className='flex items-start gap-3'>
+          <Checkbox
+            id={`task-${task.id}`}
+            checked={task.isDone}
+            onCheckedChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              e.stopPropagation()
+              onToggleCheck(task.id)
+            }}
+            className='mt-1'
+            onClick={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
+            onPointerDown={(e: React.PointerEvent<HTMLInputElement>) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+          />
+          <div className='flex-1 overflow-hidden'>
+            <p
+              className={cn(
+                'text-gray-900 mb-1 mt-0 text-base break-words',
+                task.isDone ? 'line-through text-gray-400' : '',
+              )}
+            >
+              {task.text}
+            </p>
           </div>
+        </div>
+        <div className='flex flex-wrap items-center gap-2 mt-1'>
+          {task.author ? (
+            <span className='text-xs text-gray-400'>
+              Created by <b>{authorName}</b>
+            </span>
+          ) : null}
+          {task.priority === TaskPriority.Urgent && (
+            <span className='text-xs font-semibold text-white bg-[#FF7474] rounded px-2 py-0.5'>
+              Urgent
+            </span>
+          )}
+          {task.priority === TaskPriority.High && (
+            <span className='text-xs font-semibold text-white bg-[#FFB774] rounded px-2 py-0.5'>
+              High
+            </span>
+          )}
+          {task.priority === TaskPriority.Medium && (
+            <span className='text-xs font-semibold text-black bg-[#F5CC63] rounded px-2 py-0.5'>
+              Medium
+            </span>
+          )}
+          {task.priority === TaskPriority.Low && (
+            <span className='text-xs font-semibold text-white bg-[#00A3FF] rounded px-2 py-0.5'>
+              Low
+            </span>
+          )}
         </div>
       </div>
     </div>
