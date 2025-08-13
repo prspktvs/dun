@@ -56,7 +56,7 @@ function LeftPanel() {
     <aside
       ref={sidebarRef as any}
       style={{ width: `var(--left-panel-width, ${width}px)` }}
-      className='relative flex flex-col items-center h-screen border-r-1 border-borders-purple'
+      className='relative flex-none shrink-0 box-border flex flex-col items-center h-screen border-r-1 border-borders-purple'
     >
       {/* Resize handle */}
       <div
