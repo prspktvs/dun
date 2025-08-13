@@ -213,7 +213,7 @@ export const ProjectProvider = ({
       const data = {
         ...card,
         title: '',
-        public: false,
+        public: project?.visibility === 'public',
         author: user.id,
         users: [],
         chatIds: [],

@@ -43,11 +43,11 @@ export function CardsPage() {
   const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
   const { user } = useAuth()
-  const { hasPermission, isOnboarding } = useProject()
+  const { hasPermission, isOnboarding, project } = useProject()
 
   const canCreateCard = isOnboarding
-    ? user?.id === ONBOARDING_EDITOR_ID
-    : hasPermission(ROLES.EDITOR)
+    ? (user as any)?.id === ONBOARDING_EDITOR_ID
+    : hasPermission(ROLES.EDITOR) || project?.visibility === 'public'
 
   const {
     setSortType,

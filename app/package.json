@@ -8,8 +8,8 @@
     "build": "vite build --mode production",
     "test": "tsc",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+  "lint": "eslint .",
+  "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "p11.co",
