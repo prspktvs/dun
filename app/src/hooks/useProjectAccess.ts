@@ -26,10 +26,21 @@ export function useProjectAccess() {
       return
     }
 
-    const isInProject = users?.some((u: ITeamMember) => u.id === user.id)
+  const currentUserId = (user as unknown as { id?: string })?.id
+  const isInProject = users?.some((u: ITeamMember) => u.id === currentUserId)
     if (isInProject || project.id === ONBOARDING_ID) {
       setAllow(true)
       setChecked(true)
+      return
+    }
+
+    if (project.visibility === 'public') {
+      addUserToProject(projectId, { ...(user as unknown as ITeamMember), role: 'viewer' })
+        .then(() => {
+          setAllow(true)
+          setChecked(true)
+        })
+        .catch(() => navigate('/dashboard?noaccess=1'))
       return
     }
 
@@ -45,10 +56,12 @@ export function useProjectAccess() {
       return
     }
 
-    addUserToProject(projectId, {...user, role: 'viewer' }).then(() => {
-      setAllow(true)
-      setChecked(true)
-    }).catch(() => navigate('/dashboard?noaccess=1'))
+  addUserToProject(projectId, { ...(user as unknown as ITeamMember), role: 'viewer' })
+      .then(() => {
+        setAllow(true)
+        setChecked(true)
+      })
+      .catch(() => navigate('/dashboard?noaccess=1'))
     
   }, [user, authLoading, projectId, inviteToken, navigate, isLoading, users, project])
 

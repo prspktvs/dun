@@ -20,9 +20,11 @@ interface ICreateProjectProps {
 interface ProjectFormProps {
   title: string
   description: string
+  visibility: 'private' | 'public'
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
   ) => void
+  onToggleVisibility: () => void
   onCreate: () => void
   goToDashboard?: () => void
   isNewUser?: boolean
@@ -32,7 +34,9 @@ interface ProjectFormProps {
 const ProjectForm: React.FC<ProjectFormProps> = ({
   title,
   description,
+  visibility,
   handleInputChange,
+  onToggleVisibility,
   onCreate,
   goToDashboard,
   isNewUser,
@@ -68,6 +72,33 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             }
           }}
         ></textarea>
+        <div className='pl-4 mt-4'>
+          <div className='text-sm font-monaspace mb-1'>Visibility</div>
+          <div className='flex items-center gap-3'>
+            <span className='text-sm'>{visibility === 'public' ? 'Public' : 'Private'}</span>
+            <button
+              type='button'
+              aria-label='Toggle visibility'
+              onClick={onToggleVisibility}
+              className={clsx(
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+                visibility === 'public' ? 'bg-[#8379BD]' : 'bg-gray-300',
+              )}
+            >
+              <span
+                className={clsx(
+                  'absolute  h-5 w-5 rounded-full bg-white transition-all duration-200',
+                  visibility === 'public' ? 'right-1' : 'left-1',
+                )}
+              />
+            </button>
+          </div>
+          <div className='text-xs text-gray-500 mt-1'>
+            {visibility === 'public'
+              ? 'Anyone with the link can view'
+              : 'Only invited members can access'}
+          </div>
+        </div>
       </div>
       <div className='flex flex-col h-full items-end gap-3 md:flex-row'>
         {!isNewUser && goToDashboard && (
@@ -106,9 +137,10 @@ export const CreateProject = (props: ICreateProjectProps) => {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [visibility, setVisibility] = useState<'private' | 'public'>('private')
   const { isMobile } = useBreakpoint()
   const { user } = useAuth()
-  const isNewUser = !user?.lastProjectId
+  const isNewUser = !(user as any)?.lastProjectId
 
   const goToDashboard = () => navigate(ROUTES.DASHBOARD)
 
@@ -121,14 +153,18 @@ export const CreateProject = (props: ICreateProjectProps) => {
       users: [{ ...user, role: 'owner' } as ITeamMember],
       tags: [],
       inviteUrl,
+      visibility,
     }
     await createProject(project)
   }
 
-  const handleInputChange = ({ target }) => {
-    const { name, value } = target
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target
     if (name === 'title') return setTitle(value)
-    setDescription(value)
+    if (name === 'description') return setDescription(value)
+    if (name === 'visibility') return setVisibility(value as 'private' | 'public')
   }
 
   return (
@@ -149,7 +185,11 @@ export const CreateProject = (props: ICreateProjectProps) => {
               <ProjectForm
                 title={title}
                 description={description}
+                visibility={visibility}
                 handleInputChange={handleInputChange}
+                onToggleVisibility={() =>
+                  setVisibility((v) => (v === 'public' ? 'private' : 'public'))
+                }
                 onCreate={onCreate}
                 goToDashboard={goToDashboard}
                 isTitleEmpty={title.length === 0}
@@ -177,7 +217,11 @@ export const CreateProject = (props: ICreateProjectProps) => {
             <ProjectForm
               title={title}
               description={description}
+              visibility={visibility}
               handleInputChange={handleInputChange}
+              onToggleVisibility={() =>
+                setVisibility((v) => (v === 'public' ? 'private' : 'public'))
+              }
               onCreate={onCreate}
               goToDashboard={goToDashboard}
               isNewUser={isNewUser}

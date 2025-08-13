@@ -99,8 +99,8 @@ function CardTasksPreview({ title, tasks }: { tasks: ITask[]; title: string }) {
 export function MyWorkPage() {
   const { id: projectId } = useParams()
   const navigate = useNavigate()
-  const { optimisticCreateCard, tasks, cards, hasPermission, isOnboarding } = useProject()
-  const canCreateCard = hasPermission(ROLES.EDITOR)
+  const { optimisticCreateCard, tasks, cards, hasPermission, isOnboarding, project } = useProject()
+  const canCreateCard = hasPermission(ROLES.EDITOR) || project?.visibility === 'public'
 
   const cardsTitles = useMemo(
     () =>

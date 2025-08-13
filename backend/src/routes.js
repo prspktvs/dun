@@ -13,6 +13,7 @@ import {
 import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
 import { getCardFiles, addFilesToCard, removeFileFromCard, getFileById } from './api/files.js'
 import notificationsRouter from './api/notifications.js'
+import { searchProjects } from './api/projects.js'
 
 const router = express.Router()
 
@@ -31,6 +32,9 @@ router.delete('/cards/:id', deleteCard)
 router.post('/cards/:id/share', shareCard)
 router.delete('/cards/:id/share/:userId', unshareCard)
 router.delete('/cards/:id/chats/:chatId', deleteCardChat)
+
+// projects
+router.get('/projects/search', searchProjects)
 
 // files
 router.get('/cards/:cardId/files', getCardFiles)

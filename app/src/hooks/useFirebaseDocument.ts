@@ -22,9 +22,9 @@ export function useFirebaseDocument(path: string) {
 
   useEffect(() => {
     if (!loading && !error) {
-      const newData = value.data()
+    const newData = value.data()
 
-      setData(newData)
+    setData(newData)
     }
   }, [value, loading, error])
 

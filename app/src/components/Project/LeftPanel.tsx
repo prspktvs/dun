@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { groupBy, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import * as Sentry from '@sentry/react'
@@ -10,6 +10,7 @@ import LeftPanelButton from '../ui/buttons/LeftPanelButton'
 import UserList from '../User/UserList'
 import ProjectSelector from '../Project/ProjectSelector'
 import FeedbackModal from '../ui/modals/FeedbackModal'
+import { useResizableWidth } from '../../hooks/useResizable'
 
 function LeftPanel() {
   const { id: projectId } = useParams()
@@ -21,19 +22,18 @@ function LeftPanel() {
   const { tasks, cards, users, isOnboarding } = useProject()
   const topicCount = cards?.length || 0
 
-  const cardsTitles = useMemo(
-    () =>
-      cards.reduce((acc, card) => {
-        acc[card.id] = card.title
-        return acc
-      }, {}),
-    [cards],
-  )
+  const cardsTitles = useMemo(() => {
+    return cards.reduce((acc: Record<string, string>, card) => {
+      acc[card.id] = card.title
+      return acc
+    }, {} as Record<string, string>)
+  }, [cards])
 
-  const sortedTasks = useMemo(
-    () => tasks.filter((task) => !task.isDone).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
-    [tasks],
-  )
+  const sortedTasks = useMemo(() => {
+    return tasks
+      .filter((task) => !task.isDone)
+      .sort((a: any, b: any) => ((a?.createdAt ?? 0) > (b?.createdAt ?? 0) ? -1 : 1))
+  }, [tasks])
 
   const groupedTasksById = useMemo(
     () => groupBy(sortedTasks, (task) => task.card_id),
@@ -42,9 +42,33 @@ function LeftPanel() {
 
   const handleFeedback = () => setFeedbackOpened(true)
 
+  const sidebarRef = useRef<HTMLDivElement | null>(null)
+  const { width, startResize } = useResizableWidth({
+    storageKey: 'leftPanelWidth',
+    cssVarName: '--left-panel-width',
+    defaultWidth: 320,
+    min: 240,
+    max: 560,
+    side: 'left',
+  })
+
   return (
-    <aside className='flex flex-col items-center h-screen w-80 border-r-1 border-borders-purple'>
-      <section className='border-b-1 border-borders-purple h-14'>
+    <aside
+      ref={sidebarRef as any}
+      style={{ width: `var(--left-panel-width, ${width}px)` }}
+      className='relative flex-none shrink-0 box-border flex flex-col items-center h-screen border-r-1 border-borders-purple'
+    >
+      {/* Resize handle */}
+      <div
+        onMouseDown={startResize}
+        className='absolute top-0 -right-[3px] h-full w-3 cursor-col-resize z-30 flex items-stretch justify-center'
+        role='separator'
+        aria-orientation='vertical'
+        aria-label='Resize left panel'
+      >
+  <div className='pointer-events-none absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 w-1.5 h-8 bg-borders-purple/40 rounded' />
+      </div>
+  <section className='w-full border-b-1 border-borders-purple h-14'>
         <ProjectSelector />
       </section>
 
@@ -57,7 +81,7 @@ function LeftPanel() {
         <ul>
           <li className='mb-2'>
             <LeftPanelButton
-              isActive={location.pathname.endsWith(projectId)}
+              isActive={location.pathname.endsWith(projectId || '')}
               onClick={() => navigate(`/${projectId}`)}
             >
               Topics ・{topicCount}

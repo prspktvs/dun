@@ -9,4 +9,5 @@ export interface IProject {
   users: ITeamMember[] | null
   cards: ICard[] | null
   inviteUrl?: string
+  visibility?: 'private' | 'public'
 }

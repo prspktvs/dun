@@ -119,12 +119,13 @@ function Editor({ card, users }: IEditorProps) {
   const [isLoading, setLoading] = useState(true)
   const [editable, setEditable] = useState(false)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
-  const { hasPermission, isOnboarding } = useProject()
+  const { hasPermission, isOnboarding, project } = useProject()
   const { user } = useAuth()
   const { setEditor } = useEditor()
   const { openChatById, cardChats, getUnreadMessagesCount } = useChats()
 
-  const canEdit = hasPermission(ROLES.EDITOR)
+  const isViewerOwner = project?.visibility === 'public' && (user as any)?.id === card.author
+  const canEdit = hasPermission(ROLES.EDITOR) || isViewerOwner
 
   const { editor } = useCreateCollaborationEditor(
     `${projectId}/cards/${card.id}`,
@@ -202,7 +203,7 @@ function Editor({ card, users }: IEditorProps) {
 
   useEffect(() => {
     if (isOnboarding) {
-      const isAllowedOnboardingUser = user?.id === ONBOARDING_EDITOR_ID
+      const isAllowedOnboardingUser = (user as any)?.id === ONBOARDING_EDITOR_ID
       editor.isEditable = isAllowedOnboardingUser
       return
     }

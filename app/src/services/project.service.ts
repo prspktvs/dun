@@ -12,12 +12,13 @@ export const addUserToProject = async (projectId: string, user: Partial<ITeamMem
     const snap = await getDoc(projectRef)
     const data = snap.data()
 
-    const isUserFound = data?.users?.find((u) => u.id === user.id)
+  const isUserFound = data?.users?.find((u: any) => u.id === user.id)
     if (isUserFound) return console.log('User already exists in project')
 
-    const newUser = {...user, role: user?.role ?? ROLES.VIEWER  }
-    const newUsers = data?.users?.length > 0 ? [...data?.users ?? [], newUser] : [{...newUser, role: ROLES.OWNER }]
-    await setDoc(projectRef, { users: newUsers }, { merge: true })
+  const newUser = { ...user, role: (user as unknown as ITeamMember)?.role ?? ROLES.VIEWER }
+  const newUsers = data?.users?.length > 0 ? [...(data?.users ?? []), newUser] : [{ ...newUser, role: ROLES.OWNER }]
+  const initialVisibility = data && 'visibility' in data ? undefined : 'private'
+  await setDoc(projectRef, { users: newUsers, ...(initialVisibility ? { visibility: initialVisibility } : {}) }, { merge: true })
   } catch (e) {
     console.error(e)
     return null
@@ -29,11 +30,10 @@ export const createProject = async (project: Partial<IProject>) => {
     const projectId = project.id
     if (!projectId) throw new Error('project.id is required')
     const projectRef = doc(collection(db, 'projects'), projectId)
-    const snap = await setDoc(projectRef, project)
+  await setDoc(projectRef, { visibility: 'private', ...project })
 
-    if (snap) return { ...project, id: projectId }
+  return { ...project, id: projectId }
 
-    return null
   } catch (e) {
     console.error(e)
     return null
@@ -43,10 +43,9 @@ export const createProject = async (project: Partial<IProject>) => {
 export const updateProject = async (project: Partial<IProject>) => {
   try {
     const projectRef = doc(collection(db, 'projects'), project.id)
-    const snap = await setDoc(projectRef, project, { merge: true })
-    if (snap) return project
+  await setDoc(projectRef, project, { merge: true })
+  return project
 
-    return null
   } catch (e) {
     console.error(e)
     return null
@@ -70,10 +69,10 @@ export const getAllUserProject = async (userId: string) => {
     const snap = await getDocs(projectsRef)
     const projects: IProject[] = []
     snap.forEach((doc) => {
-      const { users } = doc.data()
+      const { users } = doc.data() as any
       if (users) {
-        const user = users.find((user) => user.id === userId)
-        if (user) projects.push({ ...doc.data(), id: doc.id })
+        const user = users.find((user: any) => user.id === userId)
+        if (user) projects.push({ ...(doc.data() as any), id: doc.id } as IProject)
       }
     })
     return projects
