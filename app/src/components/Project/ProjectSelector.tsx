@@ -24,8 +24,10 @@ const ProjectSelector = () => {
   const [projects, setProjects] = useState<IProject[]>([])
 
   useEffect(() => {
-    getAllUserProject(user.id).then((data) => setProjects(data))
-  }, [user?.id, project.title])
+    const uid = (user as any)?.id
+    if (!uid) return
+    getAllUserProject(uid).then((data) => setProjects(data || []))
+  }, [(user as any)?.id, project.title])
 
   const sortedProjects = useMemo(() => {
     if (!projects.length) return []
@@ -36,7 +38,7 @@ const ProjectSelector = () => {
 
   const isCurrentProject = (projectId: string) => projectId === currentProjectId
 
-  const onSettingsClick = (e) => {
+  const onSettingsClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
 
@@ -58,7 +60,7 @@ const ProjectSelector = () => {
       onChange={setMenuOpened}
     >
       <Menu.Target>
-        <nav className='relative z-50 flex flex-col w-full justify-between pl-4 pr-[15px] md:px-5 text-3xl h-14 md:w-80 hover:cursor-pointer '>
+  <nav className='relative z-50 flex flex-col w-full justify-between pl-4 pr-[15px] md:px-5 text-3xl h-14 hover:cursor-pointer'>
           {/* Overproject section */}
           <div className='flex items-end gap-1.5 text-xs h-12 text-neutral-400 leading-tight'>
             <span className='flex justify-end items-end text-[#969696] text-[10px] font-normal font-monaspace'>

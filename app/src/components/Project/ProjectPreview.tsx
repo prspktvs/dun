@@ -73,12 +73,10 @@ export function ProjectsList({ search }: { search: string }) {
         return
       }
 
-      // When searching, mirror project topic search: fetch project IDs by matching topics
       try {
         const hits: ProjectSearchHit[] = await searchProjectsByTopics(search)
         const ids = hits.map((h) => h.project_id)
 
-        // Also match by project title/description
         const s = search.toLowerCase()
         const localMatches = projects.filter(
           (p) =>
@@ -86,7 +84,6 @@ export function ProjectsList({ search }: { search: string }) {
             (p.description || '').toLowerCase().includes(s),
         )
 
-        // Union of topic-based and local matches
         const unionMap: Record<string, IProject> = {}
         for (const p of projects) {
           if (ids.includes(p.id)) unionMap[p.id] = p
@@ -96,7 +93,6 @@ export function ProjectsList({ search }: { search: string }) {
         }
         const found = Object.values(unionMap)
 
-        // Build highlights map: prefer Typesense snippets; if absent, bold first local match
         const highlights = hits.reduce(
           (acc, h) => {
             if (h.project_id) acc[h.project_id] = h.highlights || {}
@@ -130,7 +126,6 @@ export function ProjectsList({ search }: { search: string }) {
           setHighlightsByProject(highlights)
         }
       } catch (e) {
-        // Fallback to title filter on error
         const foundProjects = projects.filter(({ title }) =>
           title?.toLowerCase()?.includes(search.toLowerCase()),
         )

@@ -18,6 +18,7 @@ import Editor from '../../components/Editor'
 import CardContent from '../../components/Card/CardContent'
 import OnboardingEditor from '../../components/Editor/OnboardingEditor'
 import { ONBOARDING_EDITOR_ID, ROLES } from '../../constants/roles.constants'
+import { useResizableWidth } from '../../hooks/useResizable'
 
 interface ICardProps {
   card: ICard
@@ -115,8 +116,23 @@ const Card = ({ card }: ICardProps) => {
     navigate(backTo)
   }
 
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const { width: rightWidth, startResize: startRightResize } = useResizableWidth({
+    storageKey: 'rightPanelWidth',
+    cssVarName: '--right-panel-width',
+    defaultWidth: 400,
+    min: 280,
+    max: 720,
+    side: 'right',
+    containerRef: contentRef as any,
+  })
+
   return (
-    <div className={clsx(isMobile ? 'w-full' : 'w-[calc(100vw_-_320px)]')}>
+    <div
+      ref={contentRef as any}
+      className={clsx(isMobile ? 'w-full' : '')}
+      style={!isMobile ? { width: 'calc(100vw - var(--left-panel-width, 320px))' } : undefined}
+    >
       <CardHeader
         card={card as ICard}
         goBack={goBack}
@@ -142,11 +158,20 @@ const Card = ({ card }: ICardProps) => {
           </section>
         )}
         <aside
-          className={clsx(
-            'md:border-l-1 border-borders-purple',
-            isMobile ? 'w-full' : 'w-[320px] lg:w-[400px] xl:w-[500px] 2xl:w-[600px]',
-          )}
+          className={clsx('relative md:border-l-1 border-borders-purple', isMobile ? 'w-full' : '')}
+          style={!isMobile ? { width: 'var(--right-panel-width, 400px)' } : undefined}
         >
+          {!isMobile && (
+            <div
+              onMouseDown={startRightResize}
+              className='absolute top-0 -left-[3px] h-full w-3 cursor-col-resize z-30 flex items-stretch justify-center'
+              role='separator'
+              aria-orientation='vertical'
+              aria-label='Resize right panel'
+            >
+              <div className='pointer-events-none absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 w-1.5 h-8 bg-borders-purple/40 rounded' />
+            </div>
+          )}
           <CardTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}

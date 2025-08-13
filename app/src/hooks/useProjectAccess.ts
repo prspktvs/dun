@@ -35,7 +35,7 @@ export function useProjectAccess() {
     }
 
     if (project.visibility === 'public') {
-  addUserToProject(projectId, { ...(user as unknown as ITeamMember), role: 'viewer' })
+      addUserToProject(projectId, { ...(user as unknown as ITeamMember), role: 'viewer' })
         .then(() => {
           setAllow(true)
           setChecked(true)

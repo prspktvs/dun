@@ -1,6 +1,5 @@
 import { searchDocuments } from '../utils/typesense.js'
 
-// Search projects by matching topics (cards) content. Returns unique projects with highlight snippets.
 export const searchProjects = async (req, res) => {
   try {
     const { q } = req.query
@@ -14,7 +13,6 @@ export const searchProjects = async (req, res) => {
     const results = await searchDocuments({
       q,
       query_by: 'title,content,author',
-      // Search across all documents, but only those the user can access
       filter_by: `(author_id:=${userId} || user_ids:=${userId} || public:=true)`,
       highlight_fields: 'title,content',
       highlight_full_fields: 'content',
@@ -24,7 +22,6 @@ export const searchProjects = async (req, res) => {
       per_page: 100,
     })
 
-    // Group by project_id and pick first highlight per project
     const projectsMap = {}
     for (const hit of results?.hits || []) {
       const projectId = hit?.document?.project_id
@@ -49,5 +46,3 @@ export const searchProjects = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
-
-export default {}
