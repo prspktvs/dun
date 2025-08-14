@@ -224,6 +224,37 @@ export function ProjectSettings({ onClose: _onClose }: { onClose: () => void }) 
             </div>
           </div>
         )}
+        {isOwner && (
+          <div className='px-9 py-2 border-b-1 border-borders-purple'>
+            <div className='flex items-center justify-between'>
+              <div className='flex flex-col'>
+                <span className='w-1/4 font-bold font-monaspace'>Visibility</span>
+                <span className='text-xs text-gray-500'>
+                  {visibility === 'public'
+                    ? 'Public — anyone with the link can view'
+                    : 'Private — only invited members can access'}
+                </span>
+              </div>
+              {isOwner ? (
+                <div className='flex items-center gap-3'>
+                  <span className='text-sm'>{visibility === 'public' ? 'Public' : 'Private'}</span>
+                  <Switch
+                    size='md'
+                    color='#8379BD'
+                    checked={visibility === 'public'}
+                    onChange={(e) => {
+                      const newVisibility = e.currentTarget.checked ? 'public' : 'private'
+                      setVisibility(newVisibility)
+                      if (projectId) updateProject({ id: projectId, visibility: newVisibility })
+                    }}
+                  />
+                </div>
+              ) : (
+                <Text className='px-2 py-1'>{project?.visibility ?? 'private'}</Text>
+              )}
+            </div>
+          </div>
+        )}
         <div className='py-3'>
           <div className='px-5'>
             {canEditTitleAndDescription ? (
@@ -254,39 +285,7 @@ export function ProjectSettings({ onClose: _onClose }: { onClose: () => void }) 
               <Text className='px-2 py-1'>{description || 'No description'}</Text>
             )}
           </div>
-          {isOwner && (
-            <div className='px-5 mt-4'>
-              <div className='flex items-center justify-between'>
-                <div className='flex flex-col'>
-                  <span className='text-sm font-monaspace mb-1'>Visibility</span>
-                  <span className='text-xs text-gray-500'>
-                    {visibility === 'public'
-                      ? 'Public — anyone with the link can view'
-                      : 'Private — only invited members can access'}
-                  </span>
-                </div>
-                {isOwner ? (
-                  <div className='flex items-center gap-3'>
-                    <span className='text-sm'>
-                      {visibility === 'public' ? 'Public' : 'Private'}
-                    </span>
-                    <Switch
-                      size='md'
-                      color='#8379BD'
-                      checked={visibility === 'public'}
-                      onChange={(e) => {
-                        const newVisibility = e.currentTarget.checked ? 'public' : 'private'
-                        setVisibility(newVisibility)
-                        if (projectId) updateProject({ id: projectId, visibility: newVisibility })
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <Text className='px-2 py-1'>{project?.visibility ?? 'private'}</Text>
-                )}
-              </div>
-            </div>
-          )}
+
           <div className='flex items-center justify-between h-14 border-t-1 border-borders-purple'>
             <span className='px-5 ml-3 font-bold font-monaspace'>{title} team</span>
           </div>
