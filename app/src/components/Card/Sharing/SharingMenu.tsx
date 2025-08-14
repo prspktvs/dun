@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { SharingOption } from './SharingOption'
+import { useProject } from '../../../context/ProjectContext'
 
 function SharingButton({
   children,
@@ -27,7 +28,9 @@ export function SharingMenu({
   openFullSharingModal: () => void
   updateSharingMode: (isPrivate: boolean) => void
 }) {
-  const [isPrivate, setPrivate] = useState(true)
+  const { project } = useProject()
+
+  const [isPrivate, setPrivate] = useState(project?.visibility === 'private')
 
   return (
     <div className='absolute top-14 right-1 w-[480px] bg-background border-1 border-borders-purple z-50'>

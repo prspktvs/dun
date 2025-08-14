@@ -23,10 +23,13 @@ function LeftPanel() {
   const topicCount = cards?.length || 0
 
   const cardsTitles = useMemo(() => {
-    return cards.reduce((acc: Record<string, string>, card) => {
-      acc[card.id] = card.title
-      return acc
-    }, {} as Record<string, string>)
+    return cards.reduce(
+      (acc: Record<string, string>, card) => {
+        acc[card.id] = card.title
+        return acc
+      },
+      {} as Record<string, string>,
+    )
   }, [cards])
 
   const sortedTasks = useMemo(() => {
@@ -66,9 +69,9 @@ function LeftPanel() {
         aria-orientation='vertical'
         aria-label='Resize left panel'
       >
-  <div className='pointer-events-none absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 w-1.5 h-8 bg-borders-purple/40 rounded' />
+        <div className='pointer-events-none absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 w-1.5 h-8 bg-borders-purple/40 rounded' />
       </div>
-  <section className='w-full border-b-1 border-borders-purple h-14'>
+      <section className='w-full border-b-1 border-borders-purple h-14'>
         <ProjectSelector />
       </section>
 
