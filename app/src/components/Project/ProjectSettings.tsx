@@ -24,7 +24,9 @@ const getUserId = (user: IUser | { uid: string } | null): string | undefined => 
 export function TeamMember({ user }: { user: ITeamMember }) {
   const { id: projectId } = useParams()
   const { user: currentUser } = useAuth()
-  const { hasPermission, users } = useProject()
+  const { hasPermission, users, project } = useProject()
+
+  const isPublicProject = Boolean(project?.visibility === 'public')
 
   const currentUserId = getUserId(currentUser)
   const currentProjectUser = users.find((u) => u.id === currentUserId)
@@ -61,7 +63,7 @@ export function TeamMember({ user }: { user: ITeamMember }) {
 
       <div className='flex flex-col min-w-0'>
         <span className='text-base font-medium truncate'>{user.name}</span>
-        <span className='text-sm text-gray-500 truncate'>{user.email}</span>
+        {!isPublicProject && <span className='text-sm text-gray-500 truncate'>{user.email}</span>}
       </div>
 
       {isOwner ? (
