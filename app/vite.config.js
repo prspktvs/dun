@@ -8,6 +8,14 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env': env,
     },
+    server: {
+      open: true,
+      host: true,
+      headers: {
+        'X-Frame-Options': 'DENY',
+        'Content-Security-Policy': "frame-ancestors 'none';"
+      },
+    },
     build: {
       sourcemap: true,
       chunkSizeWarningLimit: 1200,
@@ -24,10 +32,6 @@ export default defineConfig(({ mode }) => {
       optimizeDeps: {
         include: ['@blocknote/core'],
         exclude: [],
-      },
-      server: {
-        open: true,
-        host: true,
       },
     },
   }
