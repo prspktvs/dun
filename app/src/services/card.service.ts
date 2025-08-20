@@ -1,23 +1,9 @@
-import {
-  getFirestore,
-  collection,
-  doc,
-  addDoc,
-  setDoc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-  arrayUnion,
-  updateDoc,
-} from 'firebase/firestore'
-
 import { ICard } from '../types/Card'
 import { IFile } from '../types/File'
-import { genId } from '../utils'
-import { db } from '../config/firebase'
 import { apiRequest } from '../utils/api'
+import { logAnalytics } from '../utils/analytics'
+import { ANALYTIC_EVENTS } from '../constants/analytics.constants'
 
-const BACKEND_URL = process.env.VITE_BACKEND_URL || 'https://api.dun.wtf'
 
 export const getCardById = async (cardId: string): Promise<ICard | null> => {
   if (!cardId) return null
@@ -34,7 +20,9 @@ export const createCard = async (projectId: string, card: Partial<ICard>): Promi
     method: 'POST',
     body: JSON.stringify({ ...card, projectId })
   })
-
+  if (res?.id) {
+    logAnalytics(ANALYTIC_EVENTS.CARD_CREATED, { project_id: projectId, card_id: res.id })
+  }
   return res
 }
 
@@ -86,40 +74,25 @@ export const unshareCard = async (cardId: string, userId: string) => {
 export const getCardFiles = async (cardId: string): Promise<IFile[]> => {
   if (!cardId) return []
   
-  try {
-    const res = await apiRequest<IFile[]>(`cards/${cardId}/files`)
-    return res || []
-  } catch (error) {
-    console.error('Error getting card files:', error)
-    return []
-  }
+  const res = await apiRequest<IFile[]>(`cards/${cardId}/files`)
+  return res || []
 }
 
 export const addFilesToCard = async (cardId: string, files: IFile[]): Promise<{ files: IFile[], addedCount: number } | null> => {
   if (!cardId || !files || files.length === 0) return null
   
-  try {
-    const res = await apiRequest<{ files: IFile[], addedCount: number }>(`cards/${cardId}/files`, {
-      method: 'POST',
-      body: JSON.stringify({ files })
-    })
-    return res
-  } catch (error) {
-    console.error('Error adding files to card:', error)
-    return null
-  }
+  const res = await apiRequest<{ files: IFile[], addedCount: number }>(`cards/${cardId}/files`, {
+    method: 'POST',
+    body: JSON.stringify({ files })
+  })
+  return res
 }
 
 export const removeFileFromCard = async (cardId: string, fileId: string): Promise<boolean> => {
   if (!cardId || !fileId) return false
   
-  try {
-    await apiRequest(`cards/${cardId}/files/${fileId}`, {
-      method: 'DELETE'
-    })
-    return true
-  } catch (error) {
-    console.error('Error removing file from card:', error)
-    return false
-  }
+  await apiRequest(`cards/${cardId}/files/${fileId}`, {
+    method: 'DELETE'
+  })
+  return true
 }
