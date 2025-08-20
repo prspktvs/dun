@@ -7,11 +7,13 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  getAdditionalUserInfo,
 } from 'firebase/auth'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { auth } from '../config/firebase'
 import { getOrCreateUser } from '../services'
+import { sendGreetingEmail } from '../utils/api'
 import { IUser } from '../types/User'
 import { notifyError, notifySuccess } from '../utils/notifications'
 import {
@@ -56,12 +58,13 @@ const defaultValue = {
   isAuthenticated: false,
   user: null,
   loading: true,
+  token: '',
   signInWithGoogle: async () => {},
   signOut: async () => {},
   registerWithEmailAndPassword: async () => {},
   loginWithEmailAndPassword: async () => {},
   forgotPassword: async () => {},
-}
+} as AuthContextType
 
 export const AuthContext = React.createContext<AuthContextType>(defaultValue)
 
@@ -89,16 +92,19 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       notifySuccess(LOGGED_IN_MESSAGE)
       navigate(from, { replace: true })
     } catch (error) {
-      console.error('Error signing in with email and password:', error)
-      switch (error.code) {
+      const err = error as any
+      switch (err.code) {
         case INVALID_EMAIL:
-          return notifyError('Invalid email')
+          notifyError('Invalid email')
+          break
         case INVALID_PASSWORD:
-          return notifyError('Invalid password')
+          notifyError('Invalid password')
+          break
         case USER_NOT_FOUND:
-          return notifyError('User not found')
+          notifyError('User not found')
+          break
         default:
-          return notifyError('Error in login. Please try again.')
+          notifyError('Error in login. Please try again.')
       }
     }
   }
@@ -111,22 +117,28 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
 
       await getOrCreateUser({ ...userCredential.user, displayName: name } as firebase.User)
 
+      // fire and forget greeting email
+      sendGreetingEmail(email, name).catch(() => {})
+
       await sendEmailVerification(userCredential.user)
 
       notifySuccess(EMAIL_VERIFIED_MESSAGE)
 
       navigate(from, { replace: true })
     } catch (error) {
-      console.error('Error signing up with email and password:', error)
-      switch (error.code) {
+      const err = error as any
+      switch (err.code) {
         case INVALID_EMAIL:
-          return notifyError('Invalid email')
+          notifyError('Invalid email')
+          break
         case EMAIL_EXISTS:
-          return notifyError('The email already used. Please try another one.')
+          notifyError('The email already used. Please try another one.')
+          break
         case WEAK_PASSWORD:
-          return notifyError('Your password is too weak. Please try another one.')
+          notifyError('Your password is too weak. Please try another one.')
+          break
         default:
-          return notifyError('Error in registration. Please try again.')
+          notifyError('Error in registration. Please try again.')
       }
     }
   }
@@ -134,24 +146,26 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider()
     setLoading(true)
-
     try {
-      await signInWithPopup(auth, provider)
+      const cred = await signInWithPopup(auth, provider)
+      const info = getAdditionalUserInfo(cred)
+      if (info?.isNewUser && cred.user?.email) {
+        sendGreetingEmail(cred.user.email, cred.user.displayName || undefined).catch(() => {})
+      }
       navigate(from, { replace: true })
-    } catch (error) {
-      console.error('Error signing in with Google:', error)
-    }
+    } catch (_e) {}
   }
 
   const forgotPassword = async (email: string) => {
     try {
-      if (!email) return notifyError('Please enter your email')
+      if (!email) {
+        notifyError('Please enter your email')
+        return
+      }
       await sendPasswordResetEmail(auth, email)
 
       notifySuccess('Password reset email sent on your email. Please check.')
-    } catch (error) {
-      console.error('Error forgot password:', error)
-    }
+    } catch (_e) {}
   }
 
   const signOut = async () => {
@@ -159,9 +173,7 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
       await auth.signOut()
       setUser(null)
       navigate('/login', { replace: true, state: {} })
-    } catch (error) {
-      console.error('Error log out:', error)
-    }
+    } catch (_e) {}
   }
 
   useEffect(() => {
@@ -186,11 +198,11 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     }
   }, [token])
 
-  const value = {
+  const value: AuthContextType = {
     isAuthenticated: !!user,
     loading,
     user,
-    token,
+    token: token || '',
     signInWithGoogle,
     signOut,
     registerWithEmailAndPassword,
