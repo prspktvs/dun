@@ -3,6 +3,8 @@ import firebase from 'firebase/compat/app'
 
 import { db } from '../config/firebase'
 import { IUser } from '../types/User'
+import { logAnalytics } from '../utils/analytics'
+import { ANALYTIC_EVENTS } from '../constants/analytics.constants'
 
 export const getOrCreateUser = async (user: firebase.User): Promise<IUser | null> => {
   if (!user) return null
@@ -22,11 +24,8 @@ export const getOrCreateUser = async (user: firebase.User): Promise<IUser | null
     name: user.displayName || 'User',
     lastProjectId: '',
   }
-  try {
-    await setDoc(userRef, newUser)
-  } catch (error) {
-    console.error('Error creating user document', error)
-  }
+  await setDoc(userRef, newUser)
+  logAnalytics(ANALYTIC_EVENTS.USER_CREATED, { user_id: newUser.id })
 
   return newUser
 }
@@ -34,9 +33,5 @@ export const getOrCreateUser = async (user: firebase.User): Promise<IUser | null
 export const updateUser = async (user: IUser): Promise<void> => {
   const userRef = doc(collection(db, 'users'), user.id)
 
-  try {
-    await setDoc(userRef, user, { merge: true })
-  } catch (error) {
-    console.error('Error updating user document', error)
-  }
+  await setDoc(userRef, user, { merge: true })
 }

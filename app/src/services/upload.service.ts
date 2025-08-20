@@ -1,6 +1,8 @@
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 import { storage } from '../config/firebase'
+import { logAnalytics } from '../utils/analytics'
+import { ANALYTIC_EVENTS } from '../constants/analytics.constants'
 
 // Allowed file types with their extensions
 const ALLOWED_TYPES = {
@@ -107,7 +109,8 @@ export const uploadFile = async (file: File): Promise<string> => {
       throw new Error('Failed to get download URL after upload')
     }
 
-    return url
+  logAnalytics(ANALYTIC_EVENTS.FILE_UPLOADED, { size: file.size, type: mimeType })
+  return url
   } catch (e) {
     if (e instanceof Error) {
       throw new Error(`Upload failed: ${e.message}`)
@@ -152,7 +155,8 @@ export const uploadImage = async (path: string, file: Blob | Uint8Array | ArrayB
       throw new Error('Failed to get download URL after upload')
     }
     
-    return url
+  logAnalytics(ANALYTIC_EVENTS.IMAGE_UPLOADED, { size: fileSize, path })
+  return url
   } catch (e) {
     if (e instanceof Error) {
       throw new Error(`Image upload failed: ${e.message}`)
