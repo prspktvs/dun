@@ -14,6 +14,7 @@ import { getUserTasks, updateTask, updateTasksOrderBatch } from './api/tasks.js'
 import { getCardFiles, addFilesToCard, removeFileFromCard, getFileById } from './api/files.js'
 import notificationsRouter from './api/notifications.js'
 import { searchProjects } from './api/projects.js'
+import mailRouter from './api/mail.js'
 
 const router = express.Router()
 
@@ -44,5 +45,8 @@ router.get('/files/:fileId', getFileById)
 
 // notifications
 router.use('/notifications', notificationsRouter)
+
+// mail
+router.use('/mail', mailRouter)
 
 export default router

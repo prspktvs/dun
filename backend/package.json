@@ -26,6 +26,7 @@
 		"cors": "^2.8.5",
 		"express": "^4.19.2",
 		"express-ws": "^5.0.2",
+		"nodemailer": "^6.9.13",
 		"typesense": "^1.8.2",
 		"web-push": "^3.6.7"
 	},
