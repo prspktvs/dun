@@ -60,7 +60,7 @@ function SwimLaneHeader({
   return (
     <div className='flex-shrink-0 overflow-hidden w-[200px] p-4 border-r border-gray-200'>
       <div className='flex items-center justify-between'>
-        <div className='font-medium text-gray-800'>{swimLane.title}</div>
+        <div className='font-medium text-gray-800 truncate'>{swimLane.title}</div>
         <button
           onClick={onToggleCollapse}
           className='ml-2 text-gray-500 hover:text-gray-700'
