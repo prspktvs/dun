@@ -15,6 +15,13 @@ import { logAnalytics } from './utils/analytics'
 import { ANALYTIC_EVENTS } from './constants'
 import { NotFound } from './pages/NotFound'
 import { Loader } from './components/ui/Loader'
+import { createClient } from '@supabase/supabase-js'
+
+// Initialize Supabase client
+// const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || ''
+// const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || ''
+
+// const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const Login = lazy(() => import('./pages/Auth/Login'))
 const Logout = lazy(() => import('./pages/Auth/Logout'))

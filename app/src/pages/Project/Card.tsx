@@ -33,7 +33,7 @@ const Card = ({ card }: ICardProps) => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { closeChat, unreadChats, cardChats } = useChats()
-  const { optimisticDeleteCard, optimisticUpdateCard, users, hasPermission, isOnboarding } =
+  const { optimisticDeleteCard, optimisticUpdateCard, hasPermission, isOnboarding, users } =
     useProject()
   const { isMobile } = useBreakpoint()
   const { files } = useCardFiles()
@@ -53,6 +53,8 @@ const Card = ({ card }: ICardProps) => {
     (acc, chat) => (card.chatIds?.includes(chat.id) ? acc + chat.unreadCount : acc),
     0,
   )
+
+  const cardUsers = card.public ? users : users.filter((u) => card.users?.includes(u.id))
 
   useEffect(() => {
     if (!chatId) return
@@ -154,7 +156,7 @@ const Card = ({ card }: ICardProps) => {
               onChange={onTitleChange}
               disabled={canEditTitle}
             />
-            <Editor key={card.id} card={card} users={users} />
+            <Editor key={card.id} card={card} users={cardUsers} />
           </section>
         )}
         <aside
@@ -188,7 +190,7 @@ const Card = ({ card }: ICardProps) => {
             title={title}
             setTitle={setTitle}
             onTitleChange={onTitleChange}
-            users={users}
+            users={cardUsers}
             inputRef={inputRef}
             isMobile={isMobile}
             activeTab={activeTab}
