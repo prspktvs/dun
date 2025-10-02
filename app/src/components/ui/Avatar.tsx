@@ -8,7 +8,7 @@ type UserType = IUser | firebase.User
 
 const AvatarDun = React.forwardRef<HTMLDivElement, { user: UserType; size?: AvatarProps['size'] }>(
   ({ user, size = 36 }, ref) => {
-    const name = ('name' in user ? user.name : user.displayName)?.split(' ') || []
+    const name = user ? ('name' in user ? user.name : user.displayName)?.split(' ') || [] : []
     const initials =
       name.length > 1 ? name[0].charAt(0) + name[1]?.charAt(0) : name[0]?.charAt(0) || 'U'
     const avatarUrl =
