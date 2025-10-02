@@ -1,13 +1,10 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import ButtonDun from '../components/ui/buttons/ButtonDun'
 
 export const NotFound = () => {
-  const navigate = useNavigate()
-
   const goToDashboard = () => {
-    navigate('/dashboard')
+    window.location.href = '/dashboard'
   }
 
   return (
