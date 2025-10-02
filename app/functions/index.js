@@ -23,6 +23,13 @@ exports.onMessageCreated = functions
     const messageCount = messages ? Object.keys(messages).length : 0
     const isFirstMessage = messageCount === 1
 
+    const projectRef = admin.firestore().collection('projects').doc(projectId)
+    const projectDoc = await projectRef.get()
+    const project = projectDoc.exists ? projectDoc.data() : null
+
+    console.log('Project data:', project)
+    const projectUsersIds = project?.users ? project.users.map((u) => u.id) : []
+
     const data = {
       ...msg,
       projectId,
@@ -30,6 +37,7 @@ exports.onMessageCreated = functions
       chatId,
       messageId,
       isFirstMessage,
+      projectUsersIds,
     }
 
     try {

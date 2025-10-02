@@ -12,7 +12,11 @@
 #directories
 node_modules
 
+supabase
+
 dist
+
+instant
 
 firebase-debug.log
 .firebase/

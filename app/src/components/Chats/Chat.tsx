@@ -427,7 +427,7 @@ export function Chat({ chatId, users }: { chatId: string; users: IUser[] }) {
           <Mention
             trigger='@'
             data={
-              project.users?.map((user) => ({
+              users?.map((user) => ({
                 id: user.id,
                 display: user.name,
               })) as SuggestionDataItem[]

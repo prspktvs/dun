@@ -20,9 +20,10 @@ export const getSendPushToChatFn = (sendNotification, sendMessageToUser) => asyn
     }
 
     const authorName = msg?.author || 'Someone'
-    const cardUsers = JSON.parse(dbCard.users || '[]')
+    const projectUsersIds = msg.projectUsersIds || []
 
-    for (const userId of cardUsers) {
+    console.log('Sent message notification to project users:', msg)
+    for (const userId of projectUsersIds) {
       sendNotification(userId, notification)
 
       if (userId !== msg.authorId) {
@@ -51,7 +52,7 @@ export const getSendPushToChatFn = (sendNotification, sendMessageToUser) => asyn
 
     if (msg.mentions && Array.isArray(msg.mentions)) {
       for (const mentionUserId of msg.mentions) {
-        if (mentionUserId !== msg.authorId && cardUsers.includes(mentionUserId)) {
+        if (mentionUserId !== msg.authorId && projectUsersIds.includes(mentionUserId)) {
           await createNotification({
             userId: mentionUserId,
             type: NOTIFICATION_TYPES.DISCUSSION_MENTION,

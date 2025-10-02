@@ -52,11 +52,21 @@ class UserNotifications {
     cardUsers = [],
   ) => {
     const { id, users } = data
-
+    console.log('addToUserNotifications called', {
+      action,
+      data,
+      user,
+      projectId,
+      topicTitle,
+      cardUsers,
+    })
     const promises = users.map(async (userId) => {
-      if (!cardUsers.includes(userId)) {
-        return
-      }
+
+      // @TODO: add privacy check: private (author + users or public)
+      // if (!cardUsers.includes(userId)) {
+      //   console.log('User not in card, skipping notification', userId, cardUsers)
+      //   return
+      // }
 
       if (!this.notifications[userId]) {
         this.notifications[userId] = { updatedTasks: [], deletedTasks: [], mentions: [] }
@@ -88,6 +98,7 @@ class UserNotifications {
 
       if (notificationType && userId !== user.user_id) {
         try {
+          console.log('Creating notification', { userId, notificationType, projectId, data })
           await createNotification({
             userId,
             type: notificationType,
@@ -160,7 +171,7 @@ const saveAllContent = ({
           cardId,
           new Date().toISOString(),
         )
-
+        console.log('Updating task', { ...task, card_id: cardId })
         addToUserNotifications('update_task', { ...task, card_id: cardId })
       })
       tasks_stmt.finalize()
